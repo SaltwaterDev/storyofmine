@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.dandelion.ui.Home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_people"
+        android:name="com.example.dandelion.ui.PeopleFragment"
+        android:label="@string/people"
+        tools:layout="@layout/fragment_people" />
+
+    <fragment
+        android:id="@+id/navigation_tutorial"
+        android:name="com.example.dandelion.ui.TutorialFragment"
+        android:label="@string/tutorial"
+        tools:layout="@layout/fragment_tutorial"/>
+
+    <fragment
+        android:id="@+id/navigation_self"
+        android:name="com.example.dandelion.ui.SelfFragment"
+        android:label="@string/self"
+        tools:layout="@layout/fragment_self" />
+
+</navigation>

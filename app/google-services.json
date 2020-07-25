@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "592997903387",
+    "firebase_url": "https://dandelion-36140.firebaseio.com",
+    "project_id": "dandelion-36140",
+    "storage_bucket": "dandelion-36140.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592997903387:android:bd252506da0e2877f4dcbe",
+        "android_client_info": {
+          "package_name": "com.example.dandelion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "592997903387-7i9vd6cs5j4eak15qomnasllshvqnnjc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB1zxZfNRgM3D0eqOBLh_f8KFxwyEpqYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "592997903387-7i9vd6cs5j4eak15qomnasllshvqnnjc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

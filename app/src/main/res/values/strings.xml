@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">dandelion</string>
+    <string name="home">home</string>
+    <string name="people">people</string>
+    <string name="self">self</string>
+    <string name="username">username</string>
+    <string name="action_sign_in_short">sign in</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tutorial">tutorial</string>
+    <string name="post">post</string>
+    <string name="todo">...</string>
+</resources>
