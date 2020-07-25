@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CreateFragment">
+    tools:context=".ui.CreateFragment"
+    android:background="@drawable/googleg_disabled_color_18">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

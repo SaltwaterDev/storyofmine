@@ -11,8 +11,12 @@
         android:label="@string/home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_navigation_home_to_createFragment2"
-            app:destination="@id/createFragment" />
+            android:id="@+id/action_navigation_home_to_createFragment"
+            app:destination="@id/createFragment"
+            app:enterAnim="@anim/bottom_up"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/bottom_down" />
     </fragment>
 
     <fragment

@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
 
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                navController.navigate(R.id.createFragment);
+                navController.navigate(R.id.action_navigation_home_to_createFragment);
             }
         });
 
