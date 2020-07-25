@@ -13,6 +13,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+
+import static androidx.navigation.fragment.NavHostFragment.findNavController;
 
 public class HomeFragment extends Fragment {
 
@@ -38,11 +42,14 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+        final NavController navController = findNavController(this);
+
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
         fab.setTooltipText("Create a post");
 
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                navController.navigate(R.id.createFragment);
             }
         });
 
