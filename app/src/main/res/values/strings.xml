@@ -6,8 +6,13 @@
     <string name="username">username</string>
     <string name="action_sign_in_short">sign in</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_post_fragment">Create post fragment</string>
     <string name="tutorial">tutorial</string>
-    <string name="post">post</string>
-    <string name="todo">...</string>
+    <string name="btn_submit">post</string>
+    <string name="todo">…</string>
+    <string name="blank" />
+    <string name="things_happened">What would you like to say?</string>
+    <string name="comment_btn">Send</string>
+    <string name="remind1">REMIND ME AFTER:</string>
+    <string name="remind2">DAY</string>
 </resources>

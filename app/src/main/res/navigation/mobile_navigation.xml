@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/createFragment"
-        android:name="com.example.dandelion.ui.CreateFragment"
+        android:name="com.example.dandelion.ui.Create.CreateFragment"
         android:label="fragment_create"
         tools:layout="@layout/fragment_create" />
 

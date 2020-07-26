@@ -7,25 +7,16 @@ public class Post {
     private String pid;
     private String uid;
     private String username;
-    private Boolean moods;
     private String text;
     private String thought;
     private String action;
     private String remindDate;
+    private String category;
+
 
     //don't delete this or it will cause error
     public Post(){}
 
-    public Post(String pid, String uid, String username, Boolean moods, String text, String thought, String action, String remindDate){
-        this.pid = pid;
-        this.uid = uid;
-        this.username = username;
-        this.moods = moods;
-        this.text = text;
-        this.thought = thought;
-        this.action = action;
-        this.remindDate = remindDate;
-    }
 
     public Post(String pid, String uid, String username, String text){
         this.pid = pid;
@@ -90,20 +81,28 @@ public class Post {
         this.remindDate = remindDate;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public Map<String, Object> toMap(){
        HashMap<String, Object> result = new HashMap<>();
        result.put("pid",pid);
        result.put("uid",uid);
        result.put("username",username);
-       result.put("moods",moods);
+       //result.put("category",category);   todo...ML predict category
        result.put("text",text);
-       result.put("remindDate",remindDate);
        return result;
     }
 
-    @Override
-    public boolean equals(@androidx.annotation.Nullable Object obj) {
+
+    public boolean equals(Object obj) {
         Post post = (Post) obj;
+        assert post != null;
         return pid.matches(post.getPid());
     }
 
