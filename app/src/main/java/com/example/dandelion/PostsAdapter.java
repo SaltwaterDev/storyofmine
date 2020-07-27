@@ -2,6 +2,7 @@ package com.example.dandelion;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
     private FirebaseAuth mAuth;
@@ -50,9 +54,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView username;
-        public TextView event;
-        public TextView thought;
-        public TextView action;
+        public TextView journal;
         public Button comment;
         public Button commentSend;
         public Button editPost;
@@ -61,7 +63,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public RecyclerView commentRecyclerView;
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
-            event = (TextView) itemView.findViewById(R.id.textView_event);
+            journal = (TextView) itemView.findViewById(R.id.textView_event);
             commentSend = (Button) itemView.findViewById(R.id.button_send);
             commentContent = (EditText) itemView.findViewById(R.id.editText_comment);
             commentRecyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView_comment);
@@ -93,9 +95,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         final Post post = postList.get(position);
         final List<Comment> commentList = new ArrayList<>();
         holder.username.setText(post.getUsername());
-        holder.event.setText(post.getText());
-        holder.thought.setText(post.getThought());
-        holder.action.setText(post.getAction());
+        holder.journal.setText(post.getJournal());
         if(post.getUid().matches(uid)){
             holder.editPost.setVisibility(View.VISIBLE);
         }else{
@@ -120,9 +120,24 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         });
     }
 
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
+    }
+
     @Override
     public int getItemCount() {
         return 0;
+    }
+
+    public String getLastItemDate(){
+        String lastItemDate;
+        try {
+            lastItemDate = postList.get(postList.size()-1).getCreatedDateTime();
+        } catch (Exception e) {
+            Log.e("Post Adapter Exception", String.valueOf(e));
+            return "";
+        }
+        return postList.get(postList.size()-1).getCreatedDateTime();
     }
 
     //todo
@@ -136,10 +151,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 current[0] = dataSnapshot.getValue(User.class);
                 assert current[0] != null;
-                Comment comment = new Comment(key, uid, current[0].getUsername(), current[0].getAvatarImageUrl(), content, timeStamp);
-                Map<String, Object> commentValues = comment.toMap();
+                //Comment comment = new Comment(key, uid, current[0].getUsername(), /*current[0].getAvatarImageUrl(),*/ content, timeStamp);
+                //Map<String, Object> commentValues = comment.toMap();
                 Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/post-comments/" + pid + "/" + key, commentValues);
+                //childUpdates.put("/post-comments/" + pid + "/" + key, commentValues);
                 mDatabase.updateChildren(childUpdates);
             }
             @Override

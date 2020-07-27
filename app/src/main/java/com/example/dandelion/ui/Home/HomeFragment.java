@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,7 +43,7 @@ public class HomeFragment extends Fragment {
 
         final NavController navController = findNavController(this);
 
-        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
+        FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setTooltipText("Create a post");
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +63,8 @@ public class HomeFragment extends Fragment {
         homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(@Nullable List<Post> postList) {
-                // todo
+                postsAdapter.setPostList(postList);
+                postsAdapter.notifyDataSetChanged();
             }
         });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -73,7 +73,8 @@ public class HomeFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 int id = layoutManager.findLastCompletelyVisibleItemPosition();
                 if(id >= postsAdapter.getItemCount()-1){
-                    //todo...
+                    homeViewModel.addNewPost(postsAdapter.getLastItemDate());
+
                 }
             }
         });

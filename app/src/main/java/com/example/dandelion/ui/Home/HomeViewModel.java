@@ -40,6 +40,63 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void loadPosts(int numberPost) {
-        //todo...
+        Query ref = mDatabase.child("user-posts").child(uid).limitToFirst(numberPost);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Post post = dataSnapshot.getValue(Post.class);
+                postList.add(post);
+                posts.setValue(postList);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    public void addNewPost(String lastUpdateDate){
+        Query ref = mDatabase.child("user-posts").child(uid).startAt(lastUpdateDate).limitToFirst(10);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (dataSnapshot.exists()) {
+                    Post post = dataSnapshot.getValue(Post.class);
+                    if (!postList.contains(post)) {
+                        postList.add(post);
+                        posts.setValue(postList);
+                    }
+                }
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

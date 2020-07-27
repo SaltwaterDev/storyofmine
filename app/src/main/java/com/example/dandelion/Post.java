@@ -1,28 +1,38 @@
 package com.example.dandelion;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class Post {
     private String pid;
     private String uid;
     private String username;
-    private String text;
+    private String journal;
     private String thought;
     private String action;
-    private String remindDate;
     private String category;
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    private String createdDateTime = dtf.format(now);
 
 
     //don't delete this or it will cause error
     public Post(){}
 
 
-    public Post(String pid, String uid, String username, String text){
+    public Post(String pid, String uid, String username, String journal){
         this.pid = pid;
         this.uid = uid;
         this.username = username;
-        this.text = text;
+        this.journal = journal;
     }
 
     public String getPid() {
@@ -49,12 +59,12 @@ public class Post {
         this.username = author_username;
     }
 
-    public String getText() {
-        return text;
+    public String getJournal() {
+        return journal;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setJournal(String journal) {
+        this.journal = journal;
     }
 
     public String getThought() {
@@ -73,12 +83,12 @@ public class Post {
         this.action = action;
     }
 
-    public String getRemindDate() {
-        return remindDate;
+    public String getCreatedDateTime() {
+        return createdDateTime;
     }
 
-    public void setRemindDate(String remindDate) {
-        this.remindDate = remindDate;
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 
     public String getCategory() {
@@ -94,8 +104,9 @@ public class Post {
        result.put("pid",pid);
        result.put("uid",uid);
        result.put("username",username);
+        result.put("createdDateTime",createdDateTime);
        //result.put("category",category);   todo...ML predict category
-       result.put("text",text);
+       result.put("journal",journal);
        return result;
     }
 
