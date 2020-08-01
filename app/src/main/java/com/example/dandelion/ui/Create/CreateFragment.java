@@ -43,7 +43,7 @@ public class CreateFragment extends Fragment {
     private CreateViewModel createViewModel;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private EditText journal, remind_day;
+    private EditText journal, remind_day, title;
     private Button submit;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,6 +52,7 @@ public class CreateFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_create, container, false);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        title = root.findViewById(R.id.editText_title);
         journal = root.findViewById(R.id.editText_journal);
         remind_day = root.findViewById(R.id.editText_remind_day);
         submit = root.findViewById(R.id.button_submit);
@@ -65,6 +66,7 @@ public class CreateFragment extends Fragment {
     }
 
     private void submitPost(){
+        final String pTitle = title.getText().toString();
         final String pEvent = journal.getText().toString();
         final int pRemind_day = Integer.parseInt(remind_day.getText().toString());
         if(pEvent.matches("")){
@@ -86,7 +88,7 @@ public class CreateFragment extends Fragment {
                                     "Error: could not fetch user.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            writeNewPost(userId, user.getUsername(), pEvent, pRemind_day);
+                            writeNewPost(userId, user.getUsername(), pTitle, pEvent, pRemind_day);
                         }
                         setEditingEnabled(true);
                         finishPosting();
@@ -98,18 +100,19 @@ public class CreateFragment extends Fragment {
                         setEditingEnabled(true);
                     }
                 });
-        getActivity().onBackPressed();
+        requireActivity().onBackPressed();
 
     }
 
     // I want to add a feature that user shall add review for their journal by attaching new post underneath
     private void setEditingEnabled(boolean enabled) {
+        title.setEnabled(enabled);
         journal.setEnabled(enabled);
         submit.setEnabled(enabled);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void writeNewPost(String uid, String username, String journal, int remindDay){
+    private void writeNewPost(String uid, String username, String title, String journal, int remindDay){
         String key = mDatabase.child("posts").push().getKey();
         Date currentDate = Calendar.getInstance().getTime();
         Calendar c = Calendar.getInstance();
@@ -117,6 +120,9 @@ public class CreateFragment extends Fragment {
         c.add(Calendar.DATE, remindDay);
         @SuppressLint("SimpleDateFormat") String remindDate = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date(c.getTimeInMillis()));
         Post post = new Post(key, uid, username, journal);
+        if (title != null)
+            Log.d("CREATEFRAGMENT", title);
+            post.setTitle(title);
         Map<String, Object> postValues = post.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         //childUpdates.put("/posts/" + category + "/" + key, postValues);   todo...
@@ -126,6 +132,7 @@ public class CreateFragment extends Fragment {
     }
 
     private void finishPosting(){
+        title.setText(null);
         journal.setText(null);
         remind_day.setText(null);
     }

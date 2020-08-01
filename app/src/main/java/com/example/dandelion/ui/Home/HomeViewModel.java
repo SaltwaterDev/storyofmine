@@ -40,7 +40,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void loadPosts(int numberPost) {
-        Query ref = mDatabase.child("user-posts").child(uid).limitToFirst(numberPost);
+        Query ref = mDatabase.child("user-posts").child(uid).orderByChild("createdDateTime").limitToFirst(numberPost);
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -73,7 +73,7 @@ public class HomeViewModel extends ViewModel {
 
 
     public void addNewPost(String lastUpdateDate){
-        Query ref = mDatabase.child("user-posts").child(uid).startAt(lastUpdateDate).limitToFirst(10);
+        Query ref = mDatabase.child("user-posts").child(uid).orderByChild("createdDateTime").startAt(lastUpdateDate).limitToFirst(10);
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

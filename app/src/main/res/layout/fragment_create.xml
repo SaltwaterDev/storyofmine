@@ -29,12 +29,22 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/editText_journal"
+            android:id="@+id/editText_title"
             android:layout_width="match_parent"
-            android:layout_height="131dp"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="start|top"
-            android:inputType="textMultiLine" />
+            android:inputType="textShortMessage"
+            android:autofillHints="Title" />
+
+        <EditText
+            android:id="@+id/editText_journal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:autofillHints="@string/things_happened" />
 
         <!--        <TextView-->
         <!--            android:id="@+id/music"-->

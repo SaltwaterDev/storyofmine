@@ -54,6 +54,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView username;
+        public TextView title;
         public TextView journal;
         private TextView date;
         public Button comment;
@@ -64,6 +65,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public RecyclerView commentRecyclerView;
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
+            title = (TextView) itemView.findViewById(R.id.textView_title);
             journal = (TextView) itemView.findViewById(R.id.textView_event);
             commentSend = (Button) itemView.findViewById(R.id.button_send);
             commentContent = (EditText) itemView.findViewById(R.id.editText_comment);
@@ -87,9 +89,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_post, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recyclerview_post, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
     }
 
     @Override
@@ -97,6 +100,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         final Post post = postList.get(position);
         //final List<Comment> commentList = new ArrayList<>(); todo
 
+        holder.title.setText(post.getTitle());
         holder.journal.setText(post.getJournal());
         holder.date.setText(post.getCreatedDate());
 
@@ -151,7 +155,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         final String key = mDatabase.child("comments").push().getKey();
         final User[] current = new User[1];
         Log.d("COMMENT", uid);
-        final String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         mDatabase.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -17,4 +17,5 @@
     <string name="remind2">DAY</string>
     <string name="date">date</string>
     <string name="journal">journal</string>
+    <string name="title">title</string>
 </resources>

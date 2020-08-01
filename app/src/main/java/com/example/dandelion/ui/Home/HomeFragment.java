@@ -55,7 +55,8 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         recyclerView = root.findViewById(R.id.recycleview_posts);
-        layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         postsAdapter = new PostsAdapter(getActivity());
         homeViewModel.loadPosts(mPosts);
@@ -67,17 +68,7 @@ public class HomeFragment extends Fragment {
                 postsAdapter.notifyDataSetChanged();
             }
         });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int id = layoutManager.findLastCompletelyVisibleItemPosition();
-                if(id >= postsAdapter.getItemCount()-1){
-                    homeViewModel.addNewPost(postsAdapter.getLastItemDate());
 
-                }
-            }
-        });
         return root;
     }
 }

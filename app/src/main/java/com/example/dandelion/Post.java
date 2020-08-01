@@ -17,6 +17,7 @@ public class Post {
     private String pid;
     private String uid;
     private String username;
+    private String title;
     private String journal;
     private String thought;
     private String action;
@@ -64,6 +65,14 @@ public class Post {
 
     public void setUsername(String author_username) {
         this.username = author_username;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getJournal() {
@@ -119,8 +128,9 @@ public class Post {
        result.put("pid",pid);
        result.put("uid",uid);
        result.put("username",username);
-        result.put("createdDateTime",createdDateTime);
+       result.put("createdDateTime",createdDateTime);
        //result.put("category",category);   todo...ML predict category
+       result.put("title",title);
        result.put("journal",journal);
        return result;
     }
