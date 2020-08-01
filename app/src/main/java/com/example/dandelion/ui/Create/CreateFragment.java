@@ -1,6 +1,7 @@
 package com.example.dandelion.ui.Create;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -32,7 +35,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class CreateFragment extends Fragment {
 
     private CreateViewModel createViewModel;
@@ -93,6 +98,8 @@ public class CreateFragment extends Fragment {
                         setEditingEnabled(true);
                     }
                 });
+        getActivity().onBackPressed();
+
     }
 
     // I want to add a feature that user shall add review for their journal by attaching new post underneath
@@ -101,6 +108,7 @@ public class CreateFragment extends Fragment {
         submit.setEnabled(enabled);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void writeNewPost(String uid, String username, String journal, int remindDay){
         String key = mDatabase.child("posts").push().getKey();
         Date currentDate = Calendar.getInstance().getTime();

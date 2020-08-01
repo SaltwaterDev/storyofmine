@@ -88,5 +88,4 @@
             android:text="@string/btn_submit" />
     </LinearLayout>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

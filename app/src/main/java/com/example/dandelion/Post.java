@@ -1,11 +1,14 @@
 package com.example.dandelion;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,9 +22,13 @@ public class Post {
     private String action;
     private String category;
 
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-    LocalDateTime now = LocalDateTime.now();
-    private String createdDateTime = dtf.format(now);
+    Date date = new Date();
+    @SuppressLint("SimpleDateFormat")
+    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    @SuppressLint("SimpleDateFormat")
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+    private String createdDateTime = dateTimeFormatter.format(date);
+    private String createdDate = dateFormatter.format(date);
 
 
     //don't delete this or it will cause error
@@ -89,6 +96,14 @@ public class Post {
 
     public void setCreatedDateTime(String createdDateTime) {
         this.createdDateTime = createdDateTime;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getCategory() {

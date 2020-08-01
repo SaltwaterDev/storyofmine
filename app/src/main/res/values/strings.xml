@@ -15,4 +15,6 @@
     <string name="comment_btn">Send</string>
     <string name="remind1">REMIND ME AFTER:</string>
     <string name="remind2">DAY</string>
+    <string name="date">date</string>
+    <string name="journal">journal</string>
 </resources>

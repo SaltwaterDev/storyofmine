@@ -55,6 +55,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView username;
         public TextView journal;
+        private TextView date;
         public Button comment;
         public Button commentSend;
         public Button editPost;
@@ -66,20 +67,21 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             journal = (TextView) itemView.findViewById(R.id.textView_event);
             commentSend = (Button) itemView.findViewById(R.id.button_send);
             commentContent = (EditText) itemView.findViewById(R.id.editText_comment);
-            commentRecyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView_comment);
-            commentGroup.setVisibility(View.GONE);
+            date = (TextView) itemView.findViewById(R.id.date);
+            //commentRecyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView_comment);
+            //commentGroup.setVisibility(View.GONE);
         }
 
-        private void resetComment(boolean enabled) {
+        /*private void resetComment(boolean enabled) {
             commentSend.setEnabled(enabled);
             commentContent.setEnabled(enabled);
             commentContent.setText(null);
-        }
+        }*/
 
-        private void fetchComment(String pid, ChildEventListener listener){
+        /*private void fetchComment(String pid, ChildEventListener listener){
             Query ref = mDatabase.child("post-comments").child(pid);
             ref.addChildEventListener(listener);
-        }
+        }*/
     }
 
     @NonNull
@@ -93,10 +95,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Post post = postList.get(position);
-        final List<Comment> commentList = new ArrayList<>();
-        holder.username.setText(post.getUsername());
+        //final List<Comment> commentList = new ArrayList<>(); todo
+
         holder.journal.setText(post.getJournal());
-        if(post.getUid().matches(uid)){
+        holder.date.setText(post.getCreatedDate());
+
+        /*if(post.getUid().matches(uid)){
             holder.editPost.setVisibility(View.VISIBLE);
         }else{
             holder.editPost.setVisibility(View.GONE);
@@ -106,9 +110,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             public void onClick(View view) {
                 //Post
             }
-        });
+        });*/ // todo...edit button
 
-        holder.comment.setOnClickListener(new View.OnClickListener() {
+        /*holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(holder.commentGroup.getVisibility() == View.GONE) {
@@ -117,7 +121,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                     holder.commentGroup.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
     }
 
     public void setPostList(List<Post> postList) {
@@ -126,7 +130,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return 0;
+        if(postList == null)
+            return 0;
+        return postList.size();
     }
 
     public String getLastItemDate(){
