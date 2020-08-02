@@ -46,6 +46,11 @@ public class CreateFragment extends Fragment {
     private EditText journal, remind_day, title;
     private Button submit;
 
+    Date date = new Date();
+    @SuppressLint("SimpleDateFormat")
+    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private String createdDateTime = dateTimeFormatter.format(date);
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         createViewModel = new ViewModelProvider(this).get(CreateViewModel.class);
@@ -88,7 +93,7 @@ public class CreateFragment extends Fragment {
                                     "Error: could not fetch user.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            writeNewPost(userId, user.getUsername(), pTitle, pEvent, pRemind_day);
+                            writeNewPost(userId, user.getUsername(), pTitle, pEvent, pRemind_day, createdDateTime);
                         }
                         setEditingEnabled(true);
                         finishPosting();
@@ -112,14 +117,14 @@ public class CreateFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void writeNewPost(String uid, String username, String title, String journal, int remindDay){
+    private void writeNewPost(String uid, String username, String title, String journal, int remindDay, String createdDateTime){
         String key = mDatabase.child("posts").push().getKey();
         Date currentDate = Calendar.getInstance().getTime();
         Calendar c = Calendar.getInstance();
         c.setTime(currentDate);
         c.add(Calendar.DATE, remindDay);
-        @SuppressLint("SimpleDateFormat") String remindDate = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date(c.getTimeInMillis()));
-        Post post = new Post(key, uid, username, journal);
+
+        Post post = new Post(key, uid, username, journal, createdDateTime);
         if (title != null)
             Log.d("CREATEFRAGMENT", title);
             post.setTitle(title);

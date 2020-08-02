@@ -53,14 +53,15 @@ public class HomeFragment extends Fragment {
         });
 
         mAuth = FirebaseAuth.getInstance();
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         recyclerView = root.findViewById(R.id.recycleview_posts);
-        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         postsAdapter = new PostsAdapter(getActivity());
-        homeViewModel.loadPosts(mPosts);
         recyclerView.setAdapter(postsAdapter);
+
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel.loadPosts(mPosts);
         homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(@Nullable List<Post> postList) {

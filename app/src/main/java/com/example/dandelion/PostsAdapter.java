@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,15 +65,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public EditText commentContent;
         public Group commentGroup;
         public RecyclerView commentRecyclerView;
+        public ConstraintLayout title_and_date;
+        public ConstraintLayout expandableLayout;
+
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.textView_title);
-            journal = (TextView) itemView.findViewById(R.id.textView_event);
-            commentSend = (Button) itemView.findViewById(R.id.button_send);
-            commentContent = (EditText) itemView.findViewById(R.id.editText_comment);
             date = (TextView) itemView.findViewById(R.id.date);
+            journal = (TextView) itemView.findViewById(R.id.textView_event);
+            commentContent = (EditText) itemView.findViewById(R.id.editText_comment);
+            commentSend = (Button) itemView.findViewById(R.id.button_send);
+            title_and_date = itemView.findViewById(R.id.title_and_date);
+            expandableLayout = itemView.findViewById(R.id.expandableLayout);
             //commentRecyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView_comment);
             //commentGroup.setVisibility(View.GONE);
+            title_and_date.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    Post post = postList.get(getAdapterPosition());
+                    post.setExpanded(!post.isExpanded());
+                    notifyItemChanged(getAdapterPosition());
+                }
+            });
         }
 
         /*private void resetComment(boolean enabled) {
@@ -102,7 +118,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
         holder.title.setText(post.getTitle());
         holder.journal.setText(post.getJournal());
-        holder.date.setText(post.getCreatedDate());
+        try {
+            holder.date.setText(post.getCreatedDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        boolean isExpanded = postList.get(position).isExpanded();
+        holder.expandableLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
         /*if(post.getUid().matches(uid)){
             holder.editPost.setVisibility(View.VISIBLE);

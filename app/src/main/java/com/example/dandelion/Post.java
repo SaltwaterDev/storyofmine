@@ -5,6 +5,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,25 +23,24 @@ public class Post {
     private String thought;
     private String action;
     private String category;
+    private String createdDateTime;     // for home fragment sorting
+    private String createdDate;
 
-    Date date = new Date();
-    @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-    private String createdDateTime = dateTimeFormatter.format(date);
-    private String createdDate = dateFormatter.format(date);
+    private boolean expanded;
+
 
 
     //don't delete this or it will cause error
     public Post(){}
 
 
-    public Post(String pid, String uid, String username, String journal){
+    public Post(String pid, String uid, String username, String journal, String createdDateTime){
         this.pid = pid;
         this.uid = uid;
         this.username = username;
         this.journal = journal;
+        this.expanded = false;
+        this.createdDateTime = createdDateTime;
     }
 
     public String getPid() {
@@ -107,8 +107,21 @@ public class Post {
         this.createdDateTime = createdDateTime;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
+    public String getCreatedDate() throws ParseException {
+
+        final String OLD_FORMAT = "dd-MM-yyyy HH:mm:ss";
+        final String NEW_FORMAT = "dd-MM-yyyy";
+
+        String oldDateString = getCreatedDateTime();
+        String newDateString;
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+        Date d = sdf.parse(oldDateString);
+        sdf.applyPattern(NEW_FORMAT);
+        assert d != null;
+        newDateString = sdf.format(d);
+
+        return newDateString;
     }
 
     public void setCreatedDate(String createdDate) {
@@ -121,6 +134,14 @@ public class Post {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 
     public Map<String, Object> toMap(){
