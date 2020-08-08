@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
+
 public class Post {
     private String pid;
     private String uid;

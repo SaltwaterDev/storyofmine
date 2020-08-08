@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
+
 public class CreateFragment extends Fragment {
 
     private CreateViewModel createViewModel;
@@ -59,7 +59,7 @@ public class CreateFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         title = root.findViewById(R.id.editText_title);
         journal = root.findViewById(R.id.editText_journal);
-        remind_day = root.findViewById(R.id.editText_remind_day);
+        //remind_day = root.findViewById(R.id.editText_remind_day);
         submit = root.findViewById(R.id.button_submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +73,7 @@ public class CreateFragment extends Fragment {
     private void submitPost(){
         final String pTitle = title.getText().toString();
         final String pEvent = journal.getText().toString();
-        final int pRemind_day = Integer.parseInt(remind_day.getText().toString());
+        //final int pRemind_day = Integer.parseInt(remind_day.getText().toString());
         if(pEvent.matches("")){
             Toast.makeText(getActivity(), "You did not complete the post.", Toast.LENGTH_SHORT).show();
             return;
@@ -93,7 +93,7 @@ public class CreateFragment extends Fragment {
                                     "Error: could not fetch user.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            writeNewPost(userId, user.getUsername(), pTitle, pEvent, pRemind_day, createdDateTime);
+                            writeNewPost(userId, user.getUsername(), pTitle, pEvent, createdDateTime);
                         }
                         setEditingEnabled(true);
                         finishPosting();
@@ -116,13 +116,13 @@ public class CreateFragment extends Fragment {
         submit.setEnabled(enabled);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void writeNewPost(String uid, String username, String title, String journal, int remindDay, String createdDateTime){
+
+    private void writeNewPost(String uid, String username, String title, String journal, String createdDateTime){
         String key = mDatabase.child("posts").push().getKey();
         Date currentDate = Calendar.getInstance().getTime();
         Calendar c = Calendar.getInstance();
         c.setTime(currentDate);
-        c.add(Calendar.DATE, remindDay);
+        //c.add(Calendar.DATE, remindDay);
 
         Post post = new Post(key, uid, username, journal, createdDateTime);
         if (title != null)

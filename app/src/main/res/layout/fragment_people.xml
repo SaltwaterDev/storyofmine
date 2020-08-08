@@ -3,6 +3,4 @@
     android:id="@+id/fragment_people"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_light">
-
-</RelativeLayout>
+    android:background="@color/background"/>

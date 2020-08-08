@@ -5,13 +5,7 @@
     android:id="@+id/home_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_red_light">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleview_posts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/recyclerview_post"/>
+    android:background="@color/background">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -23,11 +17,18 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:tooltipText="Create a post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:targetApi="o" />
+        android:background="@color/colorAccent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleview_posts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/recyclerview_post"/>
+
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
