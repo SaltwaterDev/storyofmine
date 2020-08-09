@@ -86,6 +86,7 @@ public class CreateFragment extends Fragment {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         User user = dataSnapshot.getValue(User.class);
                         if (user == null) {
                             Log.d("CREATEFRAGMENT", "User " + userId + " is unexpectedly null");
@@ -109,7 +110,8 @@ public class CreateFragment extends Fragment {
 
     }
 
-    // I want to add a feature that user shall add review for their journal by attaching new post underneath
+    // I want to add a feature that user shall add review for their journal
+    // by attaching new post underneath, rather than editing the existing post
     private void setEditingEnabled(boolean enabled) {
         title.setEnabled(enabled);
         journal.setEnabled(enabled);
@@ -139,7 +141,6 @@ public class CreateFragment extends Fragment {
     private void finishPosting(){
         title.setText(null);
         journal.setText(null);
-        remind_day.setText(null);
     }
 
 }

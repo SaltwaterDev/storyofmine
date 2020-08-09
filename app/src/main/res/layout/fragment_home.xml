@@ -5,7 +5,7 @@
     android:id="@+id/home_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="#FF9800">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -26,8 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/recyclerview_post"/>
-
-
 
 
 
