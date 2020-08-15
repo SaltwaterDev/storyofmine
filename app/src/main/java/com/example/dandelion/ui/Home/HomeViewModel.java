@@ -1,11 +1,7 @@
 package com.example.dandelion.ui.Home;
 
-import android.os.Build;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -21,7 +17,6 @@ import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class HomeViewModel extends ViewModel {
 
@@ -47,7 +42,6 @@ public class HomeViewModel extends ViewModel {
 
 
     public void loadPosts(int numberPost) {
-        final int[] i = {0};
         Query ref = mDatabase.child("user-posts").child(uid).orderByChild("createdDateTime").limitToFirst(numberPost);
         ref.addChildEventListener(new ChildEventListener() {
             @Override
@@ -57,7 +51,6 @@ public class HomeViewModel extends ViewModel {
                     postList.add(post);
                     posts.setValue(postList);
                 }
-
             }
 
             @Override

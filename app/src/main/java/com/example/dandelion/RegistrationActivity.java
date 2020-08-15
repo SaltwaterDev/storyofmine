@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,8 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -33,35 +33,52 @@ import java.util.UUID;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private Button avatar;
+    private Button avatar;      //TODO
     private Button register;
     private Uri userUri;
-    private EditText username;
+    private EditText username, email, password;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private FirebaseFirestore mFirestore;
+    private TextView txt_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mFirestore = FirebaseFirestore.getInstance();
 
         if (getSupportActionBar() != null){
             getSupportActionBar().hide();
         }
-        register = (Button) findViewById(R.id.button_register);
-        username = (EditText) findViewById(R.id.editText_username);
+        username = findViewById(R.id.editText_username);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        register = findViewById(R.id.button_register);
+        txt_login = findViewById(R.id.txt_login);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         register.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View view){
                 if(username.getText().toString().matches("")){
-                    Toast.makeText(RegistrationActivity.this, "Please input your username",
+                    Toast.makeText(RegistrationActivity.this, "Please type your username",
                             Toast.LENGTH_SHORT).show();
                 }
+                else if(email.getText().toString().matches("")){
+                    Toast.makeText(RegistrationActivity.this, "Please type your email",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else if(password.getText().toString().matches("")){
+                    Toast.makeText(RegistrationActivity.this, "Please type your password",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else if(password.getText().toString().length() < 6){
+                    Toast.makeText(RegistrationActivity.this, "Password must have at least 6 characters", Toast.LENGTH_SHORT).show();
+                }
                 else{
-                    performRegister();
+                    String str_email = email.getText().toString();
+                    String str_password = password.getText().toString();
+                    performRegister(str_email, str_password);
                 }
             }
         });
@@ -72,8 +89,8 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void performRegister() {
-        mAuth.signInAnonymously()
+    private void performRegister(String email, String password) {
+        /*mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
@@ -92,7 +109,19 @@ public class RegistrationActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                });*/   //TODO: this is an signInAnonymously
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    progressBar.setVisibility(View.VISIBLE);
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    saveUser();
+                }
+            }
+        });
+
     }
 
     private void uploadUserToFirebase(){
@@ -119,7 +148,8 @@ public class RegistrationActivity extends AppCompatActivity {
         Log.d("REGISTRATION", "save user uid: "+uid);
         Log.d("REGISTRATION", "save user username: "+username.getText().toString());
         User user = new User(uid, username.getText().toString());
-        mDatabase.child("users").child(uid).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        mFirestore.collection("users").document(uid).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
