@@ -53,7 +53,7 @@ public class LoadActivity extends AppCompatActivity {
             Log.d("LOADACTIVITY", "first time login");
             new Handler().postDelayed(new Runnable() {
                 public void run() {
-                    startActivity(new Intent(LoadActivity.this, RegistrationActivity.class));
+                    startActivity(new Intent(LoadActivity.this, FirstAccessActivity.class));
                     finish();
             }
         }, 2000);

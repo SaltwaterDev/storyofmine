@@ -109,7 +109,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                });*/   //TODO: this is an signInAnonymously
+                });*/   //TODO: this is signInAnonymously
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -154,7 +154,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     progressBar.setVisibility(View.GONE);
-                    Log.d("REGISTRATION", "user saved");
+                    Log.d("REGISTRATION",   "user saved");
                     Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
                     startActivity(intent);
                     Toast.makeText(RegistrationActivity.this, "Account Created",
@@ -162,6 +162,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     finish();
                 }else{
                     Log.d("REGISTRATION", Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage()));
+                    Toast.makeText(RegistrationActivity.this, Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage()),
+                            Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         });

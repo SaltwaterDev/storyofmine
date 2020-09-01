@@ -34,9 +34,9 @@
 
     <fragment
         android:id="@+id/navigation_self"
-        android:name="com.example.dandelion.ui.SelfFragment"
-        android:label="@string/self"
-        tools:layout="@layout/fragment_self" />
+        android:name="com.example.dandelion.ui.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/createFragment"

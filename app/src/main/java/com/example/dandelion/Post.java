@@ -34,10 +34,9 @@ public class Post {
     public Post(){}
 
 
-    public Post(String pid, String uid, String username, String journal, String createdDateTime){
-        this.pid = pid;
+    public Post(String uid, String journal, String createdDateTime){
+        //this.pid = pid;
         this.uid = uid;
-        this.username = username;
         this.journal = journal;
         this.expanded = false;
         this.createdDateTime = createdDateTime;
@@ -157,10 +156,5 @@ public class Post {
     }
 
 
-    public boolean equals(Object obj) {
-        Post post = (Post) obj;
-        assert post != null;
-        return pid.matches(post.getPid());
-    }
 
 }
