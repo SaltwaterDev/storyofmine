@@ -1,4 +1,4 @@
-package com.example.dandelion;
+package com.example.dandelion.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.dandelion.R;
+import com.example.dandelion.instance.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

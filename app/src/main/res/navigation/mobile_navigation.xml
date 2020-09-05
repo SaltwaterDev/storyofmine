@@ -21,10 +21,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_people"
-        android:name="com.example.dandelion.ui.PeopleFragment"
-        android:label="@string/people"
-        tools:layout="@layout/fragment_people" />
+        android:id="@+id/navigation_explore"
+        android:name="com.example.dandelion.ui.Explore.ExploreFragment"
+        android:label="@string/explore"
+        tools:layout="@layout/fragment_explore" />
 
     <fragment
         android:id="@+id/navigation_tutorial"
@@ -33,8 +33,8 @@
         tools:layout="@layout/fragment_tutorial"/>
 
     <fragment
-        android:id="@+id/navigation_self"
-        android:name="com.example.dandelion.ui.ProfileFragment"
+        android:id="@+id/navigation_profile"
+        android:name="com.example.dandelion.ui.profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
 

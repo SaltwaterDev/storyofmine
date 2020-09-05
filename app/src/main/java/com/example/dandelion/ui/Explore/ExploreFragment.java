@@ -1,5 +1,4 @@
-package com.example.dandelion.ui.Home;
-
+package com.example.dandelion.ui.Explore;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -13,60 +12,44 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dandelion.R;
 import com.example.dandelion.instance.Post;
 import com.example.dandelion.ui.PostsAdapter;
-import com.example.dandelion.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-import static androidx.navigation.fragment.NavHostFragment.findNavController;
-
-public class HomeFragment extends Fragment {
-
-    private HomeViewModel homeViewModel;
+public class ExploreFragment extends Fragment {
+    private ExploreViewModel exploreViewModel;
     private FirebaseAuth mAuth;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private PostsAdapter postsAdapter;
+    private ExplorePostsAdapter explorepostsAdapter;
     private int mPosts = 10;
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
-
-        final NavController navController = findNavController(this);
-
-        FloatingActionButton fab = root.findViewById(R.id.fab);
-        fab.setTooltipText("Create a post");
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                navController.navigate(R.id.action_navigation_home_to_createFragment);
-            }
-        });
-
+        View root = inflater.inflate(R.layout.fragment_explore, container, false);
         mAuth = FirebaseAuth.getInstance();
         recyclerView = root.findViewById(R.id.recycleview_posts);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        postsAdapter = new PostsAdapter(getActivity());
-        recyclerView.setAdapter(postsAdapter);
+        explorepostsAdapter = new ExplorePostsAdapter(getActivity());
+        recyclerView.setAdapter(explorepostsAdapter);
 
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        homeViewModel.loadPosts(mPosts);
-        homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+        exploreViewModel = new ViewModelProvider(this).get(ExploreViewModel.class);
+        exploreViewModel.loadPosts(mPosts);
+        exploreViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(@Nullable List<Post> postList) {
-                postsAdapter.setPostList(postList);
-                postsAdapter.notifyDataSetChanged();
+                explorepostsAdapter.setPostList(postList);
+                explorepostsAdapter.notifyDataSetChanged();
             }
         });
 

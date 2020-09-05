@@ -1,4 +1,4 @@
-package com.example.dandelion;
+package com.example.dandelion.instance;
 
 import java.util.HashMap;
 import java.util.Map;

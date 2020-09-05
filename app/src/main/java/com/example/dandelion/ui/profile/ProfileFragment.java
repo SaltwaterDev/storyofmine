@@ -1,4 +1,4 @@
-package com.example.dandelion.ui;
+package com.example.dandelion.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.dandelion.EditProfileActivity;
 import com.example.dandelion.R;
-import com.example.dandelion.User;
+import com.example.dandelion.instance.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;

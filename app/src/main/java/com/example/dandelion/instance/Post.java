@@ -1,4 +1,4 @@
-package com.example.dandelion;
+package com.example.dandelion.instance;
 
 import android.annotation.SuppressLint;
 import android.os.Build;

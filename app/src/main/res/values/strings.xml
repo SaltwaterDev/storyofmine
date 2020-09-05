@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">dandelion</string>
     <string name="home">home</string>
-    <string name="people">people</string>
+    <string name="explore">explore</string>
     <string name="profile">profile</string>
     <string name="username">username</string>
     <string name="action_sign_in_short">sign in</string>

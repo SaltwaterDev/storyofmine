@@ -7,9 +7,9 @@
         android:title="@string/home" />
 
     <item
-        android:id="@+id/navigation_people"
+        android:id="@+id/navigation_explore"
         android:icon="@drawable/ic_baseline_people_24"
-        android:title="@string/people" />
+        android:title="@string/explore" />
 
     <item
         android:id="@+id/navigation_tutorial"
@@ -17,7 +17,7 @@
         android:title="@string/tutorial" />
 
     <item
-        android:id="@+id/navigation_self"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_baseline_person_24"
         android:title="@string/profile" />
     </menu>

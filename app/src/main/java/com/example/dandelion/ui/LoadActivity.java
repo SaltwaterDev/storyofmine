@@ -1,4 +1,4 @@
-package com.example.dandelion;
+package com.example.dandelion.ui;
 
 import android.content.Intent;
 import android.os.Build;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.dandelion.R;
+import com.example.dandelion.instance.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
