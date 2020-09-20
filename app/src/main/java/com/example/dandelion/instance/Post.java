@@ -20,12 +20,12 @@ public class Post {
     private String username;
     private String title;
     private String journal;
-    private String thought;
-    private String action;
+    //private String thought;
+    //private String action;
     private String category;
     private String createdDateTime;     // for home fragment sorting
     private String createdDate;
-
+    private Integer likes;
     private boolean expanded;
 
 
@@ -82,6 +82,7 @@ public class Post {
         this.journal = journal;
     }
 
+/*
     public String getThought() {
         return thought;
     }
@@ -96,10 +97,18 @@ public class Post {
 
     public void setAction(String action) {
         this.action = action;
-    }
+    }*/
 
     public String getCreatedDateTime() {
         return createdDateTime;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
     }
 
     public void setCreatedDateTime(String createdDateTime) {

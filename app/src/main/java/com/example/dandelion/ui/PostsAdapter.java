@@ -50,7 +50,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     private List<Post> postList;
     Context context;
     private String uid;
-    private FirebaseFirestore mFirestore;
+    protected FirebaseFirestore mFirestore;
 
 
     public PostsAdapter(Context context) {
@@ -189,7 +189,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                     System.err.println("Listen failed: " + error);
                     return;
                 }
-
                 if (value != null && value.exists()) {
                     User user = value.toObject(User.class);
                     assert user != null;

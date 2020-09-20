@@ -1,6 +1,7 @@
 package com.example.dandelion.ui.Home;
 
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dandelion.instance.Post;
+import com.example.dandelion.ui.Create.PostActivity;
 import com.example.dandelion.ui.PostsAdapter;
 import com.example.dandelion.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,6 +38,8 @@ public class HomeFragment extends Fragment {
     private PostsAdapter postsAdapter;
     private int mPosts = 10;
 
+    public static final int REQUEST_CODE_ADD_POST = 1;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,7 +52,8 @@ public class HomeFragment extends Fragment {
 
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                navController.navigate(R.id.action_navigation_home_to_createFragment);
+                startActivityForResult(
+                        new Intent(getContext(), PostActivity.class), REQUEST_CODE_ADD_POST);
             }
         });
 

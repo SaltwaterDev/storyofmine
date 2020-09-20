@@ -63,6 +63,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
                     android:textStyle="bold"
+                    android:textSize="@dimen/_12ssp"
                     android:text="(author)" />
 
             </LinearLayout>
@@ -88,6 +89,7 @@
             android:text="@string/journal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:textSize="@dimen/_12ssp"
             tools:ignore="MissingConstraints" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -127,5 +129,6 @@
             app:layout_constraintTop_toBottomOf="@+id/recyclerView_comment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
