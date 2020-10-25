@@ -1,6 +1,7 @@
 package com.example.dandelion.ui;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public RecyclerView commentRecyclerView;
         public ConstraintLayout title_and_date;
         public ConstraintLayout expandableLayout;
+        private RoundedImageView imageNote;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -84,6 +87,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             commentContent = (EditText) itemView.findViewById(R.id.editText_comment);
             commentSend = (Button) itemView.findViewById(R.id.button_send);
             title_and_date = itemView.findViewById(R.id.title_and_date);
+            imageNote = itemView.findViewById(R.id.imageNote);
             expandableLayout = itemView.findViewById(R.id.expandableLayout);
             //commentRecyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView_comment);
             //commentGroup.setVisibility(View.GONE);
@@ -125,6 +129,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         //final List<Comment> commentList = new ArrayList<>(); todo
 
         holder.title.setText(post.getTitle());
+
+        if(post.getImagePath() != null){
+            holder.imageNote.setImageBitmap(BitmapFactory.decodeFile(post.getImagePath()));
+            holder.imageNote.setVisibility(View.VISIBLE);
+        }else{
+            holder.imageNote.setVisibility(View.GONE);
+        }
+
         holder.journal.setText(post.getJournal());
         try {
             holder.date.setText(post.getCreatedDate());

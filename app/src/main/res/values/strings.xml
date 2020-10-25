@@ -18,4 +18,5 @@
     <string name="date">date</string>
     <string name="journal">journal</string>
     <string name="title">title</string>
+    <string name="add_image">Add Image</string>
 </resources>

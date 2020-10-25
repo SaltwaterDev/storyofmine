@@ -19,6 +19,7 @@ public class Post {
     private String uid;
     private String username;
     private String title;
+    private String imagePath;
     private String journal;
     //private String thought;
     //private String action;
@@ -132,6 +133,14 @@ public class Post {
         return newDateString;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
@@ -158,6 +167,7 @@ public class Post {
        result.put("uid",uid);
        result.put("username",username);
        result.put("createdDateTime",createdDateTime);
+       result.put("imagePath",imagePath);
        //result.put("category",category);   todo...ML predict category
        result.put("title",title);
        result.put("journal",journal);

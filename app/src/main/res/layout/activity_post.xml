@@ -1,48 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.Create.PostActivity">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/_10sdp"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/_10sdp"
-        app:layout_constraintTop_toTopOf="parent">
-        
+        android:paddingTop="@dimen/_47sdp"
+        android:paddingBottom="@dimen/_30sdp"
+        android:isScrollContainer="true">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_200sdp"
             android:animateLayoutChanges="true">
 
-            <TextView
-                android:id="@+id/cancel_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginLeft="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:layout_marginRight="@dimen/_12sdp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:text="Cancel"
-                android:textSize="@dimen/_12ssp" />
-
-            <TextView
-                android:id="@+id/post_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_12sdp"
-                app:layout_constraintBottom_toBottomOf="@id/cancel_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/cancel_button"
-                android:text="Post"
-                android:textSize="@dimen/_12ssp"/>
 
             <EditText
                 android:id="@+id/inputPostTitle"
@@ -53,6 +31,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:background="@null"
+                android:fontFamily="@font/ubuntu_bold"
                 android:hint="Title"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="no"
@@ -60,9 +39,19 @@
                 android:inputType="text"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_16ssp"
-                android:fontFamily="@font/ubuntu_bold"
-                app:layout_constraintTop_toBottomOf="@id/cancel_button"/>
+                tools:ignore="MissingConstraints" />
 
+            <ImageView
+                android:id="@+id/imageNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/inputPostTitle" />
 
             <EditText
                 android:id="@+id/inputPostContext"
@@ -74,6 +63,8 @@
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:layout_marginBottom="@dimen/_15sdp"
                 android:background="@null"
+                android:fontFamily="@font/ubuntu_regular"
+                android:gravity="top"
                 android:hint="Write your story here"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
@@ -81,13 +72,16 @@
                 android:minHeight="@dimen/_100sdp"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13ssp"
-                android:fontFamily="@font/ubuntu_regular"
-                android:gravity="top"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/inputPostTitle" />
+                app:layout_constraintTop_toBottomOf="@id/imageNote" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
+    <include
+        layout="@layout/post_toolbar"
+        android:id="@+id/post_toolbar"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/post_miscellaneous"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
