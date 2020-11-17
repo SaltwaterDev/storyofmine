@@ -34,7 +34,6 @@ public class Post {
     //don't delete this or it will cause error
     public Post(){}
 
-
     public Post(String uid, String journal, String createdDateTime){
         //this.pid = pid;
         this.uid = uid;
@@ -173,7 +172,5 @@ public class Post {
        result.put("journal",journal);
        return result;
     }
-
-
 
 }

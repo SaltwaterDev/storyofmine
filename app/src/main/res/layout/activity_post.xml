@@ -22,6 +22,19 @@
             android:animateLayoutChanges="true">
 
 
+            <ImageView
+                android:id="@+id/imagePost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <EditText
                 android:id="@+id/inputPostTitle"
                 android:layout_width="match_parent"
@@ -39,19 +52,8 @@
                 android:inputType="text"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_16ssp"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@id/imagePost"/>
 
-            <ImageView
-                android:id="@+id/imageNote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/app_name"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/inputPostTitle" />
 
             <EditText
                 android:id="@+id/inputPostContext"
@@ -73,7 +75,7 @@
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13ssp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageNote" />
+                app:layout_constraintTop_toBottomOf="@id/inputPostTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

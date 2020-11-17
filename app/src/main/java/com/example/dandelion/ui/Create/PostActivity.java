@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -25,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,15 +37,22 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.dandelion.R;
 import com.example.dandelion.instance.Post;
 import com.example.dandelion.instance.User;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageActivity;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -50,6 +60,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -59,9 +70,11 @@ public class PostActivity extends AppCompatActivity {
     private CreateViewModel createViewModel;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
-    private EditText journal, remind_day, title;
-    private ImageView imageNote;
-    private Toolbar post_toolbar;
+    private StorageReference storageReference;
+
+    private EditText journal, title;
+    private ImageView imagePost;
+    StorageTask uploadTask;
 
     Date date = new Date();
     @SuppressLint("SimpleDateFormat")
@@ -69,9 +82,9 @@ public class PostActivity extends AppCompatActivity {
     private String createdDateTime = dateTimeFormatter.format(date);
 
     private String setSelectedImagePath;
+    Uri selectedImageUri;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
-    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
 
     @Override
@@ -79,25 +92,27 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        // init database storing
         createViewModel = new ViewModelProvider(this).get(CreateViewModel.class);
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference("posts");
 
-        post_toolbar = findViewById(R.id.post_toolbar);
+        // init toolbar
+        Toolbar post_toolbar = findViewById(R.id.post_toolbar);
         if (post_toolbar != null) {
             setSupportActionBar(post_toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-
-
         title = findViewById(R.id.inputPostTitle);
         journal = findViewById(R.id.inputPostContext);
-        imageNote = findViewById(R.id.imageNote);
+        imagePost = findViewById(R.id.imagePost);
 
         setSelectedImagePath="";
         initMiscellaneous();
+
 
     }
 
@@ -120,37 +135,81 @@ public class PostActivity extends AppCompatActivity {
 
     private void submitPost(){
         final String pTitle = title.getText().toString();
-        final String pEvent = journal.getText().toString();
-        if(pEvent.matches("")){
+        final String pJournal = journal.getText().toString();
+        if(pJournal.matches("")){
             Toast.makeText(getApplicationContext(), "You did not complete the post.", Toast.LENGTH_SHORT).show();
             return;
         }
         setEditingEnabled(false);
         Toast.makeText(getApplicationContext(), "Posting...", Toast.LENGTH_SHORT).show();
+
+
+        // Upload post
         final String uid = mAuth.getUid();
         assert uid != null;
-        DocumentReference docRef = mFirestore.collection("users").document(uid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        User user = document.toObject(User.class);
-                        saveNewPost(uid, user.getUsername(), pTitle, pEvent, createdDateTime);
-                        setEditingEnabled(true);
-                        finishPosting();
-                        onBackPressed();
 
-                    } else {
-                        Log.d(TAG, "No such document");
+        //upload image
+        if (selectedImageUri != null){
+            final StorageReference fileReference = storageReference.child(System.currentTimeMillis()
+                    +"." + getFileExtension(selectedImageUri));
+
+            uploadTask = fileReference.putFile(selectedImageUri);
+            uploadTask.continueWithTask(new Continuation() {
+                @Override
+                public Object then(@NonNull Task task) throws Exception {
+                    if (!task.isSuccessful()){
+                        throw task.getException();
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+
+                    return fileReference.getDownloadUrl();
                 }
-            }
-        });
+            }).addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if(task.isSuccessful()){
+                        Uri downloadUri = (Uri) task.getResult();
+                        assert downloadUri != null;
+                        setSelectedImagePath = downloadUri.toString();
+                        Toast.makeText(PostActivity.this, "pathhhh: "+ setSelectedImagePath, Toast.LENGTH_SHORT).show();
+
+                        //upload rest of the content
+                        DocumentReference docRef = mFirestore.collection("users").document(uid);
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                        User user = document.toObject(User.class);
+
+                                        saveNewPost(uid, user.getUsername(), pTitle, setSelectedImagePath, pJournal, createdDateTime);
+                                        setEditingEnabled(true);
+                                        finishPosting();
+                                        finish();
+
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+
+                    }else{
+                        Toast.makeText(PostActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            Toast.makeText(this, "No Image Selected!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -159,57 +218,6 @@ public class PostActivity extends AppCompatActivity {
     private void setEditingEnabled(boolean enabled) {
         title.setEnabled(enabled);
         journal.setEnabled(enabled);
-    }
-
-
-    private void saveNewPost(String uid, String username, String title, String journal, String createdDateTime){
-        //String key = mDatabase.child("posts").push().getKey();
-        Date currentDate = Calendar.getInstance().getTime();
-        Calendar c = Calendar.getInstance();
-        c.setTime(currentDate);
-        //c.add(Calendar.DATE, remindDay);
-
-        Post post = new Post(uid, journal, createdDateTime);
-        if (title != null)
-            Log.d("CREATEFRAGMENT", title);
-        post.setTitle(title);
-        post.setImagePath(setSelectedImagePath);
-
-        Map<String, Object> postValues = post.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-        //childUpdates.put("/posts/" + category + "/" + key, postValues);   todo...
-        mFirestore.collection("posts").add(post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                        setEditingEnabled(true);
-                    }
-                });
-
-        mFirestore.collection("users").document(uid).collection("user-posts").add(post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                        setEditingEnabled(true);
-                    }
-                });
-    }
-
-    private void finishPosting(){
-        title.setText(null);
-        journal.setText(null);
     }
 
     private void initMiscellaneous(){
@@ -247,14 +255,6 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
-    private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if(intent.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
-        }
-    }
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -267,29 +267,100 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void selectImage() {
+        CropImage.activity()
+                .start(PostActivity.this);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK){
-            if (data != null){
-                Uri selectedImageUri = data.getData();
-                if(selectedImageUri != null){
-                    try{
-                        InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        imageNote.setImageBitmap(bitmap);
-                        imageNote.setVisibility(View.VISIBLE);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
-                        setSelectedImagePath = getPathFromUri(selectedImageUri);
-                        Log.d("onActivityResult", setSelectedImagePath);
-                    }catch (Exception exception){
-                        Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+            assert result != null;
+            selectedImageUri = result.getUri();
+            if(selectedImageUri != null){
+                try{
+                    imagePost.setImageURI(selectedImageUri);
+                    imagePost.setVisibility(View.VISIBLE);
+                }catch (Exception exception){
+                    Log.d("onActivityResult", Objects.requireNonNull(exception.getMessage()));
+                    Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                    finish();
                 }
-            }
+            }else
+                Toast.makeText(this, "can't display image because selectedImage is null", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void uploadImage(){
+
+    }
+
+    private void saveNewPost(String uid, String username, String title, String ImagePath, String journal, String createdDateTime){
+        //String key = mDatabase.child("posts").push().getKey();
+        Date currentDate = Calendar.getInstance().getTime();
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+        //c.add(Calendar.DATE, remindDay);
+
+        Post post = new Post(uid, journal, createdDateTime);
+        if (title != null) {
+            Log.d("CREATEFRAGMENT", title);
+            post.setTitle(title);
+        }
+        if (ImagePath != null){
+            Log.d("CREATEFRAGMENT", ImagePath);
+            post.setImagePath(ImagePath);
+        }
+
+        //Map<String, Object> postValues = post.toMap();
+        //Map<String, Object> childUpdates = new HashMap<>();
+
+        //childUpdates.put("/posts/" + category + "/" + key, postValues);   todo...
+        mFirestore.collection("posts").add(post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                        setEditingEnabled(true);
+                    }
+                });
+
+        mFirestore.collection("users").document(uid).collection("user-posts")
+                .add(post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+                setEditingEnabled(true);
+            }
+        });
+    }
+
+    private void finishPosting(){
+        title.setText(null);
+        journal.setText(null);
+    }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String getPathFromUri(Uri contentUri){
