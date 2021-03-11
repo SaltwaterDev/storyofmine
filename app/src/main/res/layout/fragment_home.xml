@@ -28,7 +28,6 @@
         android:textSize="25sp"/>
 
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleview_posts"
             android:layout_width="match_parent"
@@ -57,7 +56,7 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/colorAccent"/>
+        android:background="@drawable/create_post"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

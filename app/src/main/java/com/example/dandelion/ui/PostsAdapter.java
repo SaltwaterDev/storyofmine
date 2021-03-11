@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dandelion.R;
 import com.example.dandelion.instance.Post;
 import com.example.dandelion.instance.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +33,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -68,14 +66,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public TextView title;
         public TextView journal;
         private TextView date;
-        public Button comment;
-        public Button commentSend;
-        public Button editPost;
-        public EditText commentContent;
-        public Group commentGroup;
-        public RecyclerView commentRecyclerView;
-        public ConstraintLayout title_and_date;
-        private RoundedImageView imageNote;
+        private ImageView imageNote;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -83,32 +74,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             date = (TextView) itemView.findViewById(R.id.date);
             username = (TextView) itemView.findViewById(R.id.username);
             journal = (TextView) itemView.findViewById(R.id.textView_journal);
-            title_and_date = itemView.findViewById(R.id.title_and_date);
             imageNote = itemView.findViewById(R.id.imageNote);
-            //commentRecyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView_comment);
-            //commentGroup.setVisibility(View.GONE);
-            title_and_date.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    Post post = postList.get(getAdapterPosition());
-                    post.setExpanded(!post.isExpanded());
-                    notifyItemChanged(getAdapterPosition());
-                }
-            });
+
 
             Log.d("PostsAdapter", "go in posts adapter");
         }
-
-        /*private void resetComment(boolean enabled) {
-            commentSend.setEnabled(enabled);
-            commentContent.setEnabled(enabled);
-            commentContent.setText(null);
-        }*/
-
-        /*private void fetchComment(String pid, ChildEventListener listener){
-            Query ref = mDatabase.child("post-comments").child(pid);
-            ref.addChildEventListener(listener);
-        }*/
     }
 
     @NonNull
@@ -140,36 +110,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             e.printStackTrace();
         }
 
-
         setAuthor(post, holder);
         if(!post.getUid().matches(uid)){
             holder.username.setVisibility(View.VISIBLE);
         }else{
             holder.username.setVisibility(View.GONE);
         }
-
-        /*if(post.getUid().matches(uid)){
-            holder.editPost.setVisibility(View.VISIBLE);
-        }else{
-            holder.editPost.setVisibility(View.GONE);
-        }
-        holder.editPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Post
-            }
-        });*/ // todo...edit button
-
-        /*holder.comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(holder.commentGroup.getVisibility() == View.GONE) {
-                    holder.commentGroup.setVisibility(View.VISIBLE);
-                }else {
-                    holder.commentGroup.setVisibility(View.GONE);
-                }
-            }
-        });*/
     }
 
     public void setPostList(List<Post> postList) {
