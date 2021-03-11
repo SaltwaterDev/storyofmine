@@ -75,7 +75,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public Group commentGroup;
         public RecyclerView commentRecyclerView;
         public ConstraintLayout title_and_date;
-        public ConstraintLayout expandableLayout;
         private RoundedImageView imageNote;
 
         public ViewHolder(@NonNull final View itemView) {
@@ -83,12 +82,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             title = (TextView) itemView.findViewById(R.id.textView_title);
             date = (TextView) itemView.findViewById(R.id.date);
             username = (TextView) itemView.findViewById(R.id.username);
-            journal = (TextView) itemView.findViewById(R.id.textView_event);
-            commentContent = (EditText) itemView.findViewById(R.id.editText_comment);
-            commentSend = (Button) itemView.findViewById(R.id.button_send);
+            journal = (TextView) itemView.findViewById(R.id.textView_journal);
             title_and_date = itemView.findViewById(R.id.title_and_date);
             imageNote = itemView.findViewById(R.id.imageNote);
-            expandableLayout = itemView.findViewById(R.id.expandableLayout);
             //commentRecyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView_comment);
             //commentGroup.setVisibility(View.GONE);
             title_and_date.setOnClickListener(new View.OnClickListener(){
@@ -144,8 +140,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             e.printStackTrace();
         }
 
-        boolean isExpanded = postList.get(position).isExpanded();
-        holder.expandableLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
         setAuthor(post, holder);
         if(!post.getUid().matches(uid)){

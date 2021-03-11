@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    app:cardCornerRadius="4dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -58,40 +57,28 @@
             app:riv_corner_radius_top_right="@dimen/_10sdp"
             app:layout_constraintTop_toBottomOf="@id/textView_title"/>
 
-            <LinearLayout
-                android:id="@+id/author"
+        <LinearLayout
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/imageNote"
+            app:layout_constraintBottom_toTopOf="@id/textView_journal">
+
+            <TextView
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/imageNote"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12ssp"
+                android:text="(author)" />
 
-                <TextView
-                    android:id="@+id/username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/_12ssp"
-                    android:text="(author)" />
-
-            </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/expandableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_and_date"
-        tools:layout_editor_absoluteX="8dp">
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textView_event"
+            android:id="@+id/textView_journal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -99,44 +86,22 @@
             android:text="@string/journal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:textSize="@dimen/_12ssp"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toBottomOf="@+id/author"
+            android:textSize="@dimen/_12ssp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/editText_comment"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_event"
+            app:layout_constraintTop_toBottomOf="@+id/textView_journal"
             app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/editText_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginBottom="4dp"
-            android:ems="10"
-            android:inputType="textLongMessage"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/button_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="#00FFFFFF"
-            android:text="@string/comment_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.588"
-            app:layout_constraintStart_toEndOf="@+id/editText_comment"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView_comment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
