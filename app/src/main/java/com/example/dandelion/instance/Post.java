@@ -34,9 +34,10 @@ public class Post {
     //don't delete this or it will cause error
     public Post(){}
 
-    public Post(String uid, String journal, String createdDateTime){
+    public Post(String uid, String username, String journal, String createdDateTime){
         //this.pid = pid;
         this.uid = uid;
+        this.username = username;
         this.journal = journal;
         this.expanded = false;
         this.createdDateTime = createdDateTime;

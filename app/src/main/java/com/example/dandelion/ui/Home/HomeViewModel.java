@@ -49,6 +49,7 @@ public class HomeViewModel extends ViewModel {
 
 
     public void loadPosts(int numberPost) {
+        // todo: switch query location
         Query docRef = mFirestore.collection("users").document(uid).collection("user-posts").orderBy("createdDateTime", Direction.DESCENDING).limit(numberPost);
         docRef.get()
         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -120,7 +120,7 @@ public class CreateFragment extends Fragment {
         c.setTime(currentDate);
         //c.add(Calendar.DATE, remindDay);
 
-        Post post = new Post(uid, journal, createdDateTime);
+        Post post = new Post(uid, username, journal, createdDateTime);
         if (title != null)
             Log.d("CREATEFRAGMENT", title);
             post.setTitle(title);

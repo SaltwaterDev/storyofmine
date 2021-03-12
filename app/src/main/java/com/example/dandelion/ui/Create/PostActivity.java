@@ -3,7 +3,6 @@ package com.example.dandelion.ui.Create;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,17 +10,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +39,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,14 +46,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageActivity;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
@@ -170,7 +160,7 @@ public class PostActivity extends AppCompatActivity {
                         Uri downloadUri = (Uri) task.getResult();
                         assert downloadUri != null;
                         setSelectedImagePath = downloadUri.toString();
-                        Toast.makeText(PostActivity.this, "pathhhh: "+ setSelectedImagePath, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostActivity.this, "setSelectedImagePath: "+ setSelectedImagePath, Toast.LENGTH_SHORT).show();
 
                         //upload rest of the content
                         DocumentReference docRef = mFirestore.collection("users").document(uid);
@@ -301,18 +291,14 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadImage(){
-
-    }
 
     private void saveNewPost(String uid, String username, String title, String ImagePath, String journal, String createdDateTime){
         //String key = mDatabase.child("posts").push().getKey();
         Date currentDate = Calendar.getInstance().getTime();
         Calendar c = Calendar.getInstance();
         c.setTime(currentDate);
-        //c.add(Calendar.DATE, remindDay);
 
-        Post post = new Post(uid, journal, createdDateTime);
+        Post post = new Post(uid, username, journal, createdDateTime);
         if (title != null) {
             Log.d("CREATEFRAGMENT", title);
             post.setTitle(title);
@@ -340,19 +326,6 @@ public class PostActivity extends AppCompatActivity {
                     }
                 });
 
-        mFirestore.collection("users").document(uid).collection("user-posts")
-                .add(post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
-                setEditingEnabled(true);
-            }
-        });
     }
 
     private void finishPosting(){

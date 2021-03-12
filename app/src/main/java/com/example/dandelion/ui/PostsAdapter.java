@@ -33,6 +33,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public TextView title;
         public TextView journal;
         private TextView date;
-        private ImageView imageNote;
+        private ImageView imageCover;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -74,7 +75,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             date = (TextView) itemView.findViewById(R.id.date);
             username = (TextView) itemView.findViewById(R.id.username);
             journal = (TextView) itemView.findViewById(R.id.textView_journal);
-            imageNote = itemView.findViewById(R.id.imageNote);
+            imageCover = itemView.findViewById(R.id.imageCover);
 
 
             Log.d("PostsAdapter", "go in posts adapter");
@@ -92,17 +93,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Post post = postList.get(position);
-        //final List<Comment> commentList = new ArrayList<>(); todo
 
         holder.title.setText(post.getTitle());
 
-        if(post.getImagePath() != null){
-            holder.imageNote.setImageBitmap(BitmapFactory.decodeFile(post.getImagePath()));
-            holder.imageNote.setVisibility(View.VISIBLE);
-        }else{
-            holder.imageNote.setVisibility(View.GONE);
+        // display image
+        String image_path = post.getImagePath();
+        try{
+            Picasso.get().load(image_path).into(holder.imageCover);
+            holder.imageCover.setVisibility(View.VISIBLE);
+        }catch (Exception e){
+            holder.imageCover.setVisibility(View.GONE);
         }
 
+        // display journal text
         holder.journal.setText(post.getJournal());
         try {
             holder.date.setText(post.getCreatedDate());
@@ -110,10 +113,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             e.printStackTrace();
         }
 
+        //display author
         setAuthor(post, holder);
         if(!post.getUid().matches(uid)){
+            // posts belonged to the public
             holder.username.setVisibility(View.VISIBLE);
         }else{
+            // posts belonged the user
             holder.username.setVisibility(View.GONE);
         }
     }
