@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ui.FirstAccessActivity">
+    tools:context=".ui.Access.FirstAccessActivity">
 
     <Button
         android:layout_width="match_parent"

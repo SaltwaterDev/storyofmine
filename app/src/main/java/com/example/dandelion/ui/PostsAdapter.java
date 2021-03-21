@@ -1,8 +1,10 @@
 package com.example.dandelion.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,6 +66,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        public CardView card;
         public TextView username;
         public TextView title;
         public TextView journal;
@@ -71,6 +75,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
+            card = itemView.findViewById(R.id.card_view);
             title = (TextView) itemView.findViewById(R.id.textView_title);
             date = (TextView) itemView.findViewById(R.id.date);
             username = (TextView) itemView.findViewById(R.id.username);
@@ -107,11 +112,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
         // display journal text
         holder.journal.setText(post.getJournal());
-        try {
-            holder.date.setText(post.getCreatedDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        holder.date.setText(post.getCreatedDate());
 
         //display author
         setAuthor(post, holder);
@@ -122,6 +123,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             // posts belonged the user
             holder.username.setVisibility(View.GONE);
         }
+
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("postId", post.getPid());
+                context.startActivity(intent);
+            }
+        });
     }
 
     public void setPostList(List<Post> postList) {

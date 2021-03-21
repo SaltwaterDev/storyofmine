@@ -1,23 +1,42 @@
 package com.example.dandelion.instance;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class Comment {
-    public String cid;
-    public String author_uid;
-    public String author_username;
-    public String content;
-    public String timestamp;
+    private String cid;
+    private String author_uid;
+    private String author_username;
+    private String content;
+    private String timestamp;
+    private float score;
 
-    public Comment(){}
+    public Comment(){
+        this.timestamp = (String) LocalDateTime.now().toString();
+    }
 
-    public Comment(String cid, String author_uid, String author_username, String avatar_url, String content, String timestamp) {
-        this.cid = cid;
+    public Comment(String author_uid, String author_username, String content) {
         this.author_uid = author_uid;
         this.author_username = author_username;
         this.content = content;
-        this.timestamp = timestamp;
+        this.timestamp = (String) LocalDateTime.now().toString();
+    }
+
+
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
     }
 
     public String getCid() {
@@ -60,13 +79,13 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
-    public Map<String, Object> toMap(){
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("cid", cid);
-        result.put("author_uid", author_uid);
-        result.put("author_username", author_username);
-        result.put("content", content);
-        result.put("timestamp", timestamp);
+        public Map<String, Object> toMap(){
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("cid", cid);
+            result.put("author_uid", author_uid);
+            result.put("author_username", author_username);
+            result.put("content", content);
+            result.put("timestamp", timestamp);
         return result;
     }
 }

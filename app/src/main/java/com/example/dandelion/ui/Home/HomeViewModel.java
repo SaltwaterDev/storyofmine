@@ -60,6 +60,8 @@ public class HomeViewModel extends ViewModel {
                             for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 Post post = document.toObject(Post.class);
+                                // add pid for post object
+                                post.setPid(document.getId());
                                 if (!postList.contains(post)) {
                                     postList.add(post);
                                     posts.setValue(postList);

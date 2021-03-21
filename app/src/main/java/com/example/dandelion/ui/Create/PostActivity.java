@@ -46,6 +46,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -168,7 +169,11 @@ public class PostActivity extends AppCompatActivity {
                                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                         User user = document.toObject(User.class);
 
-                                        saveNewPost(uid, user.getUsername(), pTitle, setSelectedImagePath, pJournal, localDateTime);
+                                        try {
+                                            saveNewPost(uid, user.getUsername(), pTitle, setSelectedImagePath, pJournal, localDateTime);
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
                                         setEditingEnabled(true);
                                         finishPosting();
                                         finish();
@@ -218,11 +223,11 @@ public class PostActivity extends AppCompatActivity {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             }
-        });
+            });
 
         layoutMiscellaneous.findViewById(R.id.layoutAddImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 if(ContextCompat.checkSelfPermission(
                         getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
@@ -286,8 +291,7 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-
-    private void saveNewPost(String uid, String username, String title, String ImagePath, String journal, String createdDateTime){
+    private void saveNewPost(String uid, String username, String title, String ImagePath, String journal, String createdDateTime) throws ParseException {
 
         Post post = new Post(uid, username, journal, createdDateTime);
         post.setCreatedDate();
@@ -323,8 +327,6 @@ public class PostActivity extends AppCompatActivity {
         title.setText(null);
         journal.setText(null);
     }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String getPathFromUri(Uri contentUri){

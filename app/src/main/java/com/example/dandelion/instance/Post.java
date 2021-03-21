@@ -78,17 +78,15 @@ public class Post {
         this.journal = journal;
     }
 
-
     public String getCreatedDateTime() {
         return createdDateTime;
     }
-
 
     public void setCreatedDateTime(String createdDateTime) {
         this.createdDateTime = createdDateTime;
     }
 
-    public String getCreatedDate() throws ParseException {
+    public String getCreatedDate(){
         return this.createdDate;
     }
 
@@ -101,7 +99,7 @@ public class Post {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setCreatedDate() {
+    public void setCreatedDate()  throws ParseException {
 
         String oldDateString = this.getCreatedDateTime();
         LocalDateTime localdatetime = LocalDateTime.parse(oldDateString);

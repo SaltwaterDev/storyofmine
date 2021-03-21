@@ -1,4 +1,4 @@
-package com.example.dandelion.ui;
+package com.example.dandelion.ui.Access;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dandelion.R;
 import com.example.dandelion.instance.User;
+import com.example.dandelion.ui.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
