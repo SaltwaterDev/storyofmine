@@ -159,16 +159,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     }
 
 
-    public String getLastItemDate(){
-        String lastItemDate;
-        try {
-            lastItemDate = postList.get(postList.size()-1).getCreatedDateTime();
-        } catch (Exception e) {
-            Log.e("Post Adapter Exception", String.valueOf(e));
-            return "";
-        }
-        return postList.get(postList.size()-1).getCreatedDateTime();
-    }
 
     //todo
     public void sendComment(final String pid, final String content){

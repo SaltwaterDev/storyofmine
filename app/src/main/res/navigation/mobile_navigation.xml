@@ -9,16 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.example.dandelion.ui.Home.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_navigation_home_to_createFragment"
-            app:destination="@id/createFragment"
-            app:enterAnim="@anim/bottom_up"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/bottom_down" />
-
-    </fragment>
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_explore"
@@ -38,11 +29,5 @@
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
 
-    <fragment
-        android:id="@+id/createFragment"
-        android:name="com.example.dandelion.ui.Create.CreateFragment"
-        android:label="fragment_create"
-        tools:layout="@layout/fragment_create"
-        />
 
 </navigation>

@@ -21,13 +21,9 @@ public class Post {
     private String title;
     private String imagePath;
     private String journal;
-    //private String thought;
-    //private String action;
     private String category;
     private String createdDateTime;     // for home fragment sorting
     private String createdDate;
-    private Integer likes;
-    private boolean expanded;
 
 
 
@@ -39,7 +35,6 @@ public class Post {
         this.uid = uid;
         this.username = username;
         this.journal = journal;
-        this.expanded = false;
         this.createdDateTime = createdDateTime;
     }
 
@@ -83,54 +78,18 @@ public class Post {
         this.journal = journal;
     }
 
-/*
-    public String getThought() {
-        return thought;
-    }
-
-    public void setThought(String thought) {
-        this.thought = thought;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
-    }*/
 
     public String getCreatedDateTime() {
         return createdDateTime;
     }
 
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
 
     public void setCreatedDateTime(String createdDateTime) {
         this.createdDateTime = createdDateTime;
     }
 
     public String getCreatedDate() throws ParseException {
-
-        final String OLD_FORMAT = "dd-MM-yyyy HH:mm:ss";
-        final String NEW_FORMAT = "dd-MM-yyyy";
-
-        String oldDateString = getCreatedDateTime();
-        String newDateString;
-
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
-        Date d = sdf.parse(oldDateString);
-        sdf.applyPattern(NEW_FORMAT);
-        assert d != null;
-        newDateString = sdf.format(d);
-
-        return newDateString;
+        return this.createdDate;
     }
 
     public String getImagePath() {
@@ -141,9 +100,15 @@ public class Post {
         this.imagePath = imagePath;
     }
 
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setCreatedDate() {
+
+        String oldDateString = this.getCreatedDateTime();
+        LocalDateTime localdatetime = LocalDateTime.parse(oldDateString);
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        this.createdDate = localdatetime.format(myFormatObj);
+        }
 
     public String getCategory() {
         return category;
@@ -151,14 +116,6 @@ public class Post {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 
     public Map<String, Object> toMap(){

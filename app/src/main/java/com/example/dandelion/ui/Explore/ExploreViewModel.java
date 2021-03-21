@@ -50,7 +50,9 @@ public class ExploreViewModel extends ViewModel {
 
 
     public void loadPosts(int numberPost) {
-        Query docRef = mFirestore.collection("posts").orderBy("createdDateTime", Query.Direction.DESCENDING).limit(10);
+        Query docRef = mFirestore.collection("posts")
+                .orderBy("createdDateTime", Query.Direction.DESCENDING)
+                .limit(10);
         docRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

@@ -49,27 +49,28 @@ public class HomeViewModel extends ViewModel {
 
 
     public void loadPosts(int numberPost) {
-        // todo: switch query location
-        Query docRef = mFirestore.collection("users").document(uid).collection("user-posts").orderBy("createdDateTime", Direction.DESCENDING).limit(numberPost);
-        docRef.get()
-        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        Post post = document.toObject(Post.class);
-                        if (!postList.contains(post)){
-                            postList.add(post);
-                            posts.setValue(postList);
+        mFirestore.collection("posts")
+                .whereEqualTo("uid", uid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                Post post = document.toObject(Post.class);
+                                if (!postList.contains(post)) {
+                                    postList.add(post);
+                                    posts.setValue(postList);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+                });
+
 
     }
 

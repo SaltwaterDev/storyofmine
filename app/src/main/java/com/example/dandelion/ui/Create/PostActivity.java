@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -47,13 +46,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class PostActivity extends AppCompatActivity {
 
 
@@ -66,10 +64,7 @@ public class PostActivity extends AppCompatActivity {
     private ImageView imagePost;
     StorageTask uploadTask;
 
-    Date date = new Date();
-    @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    private String createdDateTime = dateTimeFormatter.format(date);
+    String localDateTime = LocalDateTime.now().toString ();
 
     private String setSelectedImagePath;
     Uri selectedImageUri;
@@ -173,7 +168,7 @@ public class PostActivity extends AppCompatActivity {
                                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                         User user = document.toObject(User.class);
 
-                                        saveNewPost(uid, user.getUsername(), pTitle, setSelectedImagePath, pJournal, createdDateTime);
+                                        saveNewPost(uid, user.getUsername(), pTitle, setSelectedImagePath, pJournal, localDateTime);
                                         setEditingEnabled(true);
                                         finishPosting();
                                         finish();
@@ -293,12 +288,9 @@ public class PostActivity extends AppCompatActivity {
 
 
     private void saveNewPost(String uid, String username, String title, String ImagePath, String journal, String createdDateTime){
-        //String key = mDatabase.child("posts").push().getKey();
-        Date currentDate = Calendar.getInstance().getTime();
-        Calendar c = Calendar.getInstance();
-        c.setTime(currentDate);
 
         Post post = new Post(uid, username, journal, createdDateTime);
+        post.setCreatedDate();
         if (title != null) {
             Log.d("CREATEFRAGMENT", title);
             post.setTitle(title);
@@ -311,7 +303,6 @@ public class PostActivity extends AppCompatActivity {
         //Map<String, Object> postValues = post.toMap();
         //Map<String, Object> childUpdates = new HashMap<>();
 
-        //childUpdates.put("/posts/" + category + "/" + key, postValues);   todo...
         mFirestore.collection("posts").add(post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
