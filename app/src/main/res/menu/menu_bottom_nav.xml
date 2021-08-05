@@ -3,18 +3,10 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_baseline_home_24"
-        android:title="@string/home" />
+        android:icon="@drawable/ic_lounge"
 
-    <item
-        android:id="@+id/navigation_explore"
-        android:icon="@drawable/ic_baseline_people_24"
-        android:title="@string/explore" />
+        android:title="lounge"/>
 
-    <item
-        android:id="@+id/navigation_tutorial"
-        android:icon="@drawable/ic_baseline_tutorial"
-        android:title="@string/tutorial" />
 
     <item
         android:id="@+id/navigation_profile"

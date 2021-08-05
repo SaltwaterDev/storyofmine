@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.dandelion">
+    package="com.example.unlone">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,35 +15,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
-        <activity android:name=".ui.PostDetailActivity"></activity>
+        <activity android:name="com.example.unlone.ui.PostDetailActivity"></activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.example.unlone.ui.MainActivity"
             android:label="Home"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".ui.Create.PostActivity"
-            android:parentActivityName=".ui.MainActivity"
+            android:name="com.example.unlone.ui.Create.PostActivity"
+            android:parentActivityName="com.example.unlone.ui.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
+                android:value="com.example.unlone.ui.MainActivity" />
         </activity>
-        <activity android:name=".ui.Access.FirstAccessActivity" />
-        <activity android:name=".ui.profile.EditProfileActivity" />
-        <activity android:name=".ui.Access.LoadActivity">
+        <activity android:name="com.example.unlone.ui.Access.FirstAccessActivity" />
+        <activity android:name="com.example.unlone.ui.profile.EditProfileActivity" />
+        <activity android:name="com.example.unlone.ui.Access.LoadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.Access.RegistrationActivity" />
-        <activity android:name=".ui.Access.LoginActivity" />
+        <activity android:name="com.example.unlone.ui.Access.RegistrationActivity" />
+        <activity android:name="com.example.unlone.ui.Access.LoginActivity" />
     </application>
 
 </manifest>
