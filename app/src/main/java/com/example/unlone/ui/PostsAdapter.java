@@ -58,7 +58,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public CardView card;
-        public TextView username;
         public TextView title;
         public TextView journal;
         private TextView date;
@@ -69,7 +68,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             card = itemView.findViewById(R.id.card_view);
             title = (TextView) itemView.findViewById(R.id.textView_title);
             date = (TextView) itemView.findViewById(R.id.date);
-            username = (TextView) itemView.findViewById(R.id.username);
             journal = (TextView) itemView.findViewById(R.id.textView_journal);
             imageCover = itemView.findViewById(R.id.imageCover);
 
@@ -103,17 +101,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
         // display journal text
         holder.journal.setText(post.getJournal());
-        holder.date.setText(post.getCreatedDate());
+        //holder.date.setText(post.getCreatedDate());
 
-        //display author
-        setAuthor(post, holder);
-        if(!post.getUid().matches(uid)){
-            // posts belonged to the public
-            holder.username.setVisibility(View.VISIBLE);
-        }else{
-            // posts belonged the user
-            holder.username.setVisibility(View.GONE);
-        }
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,13 +136,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                 if (error != null) {
                     System.err.println("Listen failed: " + error);
                     return;
-                }
-                if (value != null && value.exists()) {
-                    User user = value.toObject(User.class);
-                    assert user != null;
-                    holder.username.setText(user.getUsername());
-                } else {
-                    System.out.print("Current data: null");
                 }
             }
         });

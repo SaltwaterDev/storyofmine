@@ -15,11 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
+
         <activity android:name="com.example.unlone.ui.PostDetailActivity"></activity>
         <activity
             android:name="com.example.unlone.ui.MainActivity"
-            android:label="Home"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="adjustPan"
+            android:label="Home" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

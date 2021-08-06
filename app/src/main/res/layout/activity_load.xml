@@ -6,11 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.Access.LoadActivity"
-    android:background="@drawable/load_page"
-    >
+    android:background="@color/colorPrimary">
 
     <TextView
         style="@style/AppTheme"
+        android:text="UNLONE"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_23sdp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

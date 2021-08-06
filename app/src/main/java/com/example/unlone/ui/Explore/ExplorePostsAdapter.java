@@ -21,7 +21,6 @@ public class ExplorePostsAdapter extends PostsAdapter{
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        holder.username.setVisibility(View.VISIBLE);
     }
 
 
