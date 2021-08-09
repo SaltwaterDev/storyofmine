@@ -8,11 +8,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
-        android:background="#80000000"
+        android:background="#7F000000"
         android:layout_width="match_parent"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="70dp"
-        android:layout_height="0.5dp"/>
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_height="1dp"/>
 
     <LinearLayout
         android:id="@+id/imageLayout"
@@ -24,17 +24,17 @@
         <ImageView
             android:id="@+id/imageCover"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_140sdp"
+            android:layout_height="275dp"
+            android:visibility="gone"
             android:adjustViewBounds="true"
             android:contentDescription="Display Image for post if any"
-            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="40dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:letterSpacing="0.05"
@@ -43,26 +43,25 @@
             android:textSize="18sp"
             android:fontFamily="@font/notosans_tc_medium"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/imageCover" />
 
 
         <TextView
             android:id="@+id/textView_journal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:letterSpacing="0.15"
+            android:letterSpacing="0.1"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="19dp"
+            android:layout_marginBottom="58dp"
             android:textColor="@color/colorText"
             android:fontFamily="@font/notosans_tc_regular"
-            android:maxLines="4"
+            android:maxLines="5"
             android:text="@string/journal"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
 
     </LinearLayout>

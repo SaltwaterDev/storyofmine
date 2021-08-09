@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:contentDescription="@string/app_name"
+            android:contentDescription="search post"
             android:src="@drawable/ic_search"
             app:tint="@color/colorSearchIcon"/>
 
@@ -39,9 +39,7 @@
             android:includeFontPadding="false"
             android:inputType="text"/>
 
-
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -73,7 +71,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="36dp"
+        android:layout_marginEnd="21dp"
         android:layout_marginRight="21dp"
         android:layout_marginBottom="21dp"
         app:layout_constraintBottom_toBottomOf="parent"

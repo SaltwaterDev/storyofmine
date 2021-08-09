@@ -30,6 +30,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -46,7 +48,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     Context context;
     private String uid;
     protected FirebaseFirestore mFirestore;
-
+    protected StorageReference storageReference;
 
     public PostsAdapter(Context context) {
         this.context = context;
@@ -91,9 +93,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         holder.title.setText(post.getTitle());
 
         // display image
+        storageReference = FirebaseStorage.getInstance().getReference("posts");
         String image_path = post.getImagePath();
         try{
-            Picasso.get().load(image_path).into(holder.imageCover);
+            Picasso.get().load(image_path).fit().centerCrop().into(holder.imageCover);
             holder.imageCover.setVisibility(View.VISIBLE);
         }catch (Exception e){
             holder.imageCover.setVisibility(View.GONE);

@@ -2,23 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutMiscellaneous"
+    android:id="@+id/layoutMore"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/background_miscellaneous"
     app:behavior_peekHeight="@dimen/_40sdp"
     app:layout_behavior="@string/bottom_sheet_behavior">
-    
+
     <TextView
-        android:id="@+id/textMiscellaneous"
+        android:id="@+id/textMore"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        android:fontFamily="@font/ubuntu_medium"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="miscellaneous_input"
-        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/sf_compact_display_medium"
+        android:text="More"
+        android:textColor="@color/colorText"
         android:textSize="@dimen/_13ssp"/>
     
     <LinearLayout
@@ -43,17 +43,17 @@
             android:layout_height="@dimen/_22ssp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_baseline_image_24"
-            app:tint="@color/colorIcons" />
+            app:tint="@color/colorText" />
         
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginLeft="@dimen/_10sdp"
-            android:fontFamily="@font/ubuntu_medium"
+            android:fontFamily="@font/sf_pro_display_regular"
             android:includeFontPadding="false"
             android:text="@string/add_image"
-            android:textColor="@color/colorIcons"
+            android:textColor="@color/colorText"
             android:textSize="@dimen/_12ssp"/>
 
 

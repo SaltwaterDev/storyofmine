@@ -21,11 +21,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/averia_serif_libre_light"
+                android:fontFamily="@font/averia_serif_libre_bold"
                 android:gravity="center"
-                android:text="Lounge"
+                android:text="LOUNGE"
                 android:letterSpacing="0.03"
-                android:textColor="#FFFFFF"
+                android:textColor="#FCF7DA"
                 android:textSize="20sp"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -35,6 +35,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/tab_layout"
         android:layout_below="@id/app_bar"
+        app:tabIndicatorColor="#c4000000"
+        app:tabIndicatorHeight="1.75dp"
         app:tabTextAppearance="@style/MyCustomTextAppearance">
 
         <com.google.android.material.tabs.TabItem
