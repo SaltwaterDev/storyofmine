@@ -72,9 +72,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             date = (TextView) itemView.findViewById(R.id.date);
             journal = (TextView) itemView.findViewById(R.id.textView_journal);
             imageCover = itemView.findViewById(R.id.imageCover);
-
-
-            Log.d("PostsAdapter", "go in posts adapter");
         }
     }
 
@@ -90,7 +87,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Post post = postList.get(position);
 
+        // display title
         holder.title.setText(post.getTitle());
+
+        // display text
+        holder.journal.setText(post.getJournal());
 
         // display image
         storageReference = FirebaseStorage.getInstance().getReference("posts");
@@ -102,9 +103,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             holder.imageCover.setVisibility(View.GONE);
         }
 
-        // display journal text
-        holder.journal.setText(post.getJournal());
-        //holder.date.setText(post.getCreatedDate());
 
 
         holder.card.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +136,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
                     System.err.println("Listen failed: " + error);
-                    return;
                 }
             }
         });

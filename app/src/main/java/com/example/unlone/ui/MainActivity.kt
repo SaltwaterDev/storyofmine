@@ -1,7 +1,9 @@
 package com.example.unlone.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
@@ -13,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.unlone.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,4 +74,22 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.popBackStack()
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (data?.getIntExtra("result", 0) == 1){
+                Log.d("Refresh_", "success")
+                finish();
+                startActivity(intent);
+                return
+            }
+        }
+        if (resultCode == RESULT_CANCELED) {
+            //Do nothing?
+            Log.d("Refresh_", resultCode.toString())
+            Log.d("Refresh_", "fail")
+        }
+    } //onActivityResult
+
 }

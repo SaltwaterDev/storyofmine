@@ -5,8 +5,10 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,21 +20,23 @@ public class Post {
     private String title;
     private String imagePath;
     private String journal;
-    private String category;
-    private String createdDateTime;     // for home fragment sorting
+    private String label;
+    private String createdTimestamp;     // for home fragment sorting
     private String createdDate;
-
+    private Boolean comment;
+    private Boolean share;
 
 
     //don't delete this or it will cause error
     public Post(){}
 
-    public Post(String uid, String username, String journal, String createdDateTime){
-        //this.pid = pid;
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Post(String uid, String username, String journal) throws ParseException {
         this.uid = uid;
         this.username = username;
         this.journal = journal;
-        this.createdDateTime = createdDateTime;
+        setCreatedTimestamp();
+        setCreatedDate();
     }
 
     public String getPid() {
@@ -75,12 +79,17 @@ public class Post {
         this.journal = journal;
     }
 
-    public String getCreatedDateTime() {
-        return createdDateTime;
+    public String getCreatedTimestamp() {
+        return createdTimestamp;
     }
 
-    public void setCreatedDateTime(String createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setCreatedTimestamp(String createdDateTime) {
+        this.createdTimestamp = createdDateTime;
+    }
+
+    public void setCreatedTimestamp() {
+        Long tsLong = System.currentTimeMillis();
+        this.createdTimestamp = tsLong.toString();
     }
 
     public String getCreatedDate(){
@@ -97,33 +106,31 @@ public class Post {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setCreatedDate()  throws ParseException {
-
-        String oldDateString = this.getCreatedDateTime();
-        LocalDateTime localdatetime = LocalDateTime.parse(oldDateString);
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-        this.createdDate = localdatetime.format(myFormatObj);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        this.createdDate = formatter.format(new Date(Long.parseLong(this.getCreatedTimestamp())));
         }
 
-    public String getCategory() {
-        return category;
+    public String getLabel() {
+        return label;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public Map<String, Object> toMap(){
-       HashMap<String, Object> result = new HashMap<>();
-       result.put("pid",pid);
-       result.put("uid",uid);
-       result.put("username",username);
-       result.put("createdDateTime",createdDateTime);
-       result.put("imagePath",imagePath);
-       //result.put("category",category);   todo...ML predict category
-       result.put("title",title);
-       result.put("journal",journal);
-       return result;
+    public Boolean getComment() {
+        return comment;
     }
 
+    public void setComment(Boolean comment) {
+        this.comment = comment;
+    }
+
+    public Boolean getShare() {
+        return share;
+    }
+
+    public void setShare(Boolean share) {
+        this.share = share;
+    }
 }

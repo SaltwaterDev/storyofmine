@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/create_post_navigation"
+    app:startDestination="@id/writePostFragment">
+
+
+    <fragment
+        android:id="@+id/writePostFragment"
+        android:name="com.example.unlone.ui.Create.WritePostFragment"
+        android:label="fragment_write_post"
+        tools:layout="@layout/fragment_write_post" >
+        <action
+            android:id="@+id/action_writePostFragment_to_configFragment2"
+            app:destination="@id/configFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/configFragment"
+        android:name="com.example.unlone.ui.Create.ConfigFragment"
+        android:label="fragment_config"
+        tools:layout="@layout/fragment_config" >
+        <action
+            android:id="@+id/action_configFragment_to_writePostFragment"
+            app:destination="@id/writePostFragment" />
+    </fragment>
+</navigation>
