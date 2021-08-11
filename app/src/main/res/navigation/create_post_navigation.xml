@@ -12,7 +12,7 @@
         android:label="fragment_write_post"
         tools:layout="@layout/fragment_write_post" >
         <action
-            android:id="@+id/action_writePostFragment_to_configFragment2"
+            android:id="@+id/navigateToConfigFragment"
             app:destination="@id/configFragment" />
     </fragment>
 
@@ -22,7 +22,10 @@
         android:label="fragment_config"
         tools:layout="@layout/fragment_config" >
         <action
-            android:id="@+id/action_configFragment_to_writePostFragment"
+            android:id="@+id/navigateToWritePostFragment"
             app:destination="@id/writePostFragment" />
+        <argument
+            android:name="postData"
+            app:argType="com.example.unlone.instance.Post"/>
     </fragment>
 </navigation>

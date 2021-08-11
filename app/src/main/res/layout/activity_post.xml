@@ -6,132 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.Create.PostActivity">
 
+
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/post_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?android:attr/windowBackground"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <TextView
-                android:id="@+id/cancel_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Cancel"
-                android:textSize="17sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/post_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="@font/sf_compact_display_medium"
-                android:textColor="@color/colorText"
-                android:text="Post"
-                android:textSize="17sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <ScrollView
+        android:id="@+id/fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:clipToPadding="false"
-        android:isScrollContainer="true"
-        android:paddingTop="@dimen/_47sdp"
-        android:paddingBottom="@dimen/_30sdp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_200sdp"
-            android:animateLayoutChanges="true">
-
-
-            <ImageView
-                android:id="@+id/imagePost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/app_name"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/inputPostTitle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginLeft="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:background="@null"
-                android:fontFamily="@font/notosans_tc_medium"
-                android:hint="Title"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:includeFontPadding="false"
-                android:inputType="text"
-                android:letterSpacing="0.04"
-                android:textColorHint="@color/colorTextHint"
-                android:textSize="27sp"
-                app:layout_constraintTop_toBottomOf="@id/imagePost" />
-
-
-            <EditText
-                android:id="@+id/inputPostContext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginLeft="@dimen/_12sdp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_15sdp"
-                android:background="@null"
-                android:fontFamily="@font/notosans_tc_regular"
-                android:gravity="top"
-                android:hint="Story..."
-                android:importantForAutofill="no"
-                android:includeFontPadding="false"
-                android:inputType="textMultiLine"
-                android:letterSpacing="0.16"
-                android:textColorHint="@color/colorTextHint"
-                android:textSize="17sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/inputPostTitle" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-    <include layout="@layout/post_miscellaneous"/>
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/create_post_navigation" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

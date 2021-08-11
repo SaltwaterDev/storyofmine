@@ -1,58 +1,140 @@
 package com.example.unlone.ui.Create
 
+import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.unlone.R
+import com.example.unlone.databinding.FragmentConfigBinding
+import com.example.unlone.databinding.FragmentWritePostBinding
+import com.example.unlone.instance.Post
+import com.example.unlone.instance.User
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
+import java.text.ParseException
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ConfigFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ConfigFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    val args: ConfigFragmentArgs by navArgs()
+    lateinit var post: Post
+    private var _binding: FragmentConfigBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var mFirestore: FirebaseFirestore
+    private lateinit var storageReference: StorageReference
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_config, container, false)
+        _binding = FragmentConfigBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        post = args.postData
+        val commentSwitch = binding.commentSwitch.setOnCheckedChangeListener { _, isChecked ->
+            post.comment = isChecked
+        }
+        val saveSwitch = binding.saveSwitch.setOnCheckedChangeListener { _, isChecked ->
+            post.save = isChecked
+        }
+        val backButton = binding.backButton.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.navigateToWritePostFragment)
+        }
+        val postButton = binding.postButton.setOnClickListener {
+            submitPost()
+        }
+
+        mFirestore = FirebaseFirestore.getInstance()
+
+        return view
+    }
+
+    private fun submitPost() {
+        Toast.makeText(activity, "Posting...", Toast.LENGTH_SHORT).show()
+
+        if(post.imageUri == null){
+            // Upload text only
+            post.imagePath = ""
+            uploadText(post)
+        }else{
+            // Upload Image and Text
+            val imageUUID = UUID.randomUUID().toString()
+            val ref = storageReference.child(imageUUID)
+            val uploadTask = ref.putFile(post.imageUri!!)
+
+            // get image url
+            val urlTask = uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                ref.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    post.imagePath = task.result.toString()
+                    // upload the rest of the content
+                    uploadText(post)
+                } else {
+                    Toast.makeText(activity, task.exception.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                // Handle unsuccessful uploads
+                e ->
+                Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    @Throws(ParseException::class)
+    private fun saveNewPost(post: Post) {
+        mFirestore.collection("posts").add(post).addOnSuccessListener { documentReference -> Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: " + documentReference.id) }
+                .addOnFailureListener { e ->
+                    Log.w(ContentValues.TAG, "Error adding document", e)
+                    activity?.finish()
+                }
+    }
+
+
+
+    private fun uploadText(post: Post) {
+        val docRef = mFirestore.collection("users").document(post.uid)
+        docRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (document!!.exists()) {
+                    Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.data)
+                    val user = document.toObject(User::class.java)
+                    post.username = user!!.username
+                    post.createdTimestamp = System.currentTimeMillis().toString()
+                    try {
+                        saveNewPost(post)
+                    } catch (e: ParseException) {
+                        e.printStackTrace()
+                    }
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("result", 1)
+                    activity?.setResult(AppCompatActivity.RESULT_OK, returnIntent)
+                    activity?.finish()
+                } else {
+                    Log.d(ContentValues.TAG, "No such document")
+                }
+            } else {
+                Log.d(ContentValues.TAG, "get failed with ", task.exception)
+            }
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ConfigFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                ConfigFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
     }
 }
