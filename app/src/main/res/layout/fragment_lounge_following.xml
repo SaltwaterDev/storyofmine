@@ -69,13 +69,12 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="21dp"
-        android:layout_marginRight="21dp"
         android:layout_marginBottom="21dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tint="#545454"
         android:src="@drawable/ic_pen_tool"/>
 
 </RelativeLayout>

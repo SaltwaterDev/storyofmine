@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.Access.LoadActivity"
-    android:background="@color/colorPrimary">
+    android:background="#FEFDFB">
 
     <TextView
         style="@style/AppTheme"
         android:text="UNLONE"
-        android:textColor="@color/colorWhite"
+        android:textColor="#4D4D4D"
+        android:fontFamily="@font/averia_serif_libre_regular"
         android:textSize="@dimen/_23sdp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

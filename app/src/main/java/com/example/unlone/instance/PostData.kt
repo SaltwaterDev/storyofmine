@@ -6,16 +6,10 @@ import kotlinx.parcelize.Parcelize
 import java.util.ArrayList
 
 @Parcelize
-data class Post(
+data class PostData(
         var title: String = "",
-        var imagePath: String = "",
+        var imageUri: Uri? = null,
         var journal: String = "",
         var uid: String = "",
-        var username: String = "",
         var labels: ArrayList<String> = ArrayList<String>(),
-        var createdTimestamp: String = "",
-        var createdDate: String = "",
-        var pid: String = "",
-        var comment: Boolean = true,
-        var save: Boolean = true
 ) : Parcelable

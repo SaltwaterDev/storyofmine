@@ -26,6 +26,6 @@
             app:destination="@id/writePostFragment" />
         <argument
             android:name="postData"
-            app:argType="com.example.unlone.instance.Post"/>
+            app:argType="com.example.unlone.instance.PostData"/>
     </fragment>
 </navigation>

@@ -23,10 +23,10 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/averia_serif_libre_bold"
                 android:gravity="center"
-                android:text="LOUNGE"
                 android:letterSpacing="0.03"
-                android:textColor="#FCF7DA"
-                android:textSize="20sp"/>
+                android:text="LOUNGE"
+                android:textColor="#FDFDFC"
+                android:textSize="19sp" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
