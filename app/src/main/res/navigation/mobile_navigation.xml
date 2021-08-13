@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.unlone.ui.profile.ProfileFragment"
+        android:name="com.example.unlone.ui.Profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
 

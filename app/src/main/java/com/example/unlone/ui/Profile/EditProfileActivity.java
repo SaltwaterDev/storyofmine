@@ -1,4 +1,4 @@
-package com.example.unlone.ui.profile;
+package com.example.unlone.ui.Profile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

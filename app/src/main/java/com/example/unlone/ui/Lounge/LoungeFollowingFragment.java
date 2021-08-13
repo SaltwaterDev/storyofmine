@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ public class LoungeFollowingFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private FirebaseAuth mAuth;
     private RecyclerView recyclerView;
+    SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayoutManager layoutManager;
     private PostsAdapter postsAdapter;
     private int mPosts = 10;
@@ -59,6 +61,13 @@ public class LoungeFollowingFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         recyclerView = root.findViewById(R.id.recycleview_posts);
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -74,6 +83,7 @@ public class LoungeFollowingFragment extends Fragment {
                 postsAdapter.notifyDataSetChanged();
             }
         });
+
 
         return root;
     }

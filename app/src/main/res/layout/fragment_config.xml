@@ -47,9 +47,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -66,38 +63,33 @@
         android:layout_marginTop="31dp"
         android:layout_marginBottom="69dp"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="22dp">
 
         <TextView
             android:id="@+id/CommentTv"
+            android:layout_marginTop="11dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/sf_compact_text_regular"
             android:text="Comment"
             android:textColor="@color/colorText"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="20sp"/>
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/commentSwitch"
             android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:checked="true"
-            style="@style/Widget.App.Switch"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/CommentTv"/>
+    </RelativeLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="22dp">
@@ -109,6 +101,7 @@
             android:layout_marginStart="16dp"
             android:fontFamily="@font/sf_compact_text_regular"
             android:text="Save Post"
+            android:layout_marginTop="11dp"
             android:textColor="@color/colorText"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -118,13 +111,11 @@
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/saveSwitch"
             android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/saveTv"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:checked="true"
-            style="@style/Widget.App.Switch"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 </LinearLayout>
