@@ -21,7 +21,7 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="switchStyle">@style/Widget.App.Switch</item>
     </style>
-
+ma
     <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
         <item name="textAllCaps">false</item>
@@ -37,5 +37,14 @@
         <item name="colorOnSurface">#000000</item>
         <item name="colorSecondary">#4F4F4F</item>
     </style>
+
+    <style name="SwitchAppTheme" parent="AppTheme">
+        <item name="colorAccent">#4F4F4F</item>
+        <item name="colorSecondary">#757575</item>
+        <item name="colorSurface">#757575</item>
+        <item name="android:colorForeground">#BDBDBD</item>
+    </style>
+
+
 
 </resources>

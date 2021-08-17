@@ -16,6 +16,8 @@
     <color name="colorMiscellaneousBackground">#1F1F1F</color>
     <color name="colorDelete">#FF4842</color>
     <color name="colorSearchBackground">#808080</color>
+    <color name="ActiveBottomNavIconColor">#4E4E4E</color>
+    <color name="InactiveBottomNavIconColor">#B0B0B0</color>
 
 
 </resources>

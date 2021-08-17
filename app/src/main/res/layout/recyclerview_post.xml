@@ -23,25 +23,24 @@
 
         <ImageView
             android:id="@+id/imageCover"
-            android:layout_width="match_parent"
-            android:layout_height="275dp"
-            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:contentDescription="Display Image for post if any"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="33dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:letterSpacing="0.05"
+            android:gravity="start"
             android:text="@string/title"
             android:textColor="@color/colorText"
             android:textSize="18sp"
-            android:fontFamily="@font/notosans_tc_medium"
+            android:visibility="invisible"
+            android:fontFamily="@font/sf_compact_display_medium"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintTop_toBottomOf="@id/imageCover" />
 
@@ -53,12 +52,13 @@
             android:letterSpacing="0.1"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="58dp"
+            android:layout_marginBottom="41dp"
             android:textColor="@color/colorText"
-            android:fontFamily="@font/notosans_tc_regular"
+            android:fontFamily="@font/sf_pro_display_regular"
             android:maxLines="5"
             android:text="@string/journal"
             android:textSize="14sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

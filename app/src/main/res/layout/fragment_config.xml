@@ -85,6 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:checked="true"
+            android:theme="@style/Widget.App.Switch"
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/CommentTv"/>
     </RelativeLayout>
@@ -111,6 +112,7 @@
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/saveSwitch"
             android:layout_width="50dp"
+            android:theme="@style/Widget.App.Switch"
             android:layout_toEndOf="@+id/saveTv"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

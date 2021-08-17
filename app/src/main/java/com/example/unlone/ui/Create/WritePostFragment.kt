@@ -33,7 +33,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.theartofdev.edmodo.cropper.CropImage
 import java.util.*
 
@@ -76,7 +75,7 @@ class WritePostFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
         // Inflate the layout for this fragment
         _binding = FragmentWritePostBinding.inflate(inflater, container, false)
@@ -149,23 +148,6 @@ class WritePostFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    // todo: check if this functions useful anymore
-    private fun getImageStorageUrl(uploadTask: UploadTask, ref: StorageReference): String {
-        val urlTask = uploadTask.continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    throw it
-                }
-            }
-            ref.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val downloadUri = task.result
-            }
-        }
-        return urlTask.toString()
     }
 
 

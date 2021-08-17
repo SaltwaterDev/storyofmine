@@ -28,7 +28,6 @@
             android:name="com.example.unlone.ui.Create.PostActivity"
             android:parentActivityName="com.example.unlone.ui.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
