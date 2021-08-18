@@ -73,8 +73,8 @@ class ConfigFragment : Fragment() {
         post.title = postData.title
         post.journal = postData.journal
         post.labels.addAll(postData.labels)
-        Log.d("labelssss", postData.labels.toString())
-        Log.d("labelssss", post.labels.toString())
+        Log.d("TAG", postData.labels.toString())
+        Log.d("TAG", post.labels.toString())
         if(postData.imageUri == null){
             // Upload text only
             post.imagePath = ""

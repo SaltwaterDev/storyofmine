@@ -76,9 +76,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.card_view);
-            title = (TextView) itemView.findViewById(R.id.textView_title);
-            date = (TextView) itemView.findViewById(R.id.date);
-            journal = (TextView) itemView.findViewById(R.id.textView_journal);
+            title = itemView.findViewById(R.id.textView_title);
+            date = itemView.findViewById(R.id.date);
+            journal = itemView.findViewById(R.id.textView_journal);
             imageCover = itemView.findViewById(R.id.imageCover);
         }
     }
@@ -132,7 +132,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                     LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.gravity=Gravity.CENTER;
 
-                    int image_horizontal_margin = getImageVerticalMargin((float) image_width[0]/image_height[0]);      // in px
+                    int image_horizontal_margin = getImageHorizontalMargin((float) image_width[0]/image_height[0]);      // in px
                     int image_vertical_margin = (int) dpConvertPx(60);
                     params.setMargins(image_horizontal_margin, image_vertical_margin, image_horizontal_margin,0);
                     holder.imageCover.setLayoutParams(params);
@@ -195,14 +195,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         });
     }
 
-    private int getImageVerticalMargin(float ratio) {
+    private int getImageHorizontalMargin(float ratio) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float deviceWidth = displayMetrics.widthPixels;
 
         float slope = ((deviceWidth / 6) - (deviceWidth / 4) * 45/44);
         float margin = slope * (ratio - 4/5f) + deviceWidth/4;
         return (int) margin;
-
     }
 
     public void setPostList(List<Post> postList) {

@@ -62,12 +62,6 @@ public class LoungeFollowingFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         recyclerView = root.findViewById(R.id.recycleview_posts);
         swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -81,6 +75,23 @@ public class LoungeFollowingFragment extends Fragment {
             public void onChanged(@Nullable List<Post> postList) {
                 postsAdapter.setPostList(postList);
                 postsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                homeViewModel.loadPosts(mPosts);
+                homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Post> postList) {
+                        postsAdapter.setPostList(postList);
+                        postsAdapter.notifyDataSetChanged();
+                    }
+                });
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 

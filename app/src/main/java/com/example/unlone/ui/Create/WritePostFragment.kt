@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +19,7 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import java.util.*
 
@@ -137,7 +140,18 @@ class WritePostFragment : Fragment() {
                 selectedImageUri = uri
                 imagePost.setImageURI(selectedImageUri)
                 imagePost.visibility = View.VISIBLE
+                val bitmap = (imagePost.getDrawable() as BitmapDrawable).bitmap
+                val width = bitmap.width.toFloat()
+                val height = bitmap.height.toFloat()
                 Log.d("uriiii", selectedImageUri.toString())
+                val imageHorizontalMargin: Int = getImageHorizontalMargin(width / height)    // in px
+
+                val imageVerticalMargin = dpConvertPx(10)
+                val params = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+                Log.d("margin", imageVerticalMargin.toString())
+                params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, 0)
+                imagePost.layoutParams = params
+
             }
         }
         initMoreLayout()
@@ -213,6 +227,18 @@ class WritePostFragment : Fragment() {
     }
 
 
+    private fun getImageHorizontalMargin(ratio: Float): Int {
+        val displayMetrics = requireContext().resources.displayMetrics
+        val deviceWidth = displayMetrics.widthPixels.toFloat()
+        val slope = deviceWidth / 6 - deviceWidth / 4 * 45 / 44
+        val margin = slope * (ratio - 4 / 5f) + deviceWidth / 4
+        return margin.toInt()
+    }
+
+    private fun dpConvertPx(dp: Int): Int {
+        val metrics = requireContext().resources.displayMetrics
+        return dp * metrics.densityDpi / 160
+    }
 
     companion object {
         private const val REQUEST_CODE_STORAGE_PERMISSION = 1

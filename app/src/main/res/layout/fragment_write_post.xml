@@ -67,6 +67,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/imagePost"
             android:animateLayoutChanges="true">
 
 
@@ -83,6 +84,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
             <EditText
                 android:id="@+id/inputPostTitle"
                 android:layout_width="match_parent"
@@ -92,7 +94,7 @@
                 android:layout_marginEnd="18dp"
                 android:background="@null"
                 android:fontFamily="@font/notosans_tc_medium"
-                android:hint="Title"
+                android:hint="Title (optional)"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
@@ -100,7 +102,9 @@
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="25sp"
                 android:maxLength="90"
-                app:layout_constraintTop_toBottomOf="@id/imagePost" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imagePost"/>
 
 
             <EditText
@@ -109,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="43dp"
                 android:background="@null"
-                android:fontFamily="@font/notosans_tc_regular"
+                android:fontFamily="@font/sf_compact_text_regular"
                 android:gravity="top"
                 android:hint="@string/greet"
                 android:importantForAutofill="no"
