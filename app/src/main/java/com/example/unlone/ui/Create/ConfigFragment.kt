@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.unlone.R
@@ -27,14 +28,16 @@ import java.util.*
 
 
 class ConfigFragment : Fragment() {
-    val args: ConfigFragmentArgs by navArgs()
-    lateinit var postData: PostData
+
+    private val savedStateModel: SavedStateModel by activityViewModels()
+    private lateinit var postData: PostData
     var post: Post = Post()
     private var _binding: FragmentConfigBinding? = null
+
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-
     private lateinit var mFirestore: FirebaseFirestore
+
     private lateinit var storageReference: StorageReference
 
 
@@ -43,21 +46,30 @@ class ConfigFragment : Fragment() {
         _binding = FragmentConfigBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        postData = args.postData
+        savedStateModel.postData.observe(viewLifecycleOwner, {postData ->
+            this.postData = postData
+            binding.commentSwitch.isChecked = this.postData.comment
+            binding.saveSwitch.isChecked = this.postData.save
+            Log.d("TAG", "config fragment, comment: "+ postData.comment.toString())
+            Log.d("TAG", "config fragment, comment: "+ postData.save.toString())
+            Log.d("TAG", "config fragment, labels: "+ this.postData.labels.toString())
+        })
 
-        Log.d("labelll", postData.labels.toString())
 
         val commentSwitch = binding.commentSwitch.setOnCheckedChangeListener { _, isChecked ->
-            post.comment = isChecked
+            //post.comment = isChecked
+            postData.comment = isChecked
         }
         val saveSwitch = binding.saveSwitch.setOnCheckedChangeListener { _, isChecked ->
-            post.save = isChecked
+            //post.save = isChecked
+            postData.save = isChecked
         }
         val backButton = binding.backButton.setOnClickListener {
-            activity?.onBackPressed()
+            savedStateModel.savepostData(postData)
+            Navigation.findNavController(view).navigate(R.id.navigateToWritePostFragment)
         }
         val postButton = binding.postButton.setOnClickListener {
-            submitPost()
+            submitPost(postData)
         }
 
         mFirestore = FirebaseFirestore.getInstance()
@@ -66,15 +78,18 @@ class ConfigFragment : Fragment() {
         return view
     }
 
-    private fun submitPost() {
+    private fun submitPost(postData: PostData) {
         Toast.makeText(activity, "Posting...", Toast.LENGTH_SHORT).show()
 
         post.uid = postData.uid
         post.title = postData.title
         post.journal = postData.journal
         post.labels.addAll(postData.labels)
-        Log.d("TAG", postData.labels.toString())
-        Log.d("TAG", post.labels.toString())
+        post.comment = postData.comment
+        post.save = postData.save
+        Log.d("TAG", "label in config fgragment:" + postData.labels.toString())
+        Log.d("TAG", "label in config fgragment:" + post.labels.toString())
+
         if(postData.imageUri == null){
             // Upload text only
             post.imagePath = ""

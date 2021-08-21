@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#F2F0E3</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBarIcon">#F2FFFFFF</color>
     <color name="colorSearchIcon">#DD000000</color>
     <color name="colorText">#c4000000</color>
     <color name="colorWhiteText">#95FFFFFF</color>

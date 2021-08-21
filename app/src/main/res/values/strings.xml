@@ -20,5 +20,5 @@
     <string name="add_image">Add Image</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="greet">It is not easy to open up, so we are glad to having you to be here...</string>
+    <string name="create_post_greet">It is not easy to open up, so we are glad to having you here...</string>
 </resources>

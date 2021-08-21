@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.unlone.R
@@ -35,7 +36,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import java.util.*
 
@@ -47,13 +47,9 @@ class WritePostFragment : Fragment() {
     private lateinit var mFirestore: FirebaseFirestore
     private lateinit var storageReference: StorageReference
 
-    private lateinit var journal: EditText
-    private lateinit var title: EditText
-    private lateinit var labelEv: EditText
-    private lateinit var imagePost: ImageView
     private lateinit var setSelectedImagePath: String
     private var selectedImageUri: Uri? = null
-    private val labels = ArrayList<String>()
+    private var labels = ArrayList<String>()
 
     private lateinit var labelChipGroup: ChipGroup
 
@@ -73,8 +69,9 @@ class WritePostFragment : Fragment() {
     }
 
     private lateinit var cropActivityResultLauncher: ActivityResultLauncher<Any?>
+    private val savedStateModel: SavedStateModel by activityViewModels()
+    private lateinit var postData: PostData
 
-    private val postData: PostData = PostData()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -90,37 +87,55 @@ class WritePostFragment : Fragment() {
         mFirestore = FirebaseFirestore.getInstance()
         storageReference = FirebaseStorage.getInstance().getReference("posts")
 
+        // restore UI state if any
+        savedStateModel.postData.observe(viewLifecycleOwner, {postData ->
+            this.postData = postData
+            binding.inputPostTitle.setText(postData.title)
+            binding.inputPostContext.setText(postData.journal)
+            labels.clear()
+            labels.addAll(postData.labels)
+            Log.d("TAG", "each label name: " + postData.labels)
+            Log.d("TAG", "each label name: $labels")
+            for (label in labels) {
+                addChipToGroup(label)
+            }
+            postData.imageUri?.let { displayImage(it) }
+
+        })
+
         // init toolbar
         binding.cancelButton.setOnClickListener(View.OnClickListener { activity?.onBackPressed() })
-        title = binding.inputPostTitle
-        journal = binding.inputPostContext
-        imagePost = binding.imagePost
         val nextButton = binding.nextButton.setOnClickListener {
-            if (journal.text.toString().isEmpty()) {
-                Toast.makeText(activity, "You did not complete the post.", Toast.LENGTH_SHORT).show()
+            if (binding.inputPostContext.text.toString().isEmpty()) {
+                Toast.makeText(activity, "You haven't write the context", Toast.LENGTH_SHORT).show()
             }else{
-                postData.uid = mAuth.uid!!
-                postData.title = title.text.toString()
-                postData.journal = journal.text.toString()
+                postData.title = binding.inputPostTitle.text.toString()
                 postData.imageUri = selectedImageUri
+                postData.journal = binding.inputPostContext.text.toString()
+                postData.uid = mAuth.uid!!
+                postData.labels.clear()
                 postData.labels.addAll(labels)
-                Log.d("labelll", postData.labels.toString())
+                Log.d("TAG", "labels in write fragment: $labels")
+                Log.d("TAG", "label in postData, write fragment: " + postData.labels.toString())
 
-                val action = WritePostFragmentDirections.navigateToConfigFragment(postData)
-                Navigation.findNavController(view).navigate(action)
+                savedStateModel.savepostData(postData)
+                //val action = WritePostFragmentDirections.navigateToConfigFragment(postData)
+                Navigation.findNavController(view).navigate(R.id.navigateToConfigFragment)
             }
         }
 
         // init label view
         labelChipGroup = binding.labelChipGroup
-        labelEv = binding.labelEv
+        val labelEv = binding.labelEv
         labelEv.setOnEditorActionListener { v, actionId, _ ->
-            if(!labelEv.text.toString().isEmpty()){
+            if(!binding.labelEv.text.toString().isEmpty()){
                 if(actionId == EditorInfo.IME_ACTION_DONE){
-                    addChipToGroup(labelEv.text.toString())
+                    labels.add(binding.labelEv.text.toString())
+                    addChipToGroup(binding.labelEv.text.toString())
+                    Log.d("TAG", "label just added: $labels")
                     true
                 } else {
-                    labels.remove(labelEv.text.toString())
+                    labels.remove(binding.labelEv.text.toString())
                     false
                 }
             }else{
@@ -128,35 +143,40 @@ class WritePostFragment : Fragment() {
             }
         }
 
-        labelEv.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+        binding.labelEv.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                labelEv.setText("")
+                binding.labelEv.setText("")
             }
         }
 
         // init crop image
         cropActivityResultLauncher = registerForActivityResult(cropActivityResultContract){
             it?.let { uri ->
-                selectedImageUri = uri
-                imagePost.setImageURI(selectedImageUri)
-                imagePost.visibility = View.VISIBLE
-                val bitmap = (imagePost.getDrawable() as BitmapDrawable).bitmap
-                val width = bitmap.width.toFloat()
-                val height = bitmap.height.toFloat()
-                Log.d("uriiii", selectedImageUri.toString())
-                val imageHorizontalMargin: Int = getImageHorizontalMargin(width / height)    // in px
-
-                val imageVerticalMargin = dpConvertPx(10)
-                val params = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
-                Log.d("margin", imageVerticalMargin.toString())
-                params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, 0)
-                imagePost.layoutParams = params
-
+                displayImage(uri)
             }
         }
+
         initMoreLayout()
 
+
         return view
+    }
+
+    private fun displayImage(uri: Uri) {
+        selectedImageUri = uri
+        binding.imagePost.setImageURI(selectedImageUri)
+        binding.imagePost.visibility = View.VISIBLE
+        val bitmap = (binding.imagePost.getDrawable() as BitmapDrawable).bitmap
+        val width = bitmap.width.toFloat()
+        val height = bitmap.height.toFloat()
+        Log.d("uriiii", selectedImageUri.toString())
+        val imageHorizontalMargin: Int = getImageHorizontalMargin(width / height)    // in px
+
+        val imageVerticalMargin = dpConvertPx(10)
+        val params = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+        Log.d("margin", imageVerticalMargin.toString())
+        params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, 0)
+        binding.imagePost.layoutParams = params
     }
 
     override fun onDestroyView() {
@@ -222,8 +242,7 @@ class WritePostFragment : Fragment() {
         chip.setOnCloseIconClickListener { labelChipGroup.removeView(chip as View) }
         // this will be put into the postData
         Log.d("chip", chip.text.toString())
-        labels.add(labelEv.text.toString())
-        labelEv.setText("")
+        binding.labelEv.setText("")
     }
 
 
