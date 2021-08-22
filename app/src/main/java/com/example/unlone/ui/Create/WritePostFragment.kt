@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.unlone.R
 import com.example.unlone.databinding.FragmentWritePostBinding
-import com.example.unlone.instance.PostData
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -104,7 +103,7 @@ class WritePostFragment : Fragment() {
         })
 
         // init toolbar
-        binding.cancelButton.setOnClickListener(View.OnClickListener { activity?.onBackPressed() })
+        binding.cancelButton.setOnClickListener(View.OnClickListener { activity?.finish() })
         val nextButton = binding.nextButton.setOnClickListener {
             if (binding.inputPostContext.text.toString().isEmpty()) {
                 Toast.makeText(activity, "You haven't write the context", Toast.LENGTH_SHORT).show()

@@ -44,7 +44,6 @@ public class DetailedPostViewModel extends ViewModel {
                 .document(pid)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                             Post p = documentSnapshot.toObject(Post.class);

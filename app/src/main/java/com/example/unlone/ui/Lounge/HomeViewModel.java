@@ -49,7 +49,7 @@ public class HomeViewModel extends ViewModel {
         postList.clear();
         mFirestore.collection("posts")
                 .orderBy("createdTimestamp", Query.Direction.DESCENDING)
-                .limit(10)
+                .limit(numberPost)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

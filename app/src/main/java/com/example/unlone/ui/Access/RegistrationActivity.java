@@ -150,7 +150,9 @@ public class RegistrationActivity extends AppCompatActivity {
         String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         Log.d("REGISTRATION", "save user uid: "+uid);
         Log.d("REGISTRATION", "save user username: "+username.getText().toString());
-        User user = new User(uid, username.getText().toString());
+        User user = new User();
+        user.setUid(uid);
+        user.setUsername(username.getText().toString());
 
         mFirestore.collection("users").document(uid).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

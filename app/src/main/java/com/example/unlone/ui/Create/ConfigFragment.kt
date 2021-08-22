@@ -12,13 +12,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.navArgs
 import com.example.unlone.R
 import com.example.unlone.databinding.FragmentConfigBinding
 import com.example.unlone.instance.Post
-import com.example.unlone.instance.PostData
 import com.example.unlone.instance.User
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
@@ -143,11 +142,12 @@ class ConfigFragment : Fragment() {
                 val document = task.result
                 if (document!!.exists()) {
                     Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.data)
-                    val user = document.toObject(User::class.java)
-                    post.username = user!!.username
-                    val stamp = Timestamp(System.currentTimeMillis())
+                    //val user = document.toObject(User::class.java)
+                    val user = document.toObject<User>()
+                    post.username = user!!.username.toString()
+                    val stamp = System.currentTimeMillis()
                     post.createdTimestamp = stamp.toString()
-                    post.createdDate = Date(stamp.getTime()).toString()
+                    post.createdDate = Date(Timestamp(stamp).time).toString()
 
                     try {
                         saveNewPost(post)
