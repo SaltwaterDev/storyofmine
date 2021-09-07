@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Lounge;
+package com.example.unlone.ui.lounge;
 
 import android.os.Bundle;
 

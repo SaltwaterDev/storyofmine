@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Create
+package com.example.unlone.ui.create
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

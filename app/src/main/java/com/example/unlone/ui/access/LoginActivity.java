@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Access;
+package com.example.unlone.ui.access;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

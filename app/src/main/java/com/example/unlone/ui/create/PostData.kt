@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Create
+package com.example.unlone.ui.create
 
 import android.net.Uri
 import android.os.Parcelable

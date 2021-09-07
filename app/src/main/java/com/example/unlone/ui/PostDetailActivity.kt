@@ -1,44 +1,56 @@
 package com.example.unlone.ui
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.unlone.R
 import com.example.unlone.databinding.ActivityPostDetailBinding
 import com.example.unlone.instance.Comment
 import com.example.unlone.instance.Post
 import com.example.unlone.instance.User
-import com.example.unlone.ui.Lounge.CommentsAdapter
+import com.example.unlone.ui.lounge.CommentsAdapter
 import com.example.unlone.utils.convertTimeStamp
+import com.example.unlone.utils.dpConvertPx
+import com.example.unlone.utils.getImageHorizontalMargin
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Picasso.LoadedFrom
+import com.squareup.picasso.Target
 
 class PostDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostDetailBinding
-    private val commentsAdapter by lazy {CommentsAdapter()}
 
-    private var detailedPostViewModel: DetailedPostViewModel? = null
-    protected var mFirestore: FirebaseFirestore? = null
-    private var mAuth: FirebaseAuth? = null
-    private val post: Post? = null
-    private var comment: Comment? = null
-    private val mComments = 5   // how many comment loaded each time
-
+    // declare viewModel
+    private lateinit var detailedPostViewModel: DetailedPostViewModel
+    private lateinit var commentViewModel: CommentViewModel
 
     // detail of user and the post
     var uid: String? = null
     var username: String? = null
     private lateinit var pid: String
 
-    //add comment views
+    // init firebase
+    private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val commentsAdapter by lazy {CommentsAdapter(pid, ::likeComment)}
+
+    private val post: Post? = null
+    private var comment: Comment? = null
+    private val mComments: Long = 5   // how many comment loaded each time
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
@@ -49,57 +61,122 @@ class PostDetailActivity : AppCompatActivity() {
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (supportActionBar != null) {
-            supportActionBar!!.hide()
-        }
-        binding = ActivityPostDetailBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        // init database storing
-        mFirestore = FirebaseFirestore.getInstance()
-        detailedPostViewModel = DetailedPostViewModel()
-        mAuth = FirebaseAuth.getInstance()
-
         // get id of the post using intent
         val intent = intent
         pid = intent.getStringExtra("postId").toString()
 
-        
+        supportActionBar!!.hide()
+
+        binding = ActivityPostDetailBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        // init toolbar
+        val timestamp = hashMapOf("saveTime" to System.currentTimeMillis().toString())
+        binding.returnButton.setOnClickListener { finish() }
+        binding.reportButton.setOnClickListener {/*TODO*/}
+        binding.saveButton.setOnClickListener{
+            if (binding.saveButton.tag.equals("save")) {
+                mAuth.uid?.let { uid ->
+                    mFirestore.collection("users").document(uid)
+                            .collection("saved")
+                            .document(pid)
+                            .set(timestamp)
+                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                            .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                }
+            }else{
+                mAuth.uid?.let { uid ->
+                    mFirestore.collection("users").document(uid)
+                            .collection("saved")
+                            .document(pid)
+                            .delete()
+                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                }
+            }
+        }
+
+
+
         // load info
         detailedPostViewModel = ViewModelProvider(this).get(DetailedPostViewModel::class.java)
-        detailedPostViewModel!!.loadPost(pid)
+        detailedPostViewModel.loadPost(pid)
         loadPostInfo(binding)
+        isSaved(pid, binding.saveButton)
 
-        // send comment button click
-        binding.sendBtn.setOnClickListener(View.OnClickListener {
-            postComment()
-            binding.commentEt.getText().clear()
-        })
-
-        //binding.recycleview.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(this)
         binding.recycleview.layoutManager = layoutManager
         binding.recycleview.adapter = commentsAdapter
 
-        // init comment
-        val commentViewModel = ViewModelProvider(this).get(CommentViewModel::class.java)
+        // load comment
+        commentViewModel = ViewModelProvider(this).get(CommentViewModel::class.java)
         commentViewModel.loadComments(mComments, pid)
         commentViewModel.comments.observe(this, { comments ->
-            Log.d("TAG", "comments: $comments")
+            Log.d("TAG", "comments in post detail activity: $comments")
             commentsAdapter.setCommentList(comments)
+            commentsAdapter.notifyDataSetChanged()
         })
+
+        // init load_more_comment button
+        binding.moreCommentButton.setOnClickListener {
+            commentViewModel.loadComments(mComments, pid, true)
+            if (commentViewModel.endOfComments) {
+                binding.moreCommentButton.visibility = View.INVISIBLE
+            }
+        }
+
+        // send comment button click
+        binding.sendBtn.setOnClickListener{
+            if (binding.commentEt.text.isNotEmpty()){
+                postComment()
+                binding.commentEt.text.clear()
+                commentViewModel.loadComments(mComments, pid)
+                //commentViewModel.comments.observe(this, { comments ->
+                //        commentsAdapter.setCommentList(comments)
+                //})
+            }
+        }
     }
 
+
+
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
-        detailedPostViewModel!!.observablePost.observe(this, { p ->
+        detailedPostViewModel.observablePost.observe(this, { p ->
+            // determine the comment layout (e.g. whether they have like button)
+            commentsAdapter.selfPost = (p.uid == mAuth.uid)
+
             binding.textViewTitle.text = p!!.title
 
             // display image
             val imagePath = p.imagePath
             try {
-                Picasso.get().load(imagePath).into(binding.imageCover)
-                binding.imageCover.visibility = View.VISIBLE
+                // load image and resize it
+                // action wil be done when load the image
+                val target: Target = object : Target {
+                    override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom) {
+                        binding.imageCover.visibility = View.VISIBLE
+
+                        //get measured image size
+                        val imageWidth = bitmap.width
+                        val imageHeight = bitmap.height
+                        binding.imageCover.setImageBitmap(bitmap)
+                        Log.d("Bitmap Dimensions: ", imageWidth.toString() + "x" + imageHeight)
+                        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        params.gravity = Gravity.CENTER
+                        val imageHorizontalMargin: Int = getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, this@PostDetailActivity) // in px
+                        val imageVerticalMargin = dpConvertPx(38, this@PostDetailActivity)
+                        params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, imageVerticalMargin)
+                        binding.imageCover.layoutParams = params
+
+                    }
+
+                    override fun onBitmapFailed(e: java.lang.Exception, errorDrawable: Drawable) {}
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+                }
+
+                binding.imageCover.tag = target
+                Picasso.get().load(imagePath).into(target)
             } catch (e: Exception) {
                 binding.imageCover.visibility = View.GONE
             }
@@ -108,6 +185,13 @@ class PostDetailActivity : AppCompatActivity() {
             binding.textViewJournal.text = p.journal
             binding.date.text = convertTimeStamp(p.createdTimestamp)
 
+            // display label
+            var displayLabel = ""
+            for (label in p.labels) {
+                displayLabel += "· "
+                displayLabel += "$label "
+            }
+            binding.labelTv.text = displayLabel
         })
     }
 
@@ -121,7 +205,7 @@ class PostDetailActivity : AppCompatActivity() {
             Toast.makeText(this, "Comment is empty", Toast.LENGTH_SHORT).show()
             return
         }
-        val docRef = mFirestore!!.collection("users").document(mAuth!!.uid!!)
+        val docRef = mFirestore.collection("users").document(mAuth.uid!!)
         docRef.addSnapshotListener(EventListener { value, error ->
             if (error != null) {
                 System.err.println("Listen failed: $error")
@@ -130,7 +214,7 @@ class PostDetailActivity : AppCompatActivity() {
             if (value != null && value.exists()) {
                 println("Current data: " + value.data)
                 val user = value.toObject(User::class.java)
-                val authorUid = mAuth!!.uid
+                val authorUid = mAuth.uid
                 val authorUsername = user!!.username
 
                 comment = Comment(authorUid,
@@ -139,7 +223,7 @@ class PostDetailActivity : AppCompatActivity() {
                         System.currentTimeMillis().toString())
 
                 // add comment to the database
-                mFirestore!!.collection("posts").document(pid)
+                mFirestore.collection("posts").document(pid)
                         .collection("comments")
                         .add(comment!!)
                         .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id) }
@@ -150,6 +234,35 @@ class PostDetailActivity : AppCompatActivity() {
         })
     }
 
+
+    private fun isSaved(pid: String, imageView: ImageView) {
+
+        mFirestore.collection("users").document(mAuth.uid!!)
+                .collection("saved")
+                .document(pid)
+                .addSnapshotListener{snapshot, e ->
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e)
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        Log.d(TAG, "Current data: ${snapshot.data}")
+                        imageView.setImageResource(R.drawable.ic_baseline_bookmark_24)
+                        imageView.tag = "saved"
+                    } else {
+                        if (snapshot != null) {
+                            imageView.setImageResource(R.drawable.ic_baseline_bookmark_border_24)
+                            imageView.tag = "save"
+                        }
+                    }
+                }
+    }
+
+    private fun likeComment(comment: Comment) {
+        commentViewModel.likeComment(comment, pid)
+        commentViewModel.loadComments(mComments, pid)
+    }
 
     companion object {
         private const val TAG = "PostDetailedActivity"

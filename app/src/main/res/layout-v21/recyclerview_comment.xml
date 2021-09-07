@@ -60,14 +60,14 @@
                 android:textSize="15sp"
                 android:fontFamily="@font/sf_pro_text_regular" />
 
-            <ImageButton
+            <ImageView
+                android:id="@+id/likeButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_heart"
-                android:id="@+id/likeButton"
                 android:background="@null"
                 android:layout_toEndOf="@id/comment"
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:layout_marginTop="12dp"
                 android:layout_marginStart="13dp"
                 android:layout_marginEnd="20dp" />
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="14dp">
 
             <ImageButton
                 android:id="@+id/moreButton"

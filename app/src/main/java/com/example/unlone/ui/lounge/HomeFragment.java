@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Lounge;
+package com.example.unlone.ui.lounge;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.viewpager2.widget.ViewPager2;
 

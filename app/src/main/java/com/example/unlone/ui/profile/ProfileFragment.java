@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Profile;
+package com.example.unlone.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;

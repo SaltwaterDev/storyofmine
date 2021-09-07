@@ -48,7 +48,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/colorBarIcon"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/saveButton"
                 android:background="@null"
                 android:gravity="center"
@@ -60,7 +60,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/colorBarIcon"/>
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -136,24 +135,55 @@
                 android:layout_marginEnd="16dp"
                 android:textSize="17sp"/>
 
-            <!--List of comment-->
             <TextView
+                android:id="@+id/labelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/comment"
                 android:textColor="@color/colorText"
-                android:fontFamily="@font/sf_pro_text_semibold"
+                android:layout_marginTop="60dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_gravity="start"
                 android:textSize="15sp"
-                android:layout_marginTop="150dp"
-                android:layout_marginStart="15dp"
-                android:paddingBottom="8dp"/>
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                app:layout_constraintBottom_toTopOf="@+id/author"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <!--List of comment-->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/recycleview"
-                tools:listitem="@layout/recyclerview_comment"
-                android:background="@drawable/back"/>
+                android:layout_marginTop="98dp">
+
+                <FrameLayout
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="#7F000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/recyclerview_comment" />
+
+
+                <ImageView
+                    android:id="@+id/more_comment_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_baseline_add_circle_outline_24"
+                    app:layout_constraintTop_toBottomOf="@+id/recycleview"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="80dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <!--Related Posts, will do next time-->
         </LinearLayout>
 
@@ -171,26 +201,26 @@
 
         <EditText
             android:id="@+id/commentEt"
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:padding="14dp"
             android:textSize="15sp"
-            android:background="@drawable/back"
-            android:hint="Comment..."
-            android:textColor="@color/colorTextHint"
-            android:inputType="textCapSentences|textMultiLine" />
+            android:hint="@string/comment_hint"
+            android:layout_weight="20"
+            android:background="@null"
+            android:textColor="@color/colorText"
+            android:inputType="textCapSentences|textMultiLine"
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/sendBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post"
+            android:layout_weight="1"
             android:padding="14dp"
-            android:background="@color/colorWhite"
             android:textColor="#1D723B"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"/>
+            android:gravity="center" />
 
 
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.Lounge.LoungeFollowingFragment">
+    tools:context=".ui.lounge.LoungeFollowingFragment">
 
     <LinearLayout
         android:id="@+id/search_bar"
@@ -59,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:cardElevation="0dp"
+            app:cardElevation="1dp"
             tools:listitem="@layout/recyclerview_post" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

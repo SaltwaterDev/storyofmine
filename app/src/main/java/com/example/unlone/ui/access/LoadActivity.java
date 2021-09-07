@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Access;
+package com.example.unlone.ui.access;
 
 import android.content.Intent;
 import android.os.Build;

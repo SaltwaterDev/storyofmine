@@ -1,9 +1,10 @@
-package com.example.unlone.ui.Lounge;
+package com.example.unlone.ui.lounge;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -19,7 +20,7 @@ import android.view.ViewGroup;
 
 import com.example.unlone.R;
 import com.example.unlone.instance.Post;
-import com.example.unlone.ui.Create.PostActivity;
+import com.example.unlone.ui.create.PostActivity;
 import com.example.unlone.ui.PostsAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,7 @@ public class LoungeFollowingFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private PostsAdapter postsAdapter;
     private int mPosts = 10;
+    private boolean isLoading = false;
 
     public static final int REQUEST_CODE_ADD_POST = 1;
 
@@ -74,7 +76,6 @@ public class LoungeFollowingFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<Post> postList) {
                 postsAdapter.setPostList(postList);
-                postsAdapter.notifyDataSetChanged();
             }
         });
 
@@ -87,7 +88,6 @@ public class LoungeFollowingFragment extends Fragment {
                     @Override
                     public void onChanged(@Nullable List<Post> postList) {
                         postsAdapter.setPostList(postList);
-                        postsAdapter.notifyDataSetChanged();
                     }
                 });
 
@@ -95,6 +95,29 @@ public class LoungeFollowingFragment extends Fragment {
             }
         });
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                //super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int totalItem = linearLayoutManager.getItemCount();
+                int lastVisible = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                if (totalItem < lastVisible + 3){
+                    if(!isLoading){
+                        isLoading = true;
+                        // load more posts
+                        homeViewModel.loadPosts(mPosts);
+                        homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+                            @Override
+                            public void onChanged(@Nullable List<Post> postList) {
+                                postsAdapter.setPostList(postList);
+                            }
+                        });
+                       isLoading = false;
+                    }
+                }
+            }
+        });
 
         return root;
     }

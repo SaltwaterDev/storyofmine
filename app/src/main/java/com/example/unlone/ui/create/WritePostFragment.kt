@@ -1,4 +1,4 @@
-package com.example.unlone.ui.Create
+package com.example.unlone.ui.create
 
 import android.Manifest
 import android.content.Context
@@ -28,6 +28,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.unlone.R
 import com.example.unlone.databinding.FragmentWritePostBinding
+import com.example.unlone.utils.dpConvertPx
+import com.example.unlone.utils.getImageHorizontalMargin
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -169,12 +171,14 @@ class WritePostFragment : Fragment() {
         val width = bitmap.width.toFloat()
         val height = bitmap.height.toFloat()
         Log.d("uriiii", selectedImageUri.toString())
-        val imageHorizontalMargin: Int = getImageHorizontalMargin(width / height)    // in px
 
-        val imageVerticalMargin = dpConvertPx(10)
+        val imageHorizontalMargin = activity?.let { getImageHorizontalMargin(width / height, it) }    // in px
+        val imageVerticalMargin = activity?.let { dpConvertPx(10, it) }
         val params = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
         Log.d("margin", imageVerticalMargin.toString())
-        params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, 0)
+        if (imageHorizontalMargin != null && imageVerticalMargin != null) {
+            params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, 0)
+        }
         binding.imagePost.layoutParams = params
     }
 
@@ -244,19 +248,6 @@ class WritePostFragment : Fragment() {
         binding.labelEv.setText("")
     }
 
-
-    private fun getImageHorizontalMargin(ratio: Float): Int {
-        val displayMetrics = requireContext().resources.displayMetrics
-        val deviceWidth = displayMetrics.widthPixels.toFloat()
-        val slope = deviceWidth / 6 - deviceWidth / 4 * 45 / 44
-        val margin = slope * (ratio - 4 / 5f) + deviceWidth / 4
-        return margin.toInt()
-    }
-
-    private fun dpConvertPx(dp: Int): Int {
-        val metrics = requireContext().resources.displayMetrics
-        return dp * metrics.densityDpi / 160
-    }
 
     companion object {
         private const val REQUEST_CODE_STORAGE_PERMISSION = 1
