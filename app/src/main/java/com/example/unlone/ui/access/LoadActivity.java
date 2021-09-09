@@ -64,23 +64,20 @@ public class LoadActivity extends AppCompatActivity {
     }
         else{
             mFirestore.collection("users").document(currentUser.getUid()).get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            Log.d("LOADACTIVITY", "GET USER");
-                            User current = documentSnapshot.toObject(User.class);
-                            assert current != null;
-                            Toast.makeText(LoadActivity.this, "Welcome Back "+ current.getUsername(),
-                                    Toast.LENGTH_SHORT).show();
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Log.d("LOADACTIVITY", "GET USER");
+                        User current = documentSnapshot.toObject(User.class);
+                        assert current != null;
+                        Toast.makeText(LoadActivity.this, "Welcome Back "+ current.getUsername(),
+                                Toast.LENGTH_SHORT).show();
 
-                            Log.d("LOADACTIVITY", "login: "+currentUser.getUid());
-                            new Handler().postDelayed(new Runnable() {
-                                public void run() {
-                                    startActivity(new Intent(LoadActivity.this, MainActivity.class));
-                                    finish();
-                                }
-                            }, 2000);
-                        }
+                        Log.d("LOADACTIVITY", "login: "+currentUser.getUid());
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                startActivity(new Intent(LoadActivity.this, MainActivity.class));
+                                finish();
+                            }
+                        }, 2000);
                     });
 
         }

@@ -72,7 +72,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_layout"
         android:layout_above="@+id/commentLayout">
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -191,39 +191,59 @@
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
-        android:id="@+id/commentLayout"
+        android:id="@id/commentLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/back"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#7F000000" />
 
-        <EditText
-            android:id="@+id/commentEt"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="14dp"
-            android:textSize="15sp"
-            android:hint="@string/comment_hint"
-            android:layout_weight="20"
+        <LinearLayout
+            android:id="@+id/commentBlockLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
             android:background="@null"
-            android:textColor="@color/colorText"
-            android:inputType="textCapSentences|textMultiLine"
-            android:importantForAutofill="no" />
-
-        <TextView
-            android:id="@+id/sendBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Post"
-            android:layout_weight="1"
-            android:padding="14dp"
-            android:textColor="#1D723B"
-            android:gravity="center" />
+            android:orientation="horizontal">
 
 
+
+            <EditText
+                android:id="@+id/commentEt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:padding="14dp"
+                android:textSize="15sp"
+                android:hint="@string/comment_hint"
+                android:layout_weight="20"
+                android:background="@null"
+                android:textColor="@color/colorText"
+                android:inputType="textCapSentences|textMultiLine"
+                android:importantForAutofill="no" />
+
+            <TextView
+                android:id="@+id/sendBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Post"
+                android:layout_weight="1"
+                android:padding="14dp"
+                android:textColor="#1D723B"
+                android:gravity="center" />
+
+
+
+        </LinearLayout>
 
     </LinearLayout>
+
+
+
+
 
 </RelativeLayout>

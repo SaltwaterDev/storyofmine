@@ -45,10 +45,10 @@ public class HomeViewModel extends ViewModel {
 
 
 
-    public void loadPosts(int numberPost) {
-        //postList.clear();
+    public void loadPosts(int numberPost, Boolean loadMore) {
 
-        if(lastVisible == null){
+        if(lastVisible == null || !loadMore){
+            postList.clear();
             Log.d(TAG, "First load");
             mFirestore.collection("posts")
                     .orderBy("createdTimestamp", Query.Direction.DESCENDING)

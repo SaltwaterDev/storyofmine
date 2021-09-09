@@ -2,7 +2,7 @@
     <string name="app_name">unlone</string>
     <string name="lounge">lounge</string>
     <string name="profile">profile</string>
-    <string name="username">username</string>
+    <string name="username">Username</string>
     <string name="action_sign_in_short">sign in</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="create_post_fragment">Create post fragment</string>

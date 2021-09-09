@@ -92,27 +92,31 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="14dp"
             android:layout_marginBottom="14dp">
 
             <ImageButton
                 android:id="@+id/moreButton"
-                android:background="@null"
-                android:gravity="center"
-                android:src="@drawable/ic_baseline_more_horiz_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp" />
+                android:layout_marginStart="14dp"
+                android:background="@null"
+                android:gravity="center"
+                android:padding="4dp"
+                android:src="@drawable/ic_baseline_more_horiz_24"
+                app:tint="@color/colorText" />
 
             <ImageButton
                 android:id="@+id/commentButton"
                 android:background="@null"
                 android:gravity="center"
+                android:padding="4dp"
+                android:layout_centerVertical="true"
                 android:src="@drawable/ic_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="23dp"
-                android:layout_toRightOf="@+id/moreButton"/>
+                android:layout_toEndOf="@+id/moreButton"/>
 
         </RelativeLayout>
 

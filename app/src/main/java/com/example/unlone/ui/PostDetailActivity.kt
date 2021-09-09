@@ -1,6 +1,7 @@
 package com.example.unlone.ui
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -29,6 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
+import java.security.Timestamp
+import java.util.*
 
 class PostDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostDetailBinding
@@ -72,11 +75,23 @@ class PostDetailActivity : AppCompatActivity() {
         setContentView(view)
 
         // init toolbar
-        val timestamp = hashMapOf("saveTime" to System.currentTimeMillis().toString())
         binding.returnButton.setOnClickListener { finish() }
-        binding.reportButton.setOnClickListener {/*TODO*/}
+        binding.reportButton.setOnClickListener {
+            // write the pid into the Report collection in Firestore
+            val docData = hashMapOf(
+                "pid" to pid,
+                "timestamp" to System.currentTimeMillis().toString(),
+            )
+            mFirestore.collection("report")
+                .document(pid)
+                .set(docData)
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+        }
+
         binding.saveButton.setOnClickListener{
             if (binding.saveButton.tag.equals("save")) {
+                val timestamp = hashMapOf("saveTime" to System.currentTimeMillis().toString())
                 mAuth.uid?.let { uid ->
                     mFirestore.collection("users").document(uid)
                             .collection("saved")
@@ -126,15 +141,14 @@ class PostDetailActivity : AppCompatActivity() {
             }
         }
 
+
+
         // send comment button click
         binding.sendBtn.setOnClickListener{
             if (binding.commentEt.text.isNotEmpty()){
                 postComment()
                 binding.commentEt.text.clear()
                 commentViewModel.loadComments(mComments, pid)
-                //commentViewModel.comments.observe(this, { comments ->
-                //        commentsAdapter.setCommentList(comments)
-                //})
             }
         }
     }
@@ -146,6 +160,14 @@ class PostDetailActivity : AppCompatActivity() {
             // determine the comment layout (e.g. whether they have like button)
             commentsAdapter.selfPost = (p.uid == mAuth.uid)
 
+            // enable or disable save button
+            if (!p.save){
+                binding.saveButton.isEnabled = false
+                binding.saveButton.setColorFilter(Color.argb(255, 110,
+                    110, 110))
+            }
+
+            // display title
             binding.textViewTitle.text = p!!.title
 
             // display image
@@ -192,6 +214,10 @@ class PostDetailActivity : AppCompatActivity() {
                 displayLabel += "$label "
             }
             binding.labelTv.text = displayLabel
+
+            // if author doesn't allow commenting, will disappear the comment block
+            if (!p.comment) binding.commentLayout.visibility = View.GONE
+
         })
     }
 

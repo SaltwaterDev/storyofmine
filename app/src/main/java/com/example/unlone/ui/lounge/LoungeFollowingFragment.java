@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class LoungeFollowingFragment extends Fragment {
         recyclerView.setAdapter(postsAdapter);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        homeViewModel.loadPosts(mPosts);
+        homeViewModel.loadPosts(mPosts, false);
         homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(@Nullable List<Post> postList) {
@@ -83,12 +84,11 @@ public class LoungeFollowingFragment extends Fragment {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                homeViewModel.loadPosts(mPosts);
-                homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Post> postList) {
-                        postsAdapter.setPostList(postList);
-                    }
+                homeViewModel.loadPosts(mPosts, false);
+                homeViewModel.getPosts().observe(getViewLifecycleOwner(), postList -> {
+                    assert postList != null;
+                    Log.d("TAG", String.valueOf(postList));
+                    postsAdapter.setPostList(postList);
                 });
 
                 swipeRefreshLayout.setRefreshing(false);
@@ -106,7 +106,7 @@ public class LoungeFollowingFragment extends Fragment {
                     if(!isLoading){
                         isLoading = true;
                         // load more posts
-                        homeViewModel.loadPosts(mPosts);
+                        homeViewModel.loadPosts(mPosts, true);
                         homeViewModel.getPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
                             @Override
                             public void onChanged(@Nullable List<Post> postList) {
