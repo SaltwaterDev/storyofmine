@@ -6,14 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.access.LoadActivity"
-    android:background="#FEFDFB">
+    android:background="#5C5C5C">
 
     <TextView
         style="@style/AppTheme"
         android:text="UNLONE"
-        android:textColor="#4D4D4D"
-        android:fontFamily="@font/averia_serif_libre_regular"
-        android:textSize="@dimen/_23sdp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/averia_serif_libre_bold"
+        android:textSize="27sp"
+        android:letterSpacing="0.03"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

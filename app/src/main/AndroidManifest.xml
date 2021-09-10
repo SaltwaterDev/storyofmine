@@ -41,8 +41,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.unlone.ui.access.RegistrationActivity" />
-        <activity android:name="com.example.unlone.ui.access.LoginActivity" />
+
     </application>
 
 </manifest>

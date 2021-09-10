@@ -120,7 +120,6 @@ class WritePostFragment : Fragment() {
                 Log.d("TAG", "label in postData, write fragment: " + postData.labels.toString())
 
                 savedStateModel.savepostData(postData)
-                //val action = WritePostFragmentDirections.navigateToConfigFragment(postData)
                 Navigation.findNavController(view).navigate(R.id.navigateToConfigFragment)
             }
         }
@@ -128,8 +127,8 @@ class WritePostFragment : Fragment() {
         // init label view
         labelChipGroup = binding.labelChipGroup
         val labelEv = binding.labelEv
-        labelEv.setOnEditorActionListener { v, actionId, _ ->
-            if(!binding.labelEv.text.toString().isEmpty()){
+        labelEv.setOnEditorActionListener { _, actionId, _ ->
+            if(binding.labelEv.text.toString().isNotEmpty()){
                 if(actionId == EditorInfo.IME_ACTION_DONE){
                     labels.add(binding.labelEv.text.toString())
                     addChipToGroup(binding.labelEv.text.toString())

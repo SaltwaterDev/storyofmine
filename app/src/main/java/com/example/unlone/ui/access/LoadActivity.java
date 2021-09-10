@@ -60,7 +60,7 @@ public class LoadActivity extends AppCompatActivity {
                     startActivity(new Intent(LoadActivity.this, FirstAccessActivity.class));
                     finish();
             }
-        }, 2000);
+        }, 1000);
     }
         else{
             mFirestore.collection("users").document(currentUser.getUid()).get()
@@ -77,7 +77,7 @@ public class LoadActivity extends AppCompatActivity {
                                 startActivity(new Intent(LoadActivity.this, MainActivity.class));
                                 finish();
                             }
-                        }, 2000);
+                        }, 1000);
                     });
 
         }
