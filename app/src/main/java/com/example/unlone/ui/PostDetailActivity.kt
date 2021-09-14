@@ -158,13 +158,17 @@ class PostDetailActivity : AppCompatActivity() {
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
         detailedPostViewModel.observablePost.observe(this, { p ->
             // determine the comment layout (e.g. whether they have like button)
-            commentsAdapter.selfPost = (p.uid == mAuth.uid)
+            if (p != null) {
+                commentsAdapter.selfPost = (p.uid == mAuth.uid)
+            }
 
             // enable or disable save button
-            if (!p.save){
-                binding.saveButton.isEnabled = false
-                binding.saveButton.setColorFilter(Color.argb(255, 110,
-                    110, 110))
+            if (p != null) {
+                if (!p.save){
+                    binding.saveButton.isEnabled = false
+                    binding.saveButton.setColorFilter(Color.argb(255, 110,
+                        110, 110))
+                }
             }
 
             // display title

@@ -1,86 +1,70 @@
-package com.example.unlone.ui.access;
+package com.example.unlone.ui.access
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import android.os.Bundle
+import com.example.unlone.R
+import android.view.WindowManager
+import android.content.Intent
+import android.os.Handler
+import android.util.Log
+import android.view.View
+import com.google.firebase.firestore.DocumentSnapshot
+import android.widget.Toast
+import com.example.unlone.instance.User
+import com.example.unlone.ui.MainActivity
+import com.google.firebase.firestore.ktx.toObject
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.unlone.R;
-import com.example.unlone.instance.User;
-import com.example.unlone.ui.MainActivity;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-public class LoadActivity extends AppCompatActivity {
-
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore mFirestore;
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-        mFirestore = FirebaseFirestore.getInstance();
-        setContentView(R.layout.activity_load);
+class LoadActivity : AppCompatActivity() {
+    private var mAuth: FirebaseAuth? = null
+    private var mFirestore: FirebaseFirestore? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mAuth = FirebaseAuth.getInstance()
+        mFirestore = FirebaseFirestore.getInstance()
+        setContentView(R.layout.activity_load)
 
         // hide action bar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().hide();
+        if (supportActionBar != null) {
+            supportActionBar!!.hide()
         }
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        View decorView = getWindow().getDecorView();
-        int uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setSystemUiVisibility(uiOption);
-
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+        val decorView = window.decorView
+        val uiOption =
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        decorView.systemUiVisibility = uiOption
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public override fun onStart() {
+        super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        final FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            Log.d("LOADACTIVITY", "first time login");
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    startActivity(new Intent(LoadActivity.this, FirstAccessActivity.class));
-                    finish();
-            }
-        }, 1000);
-    }
-        else{
-            mFirestore.collection("users").document(currentUser.getUid()).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        Log.d("LOADACTIVITY", "GET USER");
-                        User current = documentSnapshot.toObject(User.class);
-                        assert current != null;
-                        Toast.makeText(LoadActivity.this, "Welcome Back "+ current.getUsername(),
-                                Toast.LENGTH_SHORT).show();
-
-                        Log.d("LOADACTIVITY", "login: "+currentUser.getUid());
-                        new Handler().postDelayed(new Runnable() {
-                            public void run() {
-                                startActivity(new Intent(LoadActivity.this, MainActivity.class));
-                                finish();
-                            }
-                        }, 1000);
-                    });
-
+        val currentUser = mAuth!!.currentUser
+        if (currentUser == null) {
+            Log.d("LOADACTIVITY", "first time login")
+            Handler().postDelayed({
+                startActivity(Intent(this@LoadActivity, FirstAccessActivity::class.java))
+                finish()
+            }, 1000)
+        } else {
+            Log.d("LOADACTIVITY", "uid: ${currentUser.uid}")
+            mFirestore!!.collection("users").document(currentUser.uid).get()
+                .addOnSuccessListener { documentSnapshot: DocumentSnapshot ->
+                    Log.d("LOADACTIVITY", "GET USER")
+                    val current = documentSnapshot.toObject<User>()!!
+                    Toast.makeText(
+                        this@LoadActivity, "Welcome Back " + current.username,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.d("LOADACTIVITY", "login: " + currentUser.uid)
+                    Handler().postDelayed({
+                        startActivity(Intent(this@LoadActivity, MainActivity::class.java))
+                        finish()
+                    }, 1000)
+                }
         }
     }
-
 }

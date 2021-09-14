@@ -38,8 +38,8 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     private val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
     private var postList = emptyList<Post>()
     private val uid: String? = mAuth.uid
-    protected var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    protected var storageReference: StorageReference? = null
+    private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var storageReference: StorageReference? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var card: CardView = itemView.findViewById(R.id.card_view)

@@ -43,13 +43,11 @@ class RegistrationFragment : Fragment() {
         _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
 
 
-
         val username = binding.username
         val email = binding.email
         val password = binding.password
         val confirmPassword = binding.confirmPassword
         val register = binding.registerBtn
-        val progressBar = binding.progressBar
         val declaration = binding.decalration
 
         register.setOnClickListener {
@@ -74,7 +72,7 @@ class RegistrationFragment : Fragment() {
                     "Password must have at least 6 characters",
                     Toast.LENGTH_SHORT
                 ).show()
-            } else if (password.text != confirmPassword.text){
+            } else if (password.text.toString() != confirmPassword.text.toString()){
                 Toast.makeText(
                     context,
                     "Password is not the same as Confirm Password",
@@ -122,12 +120,13 @@ class RegistrationFragment : Fragment() {
                     });*/
 
         // Sign in with email
+        binding.progressBar.visibility = View.VISIBLE
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener{ task ->
                     if (task.isSuccessful) {
-                        binding.progressBar.visibility = View.VISIBLE
                         val user: FirebaseUser? = mAuth.currentUser
                         if (user != null) {
+                            Log.d("TAG", "saveUser")
                             saveUser(user)
                         }
                     }

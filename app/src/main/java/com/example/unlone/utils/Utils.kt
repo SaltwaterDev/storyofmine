@@ -21,7 +21,7 @@ fun convertTimeStamp(timestamp: String, dateFormat: String = "HH:mm   dd'th' MMM
 }
 
 fun dpConvertPx(dp: Int, context: Context): Int {
-    val metrics: DisplayMetrics = context.getResources().getDisplayMetrics()
+    val metrics: DisplayMetrics = context.resources.displayMetrics
     return dp * metrics.densityDpi / 160
 }
 

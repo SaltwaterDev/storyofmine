@@ -8,4 +8,5 @@ data class User (    var uid: String? = null,
                      var username: String? = null,
                      var personae: ArrayList<String>? = null,
                      var persona: String? = null,
+                     var bio: String? = null,
 ): Parcelable

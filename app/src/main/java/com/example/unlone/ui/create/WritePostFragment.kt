@@ -108,8 +108,11 @@ class WritePostFragment : Fragment() {
         binding.cancelButton.setOnClickListener(View.OnClickListener { activity?.finish() })
         val nextButton = binding.nextButton.setOnClickListener {
             if (binding.inputPostContext.text.toString().isEmpty()) {
-                Toast.makeText(activity, "You haven't write the context", Toast.LENGTH_SHORT).show()
-            }else{
+                Toast.makeText(activity, "You haven't wrote the context", Toast.LENGTH_SHORT).show()
+            }else if (binding.inputPostTitle.text.toString().isEmpty()){
+                Toast.makeText(activity, "You haven't wrote the Title", Toast.LENGTH_SHORT).show()
+            }
+            else{
                 postData.title = binding.inputPostTitle.text.toString()
                 postData.imageUri = selectedImageUri
                 postData.journal = binding.inputPostContext.text.toString()
