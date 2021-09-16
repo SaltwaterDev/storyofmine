@@ -31,8 +31,7 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.title.text = dataList[position].title
         holder.binding.cardView
-            .setBackgroundColor(Color.parseColor(dataList[position].backgroundColour))
-        holder.binding.cardView.radius = dpConvertPx(5, context).toFloat()
+            .setCardBackgroundColor(Color.parseColor(dataList[position].backgroundColour))
     }
 
 

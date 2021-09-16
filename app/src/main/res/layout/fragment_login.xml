@@ -38,11 +38,13 @@
         android:layout_marginBottom="30dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
+        android:text="Email"
+        android:padding="4dp"
+        android:textAlignment="viewEnd"
         android:textColor="@color/colorWhiteText"
         android:fontFamily="@font/sf_pro_display_bold"
-        android:text="Email"
         android:id="@+id/email_text"/>
 
     <EditText
@@ -68,10 +70,12 @@
         android:layout_marginBottom="111dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_display_bold"
             android:text="Password"
+            android:padding="4dp"
+            android:textAlignment="viewEnd"
+            android:fontFamily="@font/sf_pro_display_bold"
             android:textColor="@color/colorWhiteText"
             android:id="@+id/password_text"/>
 

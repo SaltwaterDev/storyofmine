@@ -56,16 +56,19 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_layout">
     <LinearLayout
         android:id="@+id/user_info"
+        android:layout_below="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="32.35dp"
-        android:layout_below="@+id/toolbar_layout">
+        android:layout_marginTop="32.35dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -84,22 +87,18 @@
             android:textSize="21sp"
             android:textColor="@color/colorText"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerviewProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="1dp"
+            android:layout_marginTop="86dp"
+            app:cardElevation="1dp"
+            tools:listitem="@layout/recyclerview_profile_card"
+            android:nestedScrollingEnabled="false"/>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewProfile"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:elevation="1dp"
-        android:layout_marginTop="86dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_below="@+id/user_info"
-        app:cardElevation="1dp"
-        tools:listitem="@layout/recyclerview_profile_card" />
+    </androidx.core.widget.NestedScrollView>
 
 
 </RelativeLayout>
