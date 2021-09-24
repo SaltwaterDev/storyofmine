@@ -43,7 +43,6 @@ import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 class WritePostFragment : Fragment() {
-    private lateinit var createViewModel: CreateViewModel
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mFirestore: FirebaseFirestore
     private lateinit var storageReference: StorageReference
@@ -55,9 +54,10 @@ class WritePostFragment : Fragment() {
     private lateinit var labelChipGroup: ChipGroup
 
 
-    private var _binding: FragmentWritePostBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
+    private var _binding: FragmentWritePostBinding? = null
+
     private val cropActivityResultContract = object : ActivityResultContract<Any?, Uri?>(){
         override fun createIntent(context: Context, input: Any?): Intent {
             return CropImage.activity()
@@ -83,7 +83,6 @@ class WritePostFragment : Fragment() {
         val view = binding.root
 
         // init database storing
-        createViewModel = ViewModelProvider(this).get(CreateViewModel::class.java)
         mAuth = FirebaseAuth.getInstance()
         mFirestore = FirebaseFirestore.getInstance()
         storageReference = FirebaseStorage.getInstance().getReference("posts")

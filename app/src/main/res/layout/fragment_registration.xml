@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.access.RegistrationFragment"
     android:orientation="vertical"
-    android:background="#5C5C5C">
+    android:background="#4D4D4D">
 
     <TextView
         android:id="@+id/title"
@@ -19,6 +19,7 @@
         android:fontFamily="@font/averia_serif_libre_bold"
         android:textColor="@color/colorWhiteText"
         android:layout_marginTop="203dp"
+        android:layout_marginBottom="@dimen/_27sdp"
         android:textStyle="bold"/>
 
     <LinearLayout
@@ -26,12 +27,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/username_field"
         android:layout_marginStart="43dp"
-
         android:layout_marginEnd="43dp">
 
         <TextView
             android:layout_width="120dp"
             android:textAlignment="viewEnd"
+            android:textSize="@dimen/_11ssp"
             android:layout_height="wrap_content"
             android:text="Username"
             android:fontFamily="@font/sf_pro_display_bold"
@@ -61,6 +62,7 @@
         <TextView
             android:layout_width="120dp"
             android:textAlignment="viewEnd"
+            android:textSize="@dimen/_11ssp"
             android:layout_height="wrap_content"
             android:text="School email"
             android:fontFamily="@font/sf_pro_display_bold"
@@ -93,6 +95,7 @@
             android:textAlignment="viewEnd"
             android:layout_height="wrap_content"
             android:text="Set Password"
+            android:textSize="@dimen/_11ssp"
             android:fontFamily="@font/sf_pro_display_bold"
             android:textColor="@color/colorWhiteText"/>
 
@@ -120,6 +123,7 @@
             android:layout_width="120dp"
             android:textAlignment="viewEnd"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/_11ssp"
             android:text="Confirm Password"
             android:fontFamily="@font/sf_pro_display_bold"
             android:textColor="@color/colorWhiteText"/>
@@ -138,18 +142,17 @@
     </LinearLayout>
 
 
-
     <CheckBox
+        android:id="@+id/decalration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorWhiteText"
-        android:text="I agree to the term and condition"
-        android:layout_marginStart="44dp"
-        android:id="@+id/decalration"
-        android:checked="false"
+        android:layout_marginTop="19dp"
         android:backgroundTint="#C4C4C4"
+        android:checked="false"
         android:fontFamily="@font/sf_pro_display_bold"
-        android:layout_marginTop="19dp"/>
+        android:layout_gravity="center_horizontal"
+        android:text="I agree to the term and condition"
+        android:textColor="@color/colorWhiteText" />
 
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"

@@ -16,7 +16,8 @@
             android:id="@+id/lounge_toolbar"
             android:layout_width="380dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary">
+            app:layout_scrollFlags="scroll|snap"
+            android:background="@color/dark_gray">
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,7 +59,7 @@
         android:id="@+id/view_pager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tab_layout"/>
+        android:layout_below="@id/tab_layout" />
 
 
 

@@ -16,8 +16,8 @@
         android:background="@drawable/background_search"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/_10sdp"
-        android:paddingEnd="@dimen/_10sdp">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
         <ImageView
             android:layout_width="20dp"
@@ -30,9 +30,9 @@
             android:id="@+id/inputsearch"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_20sdp"
-            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginStart="5dp"
             android:background="@null"
-            android:textColor="@color/colorWhiteText"
+            android:textColor="@color/colorText"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:includeFontPadding="false"
@@ -50,7 +50,7 @@
         android:layout_below="@id/search_bar">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleview_posts"
+            android:id="@+id/recycleviewPosts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:elevation="0dp"

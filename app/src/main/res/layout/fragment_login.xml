@@ -4,34 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#5C5C5C"
+    android:background="#4D4D4D"
     tools:context=".ui.access.LoginFragment">
 
 
-    <TextView
+    <ImageView
         android:id="@+id/title"
         style="@style/AppTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_179sdp"
+        android:layout_height="@dimen/_124sdp"
         android:fontFamily="@font/averia_serif_libre_bold"
         android:letterSpacing="0.03"
-        android:text="UNLONE"
+        android:src="@drawable/logo"
         android:textColor="#FFFFFF"
         android:textSize="27sp"
         app:layout_constraintBottom_toTopOf="@+id/email_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.847" />
-
-
+        app:layout_constraintVertical_bias="0.93" />
 
     <LinearLayout
         android:id="@+id/email_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="44dp"
         app:layout_constraintBottom_toTopOf="@id/password_field"
@@ -42,6 +39,7 @@
         android:layout_height="wrap_content"
         android:text="Email"
         android:padding="4dp"
+        android:textSize="@dimen/_11ssp"
         android:textAlignment="viewEnd"
         android:textColor="@color/colorWhiteText"
         android:fontFamily="@font/sf_pro_display_bold"
@@ -66,7 +64,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
         android:layout_margin="44dp"
-        android:textSize="14sp"
         android:layout_marginBottom="111dp">
 
         <TextView
@@ -74,6 +71,7 @@
             android:layout_height="wrap_content"
             android:text="Password"
             android:padding="4dp"
+            android:textSize="@dimen/_11ssp"
             android:textAlignment="viewEnd"
             android:fontFamily="@font/sf_pro_display_bold"
             android:textColor="@color/colorWhiteText"
@@ -95,8 +93,8 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:id="@+id/buttonRegister"
         app:cornerRadius="15dp"
-        android:paddingStart="47dp"
-        android:paddingEnd="47dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
         app:strokeColor="@color/colorWhiteText"
         app:strokeWidth="1dp"
         android:layout_width="wrap_content"
@@ -110,7 +108,7 @@
         android:textAllCaps = "false"
         android:textAlignment="center"
         android:textSize="18sp"
-        android:text="@string/action_register"/>
+        android:text="Register?"/>
 
 
     <com.google.android.material.button.MaterialButton

@@ -10,6 +10,8 @@ import android.os.Bundle
 import com.example.unlone.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.content.Intent
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -18,32 +20,46 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.ViewModelProvider
+import com.example.unlone.databinding.FragmentLoungeFollowingBinding
+import com.example.unlone.databinding.FragmentWritePostBinding
 import com.example.unlone.instance.Post
+import com.google.firebase.firestore.Query
 
 class LoungeFollowingFragment : Fragment() {
     private var homeViewModel: HomeViewModel? = null
     private var postsAdapter: PostsAdapter? = null
     private val mPosts = 10
     private var isLoading = false
+
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
+    private var _binding: FragmentLoungeFollowingBinding? = null
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val root =
-            inflater.inflate(R.layout.fragment_lounge_following, container, false) as ViewGroup
-        val fab: FloatingActionButton = root.findViewById(R.id.fab)
+    ): View {
+
+        // Inflate the layout for this fragment
+        _binding = FragmentLoungeFollowingBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+
+        // create "writing post" button
+        val fab: FloatingActionButton = binding.fab
         fab.tooltipText = "Write a post"
         fab.setOnClickListener { v: View? ->
             startActivityForResult(
                 Intent(context, PostActivity::class.java), REQUEST_CODE_ADD_POST
             )
         }
+
         val mAuth =
             FirebaseAuth.getInstance() // TODO ("will be used when choosing the following topic")
-
-        val recyclerView: RecyclerView = root.findViewById(R.id.recycleview_posts)
-        val swipeRefreshLayout: SwipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout)
+        val recyclerView: RecyclerView = binding.recycleviewPosts
+        val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefreshLayout
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
@@ -84,8 +100,25 @@ class LoungeFollowingFragment : Fragment() {
                 }
             }
         })
-        return root
+
+
+        // init search bar
+        binding.inputsearch.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                homeViewModel!!.searchPost(s.toString())
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {}
+        })
+
+
+        return view
     }
+
 
     companion object {
         const val REQUEST_CODE_ADD_POST = 1

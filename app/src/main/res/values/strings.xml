@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">unlone</string>
-    <string name="lounge">lounge</string>
-    <string name="profile">profile</string>
+    <string name="lounge">Lounge</string>
+    <string name="profile">Profile</string>
     <string name="username">Username</string>
     <string name="action_register">Register</string>
     <!-- TODO: Remove or change this placeholder text -->

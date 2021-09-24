@@ -1,5 +1,6 @@
 package com.example.unlone.ui.access
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -129,8 +130,15 @@ class RegistrationFragment : Fragment() {
                             Log.d("TAG", "saveUser")
                             saveUser(user)
                         }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.exception)
+                        Toast.makeText(context, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show()
                     }
                 }
+        binding.progressBar.visibility = View.GONE
+
     }
 
     private fun saveUser(firebaseUser: FirebaseUser) {
@@ -142,7 +150,6 @@ class RegistrationFragment : Fragment() {
         mFirestore.collection("users").document(uid).set(user)
             .addOnCompleteListener(OnCompleteListener<Void?> { task ->
                 if (task.isSuccessful) {
-                    binding.progressBar.visibility = View.GONE
                     Log.d("REGISTRATION", "user saved")
                     val intent = Intent(context, MainActivity::class.java)
                     startActivity(intent)
@@ -161,7 +168,6 @@ class RegistrationFragment : Fragment() {
                         task.exception?.message,
                         Toast.LENGTH_SHORT
                     ).show()
-                    binding.progressBar.visibility = View.INVISIBLE
                 }
             })
     }
