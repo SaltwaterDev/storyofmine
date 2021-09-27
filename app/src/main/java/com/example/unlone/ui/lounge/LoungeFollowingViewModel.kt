@@ -11,7 +11,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import java.util.*
 
-class HomeViewModel : ViewModel() {
+class LoungeFollowingViewModel : ViewModel() {
     val posts: MutableLiveData<List<Post>> = MutableLiveData()
     private val postList: MutableList<Post>
     private val mFirestore: FirebaseFirestore

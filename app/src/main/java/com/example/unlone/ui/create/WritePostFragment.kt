@@ -157,7 +157,6 @@ class WritePostFragment : Fragment() {
                 displayImage(uri)
             }
         }
-
         initMoreLayout()
 
 
@@ -168,7 +167,7 @@ class WritePostFragment : Fragment() {
         selectedImageUri = uri
         binding.imagePost.setImageURI(selectedImageUri)
         binding.imagePost.visibility = View.VISIBLE
-        val bitmap = (binding.imagePost.getDrawable() as BitmapDrawable).bitmap
+        val bitmap = (binding.imagePost.drawable as BitmapDrawable).bitmap
         val width = bitmap.width.toFloat()
         val height = bitmap.height.toFloat()
         Log.d("uriiii", selectedImageUri.toString())

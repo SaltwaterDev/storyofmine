@@ -1,5 +1,6 @@
 package com.example.unlone.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.unlone.instance.Post
@@ -8,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import androidx.lifecycle.LiveData
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.toObject
 import java.util.ArrayList
 
 class DetailedPostViewModel : ViewModel() {
@@ -19,13 +21,15 @@ class DetailedPostViewModel : ViewModel() {
     val observablePost: LiveData<Post?>
         get() = post
 
-    fun loadPost(pid: String?) {
+    fun loadPost(pid: String) {
         mFirestore.collection("posts")
-            .document(pid!!)
+            .document(pid)
             .get()
             .addOnSuccessListener { documentSnapshot ->
-                val p = documentSnapshot.toObject(Post::class.java)
+                val p = documentSnapshot.toObject<Post>()
                 post.value = p
+                Log.d("TAG", "detailedPost: ${post.value.toString()}")
+                Log.d("TAG", "pid: $pid")
             }
     } //todo load comment
 

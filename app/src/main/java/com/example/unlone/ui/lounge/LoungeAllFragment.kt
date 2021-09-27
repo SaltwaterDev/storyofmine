@@ -1,60 +1,121 @@
 package com.example.unlone.ui.lounge
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import com.example.unlone.ui.lounge.LoungeAllFragment
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.example.unlone.R
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.unlone.databinding.FragmentLoungeAllBinding
+import com.example.unlone.instance.Post
+import com.example.unlone.ui.PostsAdapter
+import com.example.unlone.ui.create.PostActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LoungeAllFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoungeAllFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = arguments!!.getString(ARG_PARAM1)
-            mParam2 = arguments!!.getString(ARG_PARAM2)
-        }
-    }
+    private var viewModel: LoungeAllViewModel? = null
+    private var postsAdapter: PostsAdapter? = null
+    private val mPosts = 10
+    private var isLoading = false
 
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
+    private var _binding: FragmentLoungeAllBinding? = null
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lounge_all, container, false)
+        _binding = FragmentLoungeAllBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+
+        // create "writing post" button
+        val fab: FloatingActionButton = binding.fab
+        fab.tooltipText = "Write a post"
+        fab.setOnClickListener {
+            val intent = Intent(context, PostActivity::class.java)
+            startActivity(intent)
+        }
+
+        val recyclerView: RecyclerView = binding.recycleviewPosts
+        val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefreshLayout
+        recyclerView.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = layoutManager
+        postsAdapter = PostsAdapter(requireActivity())
+        recyclerView.adapter = postsAdapter
+        viewModel = ViewModelProvider(this).get(LoungeAllViewModel::class.java)
+        viewModel!!.loadPosts(mPosts, false)
+        viewModel!!.posts.observe(
+            viewLifecycleOwner,
+            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            viewModel!!.loadPosts(mPosts, false)
+            viewModel!!.posts.observe(viewLifecycleOwner, { postList: List<Post> ->
+                Log.d("TAG", postList.toString())
+                postsAdapter!!.setPostList(postList)
+            })
+            swipeRefreshLayout.isRefreshing = false
+        }
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                //super.onScrolled(recyclerView, dx, dy);
+                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
+                val totalItem = linearLayoutManager!!.itemCount
+                val lastVisible = linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                if (totalItem < lastVisible + 3) {
+                    if (!isLoading) {
+                        isLoading = true
+                        // load more posts
+                        viewModel!!.loadPosts(mPosts, true)
+                        viewModel!!.posts.observe(
+                            viewLifecycleOwner,
+                            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+                        isLoading = false
+                    }
+                }
+            }
+        })
+
+
+        // init search bar
+        binding.inputsearch.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                viewModel!!.searchPost(s.toString())
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {}
+        })
+
+        // TODO ("add post sorting")
+
+        return view
     }
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoungeAllFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): LoungeAllFragment {
-            val fragment = LoungeAllFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
+    companion object {
+        const val REQUEST_CODE_ADD_POST = 1
     }
 }

@@ -7,7 +7,6 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
-import com.example.unlone.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.content.Intent
 import android.text.Editable
@@ -21,12 +20,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.ViewModelProvider
 import com.example.unlone.databinding.FragmentLoungeFollowingBinding
-import com.example.unlone.databinding.FragmentWritePostBinding
 import com.example.unlone.instance.Post
-import com.google.firebase.firestore.Query
 
 class LoungeFollowingFragment : Fragment() {
-    private var homeViewModel: HomeViewModel? = null
+    private var homeViewModel: LoungeFollowingViewModel? = null
     private var postsAdapter: PostsAdapter? = null
     private val mPosts = 10
     private var isLoading = false
@@ -50,10 +47,9 @@ class LoungeFollowingFragment : Fragment() {
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
         fab.tooltipText = "Write a post"
-        fab.setOnClickListener { v: View? ->
-            startActivityForResult(
-                Intent(context, PostActivity::class.java), REQUEST_CODE_ADD_POST
-            )
+        fab.setOnClickListener {
+            val intent = Intent(context, PostActivity::class.java)
+            startActivity(intent)
         }
 
         val mAuth =
@@ -65,7 +61,7 @@ class LoungeFollowingFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         postsAdapter = PostsAdapter(requireActivity())
         recyclerView.adapter = postsAdapter
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this).get(LoungeFollowingViewModel::class.java)
         homeViewModel!!.loadPosts(mPosts, false)
         homeViewModel!!.posts.observe(
             viewLifecycleOwner,

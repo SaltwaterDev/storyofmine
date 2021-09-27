@@ -55,7 +55,7 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (title, image_path, journal, _, _, _, _, _, pid) = postList[position]
+        val (title, image_path, journal, _, _, _, _, _, _, pid) = postList[position]
 
         // set title
         holder.title.text = title

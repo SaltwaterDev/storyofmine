@@ -157,71 +157,72 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
         detailedPostViewModel.observablePost.observe(this, { p ->
-            // determine the comment layout (e.g. whether they have like button)
-            if (p != null) {
-                commentsAdapter.selfPost = (p.uid == mAuth.uid)
-            }
-
-            // enable or disable save button
-            if (p != null) {
-                if (!p.save){
-                    binding.saveButton.isEnabled = false
-                    binding.saveButton.setColorFilter(Color.argb(255, 110,
-                        110, 110))
+            p?.let{
+                // control the comment layout display (e.g. whether they have like button)
+                if (p != null) {
+                    commentsAdapter.selfPost = (p.uid == mAuth.uid)
                 }
-            }
 
-            // display title
-            binding.textViewTitle.text = p!!.title
+                // enable or disable save button
+                if (p != null) {
+                    if (!p.save){
+                        binding.saveButton.isEnabled = false
+                        binding.saveButton.setColorFilter(Color.argb(255, 110,
+                            110, 110))
+                    }
+                }
 
-            // display image
-            val imagePath = p.imagePath
-            try {
-                // load image and resize it
-                // action wil be done when load the image
-                val target: Target = object : Target {
-                    override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom) {
-                        binding.imageCover.visibility = View.VISIBLE
+                // display title
+                binding.textViewTitle.text = p!!.title
 
-                        //get measured image size
-                        val imageWidth = bitmap.width
-                        val imageHeight = bitmap.height
-                        binding.imageCover.setImageBitmap(bitmap)
-                        Log.d("Bitmap Dimensions: ", imageWidth.toString() + "x" + imageHeight)
-                        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                        params.gravity = Gravity.CENTER
-                        val imageHorizontalMargin: Int = getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, this@PostDetailActivity) // in px
-                        val imageVerticalMargin = dpConvertPx(38, this@PostDetailActivity)
-                        params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, imageVerticalMargin)
-                        binding.imageCover.layoutParams = params
+                // display image
+                val imagePath = p.imagePath
+                try {
+                    // load image and resize it
+                    // action wil be done when loading the image
+                    val target: Target = object : Target {
+                        override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom) {
+                            binding.imageCover.visibility = View.VISIBLE
 
+                            //get measured image size
+                            val imageWidth = bitmap.width
+                            val imageHeight = bitmap.height
+                            binding.imageCover.setImageBitmap(bitmap)
+                            Log.d("Bitmap Dimensions: ", imageWidth.toString() + "x" + imageHeight)
+                            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                            params.gravity = Gravity.CENTER
+                            val imageHorizontalMargin: Int = getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, this@PostDetailActivity) // in px
+                            val imageVerticalMargin = dpConvertPx(38, this@PostDetailActivity)
+                            params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, imageVerticalMargin)
+                            binding.imageCover.layoutParams = params
+
+                        }
+
+                        override fun onBitmapFailed(e: java.lang.Exception, errorDrawable: Drawable) {}
+                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
                     }
 
-                    override fun onBitmapFailed(e: java.lang.Exception, errorDrawable: Drawable) {}
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+                    binding.imageCover.tag = target
+                    Picasso.get().load(imagePath).into(target)
+                } catch (e: Exception) {
+                    binding.imageCover.visibility = View.GONE
                 }
 
-                binding.imageCover.tag = target
-                Picasso.get().load(imagePath).into(target)
-            } catch (e: Exception) {
-                binding.imageCover.visibility = View.GONE
+                // display journal text
+                binding.textViewJournal.text = p.journal
+                binding.date.text = convertTimeStamp(p.createdTimestamp)
+
+                // display label
+                var displayLabel = ""
+                for (label in p.labels) {
+                    displayLabel += "· "
+                    displayLabel += "$label "
+                }
+                binding.labelTv.text = displayLabel
+
+                // if author doesn't allow commenting, will disappear the comment block
+                if (!p.comment) binding.commentLayout.visibility = View.GONE
             }
-
-            // display journal text
-            binding.textViewJournal.text = p.journal
-            binding.date.text = convertTimeStamp(p.createdTimestamp)
-
-            // display label
-            var displayLabel = ""
-            for (label in p.labels) {
-                displayLabel += "· "
-                displayLabel += "$label "
-            }
-            binding.labelTv.text = displayLabel
-
-            // if author doesn't allow commenting, will disappear the comment block
-            if (!p.comment) binding.commentLayout.visibility = View.GONE
-
         })
     }
 

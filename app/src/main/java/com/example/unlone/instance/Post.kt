@@ -13,6 +13,7 @@ data class Post(
         var uid: String = "",
         var username: String = "",
         var labels: ArrayList<String> = ArrayList<String>(),
+        var category:String = "",
         var createdTimestamp: String = "",
         var createdDate: String = "",
         var pid: String = "",
