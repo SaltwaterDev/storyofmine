@@ -90,13 +90,6 @@ class ConfigFragment : Fragment() {
             postData?.let { it1 -> submitPost(it1) }
         }
 
-        val model = ViewModelProvider(this).get(ConfigViewModel::class.java)
-        model.loadCategories()
-        model.categories.observe(viewLifecycleOwner, { categories ->
-            Log.d("TAG category config", categories.toString())
-            val adapter = ArrayAdapter(requireContext(), R.layout.list_item, categories)
-            binding.textField.setAdapter(adapter)
-        })
 
         mFirestore = FirebaseFirestore.getInstance()
         storageReference = Firebase.storage.reference
@@ -108,7 +101,13 @@ class ConfigFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // categories
-
+        val model = ViewModelProvider(this).get(ConfigViewModel::class.java)
+        model.loadCategories()
+        model.categories.observe(viewLifecycleOwner, { categories ->
+            Log.d("TAG category config", categories.toString())
+            val adapter = ArrayAdapter(requireContext(), R.layout.list_item, categories)
+            binding.textField.setAdapter(adapter)
+        })
     }
 
     private fun displayImage(uri: Uri) {

@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/actionSave"
+        android:icon="@drawable/ic_baseline_bookmark_border_24"
+        app:tint="@color/colorBarIcon"
+        android:title="report"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/actionReport"
+        android:title="@string/report"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/actionDelete"
+        android:title="@string/delete"
+        app:showAsAction="never"
+        android:visible="false"/>
+
+</menu>
+

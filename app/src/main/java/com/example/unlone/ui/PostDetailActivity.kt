@@ -1,18 +1,20 @@
 package com.example.unlone.ui
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColor
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.unlone.R
@@ -30,8 +32,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
-import java.security.Timestamp
 import java.util.*
+import android.widget.TextView
+
+
+
 
 class PostDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostDetailBinding
@@ -44,6 +49,8 @@ class PostDetailActivity : AppCompatActivity() {
     var uid: String? = null
     var username: String? = null
     private lateinit var pid: String
+    var hashMap : HashMap<String, String>  // tag storing the save state
+            = HashMap<String, String> ()
 
     // init firebase
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -54,63 +61,66 @@ class PostDetailActivity : AppCompatActivity() {
     private var comment: Comment? = null
     private val mComments: Long = 5   // how many comment loaded each time
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return super.onSupportNavigateUp()
-    }
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // get id of the post using intent
         val intent = intent
         pid = intent.getStringExtra("postId").toString()
 
-        supportActionBar!!.hide()
-
         binding = ActivityPostDetailBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
         // init toolbar
-        binding.returnButton.setOnClickListener { finish() }
-        binding.reportButton.setOnClickListener {
-            // write the pid into the Report collection in Firestore
-            val docData = hashMapOf(
-                "pid" to pid,
-                "timestamp" to System.currentTimeMillis().toString(),
-            )
-            mFirestore.collection("report")
-                .document(pid)
-                .set(docData)
-                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+        binding.topAppBar.setNavigationOnClickListener {
+            onBackPressed()
         }
+        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.actionSave -> {
 
-        binding.saveButton.setOnClickListener{
-            if (binding.saveButton.tag.equals("save")) {
-                val timestamp = hashMapOf("saveTime" to System.currentTimeMillis().toString())
-                mAuth.uid?.let { uid ->
-                    mFirestore.collection("users").document(uid)
-                            .collection("saved")
-                            .document(pid)
-                            .set(timestamp)
-                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                            .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                    // User chose the "Settings" item, show the app settings UI...
+                    if (hashMap["saveButton"] == "save") {
+                        val timestamp = hashMapOf("saveTime" to System.currentTimeMillis().toString())
+                        mAuth.uid?.let { uid ->
+                            mFirestore.collection("users").document(uid)
+                                .collection("saved")
+                                .document(pid)
+                                .set(timestamp)
+                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                                .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                        }
+                    }else{
+                        mAuth.uid?.let { uid ->
+                            mFirestore.collection("users").document(uid)
+                                .collection("saved")
+                                .document(pid)
+                                .delete()
+                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                        }
+                    }
+                    true
                 }
-            }else{
-                mAuth.uid?.let { uid ->
-                    mFirestore.collection("users").document(uid)
-                            .collection("saved")
-                            .document(pid)
-                            .delete()
-                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-                            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+
+                R.id.actionReport -> {
+                    // write the pid into the Report collection in Firestore
+                    val docData = hashMapOf(
+                        "pid" to pid,
+                        "timestamp" to System.currentTimeMillis().toString(),
+                    )
+                    mFirestore.collection("report")
+                        .document(pid)
+                        .set(docData)
+                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                    true
                 }
+
+                else -> false
             }
         }
+
 
 
 
@@ -118,7 +128,8 @@ class PostDetailActivity : AppCompatActivity() {
         detailedPostViewModel = ViewModelProvider(this).get(DetailedPostViewModel::class.java)
         detailedPostViewModel.loadPost(pid)
         loadPostInfo(binding)
-        isSaved(pid, binding.saveButton)
+        val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
+        isSaved(pid, saveButton)
 
         val layoutManager = LinearLayoutManager(this)
         binding.recycleview.layoutManager = layoutManager
@@ -153,27 +164,25 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
         detailedPostViewModel.observablePost.observe(this, { p ->
             p?.let{
                 // control the comment layout display (e.g. whether they have like button)
-                if (p != null) {
-                    commentsAdapter.selfPost = (p.uid == mAuth.uid)
-                }
+                commentsAdapter.selfPost = (p.uid == mAuth.uid)
+
+                // enable or disable the right of delete post
+                val deleteMenuItem = binding.topAppBar.menu.findItem(R.id.actionDelete)
+                deleteMenuItem.isVisible = p.uid == mAuth.uid
 
                 // enable or disable save button
-                if (p != null) {
-                    if (!p.save){
-                        binding.saveButton.isEnabled = false
-                        binding.saveButton.setColorFilter(Color.argb(255, 110,
-                            110, 110))
-                    }
+                val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
+                if (!p.save){
+                    saveButton.isEnabled = false
+                    saveButton.icon.mutate().alpha = 135
                 }
 
                 // display title
-                binding.textViewTitle.text = p!!.title
+                binding.textViewTitle.text = p.title
 
                 // display image
                 val imagePath = p.imagePath
@@ -266,8 +275,7 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
 
-    private fun isSaved(pid: String, imageView: ImageView) {
-
+    private fun isSaved(pid: String, saveButton: MenuItem) {
         mFirestore.collection("users").document(mAuth.uid!!)
                 .collection("saved")
                 .document(pid)
@@ -279,12 +287,12 @@ class PostDetailActivity : AppCompatActivity() {
 
                     if (snapshot != null && snapshot.exists()) {
                         Log.d(TAG, "Current data: ${snapshot.data}")
-                        imageView.setImageResource(R.drawable.ic_baseline_bookmark_24)
-                        imageView.tag = "saved"
+                        saveButton.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_bookmark_24)
+                        hashMap["saveButton"] = "saved"
                     } else {
                         if (snapshot != null) {
-                            imageView.setImageResource(R.drawable.ic_baseline_bookmark_border_24)
-                            imageView.tag = "save"
+                            saveButton.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_bookmark_border_24)
+                            hashMap["saveButton"] = "save"
                         }
                     }
                 }
