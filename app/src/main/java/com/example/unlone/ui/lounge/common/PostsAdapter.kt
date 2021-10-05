@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.common
 
 import android.content.Context
 import android.content.Intent

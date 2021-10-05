@@ -4,41 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.lounge.LoungeFollowingFragment">
+    tools:context=".ui.lounge.following.LoungeFollowingFragment">
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+        app:startIconDrawable="@drawable/ic_search"
+        app:startIconTint="@color/colorSearchIcon"
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_23sdp"
+        android:layout_height="@dimen/_30sdp"
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:background="@drawable/background_search"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:shapeAppearanceOverlay="@style/searchBarView">
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:contentDescription="search post"
-            android:src="@drawable/ic_search"
-            app:tint="@color/colorSearchIcon"/>
-
-        <EditText
-            android:id="@+id/inputsearch"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputSearch"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_marginStart="5dp"
-            android:background="@null"
+            android:layout_height="wrap_content"
             android:textColor="@color/colorText"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:includeFontPadding="false"
             android:inputType="text"/>
 
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

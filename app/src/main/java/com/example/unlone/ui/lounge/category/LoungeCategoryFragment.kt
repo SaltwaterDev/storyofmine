@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.category
 
 import android.os.Bundle
 import android.view.LayoutInflater

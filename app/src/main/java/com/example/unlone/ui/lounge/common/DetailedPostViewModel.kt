@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.common
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

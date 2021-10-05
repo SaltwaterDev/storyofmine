@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.common
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -47,7 +47,7 @@ class PostDetailActivity : AppCompatActivity() {
     // init firebase
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val commentsAdapter by lazy {CommentsAdapter(pid, ::likeComment)}
+    private val commentsAdapter by lazy { CommentsAdapter(pid, ::likeComment) }
 
     private val post: Post? = null
     private var comment: Comment? = null

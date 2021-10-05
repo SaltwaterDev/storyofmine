@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.lounge.CategoryPostFragment">
+    tools:context=".ui.lounge.category.CategoryPostFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         app:startIconDrawable="@drawable/ic_search"

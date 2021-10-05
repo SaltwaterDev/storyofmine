@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/categoryListFragment"
-        android:name="com.example.unlone.ui.lounge.CategoryListFragment"
+        android:name="com.example.unlone.ui.lounge.category.CategoryListFragment"
         android:label="CategoryListFragment" >
         <action
             android:id="@+id/navigateToCategoryPostFragment"
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/categoryPostFragment"
-        android:name="com.example.unlone.ui.lounge.CategoryPostFragment"
+        android:name="com.example.unlone.ui.lounge.category.CategoryPostFragment"
         android:label="fragment_lounge_category"
         tools:layout="@layout/fragment_category_post">
         <argument

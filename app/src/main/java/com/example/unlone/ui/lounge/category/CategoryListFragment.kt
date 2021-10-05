@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.category
 
 import android.content.ContentValues.TAG
 import android.os.Bundle

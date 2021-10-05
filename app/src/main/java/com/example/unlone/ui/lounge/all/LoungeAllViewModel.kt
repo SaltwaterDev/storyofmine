@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.all
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +11,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import java.util.*
 
-class LoungeFollowingViewModel : ViewModel() {
+class LoungeAllViewModel : ViewModel() {
     val posts: MutableLiveData<List<Post>> = MutableLiveData()
     private val postList: MutableList<Post>
     private val mFirestore: FirebaseFirestore

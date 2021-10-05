@@ -1,14 +1,10 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.category
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.provider.Settings.Global.getString
 import android.util.Log
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.unlone.R
 import com.example.unlone.instance.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -42,7 +38,6 @@ class CategoriesViewModel: ViewModel() {
                 Log.d("TAG category", _categories.toString())
             }
     }
-
 
 
     init {

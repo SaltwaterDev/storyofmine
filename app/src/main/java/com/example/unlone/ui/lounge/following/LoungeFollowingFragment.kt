@@ -1,34 +1,36 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.following
 
-import android.content.Intent
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.annotation.RequiresApi
 import android.os.Build
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.os.Bundle
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.unlone.databinding.FragmentLoungeAllBinding
-import com.example.unlone.instance.Post
 import com.example.unlone.ui.create.PostActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.ViewModelProvider
+import com.example.unlone.databinding.FragmentLoungeFollowingBinding
+import com.example.unlone.instance.Post
+import com.example.unlone.ui.lounge.common.PostsAdapter
 
-class LoungeAllFragment : Fragment() {
-    private var viewModel: LoungeAllViewModel? = null
+class LoungeFollowingFragment : Fragment() {
+    private var homeViewModel: LoungeFollowingViewModel? = null
     private var postsAdapter: PostsAdapter? = null
     private val mPosts = 10
     private var isLoading = false
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-    private var _binding: FragmentLoungeAllBinding? = null
+    private var _binding: FragmentLoungeFollowingBinding? = null
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -38,7 +40,7 @@ class LoungeAllFragment : Fragment() {
     ): View {
 
         // Inflate the layout for this fragment
-        _binding = FragmentLoungeAllBinding.inflate(inflater, container, false)
+        _binding = FragmentLoungeFollowingBinding.inflate(inflater, container, false)
         val view = binding.root
 
 
@@ -50,6 +52,8 @@ class LoungeAllFragment : Fragment() {
             startActivity(intent)
         }
 
+        val mAuth =
+            FirebaseAuth.getInstance() // TODO ("will be used when choosing the following topic")
         val recyclerView: RecyclerView = binding.recycleviewPosts
         val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefreshLayout
         recyclerView.setHasFixedSize(true)
@@ -57,20 +61,22 @@ class LoungeAllFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         postsAdapter = PostsAdapter(requireActivity())
         recyclerView.adapter = postsAdapter
-        viewModel = ViewModelProvider(this).get(LoungeAllViewModel::class.java)
-        viewModel!!.loadPosts(mPosts, false)
-        viewModel!!.posts.observe(
+        homeViewModel = ViewModelProvider(this).get(LoungeFollowingViewModel::class.java)
+        homeViewModel!!.loadPosts(mPosts, false)
+        homeViewModel!!.posts.observe(
             viewLifecycleOwner,
             { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
 
         swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing = true
-            viewModel!!.loadPosts(mPosts, false)
-            viewModel!!.posts.observe(viewLifecycleOwner, { postList: List<Post> ->
+            // TODO refactor the refresh feature
+            /* swipeRefreshLayout.isRefreshing = true
+            homeViewModel!!.loadPosts(mPosts, false)
+            homeViewModel!!.posts.observe(viewLifecycleOwner, { postList: List<Post> ->
                 Log.d("TAG", postList.toString())
                 postsAdapter!!.setPostList(postList)
             })
             swipeRefreshLayout.isRefreshing = false
+             */
         }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -83,8 +89,8 @@ class LoungeAllFragment : Fragment() {
                     if (!isLoading) {
                         isLoading = true
                         // load more posts
-                        viewModel!!.loadPosts(mPosts, true)
-                        viewModel!!.posts.observe(
+                        homeViewModel!!.loadPosts(mPosts, true)
+                        homeViewModel!!.posts.observe(
                             viewLifecycleOwner,
                             { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
                         isLoading = false
@@ -95,10 +101,10 @@ class LoungeAllFragment : Fragment() {
 
 
         // init search bar
-        binding.inputsearch.addTextChangedListener(object : TextWatcher {
+        binding.inputSearch.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                viewModel!!.searchPost(s.toString())
+                homeViewModel!!.searchPost(s.toString())
             }
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {}
@@ -107,7 +113,6 @@ class LoungeAllFragment : Fragment() {
                                        before: Int, count: Int) {}
         })
 
-        // TODO ("add post sorting")
 
         return view
     }

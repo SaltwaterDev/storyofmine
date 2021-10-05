@@ -4,6 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.unlone.ui.lounge.all.LoungeAllFragment
+import com.example.unlone.ui.lounge.category.LoungeCategoryFragment
+import com.example.unlone.ui.lounge.following.LoungeFollowingFragment
 
 class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {

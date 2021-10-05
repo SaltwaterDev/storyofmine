@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.common
 
 import android.content.ContentValues.TAG
 import android.util.Log

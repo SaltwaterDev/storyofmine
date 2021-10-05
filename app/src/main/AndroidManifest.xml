@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="q">
 
-        <activity android:name="com.example.unlone.ui.lounge.PostDetailActivity"
+        <activity android:name="com.example.unlone.ui.lounge.common.PostDetailActivity"
             android:parentActivityName="com.example.unlone.ui.MainActivity"
             android:theme="@style/AppTheme">
         </activity>

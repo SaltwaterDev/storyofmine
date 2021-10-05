@@ -1,4 +1,4 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.category
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -24,6 +24,7 @@ import com.example.unlone.R
 import com.example.unlone.databinding.FragmentCategoryPostBinding
 import com.example.unlone.instance.Post
 import com.example.unlone.ui.create.PostActivity
+import com.example.unlone.ui.lounge.common.PostsAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

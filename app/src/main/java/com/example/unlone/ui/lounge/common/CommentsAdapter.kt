@@ -1,6 +1,5 @@
-package com.example.unlone.ui.lounge
+package com.example.unlone.ui.lounge.common
 
-import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
