@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/category_navigation"
+    app:startDestination="@id/categoryListFragment">
+
+    <fragment
+        android:id="@+id/categoryListFragment"
+        android:name="com.example.unlone.ui.lounge.CategoryListFragment"
+        android:label="CategoryListFragment" >
+        <action
+            android:id="@+id/navigateToCategoryPostFragment"
+            app:destination="@id/categoryPostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryPostFragment"
+        android:name="com.example.unlone.ui.lounge.CategoryPostFragment"
+        android:label="fragment_lounge_category"
+        tools:layout="@layout/fragment_category_post">
+        <argument
+            android:name="category"
+            app:argType="string"
+            android:defaultValue="nothing" />
+        <action
+            android:id="@+id/navigateToCategoryListFragment"
+            app:destination="@id/categoryListFragment"
+            app:popUpTo="@+id/categoryListFragment"/>
+    </fragment>
+
+</navigation>

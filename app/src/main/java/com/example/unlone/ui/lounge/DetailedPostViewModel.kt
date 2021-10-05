@@ -1,4 +1,4 @@
-package com.example.unlone.ui
+package com.example.unlone.ui.lounge
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,8 +7,6 @@ import com.example.unlone.instance.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.lifecycle.LiveData
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.toObject
 import java.util.ArrayList
 

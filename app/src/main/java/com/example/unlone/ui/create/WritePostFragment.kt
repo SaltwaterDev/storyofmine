@@ -24,7 +24,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.unlone.R
 import com.example.unlone.databinding.FragmentWritePostBinding
@@ -104,7 +103,7 @@ class WritePostFragment : Fragment() {
         })
 
         // init toolbar
-        binding.cancelButton.setOnClickListener(View.OnClickListener { activity?.finish() })
+        binding.cancelButton.setOnClickListener { activity?.finish() }
         val nextButton = binding.nextButton.setOnClickListener {
             if (binding.inputPostContext.text.toString().isEmpty()) {
                 Toast.makeText(activity, "You haven't wrote the context", Toast.LENGTH_SHORT).show()

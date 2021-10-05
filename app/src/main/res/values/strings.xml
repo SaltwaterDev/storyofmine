@@ -20,11 +20,15 @@
     <string name="add_image">Add Image</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="create_post_greet">It is not easy to open up, so we are glad to having you here...</string>
+    <string name="create_post_greet">It is not easy to open up, so we are glad to having you here…</string>
     <string name="comment">Comment</string>
-    <string name="comment_hint">Comment...</string>
+    <string name="comment_hint">Comment…</string>
     <string name="action_login">Login</string>
     <string name="sign_up">Sign up</string>
     <string name="report">Report</string>
     <string name="delete">Delete</string>
+    <string name="follow">Follow</string>
+    <string name="following">Following</string>
+    <string name="write_story">Write Story</string>
+    <string name="send">Send</string>
 </resources>

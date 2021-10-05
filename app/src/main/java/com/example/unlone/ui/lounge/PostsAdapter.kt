@@ -1,4 +1,4 @@
-package com.example.unlone.ui
+package com.example.unlone.ui.lounge
 
 import android.content.Context
 import android.content.Intent
@@ -152,7 +152,7 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     companion object {
         fun getHeight(context: Context, textView: TextView): Int {
             val displayMetrics = context.resources.displayMetrics
-            val deviceHeight = displayMetrics.heightPixels
+            // val deviceHeight = displayMetrics.heightPixels
             val deviceWidth = displayMetrics.widthPixels
             val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST)
             val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)

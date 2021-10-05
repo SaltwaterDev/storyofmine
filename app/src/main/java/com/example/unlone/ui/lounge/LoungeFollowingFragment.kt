@@ -1,7 +1,6 @@
 package com.example.unlone.ui.lounge
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.unlone.ui.PostsAdapter
 import androidx.annotation.RequiresApi
 import android.os.Build
 import android.view.LayoutInflater

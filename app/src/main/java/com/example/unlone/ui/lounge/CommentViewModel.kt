@@ -1,7 +1,6 @@
-package com.example.unlone.ui
+package com.example.unlone.ui.lounge
 
 import android.content.ContentValues.TAG
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

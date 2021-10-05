@@ -17,10 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.unlone.databinding.FragmentLoungeAllBinding
 import com.example.unlone.instance.Post
-import com.example.unlone.ui.PostsAdapter
 import com.example.unlone.ui.create.PostActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
 
 class LoungeAllFragment : Fragment() {
     private var viewModel: LoungeAllViewModel? = null

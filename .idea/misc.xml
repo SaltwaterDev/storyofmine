@@ -28,12 +28,15 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/activity_post.xml" value="0.22418478260869565" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/activity_post_detail.xml" value="0.25" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/activity_registration.xml" value="0.30833333333333335" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_category.xml" value="0.30833333333333335" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_category_list.xml" value="0.30833333333333335" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_category_post.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_config.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_explore.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_home.xml" value="0.22327898550724637" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_all.xml" value="0.30833333333333335" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_category.xml" value="0.30185185185185187" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_category.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_following.xml" value="0.33" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_registration.xml" value="0.33" />

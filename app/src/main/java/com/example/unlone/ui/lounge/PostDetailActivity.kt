@@ -1,20 +1,16 @@
-package com.example.unlone.ui
+package com.example.unlone.ui.lounge
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColor
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.unlone.R
@@ -22,7 +18,6 @@ import com.example.unlone.databinding.ActivityPostDetailBinding
 import com.example.unlone.instance.Comment
 import com.example.unlone.instance.Post
 import com.example.unlone.instance.User
-import com.example.unlone.ui.lounge.CommentsAdapter
 import com.example.unlone.utils.convertTimeStamp
 import com.example.unlone.utils.dpConvertPx
 import com.example.unlone.utils.getImageHorizontalMargin
@@ -33,9 +28,6 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
 import java.util.*
-import android.widget.TextView
-
-
 
 
 class PostDetailActivity : AppCompatActivity() {
@@ -79,7 +71,7 @@ class PostDetailActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.actionSave -> {
 
-                    // User chose the "Settings" item, show the app settings UI...
+                    // User chose the "Saving" item, save the post...
                     if (hashMap["saveButton"] == "save") {
                         val timestamp = hashMapOf("saveTime" to System.currentTimeMillis().toString())
                         mAuth.uid?.let { uid ->
