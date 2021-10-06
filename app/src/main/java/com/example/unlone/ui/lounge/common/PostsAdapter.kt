@@ -87,14 +87,14 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
                     Log.d("Bitmap Dimensions: ", imageWidth.toString() + "x" + imageHeight)
                     var params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     params.gravity = Gravity.CENTER
-                    val image_horizontal_margin = getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, context) // in px
-                    val image_vertical_margin = dpConvertPx(60, context)
-                    params.setMargins(image_horizontal_margin, image_vertical_margin, image_horizontal_margin, 0)
+                    val imageHorizontalMargin = getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, context) // in px
+                    val imageVerticalMargin = dpConvertPx(60, context)
+                    params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, 0)
                     holder.imageCover.layoutParams = params
 
                     // reset bottom margin
                     val textHeight = getHeight(context, holder.title)
-                    val textWhitespace = (image_vertical_margin + imageHeight) / 3 - textHeight
+                    val textWhitespace = (imageVerticalMargin + imageHeight) / 3 - textHeight
                     Log.d("whitespace", textWhitespace.toString())
                     Log.d("whitespace_text", textHeight.toString())
                     val textTopMargin = (textWhitespace / (1 + 1.5)).toInt()

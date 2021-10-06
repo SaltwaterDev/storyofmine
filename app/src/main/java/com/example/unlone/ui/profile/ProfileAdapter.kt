@@ -6,7 +6,10 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.unlone.R
 import com.example.unlone.databinding.RecyclerviewProfileCardBinding
 import com.example.unlone.utils.dpConvertPx
 
@@ -32,6 +35,15 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
         holder.binding.title.text = dataList[position].title
         holder.binding.cardView
             .setCardBackgroundColor(Color.parseColor(dataList[position].backgroundColour))
+        holder.binding.cardView.setOnClickListener{ view ->
+            when (holder.binding.title.text){
+                // Go to "My Stories"
+                "My \nStories" -> view.findNavController().navigate(R.id.action_navigation_profile_to_myStoriesFragment)
+                // Go to "Saved"
+                "Saved" -> view.findNavController().navigate(R.id.action_navigation_profile_to_savedStoriesFragment)
+
+            }
+        }
     }
 
 
