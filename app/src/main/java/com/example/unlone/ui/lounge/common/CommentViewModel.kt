@@ -53,7 +53,7 @@ class CommentViewModel : ViewModel() {
         }else{
             // run when order more comments
             mFirestore.collection("posts").document(pid).collection("comments")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)        // will be ranked by AI later
+                    .orderBy("score", Query.Direction.DESCENDING)
                     .startAfter(lastVisible!!)
                     .limit(numberPost)
                     .get()
