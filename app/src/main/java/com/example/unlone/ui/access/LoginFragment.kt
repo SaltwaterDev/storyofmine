@@ -73,6 +73,7 @@ class LoginFragment : Fragment() {
                                     val intent = Intent(context, MainActivity::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     activity?.startActivity(intent)
+                                    activity?.finish()
                                 } else {
                                     progressBar.visibility = View.INVISIBLE
                                     Toast.makeText(

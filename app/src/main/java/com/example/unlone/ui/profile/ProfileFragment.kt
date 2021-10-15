@@ -40,9 +40,11 @@ class ProfileFragment : Fragment() {
         recyclerView.adapter = profileAdapter
 
         profileList.add(ProfileCard("My \nStories", "#DCCDCB"))
-        profileList.add(ProfileCard("Journey", "#B9CAB7"))
+        // profileList.add(ProfileCard("Journey", "#B9CAB7"))   TODO
         profileList.add(ProfileCard("Saved", "#F2EAE5"))
         profileList.add(ProfileCard("Setting", "#E2E0EE"))
+        profileList.add(ProfileCard("Contact \nUs", "#B5CEF0"))
+        profileList.add(ProfileCard("Log Out", "#F1DFDA"))
         profileAdapter.setDataList(profileList)
 
         val docRef = mFirestore!!.collection("users").document(
