@@ -39,12 +39,12 @@ class ProfileFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = profileAdapter
 
-        profileList.add(ProfileCard("My \nStories", "#DCCDCB"))
-        // profileList.add(ProfileCard("Journey", "#B9CAB7"))   TODO
-        profileList.add(ProfileCard("Saved", "#F2EAE5"))
-        profileList.add(ProfileCard("Setting", "#E2E0EE"))
+        profileList.add(ProfileCard("My \nStories", "#EDC678"))
+        // profileList.add(ProfileCard("Journey", "#E6E2CB"))   TODO
+        profileList.add(ProfileCard("Saved", "#E2E0EE"))
+        // profileList.add(ProfileCard("Setting", "#B0B0B0"))   TODO
         profileList.add(ProfileCard("Contact \nUs", "#B5CEF0"))
-        profileList.add(ProfileCard("Log Out", "#F1DFDA"))
+        profileList.add(ProfileCard("Log Out", "#B9CAB7"))
         profileAdapter.setDataList(profileList)
 
         val docRef = mFirestore!!.collection("users").document(

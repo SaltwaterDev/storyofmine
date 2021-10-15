@@ -60,4 +60,16 @@
         <item name="android:textColor">@color/colorToolbarText</item>
     </style>
 
+    <style name="ThemeOverlay_App_MaterialAlertDialog" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="buttonBarPositiveButtonStyle">@style/Dialog.Warning.Button</item>
+    </style>
+
+    <style name="Dialog.Warning.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button.TextButton</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Button.TextButton" parent="">
+        <item name="colorPrimary">@color/colorWarn</item>
+    </style>
+
 </resources>

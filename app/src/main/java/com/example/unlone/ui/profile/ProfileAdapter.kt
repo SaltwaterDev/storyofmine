@@ -55,12 +55,12 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
         }
 
         if(holder.binding.title.text == "Log Out"){
-            holder.binding.title.setTextColor(Color.parseColor("#E30B0B"))
+            holder.binding.title.setTextColor(Color.parseColor("#B00020"))
         }
     }
 
     private fun logout() {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle("Alert")
             .setMessage("Are you sure to logout?")
             .setNegativeButton("Cancel") { dialog, which ->
