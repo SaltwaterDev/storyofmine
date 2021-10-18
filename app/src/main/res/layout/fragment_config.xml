@@ -66,7 +66,7 @@
             android:id="@+id/question1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Almost there! \nCan people..."
+            android:text="Almost!"
 
             android:fontFamily="@font/df_pro_display_medium"
             android:textSize="26sp"
@@ -75,9 +75,39 @@
             android:layout_marginTop="31dp"
             android:layout_marginBottom="39dp"/>
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/question2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:fontFamily="@font/df_pro_display_medium"
+                android:textSize="26sp"
+                android:textColor="@color/colorText"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="55dp"
+                android:layout_marginBottom="10dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/categoryMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/textField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:layout_marginStart="@dimen/_22sdp"
+                    android:layout_marginEnd="@dimen/_21sdp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="83dp">
 
                 <TextView
                     android:id="@+id/CommentTv"
@@ -102,9 +132,9 @@
             </RelativeLayout>
 
             <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="22dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="22dp">
 
         <TextView
             android:id="@+id/saveTv"
@@ -131,34 +161,6 @@
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
-            <TextView
-                android:id="@+id/question2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Category"
-                android:fontFamily="@font/df_pro_display_medium"
-                android:textSize="26sp"
-                android:textColor="@color/colorText"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="31dp"
-                android:layout_marginBottom="10dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/categoryMenu"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <AutoCompleteTextView
-                    android:id="@+id/textField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:layout_marginStart="@dimen/_22sdp"
-                    android:layout_marginEnd="@dimen/_21sdp"
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/preview"
@@ -169,7 +171,7 @@
                 android:textSize="26sp"
                 android:textColor="@color/colorText"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="212dp"
+                android:layout_marginTop="142dp"
                 android:layout_marginBottom="10dp"/>
 
             <FrameLayout

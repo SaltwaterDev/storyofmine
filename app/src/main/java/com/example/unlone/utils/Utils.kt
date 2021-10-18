@@ -13,6 +13,7 @@ import java.util.*
 fun convertTimeStamp(timestamp: String, dateFormat: String = "HH:mm   dd'th' MMM"): String {
     return try {
         val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+        sdf.timeZone = TimeZone.getDefault()
         val netDate = Date(timestamp.toLong() * 1000)
         sdf.format(netDate)
     } catch (e: Exception) {

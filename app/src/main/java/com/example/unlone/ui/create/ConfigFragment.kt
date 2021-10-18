@@ -68,7 +68,7 @@ class ConfigFragment : Fragment() {
             }
             postData.imageUri?.let { displayImage(it) }
             binding.textViewTitle.text = postData.title
-            binding.date.text = convertTimeStamp(System.currentTimeMillis().toString())
+            binding.date.text = convertTimeStamp((System.currentTimeMillis()/1000).toString())
             binding.textViewJournal.text = postData.journal
             binding.labelTv.text = displayLabel
 
@@ -130,7 +130,10 @@ class ConfigFragment : Fragment() {
 
     private fun submitPost(postData: PostData) {
         Toast.makeText(activity, "Posting...", Toast.LENGTH_SHORT).show()
-        assert(postData.category.isNotEmpty())
+        if (postData.category.isEmpty()){
+            Toast.makeText(activity, "You Haven't set the category", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         post.uid = postData.uid
         post.title = postData.title
@@ -193,12 +196,11 @@ class ConfigFragment : Fragment() {
                 val document = task.result
                 if (document!!.exists()) {
                     Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.data)
-                    //val user = document.toObject(User::class.java)
                     val user = document.toObject<User>()
                     post.username = user!!.username.toString()
-                    val stamp = System.currentTimeMillis()
+                    val stamp = System.currentTimeMillis()/1000
                     post.createdTimestamp = stamp.toString()
-                    post.createdDate = Date(Timestamp(stamp).time).toString()
+                    post.createdDate = convertTimeStamp(stamp.toString())
 
                     try {
                         saveNewPost(post)
