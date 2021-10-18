@@ -58,8 +58,8 @@ class ConfigFragment : Fragment() {
         savedStateModel.postData.observe(viewLifecycleOwner, {postData ->
             this.postData = postData
             Log.d("TAG", "config fragment, postData: $postData")
-            binding.commentSwitch.isChecked = postData.comment
-            binding.saveSwitch.isChecked = postData.save
+            binding.commentSwitch.isChecked = !postData.comment
+            binding.saveSwitch.isChecked = !postData.save
 
             // Preview
             var displayLabel = ""
@@ -76,10 +76,10 @@ class ConfigFragment : Fragment() {
 
 
         val commentSwitch = binding.commentSwitch.setOnCheckedChangeListener { _, isChecked ->
-            postData?.comment = isChecked
+            postData?.comment = !isChecked
         }
         val saveSwitch = binding.saveSwitch.setOnCheckedChangeListener { _, isChecked ->
-            postData?.save = isChecked
+            postData?.save = !isChecked
         }
         val backButton = binding.backButton.setOnClickListener {
             postData?.let { it1 -> savedStateModel.savepostData(it1) }
@@ -100,7 +100,7 @@ class ConfigFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // categories
+        // load categories
         val model = ViewModelProvider(this).get(ConfigViewModel::class.java)
         model.loadCategories()
         model.categories.observe(viewLifecycleOwner, { categories ->

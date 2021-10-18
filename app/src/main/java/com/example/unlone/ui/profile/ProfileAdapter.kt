@@ -48,7 +48,7 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
                 // Go to "Saved"
                 "Saved" -> view.findNavController().navigate(R.id.action_navigation_profile_to_savedStoriesFragment)
                 // Logout
-                "Contact us" -> true
+                "Contact \nUs" -> view.findNavController().navigate(R.id.action_navigation_profile_to_contactUsFragment)
                 // Logout
                 "Log Out" -> logout()
             }

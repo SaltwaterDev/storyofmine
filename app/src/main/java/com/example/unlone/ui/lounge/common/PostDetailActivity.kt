@@ -10,17 +10,21 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.unlone.R
 import com.example.unlone.databinding.ActivityPostDetailBinding
 import com.example.unlone.instance.Comment
 import com.example.unlone.instance.Post
+import com.example.unlone.instance.Report
 import com.example.unlone.instance.User
 import com.example.unlone.utils.convertTimeStamp
 import com.example.unlone.utils.dpConvertPx
 import com.example.unlone.utils.getImageHorizontalMargin
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -49,7 +53,7 @@ class PostDetailActivity : AppCompatActivity() {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val commentsAdapter by lazy { CommentsAdapter(pid, ::likeComment) }
 
-    private val post: Post? = null
+    private var post: Post? = null
     private var comment: Comment? = null
     private val mComments: Long = 5   // how many comment loaded each time
 
@@ -97,22 +101,48 @@ class PostDetailActivity : AppCompatActivity() {
 
                 R.id.actionReport -> {
                     // write the pid into the Report collection in Firestore
-                    val docData = hashMapOf(
-                        "pid" to pid,
-                        "timestamp" to System.currentTimeMillis().toString(),
-                    )
-                    mFirestore.collection("report")
-                        .document(pid)
-                        .set(docData)
-                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                    post?.let{
+                        val singleItems = arrayOf("Hate Speech", "Span or Irrelevant", "Sexual or Inappropriate", "I just don’t like it")
+                        var checkedItem = 1
+
+                        // show dialog
+                        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+                            .setTitle("Why do you want to report?")
+                            .setNeutralButton("cancel") { dialog, which ->
+                                // Respond to neutral button press
+                            }
+                            .setPositiveButton("report") { dialog, which ->
+                                // Respond to positive button press
+                                Log.d("TAG", singleItems[checkedItem])
+                                val report = Report(
+                                    "post",
+                                    post,
+                                    singleItems[checkedItem]
+                                )
+
+                                mFirestore.collection("report")
+                                    .add(report)
+                                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                                    .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+
+                                showConfirmation()
+                            }// Single-choice items (initialized with checked item)
+                            .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
+                                // Respond to item chosen
+                                Log.d("TAG", which.toString())
+                                checkedItem = which
+
+                            }
+                            .show()
+
+
+                    }
                     true
                 }
 
                 else -> false
             }
         }
-
 
 
 
@@ -156,9 +186,20 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun showConfirmation() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Thank you")
+            .setMessage("Thank you for report, we will let you know the result as soon as possible")
+            .setPositiveButton("confirm") { dialog, which ->
+                // Respond to positive button press
+            }
+            .show()
+    }
+
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
         detailedPostViewModel.observablePost.observe(this, { p ->
             p?.let{
+                post = p
                 // control the comment layout display (e.g. whether they have like button)
                 commentsAdapter.selfPost = (p.uid == mAuth.uid)
 

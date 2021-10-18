@@ -63,25 +63,24 @@
             android:orientation="vertical">
 
             <TextView
-            android:id="@+id/question1"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Almost!"
-
             android:fontFamily="@font/df_pro_display_medium"
-            android:textSize="26sp"
+            android:textSize="@dimen/_26ssp"
             android:textColor="@color/colorText"
             android:layout_marginStart="16dp"
             android:layout_marginTop="31dp"
             android:layout_marginBottom="39dp"/>
 
             <TextView
-                android:id="@+id/question2"
+                android:id="@+id/question1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Category"
                 android:fontFamily="@font/df_pro_display_medium"
-                android:textSize="26sp"
+                android:textSize="@dimen/_20ssp"
                 android:textColor="@color/colorText"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="55dp"
@@ -89,6 +88,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/categoryMenu"
+                android:layout_marginTop="24dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -104,10 +104,22 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/question2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preference"
+                android:fontFamily="@font/df_pro_display_medium"
+                android:textSize="@dimen/_20ssp"
+                android:textColor="@color/colorText"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="83dp"
+                android:layout_marginBottom="10dp"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="83dp">
+                android:layout_marginTop="24dp">
 
                 <TextView
                     android:id="@+id/CommentTv"
@@ -116,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:fontFamily="@font/sf_compact_text_regular"
-                    android:text="comment?"
+                    android:text="Disable comment"
                     android:textColor="@color/colorText"
                     android:textSize="20sp"/>
 
@@ -124,11 +136,11 @@
                     android:id="@+id/commentSwitch"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:checked="true"
-                    android:theme="@style/Widget.App.Switch"
                     android:layout_alignParentEnd="true"
-                    android:layout_toEndOf="@+id/CommentTv"/>
+                    android:layout_marginEnd="16dp"
+                    android:layout_toEndOf="@+id/CommentTv"
+                    android:checked="false"
+                    android:theme="@style/Widget.App.Switch" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -136,29 +148,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="22dp">
 
-        <TextView
-            android:id="@+id/saveTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="11dp"
-            android:fontFamily="@font/sf_compact_text_regular"
-            android:text="save your post?"
-            android:textColor="@color/colorText"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/saveTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="11dp"
+                    android:fontFamily="@font/sf_compact_text_regular"
+                    android:text="Disable saving"
+                    android:textColor="@color/colorText"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/saveSwitch"
-            android:layout_width="50dp"
-            android:theme="@style/Widget.App.Switch"
-            android:layout_toEndOf="@+id/saveTv"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:checked="true"
-            android:layout_alignParentEnd="true" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/saveSwitch"
+                    android:layout_width="50dp"
+                    android:theme="@style/Widget.App.Switch"
+                    android:layout_toEndOf="@+id/saveTv"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:checked="false"
+                    android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
 

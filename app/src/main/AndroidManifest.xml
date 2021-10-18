@@ -15,14 +15,13 @@
         android:theme="@style/AppTheme"
         tools:targetApi="q">
 
-        <activity android:name="com.example.unlone.ui.lounge.common.PostDetailActivity"
-            android:parentActivityName="com.example.unlone.ui.MainActivity"
-            android:theme="@style/AppTheme">
-        </activity>
         <activity
             android:name="com.example.unlone.ui.MainActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="Home" />
+        <activity android:name="com.example.unlone.ui.lounge.common.PostDetailActivity"
+            android:parentActivityName="com.example.unlone.ui.MainActivity">
+        </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

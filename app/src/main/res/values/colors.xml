@@ -2,7 +2,7 @@
 <resources>
     <color name="dark_gray">#545454</color>
     <color name="darker_gray">#424242</color>
-    <color name="colorAccent">#F2F0E3</color>
+    <color name="colorAccent">#7A7452</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorToolbarText">#FDFDFC</color>
     <color name="colorBarIcon">#F2FFFFFF</color>
@@ -17,10 +17,13 @@
     <color name="colorNoteSubtitleText">#FAFAFA</color>
     <color name="colorMiscellaneousBackground">#1F1F1F</color>
     <color name="colorWarn">#b00020</color>
+    <color name="colorGreen">#346546</color>
     <color name="colorSearchBackground">#808080</color>
     <color name="ActiveBottomNavIconColor">#4E4E4E</color>
     <color name="InactiveBottomNavIconColor">#B0B0B0</color>
     <color name="menuItem">#FFFFFF</color>
+    <color name="lightYellow">#F2F0E3</color>
+    <color name="onLightYellow">#C7BE8A</color>
 
 
 

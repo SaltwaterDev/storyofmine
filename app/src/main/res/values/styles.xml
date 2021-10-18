@@ -12,6 +12,7 @@
         <item name="android:colorControlActivated">@color/colorText</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -65,11 +66,34 @@
     </style>
 
     <style name="Dialog.Warning.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button.TextButton</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button.Warning.TextButton</item>
     </style>
 
-    <style name="ThemeOverlay.App.Button.TextButton" parent="">
+    <style name="ThemeOverlay.App.Button.Warning.TextButton" parent="">
         <item name="colorPrimary">@color/colorWarn</item>
     </style>
 
+    <style name="ThemeOverlay_App_MaterialConfirmDialog" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="buttonBarPositiveButtonStyle">@style/Dialog.Confirm.Button</item>
+    </style>
+
+    <style name="Dialog.Confirm.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button.Confirm.TextButton</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Button.Confirm.TextButton" parent="">
+        <item name="colorPrimary">@color/colorGreen</item>
+    </style>
+
+
+
+    <style name="Widget.App.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.FloatingActionButton</item>
+    </style>
+
+    <style name="ThemeOverlay.App.FloatingActionButton" parent="">
+        <item name="colorSecondary">@color/lightYellow</item>
+        <item name="colorOnSecondary">@color/onLightYellow</item>
+        <item name="colorOnSurface">@color/onLightYellow</item>
+    </style>
 </resources>
