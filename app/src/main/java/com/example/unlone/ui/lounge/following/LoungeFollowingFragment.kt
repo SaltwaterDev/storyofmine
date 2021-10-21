@@ -25,7 +25,7 @@ import com.example.unlone.ui.lounge.common.PostsAdapter
 class LoungeFollowingFragment : Fragment() {
     private var homeViewModel: LoungeFollowingViewModel? = null
     private var postsAdapter: PostsAdapter? = null
-    private val mPosts = 10
+    private val mPosts = 100
     private var isLoading = false
 
     // This property is only valid between onCreateView and onDestroyView.

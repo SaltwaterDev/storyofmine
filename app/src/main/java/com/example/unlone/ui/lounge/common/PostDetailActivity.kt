@@ -1,5 +1,7 @@
 package com.example.unlone.ui.lounge.common
 
+import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -10,13 +12,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.unlone.R
 import com.example.unlone.databinding.ActivityPostDetailBinding
+import com.example.unlone.firebasenotifications.FirebaseMessagingService
 import com.example.unlone.instance.Comment
 import com.example.unlone.instance.Post
 import com.example.unlone.instance.Report
@@ -24,10 +25,12 @@ import com.example.unlone.instance.User
 import com.example.unlone.utils.convertTimeStamp
 import com.example.unlone.utils.dpConvertPx
 import com.example.unlone.utils.getImageHorizontalMargin
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
@@ -59,6 +62,22 @@ class PostDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseMessagingService.sharedPref = getSharedPreferences("sgaredPref", Context.MODE_PRIVATE)
+        var token: String? = null
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            token = task.result
+
+            // Log and toast
+            Log.d(ContentValues.TAG, "FCM token: "+token)
+
+        })
+
         // get id of the post using intent
         val intent = intent
         pid = intent.getStringExtra("postId").toString()
@@ -178,10 +197,11 @@ class PostDetailActivity : AppCompatActivity() {
 
         // send comment button click
         binding.sendBtn.setOnClickListener{
-            if (binding.commentEt.text.isNotEmpty()){
+            if (binding.commentEt.text.isNotEmpty() && token != null){
                 postComment()
                 binding.commentEt.text.clear()
                 commentViewModel.loadComments(mComments, pid)
+
             }
         }
     }
@@ -301,6 +321,9 @@ class PostDetailActivity : AppCompatActivity() {
                         .add(comment!!)
                         .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id) }
                         .addOnFailureListener { e -> Log.w(TAG, "Error adding comment\n", e) }
+
+
+
             } else {
                 print("Current data: null")
             }
@@ -339,4 +362,5 @@ class PostDetailActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "PostDetailedActivity"
     }
+
 }

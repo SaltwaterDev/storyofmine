@@ -37,7 +37,7 @@ class CategoryPostFragment : Fragment() {
     }
     private var categoryViewModel: CategoriesViewModel? = null
     private var postsAdapter: PostsAdapter? = null
-    private val mPosts = 10
+    private val mPosts = 100
     private var isLoading = false
 
     val mAuth: FirebaseAuth = FirebaseAuth.getInstance()

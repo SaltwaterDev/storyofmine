@@ -1,5 +1,6 @@
 package com.example.unlone.ui
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
@@ -16,8 +18,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.example.unlone.R
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         findViewById<BottomNavigationView>(R.id.nav_view)
             .setupWithNavController(navController)
+
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -91,5 +96,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("Refresh_", "fail")
         }
     } //onActivityResult
+
 
 }

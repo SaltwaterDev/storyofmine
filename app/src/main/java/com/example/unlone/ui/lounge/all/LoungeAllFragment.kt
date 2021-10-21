@@ -24,7 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class LoungeAllFragment : Fragment() {
     private var viewModel: LoungeAllViewModel? = null
     private var postsAdapter: PostsAdapter? = null
-    private val mPosts = 10
+    private val mPosts = 100
     private var isLoading = false
 
     // This property is only valid between onCreateView and onDestroyView.
