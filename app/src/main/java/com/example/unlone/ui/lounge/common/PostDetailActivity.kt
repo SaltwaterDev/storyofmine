@@ -355,7 +355,7 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun likeComment(comment: Comment) {
-        commentViewModel.likeComment(comment, pid)
+        commentViewModel.processCommentLike(comment, pid)
         commentViewModel.loadComments(mComments, pid)
     }
 

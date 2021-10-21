@@ -1,5 +1,6 @@
 package com.example.unlone.ui.lounge.common
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,7 +42,6 @@ class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comm
         holder.binding.username.text = commentList[position].username
         holder.binding.date.text = commentList[position].timestamp?.let { convertTimeStamp(it) }
         holder.binding.comment.text = commentList[position].content
-        if (selfPost){ holder.binding.likeButton.visibility = View.VISIBLE }
 
         isLiked(holder.binding.likeButton, commentList[position])
         holder.binding.likeButton.setOnClickListener {
@@ -65,18 +65,25 @@ class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comm
     private fun isLiked(likeButton: ImageView, comment: Comment) {
         mFirestore.collection("posts").document(pid)
             .collection("comments").document(comment.cid!!)
+            .collection("likes").whereEqualTo("likedBy", mAuth.uid)
             .addSnapshotListener{snapshot, e ->
                 if (e != null) {
                     Log.w("TAG", "Listen failed.", e)
                     return@addSnapshotListener
                 }
-                val dummyComment = snapshot!!.toObject<Comment>()!!
-                if (dummyComment.liked) {
-                    Log.d("TAG", "Current data: ${snapshot.data}")
+                val likeList = ArrayList<String>()
+                for (doc in snapshot!!) {
+                    doc.getString("likedBy")?.let {
+                        likeList.add(it)
+                    }
+                }
+                assert (likeList.size <= 1)
+                Log.d(TAG, "People who has liked: $likeList")
+
+                if (likeList.size == 1){    // user has liked
                     likeButton.setImageResource(R.drawable.ic_heart_filled)
                     likeButton.tag = "liked"
-                } else {
-                    Log.d("TAG", "Current data: ${snapshot.data}")
+                } else{
                     likeButton.setImageResource(R.drawable.ic_heart)
                     likeButton.tag = "like"
                 }

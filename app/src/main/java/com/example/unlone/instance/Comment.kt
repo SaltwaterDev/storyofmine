@@ -9,6 +9,5 @@ data class Comment (    var uid: String? = null,
                         var content: String? = null,
                         var timestamp: String? = null,
                         var score: Float = 0f,
-                        var liked: Boolean = false,
                         var cid: String? = null,
                         ): Parcelable
