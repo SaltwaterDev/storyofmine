@@ -17,11 +17,12 @@ class PostDiffUtil(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        Log.d("TAG", "areItemsTheSame: "+ oldList[oldItemPosition].hashCode() +" "+ newList[newItemPosition].hashCode())
+        Log.d("TAG", "oldItemPosition: $oldItemPosition; newItemPosition: $newItemPosition")
         return oldList[oldItemPosition].hashCode() == newList[newItemPosition].hashCode()
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        Log.d("TAG", "oldItemPosition: $oldItemPosition; newItemPosition: $newItemPosition")
         return when {
             oldList[oldItemPosition].hashCode() != newList[newItemPosition].hashCode() -> {
                 false
@@ -35,7 +36,7 @@ class PostDiffUtil(
             oldList[oldItemPosition].journal != newList[newItemPosition].journal -> {
                 false
             }
-            oldList[oldItemPosition].uid != newList[newItemPosition].uid -> {
+            oldList[oldItemPosition].author_uid != newList[newItemPosition].author_uid -> {
                 false
             }
             oldList[oldItemPosition].username != newList[newItemPosition].username -> {

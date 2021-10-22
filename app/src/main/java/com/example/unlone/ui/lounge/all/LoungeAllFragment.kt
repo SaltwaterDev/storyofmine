@@ -77,6 +77,7 @@ class LoungeAllFragment : Fragment() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 //super.onScrolled(recyclerView, dx, dy);
+                /*
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
                 val totalItem = linearLayoutManager!!.itemCount
                 val lastVisible = linearLayoutManager.findLastCompletelyVisibleItemPosition()
@@ -91,6 +92,8 @@ class LoungeAllFragment : Fragment() {
                         isLoading = false
                     }
                 }
+
+                 */
             }
         })
 

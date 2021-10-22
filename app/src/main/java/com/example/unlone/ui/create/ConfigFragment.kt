@@ -135,7 +135,7 @@ class ConfigFragment : Fragment() {
             return
         }
 
-        post.uid = postData.uid
+        post.author_uid = postData.uid
         post.title = postData.title
         post.journal = postData.journal
         post.labels.addAll(postData.labels)
@@ -190,7 +190,7 @@ class ConfigFragment : Fragment() {
 
 
     private fun uploadText(post: Post) {
-        val docRef = mFirestore.collection("users").document(post.uid)
+        val docRef = mFirestore.collection("users").document(post.author_uid)
         docRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val document = task.result

@@ -24,7 +24,7 @@ class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comm
     var selfPost: Boolean = false
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-
+    private var userLikeId: String? = null
 
     class ViewHolder(val binding: RecyclerviewCommentBinding)
         :RecyclerView.ViewHolder(binding.root)
@@ -38,15 +38,15 @@ class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comm
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("TAG", "commentListt:　$commentList")
+        Log.d("TAG", "commentList:　$commentList")
         holder.binding.username.text = commentList[position].username
         holder.binding.date.text = commentList[position].timestamp?.let { convertTimeStamp(it) }
         holder.binding.comment.text = commentList[position].content
 
-        isLiked(holder.binding.likeButton, commentList[position])
         holder.binding.likeButton.setOnClickListener {
             onLikeCallback(commentList[position])
         }
+        isLiked(holder.binding.likeButton, commentList[position])
     }
 
     // Return the size of your dataset (invoked by the layout manager)

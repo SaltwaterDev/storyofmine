@@ -139,6 +139,7 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     }
 
     fun setPostList(postList: List<Post>) {
+        Log.d("TAG", "old postList: ${this.postList}; new postList: $postList")
         val diffUtil = PostDiffUtil(this.postList, postList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         this.postList = postList

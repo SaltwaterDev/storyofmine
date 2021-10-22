@@ -221,11 +221,11 @@ class PostDetailActivity : AppCompatActivity() {
             p?.let{
                 post = p
                 // control the comment layout display (e.g. whether they have like button)
-                commentsAdapter.selfPost = (p.uid == mAuth.uid)
+                commentsAdapter.selfPost = (p.author_uid == mAuth.uid)
 
                 // enable or disable the right of delete post
                 val deleteMenuItem = binding.topAppBar.menu.findItem(R.id.actionDelete)
-                deleteMenuItem.isVisible = p.uid == mAuth.uid
+                deleteMenuItem.isVisible = p.author_uid == mAuth.uid
 
                 // enable or disable save button
                 val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)

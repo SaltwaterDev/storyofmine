@@ -123,7 +123,7 @@ class CommentViewModel : ViewModel() {
                     "likedBy" to mAuth.uid,
                     "timeStamp" to (System.currentTimeMillis() / 1000).toString()
                 )
-                docRef.add(data).await()
+                val docRefId = docRef.add(data).await().id
             }
         }
     }

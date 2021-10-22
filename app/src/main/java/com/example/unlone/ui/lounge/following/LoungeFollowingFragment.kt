@@ -65,7 +65,9 @@ class LoungeFollowingFragment : Fragment() {
         homeViewModel!!.loadPosts(mPosts, false)
         homeViewModel!!.posts.observe(
             viewLifecycleOwner,
-            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+            { postList: List<Post> ->
+                Log.d("TAG", "postList: $postList")
+                postsAdapter!!.setPostList(postList) })
 
         swipeRefreshLayout.setOnRefreshListener {
             // TODO refactor the refresh feature
@@ -82,7 +84,7 @@ class LoungeFollowingFragment : Fragment() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 //super.onScrolled(recyclerView, dx, dy);
-                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
+                /*val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
                 val totalItem = linearLayoutManager!!.itemCount
                 val lastVisible = linearLayoutManager.findLastCompletelyVisibleItemPosition()
                 if (totalItem < lastVisible + 3) {
@@ -96,6 +98,7 @@ class LoungeFollowingFragment : Fragment() {
                         isLoading = false
                     }
                 }
+                 */
             }
         })
 

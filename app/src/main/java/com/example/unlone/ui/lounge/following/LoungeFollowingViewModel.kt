@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class LoungeFollowingViewModel : ViewModel() {
@@ -49,68 +50,99 @@ class LoungeFollowingViewModel : ViewModel() {
             // retrieve the following categories
             val followingCategories = async { loadFollowingCategories() }
 
-            // load the post only with the following categories
+            // load the post with the following categories AND self-written posts
             Log.d(ContentValues.TAG, "followingCategories: $followingCategories")
             if (lastVisible == null || !loadMore!!) {
                 postList.clear()
                 Log.d(ContentValues.TAG, "First load")
-                mFirestore.collection("posts")
+                // add the following categories
+                val followingDocs = mFirestore.collection("posts")
                     .whereIn("category", followingCategories.await())
                     .orderBy("createdTimestamp", Query.Direction.DESCENDING)
                     .limit(numberPost.toLong())
                     .get()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            task.result?.let{ results ->
-                                if (results.size() > 0) {
-                                    lastVisible = results.documents[results.size() - 1]
-                                }
-                                for (document in results) {
-                                    Log.d(ContentValues.TAG, document.id + " => " + document.data)
-                                    val post = document.toObject<Post>()
-                                    post.pid = document.id
-                                    if (!postList.contains(post)) {
-                                        postList.add(post)
-                                        posts.value = postList
-                                    }
-                                }
-                            }
-                        }else {
-                            Log.d(ContentValues.TAG, "Error getting documents: ", task.exception)
-                        }
+                    .await()
+
+                if (followingDocs.size() > 0) {
+                    lastVisible = followingDocs.documents[followingDocs.size() - 1]
+                }
+                for (document in followingDocs) {
+                    Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                    val post = document.toObject<Post>()
+                    post.pid = document.id
+                    if (!postList.contains(post)) {
+                        postList.add(post)
                     }
+                }
+
+                // add the self-written posts
+                val selfDocs = mFirestore.collection("posts")
+                    .whereEqualTo("author_uid", mAuth.uid)
+                    .get()
+                    .await()
+                for (document in selfDocs) {
+                    Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                    val post = document.toObject<Post>()
+                    post.pid = document.id
+                    if (!postList.contains(post)) {
+                        postList.add(post)
+                    }
+                }
+                // sort the postList again
+                val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
+                withContext(Dispatchers.Main){
+                    Log.d("TAG", "sorted postList: $sortedPostList")
+                    posts.value = sortedPostList
+                }
             } else {
-                mFirestore.collection("posts")
+                // TODO ("fixing the paging")
+                // add the following categories
+                val followingDocs = mFirestore.collection("posts")
                     .whereIn("category", followingCategories.await())
                     .orderBy("createdTimestamp", Query.Direction.DESCENDING)
-                    .startAfter(lastVisible)
+                    //.startAfter(lastVisible)
                     .limit(numberPost.toLong())
                     .get()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            task.result?.let{ results ->
-                                if (results.size() > 0) {
-                                    for (document in results) {
-                                        Log.d(ContentValues.TAG, document.id + " => " + document.data)
-                                        val post = document.toObject(Post::class.java)
-                                        post.pid = document.id
-                                        if (!postList.contains(post)) {
-                                            postList.add(post)
-                                            posts.value = postList
-                                        }
-                                    }
-                                    lastVisible =
-                                        results.documents[task.result!!.size() - 1]
-                                } else {Log.d(ContentValues.TAG, "End of posts")}
+                    .await()
+
+                followingDocs?.let{ results ->
+                    if (results.size() > 0) {
+                        for (document in results) {
+                            Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                            val post = document.toObject(Post::class.java)
+                            post.pid = document.id
+                            if (!postList.contains(post)) {
+                                postList.add(post)
                             }
-                        } else {
-                            Log.d(ContentValues.TAG, "Error getting documents: ", task.exception)
                         }
+                        lastVisible =
+                            results.documents[results.size() - 1]
+                    } else {Log.d(ContentValues.TAG, "End of posts")}
+                }
+
+                // add the self-written posts
+                val selfDocs = mFirestore.collection("posts")
+                    .whereEqualTo("author_id", mAuth.uid)
+                    // .startAfter(lastVisible)
+                    .get()
+                    .await()
+                for (document in selfDocs) {
+                    Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                    val post = document.toObject<Post>()
+                    post.pid = document.id
+                    if (!postList.contains(post)) {
+                        postList.add(post)
                     }
+                }
+                // sort the postList again
+                val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
+                withContext(Dispatchers.Main){
+                    Log.d("TAG", "sorted postList: $sortedPostList")
+                    posts.value = sortedPostList
+                }
+
             }
         }
-
-
     }
 
     fun searchPost(text: String){
