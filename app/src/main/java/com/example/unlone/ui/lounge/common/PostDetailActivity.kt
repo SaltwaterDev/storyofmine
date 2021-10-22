@@ -69,12 +69,11 @@ class PostDetailActivity : AppCompatActivity() {
                 Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
-
             // Get new FCM registration token
             token = task.result
 
             // Log and toast
-            Log.d(ContentValues.TAG, "FCM token: "+token)
+            Log.d(ContentValues.TAG, "FCM token: $token")
 
         })
 
@@ -158,6 +157,22 @@ class PostDetailActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.actionDelete -> {
+                    // delete the post
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Alert")
+                        .setMessage("Are you sure deleting this post?")
+                        .setPositiveButton("delete") { dialog, which ->
+                            // Respond to positive button press
+                            detailedPostViewModel.deletePost(pid)
+                            finish()
+                        }
+                        .setNeutralButton("cancel") { dialog, which ->
+                            // Respond to positive button press
+                        }
+                        .show()
+                    true
+                }
 
                 else -> false
             }
@@ -197,7 +212,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         // send comment button click
         binding.sendBtn.setOnClickListener{
-            if (binding.commentEt.text.isNotEmpty() && token != null){
+            if (binding.commentEt.text.isNotEmpty()){
                 postComment()
                 binding.commentEt.text.clear()
                 commentViewModel.loadComments(mComments, pid)

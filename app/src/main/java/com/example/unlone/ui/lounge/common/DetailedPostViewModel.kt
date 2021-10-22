@@ -29,7 +29,17 @@ class DetailedPostViewModel : ViewModel() {
                 Log.d("TAG", "detailedPost: ${post.value.toString()}")
                 Log.d("TAG", "pid: $pid")
             }
-    } //todo load comment
+    }
+
+    fun deletePost(pid:String){
+        mFirestore.collection("posts")
+            .document(pid)
+            .delete()
+            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w("TAG", "Error deleting document", e) }
+
+    }
+
 
     init {
         postList = ArrayList()
