@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.ViewModelProvider
+import com.example.unlone.R
 import com.example.unlone.databinding.FragmentLoungeFollowingBinding
 import com.example.unlone.instance.Post
 import com.example.unlone.ui.lounge.common.PostsAdapter
@@ -46,7 +47,7 @@ class LoungeFollowingFragment : Fragment() {
 
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
-        fab.tooltipText = "Write a post"
+        fab.tooltipText = resources.getString(R.string.write_a_post)
         fab.setOnClickListener {
             val intent = Intent(context, PostActivity::class.java)
             startActivity(intent)

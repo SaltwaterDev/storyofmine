@@ -19,7 +19,7 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             app:iconTint="@color/colorWhite"
             app:titleCentered="true"
-            app:title="My Stories"
+            app:title="@string/my_stories"
             app:titleTextAppearance="@style/Toolbar.TextAppearance"
             />
 

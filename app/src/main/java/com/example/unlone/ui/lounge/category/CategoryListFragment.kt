@@ -9,9 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.unlone.databinding.FragmentCategoryListBinding
+import java.util.ArrayList
 
 class CategoryListFragment : Fragment() {
     private val binding get() = _binding!!
@@ -41,11 +43,17 @@ class CategoryListFragment : Fragment() {
 
         binding.listview.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
-                val selectedCategory = parent.getItemAtPosition(position) as String
+                var selectedCategory = parent.getItemAtPosition(position) as String
                 Log.d(TAG, "selected category: $selectedCategory")
-                // open the post with specific category
-                val action = CategoryListFragmentDirections.navigateToCategoryPostFragment(selectedCategory)
-                Navigation.findNavController(view).navigate(action)
+                selectedCategory = model.retrieveDefaultCategory(selectedCategory).toString()
+                if (selectedCategory != "null"){
+                    // open the post with specific category
+                    val action = CategoryListFragmentDirections.navigateToCategoryPostFragment(selectedCategory)
+                    Navigation.findNavController(view).navigate(action)
+                }
+                else{
+                    Log.d(TAG, "couldn't find the category")
+                }
             }
 
         return view

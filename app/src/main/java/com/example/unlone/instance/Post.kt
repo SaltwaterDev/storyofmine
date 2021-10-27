@@ -18,5 +18,5 @@ data class Post(
         var createdDate: String = "",
         var pid: String = "",
         var comment: Boolean = true,
-        var save: Boolean = true
+        var save: Boolean = true,
 ) : Parcelable

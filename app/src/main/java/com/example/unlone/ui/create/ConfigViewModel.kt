@@ -12,19 +12,65 @@ import java.util.*
 
 class ConfigViewModel: ViewModel() {
     private var _categories: MutableLiveData<List<String>> = MutableLiveData()
+    private var _rawCategories: MutableLiveData<List<Pair<String, String>>> = MutableLiveData()
     var categories:  LiveData<List<String>> = _categories
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Suppress("UNCHECKED_CAST")
     fun loadCategories() {
-        mFirestore.collection("categories")
-            .document("pre_defined_categories")
-            .get()
-            .addOnSuccessListener { documentSnapshot ->
-                val data: Map<String, Any> = documentSnapshot.data as Map<String, Any>
-                _categories.value = data["list"] as List<String>?
-                Log.d("TAG category", _categories.toString())
+        val language = Locale.getDefault().language
+        Log.d("TAG", "language: $language")
+        if (language == "zh"){
+            // if the device language is set to Chinese, use chinese text
+            mFirestore.collection("categories")
+                .document("pre_defined_categories")
+                .collection("categories_name")
+                .get()
+                .addOnSuccessListener { result  ->
+                    val rawCategoryArrayList = ArrayList<Pair<String, String>>()
+                    for (document in result) {
+                        val category = Pair(document.id, document.data["zh_hk"])
+                        category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
+
+                    }
+                    _rawCategories.value = rawCategoryArrayList
+                    val c = ArrayList<String>()
+                    for (rawCategory in rawCategoryArrayList){
+                        c.add(rawCategory.second)
+                    }
+                    _categories.value = c
+                    Log.d("TAG category", _categories.toString())
+                }
+        }else {
+            // default language (english)
+            mFirestore.collection("categories")
+                .document("pre_defined_categories")
+                .collection("categories_name")
+                .get()
+                .addOnSuccessListener { result ->
+                    val rawCategoryArrayList = ArrayList<Pair<String, String>>()
+                    for (document in result) {
+                        val category = Pair(document.id, document.data["default"])
+                        category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
+                    }
+                    _rawCategories.value = rawCategoryArrayList
+                    val c = ArrayList<String>()
+                    for (rawCategory in rawCategoryArrayList){
+                        c.add(rawCategory.second)
+                    }
+                    _categories.value = c
+                    Log.d("TAG category", _categories.toString())
+                }
+        }
+    }
+
+    fun retrieveDefaultCategory(category: String): String? {
+        for (c in _rawCategories.value!!){
+            if (category in c.toList()){
+                return c.first
             }
+        }
+        return null
     }
 
 }

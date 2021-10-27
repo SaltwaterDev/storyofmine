@@ -8,5 +8,6 @@ import kotlinx.parcelize.Parcelize
 data class Report(
     val type: String? = null,
     val post: Post? = null,
-    val reportReason: String? = null
+    val reportReason: String? = null,
+    val reportedBy: String
 ): Parcelable

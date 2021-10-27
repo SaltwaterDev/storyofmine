@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Back"
+                android:text="@string/back"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/sf_compact_display_medium"
                 android:textColor="@color/colorText"
-                android:text="Post"
+                android:text="@string/post"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -66,9 +66,9 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Almost!"
+            android:text="@string/almost"
             android:fontFamily="@font/df_pro_display_medium"
-            android:textSize="@dimen/_26ssp"
+            android:textSize="@dimen/_24ssp"
             android:textColor="@color/colorText"
             android:layout_marginStart="16dp"
             android:layout_marginTop="31dp"
@@ -78,17 +78,15 @@
                 android:id="@+id/question1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Category"
-                android:fontFamily="@font/df_pro_display_medium"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/notosans_tc_medium"
                 android:textSize="@dimen/_20ssp"
                 android:textColor="@color/colorText"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="55dp"
-                android:layout_marginBottom="10dp"/>
+                android:text="@string/category"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/categoryMenu"
-                android:layout_marginTop="16dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -108,29 +106,26 @@
                 android:id="@+id/question2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Preference"
-                android:fontFamily="@font/df_pro_display_medium"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/notosans_tc_medium"
                 android:textSize="@dimen/_20ssp"
                 android:textColor="@color/colorText"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="70dp"
-                android:layout_marginBottom="10dp"/>
+                android:text="@string/preference"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/CommentTv"
-                    android:layout_marginTop="11dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:fontFamily="@font/sf_compact_text_regular"
-                    android:text="Disable comment"
+                    android:fontFamily="@font/notosans_tc_regular"
+                    android:text="@string/disable_comment"
                     android:textColor="@color/colorText"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/commentSwitch"
@@ -153,9 +148,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="11dp"
-                    android:fontFamily="@font/sf_compact_text_regular"
-                    android:text="Disable saving"
+                    android:fontFamily="@font/notosans_tc_regular"
+                    android:text="@string/disable_saving"
                     android:textColor="@color/colorText"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -178,12 +172,12 @@
                 android:id="@+id/preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Preview"
+                android:layout_marginTop="80dp"
                 android:fontFamily="@font/df_pro_display_medium"
                 android:textSize="26sp"
                 android:textColor="@color/colorText"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="120dp"
+                android:text="@string/preview"
                 android:layout_marginBottom="10dp"/>
 
             <FrameLayout
@@ -197,13 +191,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
                 android:layout_marginTop="47dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:fontFamily="@font/sf_compact_display_medium"
                 android:textSize="25sp"
-                android:layout_marginEnd="16dp"
                 android:text="@string/title"
+                android:letterSpacing="0.04"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textStyle="bold"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/author"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -213,8 +207,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="19dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_gravity="start"
                 android:text="@string/date"
                 android:textSize="14sp"
@@ -238,10 +232,12 @@
                 android:layout_marginTop="15dp"
                 android:text="@string/journal"
                 android:textColor="@color/colorText"
-                android:fontFamily="@font/sf_pro_text_regular"
+                android:layout_marginStart="24dp"
                 android:gravity="top"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="24dp"
+                android:fontFamily="@font/notosans_tc_regular"
+                android:letterSpacing="0.1"
+                android:lineSpacingExtra="10dp"
                 android:textSize="17sp"/>
 
             <TextView

@@ -28,33 +28,34 @@
         android:id="@+id/email_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="@dimen/_34sdp"
         android:layout_marginEnd="@dimen/_34sdp"
         app:layout_constraintBottom_toTopOf="@id/password_field"
         android:layout_marginBottom="10dp">
 
-    <TextView
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:padding="4dp"
-        android:textSize="@dimen/_11ssp"
-        android:textAlignment="viewEnd"
-        android:textColor="@color/colorWhiteText"
-        android:fontFamily="@font/sf_pro_display_bold"
-        android:id="@+id/email_text"/>
+        <TextView
+            android:id="@+id/email_text"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_display_bold"
+            android:padding="4dp"
+            android:text="@string/email"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="@dimen/_11ssp"/>
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorWhiteText"
-        android:backgroundTint="@color/colorWhiteText"
-        android:layout_marginStart="10dp"
-        android:inputType="textEmailAddress"
-        android:padding="10dp" />
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/colorWhiteText"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textColor="@color/colorWhiteText" />
+
     </LinearLayout>
 
 
@@ -62,57 +63,57 @@
         android:id="@+id/password_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
         android:layout_marginStart="@dimen/_34sdp"
         android:layout_marginEnd="@dimen/_34sdp"
-        android:layout_marginBottom="114dp">
+        android:layout_marginBottom="113dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
+            android:id="@+id/password_text"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:text="Password"
-            android:padding="4dp"
-            android:textSize="@dimen/_11ssp"
-            android:textAlignment="viewEnd"
             android:fontFamily="@font/sf_pro_display_bold"
+            android:padding="4dp"
+            android:text="@string/password"
+            android:textAlignment="viewEnd"
             android:textColor="@color/colorWhiteText"
-            android:id="@+id/password_text"/>
+            android:textSize="@dimen/_11ssp" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textColor="@color/colorWhiteText"
             android:backgroundTint="@color/colorWhiteText"
             android:inputType="textPassword"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:textColor="@color/colorWhiteText" />
 
     </LinearLayout>
 
 
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:id="@+id/buttonRegister"
-        app:cornerRadius="15dp"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        app:strokeColor="@color/colorWhiteText"
-        app:strokeWidth="1dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/buttonLogin"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        android:fontFamily="@font/sf_pro_display_regular"
         android:layout_marginBottom="15dp"
-        android:textColor="@color/colorWhiteText"
-        android:textAllCaps = "false"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:text="@string/action_sign_up"
         android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhiteText"
         android:textSize="18sp"
-        android:text="@string/sign_up"/>
+        app:cornerRadius="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/progressBar"
+        app:layout_constraintEnd_toStartOf="@id/buttonLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="@color/colorWhiteText"
+        app:strokeWidth="1dp" />
 
 
     <com.google.android.material.button.MaterialButton

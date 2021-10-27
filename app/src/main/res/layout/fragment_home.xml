@@ -25,33 +25,36 @@
                 android:fontFamily="@font/averia_serif_libre_bold"
                 android:gravity="center"
                 android:letterSpacing="0.03"
-                android:text="LOUNGE"
+                android:text="@string/lounge"
+                android:textAllCaps="true"
                 android:textColor="@color/colorWhiteText"
                 android:textSize="19sp" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tab_layout"
         android:layout_below="@id/app_bar"
         app:tabIndicatorColor="#c4000000"
         app:tabIndicatorHeight="1.75dp"
         app:tabTextAppearance="@style/MyCustomTextAppearance">
 
         <com.google.android.material.tabs.TabItem
-            android:text="Following"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+            android:text="@string/tab_following" />
+
         <com.google.android.material.tabs.TabItem
-            android:text="All"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+            android:text="@string/tab_all" />
+
         <com.google.android.material.tabs.TabItem
-            android:text="Categories"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+            android:text="@string/tab_categories" />
 
     </com.google.android.material.tabs.TabLayout>
 

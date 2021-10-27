@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/sf_compact_display_medium"
                 android:textColor="#346546"
-                android:text="Send"
+                android:text="@string/send"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -56,14 +56,14 @@
         android:id="@+id/issueTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="What type of issue?"
-        android:fontFamily="@font/df_pro_display_medium"
-        android:textSize="@dimen/_18ssp"
-        android:textColor="@color/colorText"
         android:layout_below="@+id/toolbar"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/df_pro_display_medium"
+        android:text="@string/what_type_of_issue"
+        android:textColor="@color/colorText"
+        android:textSize="@dimen/_18ssp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/categoryMenu"
@@ -92,7 +92,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginBottom="10dp"
         android:fontFamily="@font/df_pro_display_medium"
-        android:text="Details"
+        android:text="@string/details"
         android:textColor="@color/colorText"
         android:textSize="@dimen/_18ssp" />
 
@@ -114,6 +114,7 @@
             android:maxLines="20"
             android:gravity="top|start"
             android:scrollbars="vertical"
+            android:hint="@string/we_will_reply_you_as_soon_as_possible"
             />
 
     </com.google.android.material.textfield.TextInputLayout>

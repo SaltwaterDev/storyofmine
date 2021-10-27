@@ -19,7 +19,7 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             app:iconTint="@color/colorWhite"
             app:titleCentered="true"
-            app:title="Saved"
+            app:title="@string/saved"
             app:titleTextAppearance="@style/Toolbar.TextAppearance"
             />
 

@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="19dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
                 android:layout_marginEnd="19dp"
                 android:fontFamily="@font/sf_compact_display_medium"
                 android:textColor="@color/colorText"
-                android:text="Save"
+                android:text="@string/save"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Name"
+            android:text="@string/name"
             android:textSize="21sp"
             android:textColor="@color/colorText"/>
 
@@ -91,7 +91,7 @@
             android:layout_marginTop="34dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Bio"
+            android:text="@string/bio"
             android:textSize="21sp"
             android:textColor="@color/colorText"/>
 
@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/bio"
-            android:hint="Others won't see it"
+            android:hint="@string/others_won_t_see_it"
             app:met_floatingLabel="normal"
             android:layout_marginTop="7dp"
             android:layout_marginStart="16dp"
@@ -112,7 +112,7 @@
             android:layout_marginTop="34dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Likes"
+            android:text="@string/likes"
             android:textSize="21sp"
             android:textColor="@color/colorText"/>
 
@@ -122,7 +122,7 @@
             android:id="@+id/likes"
             app:met_floatingLabel="normal"
             android:layout_marginTop="7dp"
-            android:hint="Others won't see it"
+            android:hint="@string/others_won_t_see_it"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
@@ -133,7 +133,7 @@
             android:layout_marginTop="34dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Dislikes"
+            android:text="@string/dislikes"
             android:textSize="21sp"
             android:textColor="@color/colorText"/>
 
@@ -142,7 +142,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/dislikes"
             app:met_floatingLabel="normal"
-            android:hint="Others won't see it"
+            android:hint="@string/others_won_t_see_it"
             android:layout_marginTop="7dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>

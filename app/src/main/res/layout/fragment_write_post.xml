@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/sf_compact_display_medium"
                 android:textColor="@color/colorText"
-                android:text="Next"
+                android:text="@string/next"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +94,7 @@
                 android:layout_marginEnd="18dp"
                 android:background="@null"
                 android:fontFamily="@font/notosans_tc_medium"
-                android:hint="Title"
+                android:hint="@string/title"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
@@ -102,6 +102,7 @@
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="25sp"
                 android:maxLength="90"
+                android:letterSpacing="0.04"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imagePost"/>
@@ -121,6 +122,8 @@
                 android:inputType="textMultiLine"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="17sp"
+                android:letterSpacing="0.1"
+                android:lineSpacingExtra="10dp"
                 android:layout_marginStart="18dp"
                 android:layout_marginEnd="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +147,7 @@
                     android:textColor="@color/colorText"
                     android:fontFamily="@font/notosans_tc_medium"
                     android:textSize="15sp"
-                    android:text="Label:" />
+                    android:text="@string/label" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/label_chip_group"

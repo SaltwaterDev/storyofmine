@@ -31,7 +31,7 @@ class MyStoriesViewModel : ViewModel() {
             postList.clear()
             Log.d(ContentValues.TAG, "First load")
             mFirestore.collection("posts")
-                .whereEqualTo("uid", mAuth.uid!!)
+                .whereEqualTo("author_uid", mAuth.uid!!)
                 .orderBy("createdTimestamp", Query.Direction.DESCENDING)
                 .limit(numberPost.toLong())
                 .get()
@@ -57,7 +57,7 @@ class MyStoriesViewModel : ViewModel() {
                 }
         } else {
             mFirestore.collection("posts")
-                .whereEqualTo("uid", mAuth.uid!!)
+                .whereEqualTo("author_uid", mAuth.uid!!)
                 .orderBy("createdTimestamp", Query.Direction.DESCENDING)
                 .startAfter(lastVisible)
                 .limit(numberPost.toLong())

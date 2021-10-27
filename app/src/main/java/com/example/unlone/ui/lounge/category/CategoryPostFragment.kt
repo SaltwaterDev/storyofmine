@@ -72,7 +72,7 @@ class CategoryPostFragment : Fragment() {
 
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
-        fab.tooltipText = "Write a post"
+        fab.tooltipText = resources.getString(R.string.write_a_post)
         fab.setOnClickListener {
             val intent = Intent(context, PostActivity::class.java)
             startActivity(intent)
@@ -80,7 +80,10 @@ class CategoryPostFragment : Fragment() {
 
         // set category title
         categoryViewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
-        binding.categoryTitleTv.text = args.category
+        categoryViewModel!!.getCategoryTitle(args.category)
+        categoryViewModel!!.categoryTitle.observe(viewLifecycleOwner){ title ->
+            binding.categoryTitleTv.text = title
+        }
         isFollowing(binding.isFollowingTv)
         binding.isFollowingTv.setOnClickListener{
             if (binding.isFollowingTv.tag == "follow"){

@@ -3,19 +3,14 @@ package com.example.unlone.ui.profile
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.unlone.R
 import com.example.unlone.databinding.RecyclerviewProfileCardBinding
-import com.example.unlone.ui.MainActivity
 import com.example.unlone.ui.access.FirstAccessActivity
-import com.example.unlone.utils.dpConvertPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 
@@ -44,29 +39,29 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
         holder.binding.cardView.setOnClickListener{ view ->
             when (holder.binding.title.text){
                 // Go to "My Stories"
-                "My \nStories" -> view.findNavController().navigate(R.id.action_navigation_profile_to_myStoriesFragment)
+                holder.itemView.context.getString(R.string.my_stories) -> view.findNavController().navigate(R.id.action_navigation_profile_to_myStoriesFragment)
                 // Go to "Saved"
-                "Saved" -> view.findNavController().navigate(R.id.action_navigation_profile_to_savedStoriesFragment)
+                holder.itemView.context.getString(R.string.saved) -> view.findNavController().navigate(R.id.action_navigation_profile_to_savedStoriesFragment)
                 // Logout
-                "Contact \nUs" -> view.findNavController().navigate(R.id.action_navigation_profile_to_contactUsFragment)
+                holder.itemView.context.getString(R.string.contact) -> view.findNavController().navigate(R.id.action_navigation_profile_to_contactUsFragment)
                 // Logout
-                "Log Out" -> logout()
+                holder.itemView.context.getString(R.string.logout) -> logout(holder)
             }
         }
 
-        if(holder.binding.title.text == "Log Out"){
-            holder.binding.title.setTextColor(Color.parseColor("#B00020"))
+        if(holder.binding.title.text == holder.itemView.context.getString(R.string.logout)){
+            holder.binding.title.setTextColor(Color.parseColor("#C10909"))
         }
     }
 
-    private fun logout() {
+    private fun logout(holder: ViewHolder) {
         MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
-            .setTitle("Alert")
-            .setMessage("Are you sure to logout?")
-            .setNegativeButton("Cancel") { dialog, which ->
+            .setTitle(holder.itemView.context.getString(R.string.delete_alert))
+            .setMessage(holder.itemView.context.getString(R.string.logout_alert))
+            .setNegativeButton(holder.itemView.context.getString(R.string.cancel)) { dialog, which ->
                 // Respond to negative button press
             }
-            .setPositiveButton("Log Out") { dialog, which ->
+            .setPositiveButton(holder.itemView.context.getString(R.string.logout)) { dialog, which ->
                 val user = FirebaseAuth.getInstance()
                 user.signOut()
                 val intent = Intent(context, FirstAccessActivity::class.java)

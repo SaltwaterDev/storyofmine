@@ -1,7 +1,5 @@
 package com.example.unlone.ui.lounge.common
 
-import android.content.ContentValues
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -17,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.unlone.R
 import com.example.unlone.databinding.ActivityPostDetailBinding
-import com.example.unlone.firebasenotifications.FirebaseMessagingService
 import com.example.unlone.instance.Comment
 import com.example.unlone.instance.Post
 import com.example.unlone.instance.Report
@@ -25,12 +22,10 @@ import com.example.unlone.instance.User
 import com.example.unlone.utils.convertTimeStamp
 import com.example.unlone.utils.dpConvertPx
 import com.example.unlone.utils.getImageHorizontalMargin
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
@@ -44,17 +39,18 @@ class PostDetailActivity : AppCompatActivity() {
     private lateinit var detailedPostViewModel: DetailedPostViewModel
     private lateinit var commentViewModel: CommentViewModel
 
-    // detail of user and the post
-    var uid: String? = null
-    var username: String? = null
-    private lateinit var pid: String
-    var hashMap : HashMap<String, String>  // tag storing the save state
-            = HashMap<String, String> ()
-
     // init firebase
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val commentsAdapter by lazy { CommentsAdapter(pid, ::likeComment) }
+
+    // detail of user and the post
+    var uid: String? = mAuth.uid
+    var username: String? = null
+    private lateinit var pid: String
+
+    var hashMap : HashMap<String, String>  // tag storing the save state
+            = HashMap<String, String> ()
 
     private var post: Post? = null
     private var comment: Comment? = null
@@ -62,20 +58,6 @@ class PostDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseMessagingService.sharedPref = getSharedPreferences("sgaredPref", Context.MODE_PRIVATE)
-        var token: String? = null
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-            // Get new FCM registration token
-            token = task.result
-
-            // Log and toast
-            Log.d(ContentValues.TAG, "FCM token: $token")
-
-        })
 
         // get id of the post using intent
         val intent = intent
@@ -120,30 +102,44 @@ class PostDetailActivity : AppCompatActivity() {
                 R.id.actionReport -> {
                     // write the pid into the Report collection in Firestore
                     post?.let{
-                        val singleItems = arrayOf("Hate Speech", "Span or Irrelevant", "Sexual or Inappropriate", "I just don’t like it")
+
+                        val reportMap = mapOf(getString(R.string.hate_speech) to "Hate Speech",
+                            getString(R.string.span_or_irrelevant) to "Span or Irrelevant",
+                            getString(R.string.sexual_or_inappropriate) to "Sexual or Inappropriate",
+                            getString(R.string.just_dont_like) to "I just don’t like it"
+                            )
+                        val singleItems = reportMap.keys.toList().toTypedArray()
                         var checkedItem = 1
 
                         // show dialog
                         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
-                            .setTitle("Why do you want to report?")
-                            .setNeutralButton("cancel") { dialog, which ->
+                            .setTitle(getString(R.string.why_report))
+                            .setNeutralButton(getString(R.string.cancel)) { dialog, which ->
                                 // Respond to neutral button press
                             }
-                            .setPositiveButton("report") { dialog, which ->
+                            .setPositiveButton(getString(R.string.report)) { dialog, which ->
                                 // Respond to positive button press
                                 Log.d("TAG", singleItems[checkedItem])
-                                val report = Report(
-                                    "post",
-                                    post,
-                                    singleItems[checkedItem]
-                                )
+                                val report = uid?.let { it1 ->
+                                    Report(
+                                        "post",
+                                        post,
+                                        reportMap[singleItems[checkedItem]],
+                                        it1
+                                    )
+                                }
 
-                                mFirestore.collection("report")
-                                    .add(report)
-                                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                                    .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                                Log.d("TAG", report.toString())
+                                if (report != null) {
+                                    mFirestore.collection("reports")
+                                        .add(report)
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Report DocumentSnapshot successfully written!")
+                                            showConfirmation()
+                                        }
+                                        .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                                }
 
-                                showConfirmation()
                             }// Single-choice items (initialized with checked item)
                             .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
                                 // Respond to item chosen
@@ -160,14 +156,14 @@ class PostDetailActivity : AppCompatActivity() {
                 R.id.actionDelete -> {
                     // delete the post
                     MaterialAlertDialogBuilder(this)
-                        .setTitle("Alert")
-                        .setMessage("Are you sure deleting this post?")
-                        .setPositiveButton("delete") { dialog, which ->
+                        .setTitle(getString(R.string.delete_alert))
+                        .setMessage(getString(R.string.report_alert_context))
+                        .setPositiveButton(getString(R.string.action_delete)) { dialog, which ->
                             // Respond to positive button press
                             detailedPostViewModel.deletePost(pid)
                             finish()
                         }
-                        .setNeutralButton("cancel") { dialog, which ->
+                        .setNeutralButton(getString(R.string.cancel)) { dialog, which ->
                             // Respond to positive button press
                         }
                         .show()
@@ -223,10 +219,11 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun showConfirmation() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Thank you")
-            .setMessage("Thank you for report, we will let you know the result as soon as possible")
-            .setPositiveButton("confirm") { dialog, which ->
+            .setTitle(resources.getString(R.string.thank_you))
+            .setMessage(getString(R.string.report_text))
+            .setPositiveButton(getString(R.string.confirm)) { dialog, which ->
                 // Respond to positive button press
+                finish()
             }
             .show()
     }

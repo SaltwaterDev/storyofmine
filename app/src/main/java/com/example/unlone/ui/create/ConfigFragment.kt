@@ -60,6 +60,7 @@ class ConfigFragment : Fragment() {
             Log.d("TAG", "config fragment, postData: $postData")
             binding.commentSwitch.isChecked = !postData.comment
             binding.saveSwitch.isChecked = !postData.save
+            binding.textField.setText(postData.category)
 
             // Preview
             var displayLabel = ""
@@ -82,6 +83,7 @@ class ConfigFragment : Fragment() {
             postData?.save = !isChecked
         }
         val backButton = binding.backButton.setOnClickListener {
+            postData?.category  = binding.textField.text.toString()
             postData?.let { it1 -> savedStateModel.savepostData(it1) }
             Navigation.findNavController(view).navigate(R.id.navigateToWritePostFragment)
         }
@@ -134,12 +136,18 @@ class ConfigFragment : Fragment() {
             Toast.makeText(activity, "You Haven't set the category", Toast.LENGTH_SHORT).show()
             return
         }
+        // Since the displaying category name may have varied language,
+        // it has to be stored as the default language
+        val model = ViewModelProvider(this).get(ConfigViewModel::class.java)
+        model.retrieveDefaultCategory(postData.category)?.let {
+            post.category = it
+        }
 
+        // assign the rest of it
         post.author_uid = postData.uid
         post.title = postData.title
         post.journal = postData.journal
         post.labels.addAll(postData.labels)
-        post.category = postData.category
         post.comment = postData.comment
         post.save = postData.save
 

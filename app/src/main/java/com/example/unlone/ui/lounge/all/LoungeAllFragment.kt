@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.unlone.R
 import com.example.unlone.databinding.FragmentLoungeAllBinding
 import com.example.unlone.instance.Post
 import com.example.unlone.ui.create.PostActivity
@@ -45,7 +46,7 @@ class LoungeAllFragment : Fragment() {
 
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
-        fab.tooltipText = "Write a post"
+        fab.tooltipText = resources.getString(R.string.write_a_post)
         fab.setOnClickListener {
             val intent = Intent(context, PostActivity::class.java)
             startActivity(intent)

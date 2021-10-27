@@ -11,6 +11,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.unlone.R
 import com.example.unlone.databinding.FragmentProfileBinding
 import com.example.unlone.instance.User
 import com.google.firebase.firestore.EventListener
@@ -39,12 +40,12 @@ class ProfileFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = profileAdapter
 
-        profileList.add(ProfileCard("My \nStories", "#EDC678"))
-        // profileList.add(ProfileCard("Journey", "#E6E2CB"))   TODO
-        profileList.add(ProfileCard("Saved", "#E2E0EE"))
-        // profileList.add(ProfileCard("Setting", "#B0B0B0"))   TODO
-        profileList.add(ProfileCard("Contact \nUs", "#B5CEF0"))
-        profileList.add(ProfileCard("Log Out", "#B9CAB7"))
+        profileList.add(ProfileCard(getString(R.string.my_stories), "#EDC678"))
+        // profileList.add(ProfileCard(getString(R.string.journey), "#E6E2CB"))   TODO
+        profileList.add(ProfileCard(getString(R.string.saved), "#E2E0EE"))
+        // profileList.add(ProfileCard(getString(R.string.setting), "#B0B0B0"))   TODO
+        profileList.add(ProfileCard(getString(R.string.contact), "#B5CEF0"))
+        profileList.add(ProfileCard(getString(R.string.logout), "#B9CAB7"))
         profileAdapter.setDataList(profileList)
 
         val docRef = mFirestore!!.collection("users").document(
