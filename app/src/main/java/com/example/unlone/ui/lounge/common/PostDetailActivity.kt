@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.unlone.R
 import com.example.unlone.databinding.ActivityPostDetailBinding
+import com.example.unlone.databinding.LayoutPostBinding
 import com.example.unlone.instance.Comment
 import com.example.unlone.instance.Post
 import com.example.unlone.instance.Report
@@ -34,6 +35,7 @@ import java.util.*
 
 class PostDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostDetailBinding
+    private lateinit var mergeLayoutPostBinding: LayoutPostBinding
 
     // declare viewModel
     private lateinit var detailedPostViewModel: DetailedPostViewModel
@@ -65,6 +67,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         binding = ActivityPostDetailBinding.inflate(layoutInflater)
         val view = binding.root
+        mergeLayoutPostBinding = LayoutPostBinding.bind(view)
         setContentView(view)
 
         // init toolbar
@@ -247,7 +250,7 @@ class PostDetailActivity : AppCompatActivity() {
                 }
 
                 // display title
-                binding.textViewTitle.text = p.title
+                mergeLayoutPostBinding.textViewTitle.text = p.title
 
                 // display image
                 val imagePath = p.imagePath
@@ -256,19 +259,19 @@ class PostDetailActivity : AppCompatActivity() {
                     // action wil be done when loading the image
                     val target: Target = object : Target {
                         override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom) {
-                            binding.imageCover.visibility = View.VISIBLE
+                            mergeLayoutPostBinding.imageCover.visibility = View.VISIBLE
 
                             //get measured image size
                             val imageWidth = bitmap.width
                             val imageHeight = bitmap.height
-                            binding.imageCover.setImageBitmap(bitmap)
+                            mergeLayoutPostBinding.imageCover.setImageBitmap(bitmap)
                             Log.d("Bitmap Dimensions: ", imageWidth.toString() + "x" + imageHeight)
                             val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                             params.gravity = Gravity.CENTER
                             val imageHorizontalMargin: Int = getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, this@PostDetailActivity) // in px
                             val imageVerticalMargin = dpConvertPx(38, this@PostDetailActivity)
                             params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, imageVerticalMargin)
-                            binding.imageCover.layoutParams = params
+                            mergeLayoutPostBinding.imageCover.layoutParams = params
 
                         }
 
@@ -276,15 +279,15 @@ class PostDetailActivity : AppCompatActivity() {
                         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
                     }
 
-                    binding.imageCover.tag = target
+                    mergeLayoutPostBinding.imageCover.tag = target
                     Picasso.get().load(imagePath).into(target)
                 } catch (e: Exception) {
-                    binding.imageCover.visibility = View.GONE
+                    mergeLayoutPostBinding.imageCover.visibility = View.GONE
                 }
 
                 // display journal text
-                binding.textViewJournal.text = p.journal
-                binding.date.text = convertTimeStamp(p.createdTimestamp)
+                mergeLayoutPostBinding.textViewJournal.text = p.journal
+                mergeLayoutPostBinding.date.text = convertTimeStamp(p.createdTimestamp, Locale.getDefault().language)
 
                 // display label
                 var displayLabel = ""
@@ -292,7 +295,7 @@ class PostDetailActivity : AppCompatActivity() {
                     displayLabel += "· "
                     displayLabel += "$label "
                 }
-                binding.labelTv.text = displayLabel
+                mergeLayoutPostBinding.labelTv.text = displayLabel
 
                 // if author doesn't allow commenting, will disappear the comment block
                 if (!p.comment) binding.commentLayout.visibility = View.GONE

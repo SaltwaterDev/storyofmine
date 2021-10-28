@@ -4,17 +4,34 @@
 package com.example.unlone.utils
 
 import android.content.Context
+import android.os.Build
 import android.util.DisplayMetrics
+import androidx.annotation.RequiresApi
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-fun convertTimeStamp(timestamp: String, dateFormat: String = "HH:mm   dd'th' MMM"): String {
+@RequiresApi(Build.VERSION_CODES.N)
+fun convertTimeStamp(timestamp: String, language: String?): String {
     return try {
-        val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+        lateinit var sdf: SimpleDateFormat
+        lateinit var netDate: Date
+        when (language){
+            "zh" -> {
+                sdf = SimpleDateFormat("MMMdd'日'  |   HH:mm", Locale.getDefault())
+                netDate = Date(timestamp.toLong() * 1000)
+            }
+            "COMMENT" -> {
+                sdf = SimpleDateFormat("dd-MM-yyyy   H:mm", Locale.getDefault())
+                netDate = Date(timestamp.toLong())
+            }
+            else -> {
+                SimpleDateFormat("HH:mm   dd'th' MMM", Locale.getDefault())
+                netDate = Date(timestamp.toLong() * 1000)
+            }
+        }
         sdf.timeZone = TimeZone.getDefault()
-        val netDate = Date(timestamp.toLong() * 1000)
         sdf.format(netDate)
     } catch (e: Exception) {
         e.toString()

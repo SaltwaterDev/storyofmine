@@ -14,6 +14,8 @@ import com.example.unlone.utils.convertTimeStamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comment) -> Unit) :
@@ -40,7 +42,7 @@ class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comm
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("TAG", "commentList:　$commentList")
         holder.binding.username.text = commentList[position].username
-        holder.binding.date.text = commentList[position].timestamp?.let { convertTimeStamp(it) }
+        holder.binding.date.text = commentList[position].timestamp?.let { convertTimeStamp(it, "COMMENT") }
         holder.binding.comment.text = commentList[position].content
 
         holder.binding.likeButton.setOnClickListener {

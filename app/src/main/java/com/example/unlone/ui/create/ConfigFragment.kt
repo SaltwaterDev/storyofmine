@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.unlone.R
 import com.example.unlone.databinding.FragmentConfigBinding
+import com.example.unlone.databinding.LayoutPostBinding
 import com.example.unlone.instance.Post
 import com.example.unlone.instance.User
 import com.example.unlone.utils.convertTimeStamp
@@ -43,6 +44,7 @@ class ConfigFragment : Fragment() {
     private var postData: PostData? = null
     var post: Post = Post()
     private var _binding: FragmentConfigBinding? = null
+    private lateinit var mergeLayoutPostBinding: LayoutPostBinding
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -54,6 +56,7 @@ class ConfigFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         _binding = FragmentConfigBinding.inflate(inflater, container, false)
         val view = binding.root
+        mergeLayoutPostBinding = LayoutPostBinding.bind(view)
 
         savedStateModel.postData.observe(viewLifecycleOwner, {postData ->
             this.postData = postData
@@ -68,10 +71,10 @@ class ConfigFragment : Fragment() {
                 displayLabel += "·$label "
             }
             postData.imageUri?.let { displayImage(it) }
-            binding.textViewTitle.text = postData.title
-            binding.date.text = convertTimeStamp((System.currentTimeMillis()/1000).toString())
-            binding.textViewJournal.text = postData.journal
-            binding.labelTv.text = displayLabel
+            mergeLayoutPostBinding.textViewTitle.text = postData.title
+            mergeLayoutPostBinding.date.text = convertTimeStamp((System.currentTimeMillis()/1000).toString(), Locale.getDefault().language)
+            mergeLayoutPostBinding.textViewJournal.text = postData.journal
+            mergeLayoutPostBinding.labelTv.text = displayLabel
 
         })
 
@@ -113,9 +116,9 @@ class ConfigFragment : Fragment() {
     }
 
     private fun displayImage(uri: Uri) {
-        binding.imageCover.setImageURI(uri)
-        binding.imageCover.visibility = View.VISIBLE
-        val bitmap = (binding.imageCover.drawable as BitmapDrawable).bitmap
+        mergeLayoutPostBinding.imageCover.setImageURI(uri)
+        mergeLayoutPostBinding.imageCover.visibility = View.VISIBLE
+        val bitmap = (mergeLayoutPostBinding.imageCover.drawable as BitmapDrawable).bitmap
         val width = bitmap.width.toFloat()
         val height = bitmap.height.toFloat()
         Log.d("uri", uri.toString())
@@ -127,7 +130,7 @@ class ConfigFragment : Fragment() {
         if (imageHorizontalMargin != null && imageVerticalMargin != null) {
             params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, 0)
         }
-        binding.imageCover.layoutParams = params
+        mergeLayoutPostBinding.imageCover.layoutParams = params
     }
 
     private fun submitPost(postData: PostData) {
@@ -208,7 +211,7 @@ class ConfigFragment : Fragment() {
                     post.username = user!!.username.toString()
                     val stamp = System.currentTimeMillis()/1000
                     post.createdTimestamp = stamp.toString()
-                    post.createdDate = convertTimeStamp(stamp.toString())
+                    post.createdDate = convertTimeStamp(stamp.toString(), Locale.getDefault().language)
 
                     try {
                         saveNewPost(post)
