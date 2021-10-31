@@ -3,6 +3,7 @@ package com.example.unlone.ui.access
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,9 @@ class LoginFragment : Fragment() {
         }
 
         login.setOnClickListener {
+            login.isEnabled = false
+            register.isEnabled = false
+
             progressBar.visibility = View.VISIBLE
             val strEmail = email.text.toString()
             val strPassword = password.text.toString()
@@ -90,6 +94,8 @@ class LoginFragment : Fragment() {
                                 "Authentication failed!",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            login.isEnabled = true
+                            register.isEnabled = true
                         }
                     }
             }

@@ -11,6 +11,5 @@ class FirstAccessActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
         setContentView(R.layout.activity_first_access)
-
     }
 }

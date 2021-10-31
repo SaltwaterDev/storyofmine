@@ -34,14 +34,15 @@ class LoungeFollowingViewModel : ViewModel() {
     }
 
 
-    private suspend fun loadFollowingCategories(): ArrayList<String> {
+    private suspend fun loadFollowingCategories(): ArrayList<String>? {
         // retrieve the following categories first
-        return mFirestore.collection("users")
+        val result =  mFirestore.collection("users")
             .document(mAuth.uid!!)
             .get()
             .await()
             .data
-            ?.get("followingCategories") as ArrayList<String>
+            ?.get("followingCategories")
+        return if (result != null) result as ArrayList<String> else null
     }
 
     fun loadPosts(numberPost: Int, loadMore: Boolean?) {
@@ -56,22 +57,26 @@ class LoungeFollowingViewModel : ViewModel() {
                 postList.clear()
                 Log.d(ContentValues.TAG, "First load")
                 // add the following categories
-                val followingDocs = mFirestore.collection("posts")
-                    .whereIn("category", followingCategories.await())
-                    .orderBy("createdTimestamp", Query.Direction.DESCENDING)
-                    .limit(numberPost.toLong())
-                    .get()
-                    .await()
-
-                if (followingDocs.size() > 0) {
-                    lastVisible = followingDocs.documents[followingDocs.size() - 1]
+                val followingDocs = followingCategories.await()?.let {
+                    mFirestore.collection("posts")
+                        .whereIn("category", it)
+                        .orderBy("createdTimestamp", Query.Direction.DESCENDING)
+                        .limit(numberPost.toLong())
+                        .get()
+                        .await()
                 }
-                for (document in followingDocs) {
-                    Log.d(ContentValues.TAG, document.id + " => " + document.data)
-                    val post = document.toObject<Post>()
-                    post.pid = document.id
-                    if (!postList.contains(post)) {
-                        postList.add(post)
+
+                if (followingDocs != null) {
+                    if (followingDocs.size() > 0) {
+                        lastVisible = followingDocs.documents[followingDocs.size() - 1]
+                    }
+                    for (document in followingDocs) {
+                        Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                        val post = document.toObject<Post>()
+                        post.pid = document.id
+                        if (!postList.contains(post)) {
+                            postList.add(post)
+                        }
                     }
                 }
 
@@ -97,13 +102,15 @@ class LoungeFollowingViewModel : ViewModel() {
             } else {
                 // TODO ("fixing the paging")
                 // add the following categories
-                val followingDocs = mFirestore.collection("posts")
-                    .whereIn("category", followingCategories.await())
-                    .orderBy("createdTimestamp", Query.Direction.DESCENDING)
-                    //.startAfter(lastVisible)
-                    .limit(numberPost.toLong())
-                    .get()
-                    .await()
+                val followingDocs = followingCategories.await()?.let {
+                    mFirestore.collection("posts")
+                        .whereIn("category", it)
+                        .orderBy("createdTimestamp", Query.Direction.DESCENDING)
+                        //.startAfter(lastVisible)
+                        .limit(numberPost.toLong())
+                        .get()
+                        .await()
+                }
 
                 followingDocs?.let{ results ->
                     if (results.size() > 0) {

@@ -76,4 +76,18 @@
     <string name="dislikes">Dislikes</string>
     <string name="why_report">Why do you want to report?</string>
     <string name="logout_alert">Are you sure to logout?</string>
+    <string name="pick_categories_greeting">Pick 3 or more categories you’re interested</string>
+    <string name="start">Start!</string>
+    <string name="type_your_name">Type your name</string>
+    <string name="for_now_what_is_your_main_reason_for_downloading_this_app">For now, what is your main reason for downloading this app?</string>
+    <string name="look_for_connection">Look for connection</string>
+    <string name="express_my_feelings">Express my feelings</string>
+    <string name="help_people_in_need">Help people in need</string>
+    <string name="wandering_look_for_sth_different">Wandering/ look for sth different</string>
+    <string name="final_step">Final Step</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="welcome_to_unlone">Welcome to Unlone</string>
+    <string name="to_ensure_to_community_safety_nwe_d_like_to_confirm_your_identity">To ensure to community safety,\nwe’d like to confirm your identity</string>
+    <string name="please_click_the_button_below_nto_send_verification_email">Please click the button below\nto send verification email</string>
+    <string name="send_verification_email">send verification email</string>
 </resources>

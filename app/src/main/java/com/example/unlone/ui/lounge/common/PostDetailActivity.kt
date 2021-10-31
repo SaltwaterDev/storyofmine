@@ -2,6 +2,7 @@ package com.example.unlone.ui.lounge.common
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -58,6 +60,7 @@ class PostDetailActivity : AppCompatActivity() {
     private var comment: Comment? = null
     private val mComments: Long = 5   // how many comment loaded each time
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -231,6 +234,7 @@ class PostDetailActivity : AppCompatActivity() {
             .show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
         detailedPostViewModel.observablePost.observe(this, { p ->
             p?.let{

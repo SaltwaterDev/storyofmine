@@ -91,8 +91,12 @@ class ConfigFragment : Fragment() {
             Navigation.findNavController(view).navigate(R.id.navigateToWritePostFragment)
         }
         val postButton = binding.postButton.setOnClickListener {
+            binding.postButton.isEnabled = false
+            binding.backButton.isEnabled = false
             postData?.category  = binding.textField.text.toString()
             postData?.let { it1 -> submitPost(it1) }
+            binding.postButton.isEnabled = true
+            binding.backButton.isEnabled = true
         }
 
 

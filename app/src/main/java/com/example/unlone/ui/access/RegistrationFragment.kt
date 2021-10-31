@@ -12,16 +12,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.navigation.Navigation
 import com.example.unlone.R
 import com.example.unlone.databinding.FragmentLoginBinding
 import com.example.unlone.databinding.FragmentRegistrationBinding
 import com.example.unlone.instance.User
 import com.example.unlone.ui.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import java.util.*
 
 /**
@@ -34,7 +39,6 @@ class RegistrationFragment : Fragment() {
     private val binding get() = _binding!!
 
     val mAuth = FirebaseAuth.getInstance()
-    val mFirestore = FirebaseFirestore.getInstance()
 
 
     override fun onCreateView(
@@ -52,12 +56,7 @@ class RegistrationFragment : Fragment() {
         val declaration = binding.decalration
 
         register.setOnClickListener {
-            if (username.text.toString().isBlank()) {
-                Toast.makeText(
-                    context, "Please type your username",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (email.text.toString().isBlank()) {
+            if (email.text.toString().isBlank()) {
                 Toast.makeText(
                     context, "Please type your email",
                     Toast.LENGTH_SHORT
@@ -79,16 +78,20 @@ class RegistrationFragment : Fragment() {
                     "Password is not the same as Confirm Password",
                     Toast.LENGTH_SHORT
                 ).show()
-            }else if(!declaration.isChecked){
+            }
+            /*else if(!declaration.isChecked){
                 Toast.makeText(
                     context,
                     "You must agree the term and condition",
                     Toast.LENGTH_SHORT
                 ).show()
-            }else {
+            }*/
+            else {
                 val strEmail = email.text.toString()
                 val strPassword = password.text.toString()
-                performRegister(strEmail, strPassword, mAuth)
+                CoroutineScope(Dispatchers.Main).launch {
+                    performRegister(strEmail, strPassword, mAuth)
+                }
             }
         }
 
@@ -97,7 +100,8 @@ class RegistrationFragment : Fragment() {
 }
 
 
-    private fun performRegister(email: String, password: String, mAuth: FirebaseAuth) {
+    private suspend fun performRegister(email: String, password: String, mAuth: FirebaseAuth) {
+        binding.registerBtn.isEnabled = false
         //TODO: this is signInAnonymously
         /*mAuth.signInAnonymously()
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -122,55 +126,21 @@ class RegistrationFragment : Fragment() {
 
         // Sign in with email
         binding.progressBar.visibility = View.VISIBLE
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener{ task ->
-                    if (task.isSuccessful) {
-                        val user: FirebaseUser? = mAuth.currentUser
-                        if (user != null) {
-                            Log.d("TAG", "saveUser")
-                            saveUser(user)
-                        }
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(context, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                }
+        mAuth.createUserWithEmailAndPassword(email, password).await()
+        val user: FirebaseUser? = mAuth.currentUser
+        if (user != null) {
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_registrationFragment_to_emailVerificationFragment)
+        }else{
+            Toast.makeText(
+                context, "register failed for some reason",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         binding.progressBar.visibility = View.GONE
-
     }
 
-    private fun saveUser(firebaseUser: FirebaseUser) {
-        val uid: String = firebaseUser.uid
-        Log.d("REGISTRATION", "save user uid: $uid")
-        val username = binding.username.text.toString()
-        Log.d("REGISTRATION", "save user username: $username")
-        val user = User(uid, username)
-        mFirestore.collection("users").document(uid).set(user)
-            .addOnCompleteListener(OnCompleteListener<Void?> { task ->
-                if (task.isSuccessful) {
-                    Log.d("REGISTRATION", "user saved")
-                    val intent = Intent(context, MainActivity::class.java)
-                    startActivity(intent)
-                    Toast.makeText(
-                        context, "Account Created",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    (task.exception)?.message?.let {
-                        Log.d(
-                            "REGISTRATION", it
-                        )
-                    }
-                    Toast.makeText(
-                        context,
-                        task.exception?.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-    }
+
 
     companion object {
         /**

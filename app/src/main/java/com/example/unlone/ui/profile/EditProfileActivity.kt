@@ -44,8 +44,12 @@ class EditProfileActivity : AppCompatActivity() {
 
         cancel.setOnClickListener{ finish() }
         save.setOnClickListener{
+            save.isEnabled = false
+            cancel.isEnabled = false
             updateProfile(username.text.toString(), bio.text.toString())
             finish()
+            save.isEnabled = true
+            cancel.isEnabled = true
         }
 
         currentUser = FirebaseAuth.getInstance().currentUser
