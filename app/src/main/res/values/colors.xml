@@ -2,6 +2,7 @@
 <resources>
     <color name="dark_gray">#545454</color>
     <color name="darker_gray">#424242</color>
+    <color name="lighter_gray">#707070</color>
     <color name="colorAccent">#7A7452</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorToolbarText">#FDFDFC</color>

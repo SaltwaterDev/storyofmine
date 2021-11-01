@@ -51,7 +51,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.unlone.ui.MainActivity" />
         </activity>
-        <activity android:name=".ui.access.FirstAccessActivity" />
+        <activity android:name=".ui.access.FirstAccessActivity"
+            android:theme="@style/AppTheme.Dark"
+            />
         <activity android:name=".ui.profile.EditProfileActivity" />
         <activity
             android:name=".ui.access.LoadActivity"

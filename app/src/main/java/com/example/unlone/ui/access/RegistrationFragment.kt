@@ -20,6 +20,7 @@ import com.example.unlone.instance.User
 import com.example.unlone.ui.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -48,12 +49,11 @@ class RegistrationFragment : Fragment() {
         _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
 
 
-        val username = binding.username
-        val email = binding.email
-        val password = binding.password
-        val confirmPassword = binding.confirmPassword
+        val email = binding.emailEv
+        val password = binding.passwordEv
+        val confirmPassword = binding.confirmPasswordEv
         val register = binding.registerBtn
-        val declaration = binding.decalration
+        val declaration = binding.declaration
 
         register.setOnClickListener {
             if (email.text.toString().isBlank()) {
@@ -92,6 +92,15 @@ class RegistrationFragment : Fragment() {
                 CoroutineScope(Dispatchers.Main).launch {
                     performRegister(strEmail, strPassword, mAuth)
                 }
+            }
+        }
+
+        binding.emailField.setEndIconOnClickListener {
+            // Respond to help icon presses
+            context?.let { it1 ->
+                MaterialAlertDialogBuilder(it1)
+                    .setMessage(resources.getString(R.string.school_email_description))
+                    .show()
             }
         }
 

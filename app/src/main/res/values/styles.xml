@@ -15,6 +15,20 @@
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item>
     </style>
 
+    <style name="AppTheme.Dark" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/dark_gray</item>
+        <item name="colorPrimaryDark">@color/darker_gray</item>
+        <item name="colorSecondary">@color/colorAccent</item>
+        <item name="colorOnSecondary">#595959</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="switchStyle">@style/Widget.App.Switch</item>
+        <item name="android:colorControlActivated">@color/colorWhiteText</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
@@ -96,4 +110,49 @@
         <item name="colorOnSecondary">@color/onLightYellow</item>
         <item name="colorOnSurface">@color/onLightYellow</item>
     </style>
+
+
+    <!-- register text field-->
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="colorPrimary">@color/darker_gray</item>
+        <item name="boxBackgroundColor">@color/lighter_gray</item>
+        <item name="colorOnSurface">@color/colorWhiteText</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="hintTextColor">@color/colorWhiteText</item>
+        <item name="android:textColorHint">@color/colorWhiteText</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.App.Subtitle1</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.App.Caption</item>
+        <item name="endIconTint">@color/colorWhiteText</item>
+    </style>
+
+
+    <style name="ThemeOverlay.App.TextInputLayout" parent="">
+        <item name="colorPrimary">@color/lighter_gray</item>
+        <item name="colorOnSurface">@color/colorWhiteText</item>
+        <item name="colorError">@color/colorWarn</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.App.Subtitle1</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.App.Caption</item>
+        <item name="editTextStyle">@style/Widget.App.EditText</item>
+        <item name="android:colorControlActivated">@color/colorWhiteText</item>
+    </style>
+
+
+    <style name="Widget.App.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorWhiteText</item>
+    </style>
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="TextAppearance.App.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:fontFamily">@font/notosans_tc_medium</item>
+    </style>
+
+    <style name="TextAppearance.App.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/notosans_tc_regular</item>
+    </style>
+
+
 </resources>

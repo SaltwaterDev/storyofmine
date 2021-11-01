@@ -90,4 +90,5 @@
     <string name="to_ensure_to_community_safety_nwe_d_like_to_confirm_your_identity">To ensure to community safety,\nwe’d like to confirm your identity</string>
     <string name="please_click_the_button_below_nto_send_verification_email">Please click the button below\nto send verification email</string>
     <string name="send_verification_email">send verification email</string>
+    <string name="school_email_description">"No matter you’re a student or graduated, you can still register via school email.  "</string>
 </resources>
