@@ -80,6 +80,7 @@ dependencies {
     // Declare the dependencies for the Firebase Cloud Messaging and Analytics libraries
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-dynamic-links-ktx'
+    implementation 'com.google.firebase:firebase-functions-ktx'
 
 
     implementation "androidx.multidex:multidex:2.0.1"

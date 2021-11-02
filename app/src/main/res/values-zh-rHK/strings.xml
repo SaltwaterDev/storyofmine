@@ -91,5 +91,9 @@
     <string name="please_click_the_button_below_nto_send_verification_email">點擊以下按鈕以發送認證電郵</string>
     <string name="send_verification_email">發送認證電郵</string>
     <string name="school_email_description">"即使你已經畢業,你仍可以用學校電郵申請"</string>
+    <string name="validate_school_email">Validating your school email...</string>
+    <string name="continue_text">繼續</string>
+    <string name="validation_failed">無法確認學校電郵</string>
+    <string name="validation_failed_supporting_text"> </string>
 
 </resources>

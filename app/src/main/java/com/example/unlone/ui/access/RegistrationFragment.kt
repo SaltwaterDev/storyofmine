@@ -1,9 +1,5 @@
 package com.example.unlone.ui.access
 
-import android.content.ContentValues.TAG
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,24 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.navigation.Navigation
 import com.example.unlone.R
-import com.example.unlone.databinding.FragmentLoginBinding
 import com.example.unlone.databinding.FragmentRegistrationBinding
-import com.example.unlone.instance.User
-import com.example.unlone.ui.MainActivity
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.FirebaseFunctionsException
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -40,6 +33,7 @@ class RegistrationFragment : Fragment() {
     private val binding get() = _binding!!
 
     val mAuth = FirebaseAuth.getInstance()
+    private lateinit var functions: FirebaseFunctions
 
 
     override fun onCreateView(
@@ -47,6 +41,7 @@ class RegistrationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
+        functions = Firebase.functions
 
 
         val email = binding.emailEv
@@ -89,9 +84,39 @@ class RegistrationFragment : Fragment() {
             else {
                 val strEmail = email.text.toString()
                 val strPassword = password.text.toString()
-                CoroutineScope(Dispatchers.Main).launch {
-                    performRegister(strEmail, strPassword, mAuth)
-                }
+                Toast.makeText(context, this.getString(R.string.validate_school_email),
+                    Toast.LENGTH_SHORT).show()
+
+                validateSchoolEmail(strEmail)
+                    .addOnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            val e = task.exception
+                            if (e is FirebaseFunctionsException) {
+                                val code = e.code
+                                val details = e.details
+                                Log.e("TAG", "\n$code\n$details")
+                            }
+                            Toast.makeText(context, "error: $e", Toast.LENGTH_SHORT).show()
+                            e?.toString()?.let { it1 -> Log.e("TAG", it1) }
+                        }else{
+                            Log.d("TAG", task.result)
+                            if (task.result == "true") {
+                                // school email is validated, perform register process
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    performRegister(strEmail, strPassword, mAuth)
+                                }
+                            } else {
+                                context?.let { it1 ->
+                                    MaterialAlertDialogBuilder(it1)
+                                        .setTitle(resources.getString(R.string.validation_failed))
+                                        .setMessage(resources.getString(R.string.validation_failed_supporting_text))
+                                        .setPositiveButton(resources.getString(R.string.continue_text)) { _, _ ->
+                                        }
+                                        .show()
+                                }
+                            }
+                        }
+                    }
             }
         }
 
@@ -127,7 +152,7 @@ class RegistrationFragment : Fragment() {
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("REGISTRATION", "signInAnonymously:failure", task.getException());
-                                Toast.makeText(RegistrationActivity.this, "Authentication failed.",
+                                Toast.makeText(context, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -149,7 +174,24 @@ class RegistrationFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
     }
 
+    private fun validateSchoolEmail(email: String): Task<String> {
+        // Create the arguments to the callable function.
+        val data = hashMapOf(
+            "text" to email,
+            "push" to true
+        )
 
+        return functions
+            .getHttpsCallable("validateSchoolEmail")
+            .call(data)
+            .continueWith { task ->
+                // This continuation runs on either success or failure, but if the task
+                // has failed then result will throw an Exception which will be
+                // propagated down.
+                val result: HashMap<String, String> = task.result.data as HashMap<String, String>
+                result.values.toList()[0]
+            }
+    }
 
     companion object {
         /**
