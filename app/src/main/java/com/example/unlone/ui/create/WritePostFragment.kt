@@ -233,7 +233,7 @@ class WritePostFragment : Fragment() {
     private fun addChipToGroup(label: String) {
         val chip = Chip(activity)
         chip.text = label
-        chip.chipIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_launcher_background)
+        chip.chipIcon = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)
         chip.isChipIconVisible = false
         chip.isCloseIconVisible = true
         chip.gravity = Gravity.TOP

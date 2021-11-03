@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_gray">#545454</color>
-    <color name="darker_gray">#424242</color>
+    <color name="dark_gray">#4D4D4D</color>
+    <color name="darker_gray">#404040</color>
     <color name="lighter_gray">#707070</color>
     <color name="colorAccent">#7A7452</color>
     <color name="colorWhite">#FFFFFF</color>

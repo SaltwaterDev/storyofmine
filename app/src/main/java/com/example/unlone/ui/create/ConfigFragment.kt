@@ -2,22 +2,23 @@ package com.example.unlone.ui.create
 
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -77,7 +78,19 @@ class ConfigFragment : Fragment() {
             mergeLayoutPostBinding.textViewTitle.text = postData.title
             mergeLayoutPostBinding.date.text = convertTimeStamp((System.currentTimeMillis()/1000).toString(), Locale.getDefault().language)
             mergeLayoutPostBinding.textViewJournal.text = postData.journal
-            mergeLayoutPostBinding.labelTv.text = displayLabel
+            val labelTv = TextView(context)
+            labelTv.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            context?.let {
+                labelTv.typeface = ResourcesCompat.getFont(it, R.font.sf_pro_text_semibold)
+                labelTv.setTextColor(ContextCompat.getColor(it, R.color.colorText))
+            }
+            labelTv.letterSpacing = 0.01F
+            labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
+            labelTv.text = displayLabel
+            mergeLayoutPostBinding.labelGroup.addView(labelTv)
 
         })
 

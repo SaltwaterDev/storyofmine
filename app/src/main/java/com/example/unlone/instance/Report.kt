@@ -4,10 +4,17 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 
-@Parcelize
-data class Report(
-    val type: String? = null,
-    val post: Post? = null,
-    val reportReason: String? = null,
-    val reportedBy: String
-): Parcelable
+sealed class Report(){
+    data class PostReport(
+        val type: String = "post",
+        val post: Post? = null,
+        val reportReason: String? = null,
+        val reportedBy: String): Report()
+
+    data class CommentReport(
+        val type: String = "comment",
+        val comment: Comment? = null,
+        val reportReason: String? = null,
+        val reportedBy: String): Report()
+
+}

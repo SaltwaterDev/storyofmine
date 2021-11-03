@@ -7,9 +7,10 @@
     tools:context=".ui.lounge.category.CategoryPostFragment">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_bar"
+        android:visibility="gone"
         app:startIconDrawable="@drawable/ic_search"
         app:startIconTint="@color/colorSearchIcon"
-        android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_30sdp"
         android:layout_marginStart="@dimen/_8sdp"

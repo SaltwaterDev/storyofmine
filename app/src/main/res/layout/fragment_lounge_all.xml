@@ -7,6 +7,7 @@
     tools:context=".ui.lounge.all.LoungeAllFragment">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:visibility="gone"
         app:startIconDrawable="@drawable/ic_search"
         app:startIconTint="@color/colorSearchIcon"
         android:id="@+id/search_bar"

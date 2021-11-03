@@ -6,9 +6,11 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -33,8 +35,11 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
 import java.util.*
+import android.widget.LinearLayout
+import androidx.core.content.res.ResourcesCompat
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 class PostDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostDetailBinding
     private lateinit var mergeLayoutPostBinding: LayoutPostBinding
@@ -72,6 +77,7 @@ class PostDetailActivity : AppCompatActivity() {
         val view = binding.root
         mergeLayoutPostBinding = LayoutPostBinding.bind(view)
         setContentView(view)
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
 
         // init toolbar
         binding.topAppBar.setNavigationOnClickListener {
@@ -127,11 +133,10 @@ class PostDetailActivity : AppCompatActivity() {
                                 // Respond to positive button press
                                 Log.d("TAG", singleItems[checkedItem])
                                 val report = uid?.let { it1 ->
-                                    Report(
-                                        "post",
-                                        post,
-                                        reportMap[singleItems[checkedItem]],
-                                        it1
+                                    Report.PostReport(
+                                        post = post,
+                                        reportReason = reportMap[singleItems[checkedItem]],
+                                        reportedBy = it1
                                     )
                                 }
 
@@ -298,9 +303,18 @@ class PostDetailActivity : AppCompatActivity() {
                 for (label in p.labels) {
                     displayLabel += "· "
                     displayLabel += "$label "
+                    val labelTv = TextView(this)
+                    labelTv.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    labelTv.typeface = ResourcesCompat.getFont(this, R.font.sf_pro_text_semibold)
+                    labelTv.setTextColor(ContextCompat.getColor(this, R.color.colorText))
+                    labelTv.letterSpacing = 0.01F
+                    labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
+                    labelTv.text = displayLabel
+                    mergeLayoutPostBinding.labelGroup.addView(labelTv)
                 }
-                mergeLayoutPostBinding.labelTv.text = displayLabel
-
                 // if author doesn't allow commenting, will disappear the comment block
                 if (!p.comment) binding.commentLayout.visibility = View.GONE
             }
