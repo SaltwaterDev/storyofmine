@@ -72,12 +72,12 @@
         android:layout_marginTop="32.35dp">
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/name"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="31sp"
-            android:textColor="@color/colorText"/>
+            android:textColor="@color/colorText"
+            android:textSize="31sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -86,7 +86,8 @@
             android:layout_marginTop="13.35dp"
             android:fontFamily="@font/sf_compact_text_regular"
             android:textSize="21sp"
-            android:textColor="@color/colorText"/>
+            android:textColor="@color/colorText"
+            android:visibility="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerviewProfile"

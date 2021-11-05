@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.unlone.ui.access.LoginFragment"
+        android:name="com.unlone.app.ui.access.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="com.example.unlone.ui.access.RegistrationFragment"
+        android:name="com.unlone.app.ui.access.RegistrationFragment"
         android:label="fragment_registration"
         tools:layout="@layout/fragment_registration" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/emailVerificationFragment"
-        android:name="com.example.unlone.ui.access.EmailVerificationFragment"
+        android:name="com.unlone.app.ui.access.EmailVerificationFragment"
         android:label="fragment_email_verification"
         tools:layout="@layout/fragment_email_verification" />
 </navigation>

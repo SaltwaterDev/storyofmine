@@ -1,0 +1,17 @@
+package com.unlone.app.instance
+
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import java.util.*
+
+@Parcelize
+data class User (
+    var uid: String? = null,
+    var username: String? = null,
+    var personae: ArrayList<String>? = null,
+    var persona: String? = null,
+    var bio: String? = null,
+    var followingCategories: ArrayList<String>? = null,
+    var notificationToken: String? = null,
+    var identity:String? = null
+): Parcelable

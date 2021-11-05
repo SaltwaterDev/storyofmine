@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/writePostFragment"
-        android:name="com.example.unlone.ui.create.WritePostFragment"
+        android:name="com.unlone.app.ui.create.WritePostFragment"
         android:label="fragment_write_post"
         tools:layout="@layout/fragment_write_post" >
         <action
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/configFragment"
-        android:name="com.example.unlone.ui.create.ConfigFragment"
+        android:name="com.unlone.app.ui.create.ConfigFragment"
         android:label="fragment_config"
         tools:layout="@layout/fragment_config" >
         <action

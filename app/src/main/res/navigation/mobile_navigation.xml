@@ -7,14 +7,14 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.unlone.ui.lounge.HomeFragment"
+        android:name="com.unlone.app.ui.lounge.HomeFragment"
         android:label="@string/lounge"
         tools:layout="@layout/fragment_home" />
 
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.unlone.ui.profile.ProfileFragment"
+        android:name="com.unlone.app.ui.profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/myStoriesFragment"
-        android:name="com.example.unlone.ui.profile.MyStoriesFragment"
+        android:name="com.unlone.app.ui.profile.MyStoriesFragment"
         android:label="fragment_my_stories"
         tools:layout="@layout/fragment_my_stories" >
         <action
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/savedStoriesFragment"
-        android:name="com.example.unlone.ui.profile.SavedPostsFragment"
+        android:name="com.unlone.app.ui.profile.SavedPostsFragment"
         android:label="fragment_saved_stories"
         tools:layout="@layout/fragment_saved_posts" >
         <action
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/contactUsFragment"
-        android:name="com.example.unlone.ui.profile.ContactUsFragment"
+        android:name="com.unlone.app.ui.profile.ContactUsFragment"
         android:label="contact_us_fragment"
         tools:layout="@layout/fragment_contact_us" >
         <action

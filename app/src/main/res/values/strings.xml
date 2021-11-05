@@ -76,7 +76,7 @@
     <string name="dislikes">Dislikes</string>
     <string name="why_report">Why do you want to report?</string>
     <string name="logout_alert">Are you sure to logout?</string>
-    <string name="pick_categories_greeting">Pick 3 or more categories you’re interested</string>
+    <string name="pick_categories_greeting">Pick 3 or more topics that interest you</string>
     <string name="start">Start!</string>
     <string name="type_your_name">Type your name</string>
     <string name="for_now_what_is_your_main_reason_for_downloading_this_app">For now, what is your main reason for downloading this app?</string>
@@ -91,7 +91,7 @@
     <string name="please_click_the_button_below_nto_send_verification_email">Please click the button below\nto send verification email</string>
     <string name="send_verification_email">send verification email</string>
     <string name="school_email_description">"No matter you’re a student or graduated, you can still register via school email.  "</string>
-    <string name="validate_school_email">Validating your school email...</string>
+    <string name="validate_school_email">Validating your school email…</string>
     <string name="continue_text">continue</string>
     <string name="validation_failed">validation failed</string>
     <string name="validation_failed_supporting_text">Your school email is not validated. If you have any question, please email us via unlonely2021@gmail.com</string>

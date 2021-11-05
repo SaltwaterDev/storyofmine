@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/userSetupFragment"
-        android:name="com.example.unlone.ui.access.UserSetupFragment"
+        android:name="com.unlone.app.ui.access.UserSetupFragment"
         android:label="fragment_user_setup"
         tools:layout="@layout/fragment_user_setup" >
         <action
@@ -16,11 +16,11 @@
     </fragment>
     <fragment
         android:id="@+id/chooseCategoriesFragment"
-        android:name="com.example.unlone.ui.access.ChooseCategoriesFragment"
+        android:name="com.unlone.app.ui.access.ChooseCategoriesFragment"
         android:label="fragment_choose_categories"
         tools:layout="@layout/fragment_choose_categories" >
         <argument
             android:name="user"
-            app:argType="com.example.unlone.instance.User" />
+            app:argType="com.unlone.app.instance.User" />
     </fragment>
 </navigation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.unlone">
+    package="com.unlone.app">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,9 +16,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="q">
         <activity
-            android:name=".ui.access.OnBoardingActivity"
+            android:name="com.unlone.app.ui.access.OnBoardingActivity"
             android:exported="true"
-            android:parentActivityName=".ui.access.LoadActivity">
+            android:parentActivityName="com.unlone.app.ui.access.LoadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -30,33 +30,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.unlone.app.ui.MainActivity"
             android:exported="true"
             android:label="Home"
-            android:parentActivityName=".ui.access.LoadActivity"
+            android:parentActivityName="com.unlone.app.ui.access.LoadActivity"
             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
-            android:name=".ui.lounge.common.PostDetailActivity"
-            android:parentActivityName=".ui.MainActivity" />
+            android:name="com.unlone.app.ui.lounge.common.PostDetailActivity"
+            android:parentActivityName="com.unlone.app.ui.MainActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".ui.create.PostActivity"
-            android:parentActivityName=".ui.MainActivity"
+            android:name="com.unlone.app.ui.create.PostActivity"
+            android:parentActivityName="com.unlone.app.ui.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.unlone.ui.MainActivity" />
+                android:value="com.unlone.app.ui.MainActivity" />
         </activity>
-        <activity android:name=".ui.access.FirstAccessActivity"
+        <activity android:name="com.unlone.app.ui.access.FirstAccessActivity"
             android:theme="@style/AppTheme.Dark"
             />
-        <activity android:name=".ui.profile.EditProfileActivity" />
+        <activity android:name="com.unlone.app.ui.profile.EditProfileActivity" />
         <activity
-            android:name=".ui.access.LoadActivity"
+            android:name="com.unlone.app.ui.access.LoadActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,7 +66,7 @@
         </activity>
 
         <service
-            android:name=".firebasenotifications.FirebaseMessagingService"
+            android:name="com.unlone.app.firebasenotifications.FirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
