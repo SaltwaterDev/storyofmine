@@ -72,7 +72,7 @@ class ConfigFragment : Fragment() {
             }
             postData.imageUri?.let { displayImage(it) }
             mergeLayoutPostBinding.textViewTitle.text = postData.title
-            mergeLayoutPostBinding.date.text = convertTimeStamp((System.currentTimeMillis()/1000).toString(), Locale.getDefault().language)
+            mergeLayoutPostBinding.date.text = convertTimeStamp((System.currentTimeMillis()).toString(), Locale.getDefault().language)
             mergeLayoutPostBinding.textViewJournal.text = postData.journal
             val labelTv = TextView(context)
             labelTv.layoutParams = LinearLayout.LayoutParams(
@@ -149,7 +149,6 @@ class ConfigFragment : Fragment() {
         mergeLayoutPostBinding.imageCover.layoutParams = params
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun submitPost(postData: PostData) {
         Toast.makeText(activity, "Posting...", Toast.LENGTH_SHORT).show()
         if (postData.category.isEmpty()){
@@ -217,7 +216,6 @@ class ConfigFragment : Fragment() {
 
 
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun uploadText(post: Post) {
         val docRef = mFirestore.collection("users").document(post.author_uid)
         docRef.get().addOnCompleteListener { task ->
@@ -227,7 +225,7 @@ class ConfigFragment : Fragment() {
                     Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.data)
                     val user = document.toObject<User>()
                     post.username = user!!.username.toString()
-                    val stamp = System.currentTimeMillis()/1000
+                    val stamp = System.currentTimeMillis()
                     post.createdTimestamp = stamp.toString()
                     post.createdDate = convertTimeStamp(stamp.toString(), Locale.getDefault().language)
 

@@ -1,4 +1,4 @@
-package com.unlone.app.ui.profile
+package com.unlone.app.instance
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

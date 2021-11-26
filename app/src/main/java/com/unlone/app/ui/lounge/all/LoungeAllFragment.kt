@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +32,6 @@ class LoungeAllFragment : Fragment() {
     private var _binding: FragmentLoungeAllBinding? = null
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,7 +44,9 @@ class LoungeAllFragment : Fragment() {
 
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
-        fab.tooltipText = resources.getString(R.string.write_a_post)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            fab.tooltipText = resources.getString(R.string.write_a_post)
+        }
         fab.setOnClickListener {
             val intent = Intent(context, PostActivity::class.java)
             startActivity(intent)

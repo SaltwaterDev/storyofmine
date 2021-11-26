@@ -34,7 +34,6 @@ class LoungeFollowingFragment : Fragment() {
     private var _binding: FragmentLoungeFollowingBinding? = null
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,7 +46,9 @@ class LoungeFollowingFragment : Fragment() {
 
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
-        fab.tooltipText = resources.getString(R.string.write_a_post)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            fab.tooltipText = resources.getString(R.string.write_a_post)
+        }
         fab.setOnClickListener {
             val intent = Intent(context, PostActivity::class.java)
             startActivity(intent)

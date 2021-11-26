@@ -32,7 +32,6 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
 
-@RequiresApi(api = Build.VERSION_CODES.O)
 class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference

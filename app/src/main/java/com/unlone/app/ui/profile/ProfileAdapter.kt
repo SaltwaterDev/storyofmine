@@ -13,6 +13,7 @@ import com.unlone.app.databinding.RecyclerviewProfileCardBinding
 import com.unlone.app.ui.access.FirstAccessActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.unlone.app.instance.ProfileCard
 
 
 class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){

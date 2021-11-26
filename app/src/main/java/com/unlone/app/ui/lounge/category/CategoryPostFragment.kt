@@ -59,7 +59,6 @@ class CategoryPostFragment : Fragment() {
         // The callback can be enabled or disabled here or in the lambda
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,7 +71,9 @@ class CategoryPostFragment : Fragment() {
 
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
-        fab.tooltipText = resources.getString(R.string.write_a_post)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            fab.tooltipText = resources.getString(R.string.write_a_post)
+        }
         fab.setOnClickListener {
             val intent = Intent(context, PostActivity::class.java)
             startActivity(intent)
@@ -166,20 +167,16 @@ class CategoryPostFragment : Fragment() {
     private fun isFollowing(followingTv: TextView){
         mFirestore.collection("users").document(mAuth.uid!!).get()
             .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                    val categories = document.data?.get("followingCategories")
-                    if (category in categories as ArrayList<*>) {
-                        followingTv.text = getString(R.string.following)
-                        followingTv.tag = "following"
-                    } else {
-                            followingTv.text = getString(R.string.follow)
-                            followingTv.tag = "follow"
-                    }
-
+                Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                val categories = document.data?.get("followingCategories")
+                if (category in categories as ArrayList<*>) {
+                    followingTv.text = getString(R.string.following)
+                    followingTv.tag = "following"
                 } else {
-                    Log.d(TAG, "No such document")
+                        followingTv.text = getString(R.string.follow)
+                        followingTv.tag = "follow"
                 }
+
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)

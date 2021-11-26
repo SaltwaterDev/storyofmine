@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.access.LoadActivity"
-    android:background="#4D4D4D">
+    android:background="@color/dark_gray">
 
     <ImageView
         android:layout_width="@dimen/_179sdp"

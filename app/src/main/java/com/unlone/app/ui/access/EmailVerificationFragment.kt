@@ -2,10 +2,12 @@ package com.unlone.app.ui.access
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.unlone.app.databinding.FragmentEmailVerificationBinding
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.ktx.auth
@@ -38,6 +40,7 @@ class EmailVerificationFragment : Fragment() {
         val view = binding.root
 
         binding.sendEmailBtn.setOnClickListener{
+            binding.sendEmailBtn.isEnabled = false
             val user = mAuth.currentUser
             CoroutineScope(Dispatchers.Main).launch {
                 if (user != null) {
@@ -51,22 +54,15 @@ class EmailVerificationFragment : Fragment() {
                     mAuth.setLanguageCode(Locale.getDefault().country)
                     withContext(Dispatchers.IO){
                         user.sendEmailVerification(actionCodeSettings).await()
+                        Log.d("TAG", "send verification email successful")
                     }
                 }
-                // TODO("move the following block to cloud function")
-                /* delay(60000L) // wait for one minute
-                println("main: I'm tired of waiting!")
-                println("main: Now I delete user.")
-                // delete account
-                user?.delete()?.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "User account deleted.")
-                    }
-                }
-                activity?.finish()
-
-                 */
             }
+            Toast.makeText(
+                context,
+                "Please check your email",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         return view

@@ -2,7 +2,6 @@ package com.unlone.app.ui.lounge.common
 
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.annotation.MenuRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
@@ -25,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
 
-@RequiresApi(Build.VERSION_CODES.N)
 class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comment) -> Unit) :
     RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
 

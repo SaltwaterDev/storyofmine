@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -39,7 +38,6 @@ import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 
 
-@RequiresApi(Build.VERSION_CODES.N)
 class PostDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostDetailBinding
     private lateinit var mergeLayoutPostBinding: LayoutPostBinding
@@ -65,7 +63,6 @@ class PostDetailActivity : AppCompatActivity() {
     private var comment: Comment? = null
     private val mComments: Long = 5   // how many comment loaded each time
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -239,7 +236,6 @@ class PostDetailActivity : AppCompatActivity() {
             .show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
         detailedPostViewModel.observablePost.observe(this, { p ->
             p?.let{

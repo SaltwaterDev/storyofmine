@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.view.WindowInsetsController
 import com.google.firebase.firestore.DocumentSnapshot
 import android.widget.Toast
 import com.unlone.app.instance.User
@@ -26,20 +27,8 @@ class LoadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mAuth =  Firebase.auth
         mFirestore = Firebase.firestore
+        setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_load)
-
-        // hide action bar
-        if (supportActionBar != null) {
-            supportActionBar!!.hide()
-        }
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-        val decorView = window.decorView
-        val uiOption =
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        decorView.systemUiVisibility = uiOption
     }
 
     public override fun onStart() {
@@ -48,10 +37,8 @@ class LoadActivity : AppCompatActivity() {
         val currentUser = mAuth!!.currentUser
         if (currentUser == null) {
             Log.d("LOADACTIVITY", "first time login")
-            Handler().postDelayed({
                 startActivity(Intent(this, FirstAccessActivity::class.java))
                 finish()
-            }, 1000)
         } else {
             Log.d("LOADACTIVITY", "isEmailVerified = "+currentUser.isEmailVerified.toString())
             Log.d("LOADACTIVITY", "uid: ${currentUser.uid}")
@@ -72,13 +59,14 @@ class LoadActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     Log.d("LOADACTIVITY", "login: " + currentUser.uid)
-                    Handler().postDelayed({
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
-                    }, 1000)
                 }
                 .addOnFailureListener { e ->
                     Log.d("LOADACTIVITY", "exception: \n$e")
+                    Log.d("LOADACTIVITY", "haven't written in Firestore yet, go to login page")
+                        startActivity(Intent(this, FirstAccessActivity::class.java))
+                        finish()
                 }
         }
     }

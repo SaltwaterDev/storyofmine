@@ -4,31 +4,28 @@
 package com.unlone.app.utils
 
 import android.content.Context
-import android.os.Build
 import android.util.DisplayMetrics
-import androidx.annotation.RequiresApi
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-@RequiresApi(Build.VERSION_CODES.N)
 fun convertTimeStamp(timestamp: String, language: String?): String {
     return try {
         lateinit var sdf: SimpleDateFormat
         lateinit var netDate: Date
         when (language){
             "zh" -> {
-                sdf = SimpleDateFormat("MMMdd'日'  |   HH:mm", Locale.getDefault())
-                netDate = Date(timestamp.toLong() * 1000)
+                sdf = SimpleDateFormat("MMMdd'日'   |   HH:mm", Locale.getDefault())
+                netDate = Date(timestamp.toLong())
             }
             "COMMENT" -> {
-                sdf = SimpleDateFormat("dd-MM-yyyy   H:mm", Locale.getDefault())
+                sdf = SimpleDateFormat("dd-MM-yyyy   H:mm", Locale.US)
                 netDate = Date(timestamp.toLong())
             }
             else -> {
-                SimpleDateFormat("HH:mm   dd'th' MMM", Locale.getDefault())
-                netDate = Date(timestamp.toLong() * 1000)
+                sdf = SimpleDateFormat("HH:mm   dd'th' MMM", Locale.US)
+                netDate = Date(timestamp.toLong())
             }
         }
         sdf.timeZone = TimeZone.getDefault()

@@ -18,7 +18,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -40,7 +39,6 @@ import com.theartofdev.edmodo.cropper.CropImage
 import java.util.*
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 class WritePostFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mFirestore: FirebaseFirestore

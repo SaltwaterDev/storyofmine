@@ -16,6 +16,7 @@ import com.unlone.app.databinding.FragmentProfileBinding
 import com.unlone.app.instance.User
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.toObject
+import com.unlone.app.instance.ProfileCard
 
 class ProfileFragment : Fragment() {
     private var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser

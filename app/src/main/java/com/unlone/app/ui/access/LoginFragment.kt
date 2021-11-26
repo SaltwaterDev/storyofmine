@@ -75,11 +75,15 @@ class LoginFragment : Fragment() {
                                     activity?.finish()
                                 } else {
                                     progressBar.visibility = View.INVISIBLE
-                                    Toast.makeText(
+                                    startActivity(Intent(context, OnBoardingActivity::class.java))
+                                    activity?.finish()
+
+                                    /* Toast.makeText(
                                         context,
                                         "Unknown error",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                     */
                                 }
                             }
                         } else {
