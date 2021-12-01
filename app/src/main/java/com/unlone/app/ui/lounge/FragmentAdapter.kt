@@ -7,8 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.unlone.app.ui.lounge.all.LoungeAllFragment
 import com.unlone.app.ui.lounge.category.LoungeCategoryFragment
 import com.unlone.app.ui.lounge.following.LoungeFollowingFragment
+import javax.inject.Inject
 
-class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+class FragmentAdapter @Inject constructor(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun createFragment(position: Int): Fragment {
         when (position) {

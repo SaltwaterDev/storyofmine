@@ -8,19 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
 import com.unlone.app.databinding.FragmentEmailVerificationBinding
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.unlone.app.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 
 class EmailVerificationFragment : Fragment() {
@@ -60,9 +57,12 @@ class EmailVerificationFragment : Fragment() {
             }
             Toast.makeText(
                 context,
-                "Please check your email",
+                "Sending...",
                 Toast.LENGTH_SHORT
             ).show()
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_emailVerificationFragment_to_emailVerification2)
+
         }
 
         return view
@@ -70,14 +70,9 @@ class EmailVerificationFragment : Fragment() {
 
 
     companion object {
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             EmailVerificationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
             }
     }
 }

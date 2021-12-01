@@ -95,4 +95,7 @@
     <string name="continue_text">continue</string>
     <string name="validation_failed">validation failed</string>
     <string name="validation_failed_supporting_text">Your school email is not validated. If you have any question, please email us via unlonely2021@gmail.com</string>
+    <string name="email_has_been_sent">Email has been sent</string>
+    <string name="please_check_your_email">Please check your email</string>
+    <string name="you_may_also_need_to_check_n_the_junk_mail">You may also need to check\n the junk mail</string>
 </resources>

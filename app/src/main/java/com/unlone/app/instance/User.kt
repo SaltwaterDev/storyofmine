@@ -1,10 +1,12 @@
 package com.unlone.app.instance
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
+@Keep
 data class User (
     var uid: String? = null,
     var username: String? = null,

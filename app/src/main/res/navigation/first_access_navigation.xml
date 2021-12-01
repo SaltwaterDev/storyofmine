@@ -30,5 +30,14 @@
         android:id="@+id/emailVerificationFragment"
         android:name="com.unlone.app.ui.access.EmailVerificationFragment"
         android:label="fragment_email_verification"
-        tools:layout="@layout/fragment_email_verification" />
+        tools:layout="@layout/fragment_email_verification" >
+        <action
+            android:id="@+id/action_emailVerificationFragment_to_emailVerification2"
+            app:destination="@id/emailVerificationFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/emailVerificationFragment2"
+        android:name="com.unlone.app.ui.access.EmailVerificationFragment2"
+        android:label="fragment_email_verification2"
+        tools:layout="@layout/fragment_email_verification2" />
 </navigation>

@@ -36,7 +36,7 @@ class LoungeFollowingViewModel : ViewModel() {
 
     private suspend fun loadFollowingCategories(): ArrayList<String>? {
         // retrieve the following categories first
-        val result =  mFirestore.collection("users")
+        val result = mFirestore.collection("users")
             .document(mAuth.uid!!)
             .get()
             .await()
@@ -55,7 +55,7 @@ class LoungeFollowingViewModel : ViewModel() {
             Log.d(ContentValues.TAG, "followingCategories: $followingCategories")
             if (lastVisible == null || !loadMore!!) {
                 postList.clear()
-                Log.d(ContentValues.TAG, "First load")
+                Log.d(ContentValues.TAG, "First load/Refresh")
                 // add the following categories
                 val followingDocs = followingCategories.await()?.let {
                     mFirestore.collection("posts")
@@ -95,7 +95,7 @@ class LoungeFollowingViewModel : ViewModel() {
                 }
                 // sort the postList again
                 val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     Log.d("TAG", "sorted postList: $sortedPostList")
                     posts.value = sortedPostList
                 }
@@ -112,7 +112,7 @@ class LoungeFollowingViewModel : ViewModel() {
                         .await()
                 }
 
-                followingDocs?.let{ results ->
+                followingDocs?.let { results ->
                     if (results.size() > 0) {
                         for (document in results) {
                             Log.d(ContentValues.TAG, document.id + " => " + document.data)
@@ -124,7 +124,9 @@ class LoungeFollowingViewModel : ViewModel() {
                         }
                         lastVisible =
                             results.documents[results.size() - 1]
-                    } else {Log.d(ContentValues.TAG, "End of posts")}
+                    } else {
+                        Log.d(ContentValues.TAG, "End of posts")
+                    }
                 }
 
                 // add the self-written posts
@@ -143,16 +145,15 @@ class LoungeFollowingViewModel : ViewModel() {
                 }
                 // sort the postList again
                 val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     Log.d("TAG", "sorted postList: $sortedPostList")
                     posts.value = sortedPostList
                 }
-
             }
         }
     }
 
-    fun searchPost(text: String){
+    fun searchPost(text: String) {
         // TODO ("After using firebase function")
     }
 }

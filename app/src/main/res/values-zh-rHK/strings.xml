@@ -95,5 +95,8 @@
     <string name="continue_text">繼續</string>
     <string name="validation_failed">無法確認學校電郵</string>
     <string name="validation_failed_supporting_text"> </string>
+    <string name="email_has_been_sent">電郵已經寄出</string>
+    <string name="please_check_your_email">請查看你的電郵信箱</string>
+    <string name="you_may_also_need_to_check_n_the_junk_mail">如果找不到，請查看垃圾郵件</string>
 
 </resources>

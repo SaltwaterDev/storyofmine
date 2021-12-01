@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,6 @@ class LoungeAllFragment : Fragment() {
         _binding = FragmentLoungeAllBinding.inflate(inflater, container, false)
         val view = binding.root
 
-
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -63,15 +61,12 @@ class LoungeAllFragment : Fragment() {
         viewModel!!.loadPosts(mPosts, false)
         viewModel!!.posts.observe(
             viewLifecycleOwner,
-            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+            { postList: List<Post> ->
+                postsAdapter!!.setPostList(postList) })
 
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
             viewModel!!.loadPosts(mPosts, false)
-            viewModel!!.posts.observe(viewLifecycleOwner, { postList: List<Post> ->
-                Log.d("TAG", postList.toString())
-                postsAdapter!!.setPostList(postList)
-            })
             swipeRefreshLayout.isRefreshing = false
         }
 
@@ -90,10 +85,10 @@ class LoungeAllFragment : Fragment() {
                         viewModel!!.posts.observe(
                             viewLifecycleOwner,
                             { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+                        isLoading = false
                     }
                 }
                  */
-                isLoading = false
             }
         })
 
@@ -110,8 +105,6 @@ class LoungeAllFragment : Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {}
         })
-
-        // TODO ("add post sorting")
 
         return view
     }

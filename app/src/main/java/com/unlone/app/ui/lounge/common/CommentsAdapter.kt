@@ -8,10 +8,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.unlone.app.R
 import com.unlone.app.databinding.RecyclerviewCommentBinding
 import com.unlone.app.instance.Comment
@@ -101,7 +101,7 @@ class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comm
             }
     }
 
-    private fun showMenu(v: View, @MenuRes menuRes: Int, comment: Comment, commentView: RelativeLayout) {
+    private fun showMenu(v: View, @MenuRes menuRes: Int, comment: Comment, commentView: MaterialCardView) {
         val popup = PopupMenu(context!!, v)
         popup.menuInflater.inflate(menuRes, popup.menu)
 
@@ -169,7 +169,7 @@ class CommentsAdapter(private val pid: String, private val onLikeCallback: (Comm
         popup.show()
     }
 
-    private fun showConfirmation(commentView: RelativeLayout) {
+    private fun showConfirmation(commentView: MaterialCardView) {
         context?.let{
             MaterialAlertDialogBuilder(it)
                 .setTitle(it.getString(R.string.thank_you))

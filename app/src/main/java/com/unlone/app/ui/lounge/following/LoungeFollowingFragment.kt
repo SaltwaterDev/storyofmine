@@ -1,7 +1,6 @@
 package com.unlone.app.ui.lounge.following
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.annotation.RequiresApi
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.unlone.app.ui.create.PostActivity
@@ -43,7 +41,6 @@ class LoungeFollowingFragment : Fragment() {
         _binding = FragmentLoungeFollowingBinding.inflate(inflater, container, false)
         val view = binding.root
 
-
         // create "writing post" button
         val fab: FloatingActionButton = binding.fab
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -68,25 +65,19 @@ class LoungeFollowingFragment : Fragment() {
         homeViewModel!!.posts.observe(
             viewLifecycleOwner,
             { postList: List<Post> ->
-                Log.d("TAG", "postList: $postList")
                 postsAdapter!!.setPostList(postList) })
 
         swipeRefreshLayout.setOnRefreshListener {
-            // TODO refactor the refresh feature
-            /* swipeRefreshLayout.isRefreshing = true
+            swipeRefreshLayout.isRefreshing = true
             homeViewModel!!.loadPosts(mPosts, false)
-            homeViewModel!!.posts.observe(viewLifecycleOwner, { postList: List<Post> ->
-                Log.d("TAG", postList.toString())
-                postsAdapter!!.setPostList(postList)
-            })
-             */
             swipeRefreshLayout.isRefreshing = false
         }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 //super.onScrolled(recyclerView, dx, dy);
-                /*val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
+                /*
+                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
                 val totalItem = linearLayoutManager!!.itemCount
                 val lastVisible = linearLayoutManager.findLastCompletelyVisibleItemPosition()
                 if (totalItem < lastVisible + 3) {
@@ -117,7 +108,6 @@ class LoungeFollowingFragment : Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {}
         })
-
 
         return view
     }

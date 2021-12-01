@@ -1,10 +1,12 @@
 package com.unlone.app.instance
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
 import java.util.ArrayList
 
 @Parcelize
+@Keep
 data class Post(
         var title: String = "",
         var imagePath: String = "",

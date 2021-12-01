@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context="ui.access.EmailVerificationFragment">
+    tools:context=".ui.access.EmailVerificationFragment2">
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/welcome_to_unlone"
+        android:text="@string/email_has_been_sent"
         android:textColor="@color/colorText"
         android:textSize="26sp"
         android:textStyle="bold"/>
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
         android:gravity="center"
-        android:text="@string/to_ensure_to_community_safety_nwe_d_like_to_confirm_your_identity"
+        android:text="@string/please_check_your_email"
         android:textColor="@color/colorText"
         android:textSize="16sp"
         android:textStyle="normal"/>
@@ -32,17 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="41dp"
         android:gravity="center"
-        android:text="@string/please_click_the_button_below_nto_send_verification_email"
+        android:text="@string/you_may_also_need_to_check_n_the_junk_mail"
         android:textColor="@color/colorText"
         android:textSize="15sp"
         android:textStyle="normal"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/sendEmailBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="45dp"
-        android:text="@string/send_verification_email"/>
 
 </LinearLayout>

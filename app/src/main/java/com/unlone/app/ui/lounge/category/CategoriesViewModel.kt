@@ -97,7 +97,6 @@ class CategoriesViewModel: ViewModel() {
             mFirestore.collection("posts")
                 .whereEqualTo("category", category)
                 .orderBy("createdTimestamp", Query.Direction.DESCENDING)
-                .limit(numberPost.toLong())
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {

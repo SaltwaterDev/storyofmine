@@ -11,11 +11,14 @@ import com.unlone.app.R
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.navigation.fragment.NavHostFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     lateinit var tabLayout: TabLayout
     lateinit var pager2: ViewPager2
-    var adapter: FragmentAdapter? = null
+    lateinit var adapter: FragmentAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,

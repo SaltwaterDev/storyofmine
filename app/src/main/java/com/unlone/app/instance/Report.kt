@@ -1,6 +1,8 @@
 package com.unlone.app.instance
 
+import androidx.annotation.Keep
 
+@Keep
 sealed class Report {
     data class PostReport(
         val type: String = "post",

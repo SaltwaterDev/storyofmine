@@ -33,12 +33,7 @@ import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
 
 class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
-    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
     private var postList = emptyList<Post>()
-    private val uid: String? = mAuth.uid
-    private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var storageReference: StorageReference? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var card: CardView = itemView.findViewById(R.id.card_view)
@@ -61,10 +56,6 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
 
         // set text
         holder.journal.text = journal
-
-        // set image
-        storageReference = FirebaseStorage.getInstance().getReference("posts")
-
 
         // control what to display on post view
         if (image_path.isNotEmpty()) {
@@ -110,6 +101,7 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
                 // action wil be done when load the image
 
             }
+            // set image
             holder.imageCover.tag = target
             Picasso.get().load(image_path).into(target)
         } else {
@@ -138,7 +130,8 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     }
 
     fun setPostList(postList: List<Post>) {
-        Log.d("TAG", "old postList: ${this.postList}; new postList: $postList")
+        Log.d("TAG", "setPostList oldPostList: ${this.postList}")
+        Log.d("TAG", "setPostList newPostList: $postList")
         val diffUtil = PostDiffUtil(this.postList, postList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         this.postList = postList

@@ -118,10 +118,6 @@ class CategoryPostFragment : Fragment() {
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
             categoryViewModel!!.loadPosts(category, mPosts, false)
-            categoryViewModel!!.posts.observe(viewLifecycleOwner) { postList: List<Post> ->
-                Log.d("TAG", postList.toString())
-                postsAdapter!!.setPostList(postList)
-            }
             swipeRefreshLayout.isRefreshing = false
         }
 
