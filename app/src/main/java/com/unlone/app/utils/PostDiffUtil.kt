@@ -24,7 +24,7 @@ class PostDiffUtil(
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         Log.d("TAG", "areContentsTheSame: oldItemPosition: $oldItemPosition; newItemPosition: $newItemPosition")
         return when {
-            oldList[oldItemPosition].hashCode() != newList[newItemPosition].hashCode() -> {
+            oldList[oldItemPosition].pid != newList[newItemPosition].pid -> {
                 false
             }
             oldList[oldItemPosition].title != newList[newItemPosition].title -> {

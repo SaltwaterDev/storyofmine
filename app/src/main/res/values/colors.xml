@@ -25,6 +25,8 @@
     <color name="menuItem">#FFFFFF</color>
     <color name="lightYellow">#F2F0E3</color>
     <color name="onLightYellow">#C7BE8A</color>
+    <color name="labelled">#004C8B</color>
+    <color name="filledChatIcon">#474B57</color>
 
 
 

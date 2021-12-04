@@ -1,16 +1,19 @@
 package com.unlone.app.ui.lounge.common
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
+import android.text.*
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,10 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.unlone.app.R
 import com.unlone.app.databinding.ActivityPostDetailBinding
 import com.unlone.app.databinding.LayoutPostBinding
-import com.unlone.app.instance.Comment
-import com.unlone.app.instance.Post
-import com.unlone.app.instance.Report
-import com.unlone.app.instance.User
 import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
@@ -37,6 +36,12 @@ import java.util.*
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 
+import android.text.style.ForegroundColorSpan
+
+import android.widget.TextView
+import com.unlone.app.instance.*
+import com.unlone.app.ui.lounge.category.CategoriesViewModel
+
 
 class PostDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostDetailBinding
@@ -49,19 +54,30 @@ class PostDetailActivity : AppCompatActivity() {
     // init firebase
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val commentsAdapter by lazy { CommentsAdapter(pid, ::likeComment) }
+    private val commentsAdapter by lazy {
+        CommentsAdapter(
+            pid,
+            ::likeComment,
+            ::likeSubComment,
+            ::focusEdittextToSubComment
+        )
+    }
 
     // detail of user and the post
     var uid: String? = mAuth.uid
     var username: String? = null
     private lateinit var pid: String
 
-    var hashMap : HashMap<String, String>  // tag storing the save state
-            = HashMap<String, String> ()
+    var hashMap: HashMap<String, String>  // tag storing the save state
+            = HashMap<String, String>()
 
     private var post: Post? = null
     private var comment: Comment? = null
-    private val mComments: Long = 5   // how many comment loaded each time
+    private val mComments: Long = 4   // how many comment loaded each time
+
+    // sub comment
+    private var parentCid: String? = null
+    private var parentCommenter: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,23 +102,40 @@ class PostDetailActivity : AppCompatActivity() {
 
                     // User chose the "Saving" item, save the post...
                     if (hashMap["saveButton"] == "save") {
-                        val timestamp = hashMapOf("saveTime" to System.currentTimeMillis().toString())
+                        val timestamp =
+                            hashMapOf("saveTime" to System.currentTimeMillis().toString())
                         mAuth.uid?.let { uid ->
                             mFirestore.collection("users").document(uid)
                                 .collection("saved")
                                 .document(pid)
                                 .set(timestamp)
-                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                                .addOnSuccessListener {
+                                    Log.d(
+                                        TAG,
+                                        "DocumentSnapshot successfully written!"
+                                    )
+                                }
                                 .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
                         }
-                    }else{
+                    } else {
                         mAuth.uid?.let { uid ->
                             mFirestore.collection("users").document(uid)
                                 .collection("saved")
                                 .document(pid)
                                 .delete()
-                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-                                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                                .addOnSuccessListener {
+                                    Log.d(
+                                        TAG,
+                                        "DocumentSnapshot successfully deleted!"
+                                    )
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.w(
+                                        TAG,
+                                        "Error deleting document",
+                                        e
+                                    )
+                                }
                         }
                     }
                     true
@@ -110,18 +143,22 @@ class PostDetailActivity : AppCompatActivity() {
 
                 R.id.actionReport -> {
                     // write the pid into the Report collection in Firestore
-                    post?.let{
+                    post?.let {
 
-                        val reportMap = mapOf(getString(R.string.hate_speech) to "Hate Speech",
+                        val reportMap = mapOf(
+                            getString(R.string.hate_speech) to "Hate Speech",
                             getString(R.string.span_or_irrelevant) to "Span or Irrelevant",
                             getString(R.string.sexual_or_inappropriate) to "Sexual or Inappropriate",
                             getString(R.string.just_dont_like) to "I just don’t like it"
-                            )
+                        )
                         val singleItems = reportMap.keys.toList().toTypedArray()
                         var checkedItem = 1
 
                         // show dialog
-                        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+                        MaterialAlertDialogBuilder(
+                            this,
+                            R.style.ThemeOverlay_App_MaterialAlertDialog
+                        )
                             .setTitle(getString(R.string.why_report))
                             .setNeutralButton(getString(R.string.cancel)) { dialog, which ->
                                 // Respond to neutral button press
@@ -142,10 +179,19 @@ class PostDetailActivity : AppCompatActivity() {
                                     mFirestore.collection("reports")
                                         .add(report)
                                         .addOnSuccessListener {
-                                            Log.d(TAG, "Report DocumentSnapshot successfully written!")
+                                            Log.d(
+                                                TAG,
+                                                "Report DocumentSnapshot successfully written!"
+                                            )
                                             showConfirmation()
                                         }
-                                        .addOnFailureListener { e -> Log.w(TAG, "Error saving post\n", e) }
+                                        .addOnFailureListener { e ->
+                                            Log.w(
+                                                TAG,
+                                                "Error saving post\n",
+                                                e
+                                            )
+                                        }
                                 }
 
                             }// Single-choice items (initialized with checked item)
@@ -156,8 +202,6 @@ class PostDetailActivity : AppCompatActivity() {
 
                             }
                             .show()
-
-
                     }
                     true
                 }
@@ -181,7 +225,6 @@ class PostDetailActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
 
 
         // load info
@@ -212,17 +255,44 @@ class PostDetailActivity : AppCompatActivity() {
             }
         }
 
-
-
         // send comment button click
-        binding.sendBtn.setOnClickListener{
-            if (binding.commentEt.text.isNotEmpty()){
-                postComment()
-                binding.commentEt.text.clear()
-                commentViewModel.loadComments(mComments, pid)
-
-            }
+        binding.sendBtn.setOnClickListener {
+            postComment()
+            binding.commentEt.text.clear()
+            val imm: InputMethodManager? =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+            binding.moreCommentButton.visibility = View.VISIBLE
         }
+        binding.commentEt.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (parentCid != null && parentCommenter.toString() !in binding.commentEt.text) {
+                    // replying prefix is destroyed
+                    parentCid = null
+                    parentCommenter = null
+                    // remove the prefix directly
+                    val arr = binding.commentEt.text.split(" ").toTypedArray()
+                    val trimmedContent =
+                        arr.filterNot { it == arr[0] }     // the content with the "@user" prefix"
+                    if (trimmedContent.isEmpty()) {
+                        binding.commentEt.setText("")
+                    } else {
+                        binding.commentEt.setText(trimmedContent[0])
+                    }
+                }
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
     }
 
     private fun showConfirmation() {
@@ -238,7 +308,7 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun loadPostInfo(binding: ActivityPostDetailBinding) {
         detailedPostViewModel.observablePost.observe(this, { p ->
-            p?.let{
+            p?.let {
                 post = p
                 // control the comment layout display (e.g. whether they have like button)
                 commentsAdapter.selfPost = (p.author_uid == mAuth.uid)
@@ -249,7 +319,7 @@ class PostDetailActivity : AppCompatActivity() {
 
                 // enable or disable save button
                 val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
-                if (!p.save){
+                if (!p.save) {
                     saveButton.isEnabled = false
                     saveButton.icon.mutate().alpha = 135
                 }
@@ -271,16 +341,32 @@ class PostDetailActivity : AppCompatActivity() {
                             val imageHeight = bitmap.height
                             mergeLayoutPostBinding.imageCover.setImageBitmap(bitmap)
                             Log.d("Bitmap Dimensions: ", imageWidth.toString() + "x" + imageHeight)
-                            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                            val params = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                            )
                             params.gravity = Gravity.CENTER
-                            val imageHorizontalMargin: Int = getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, this@PostDetailActivity) // in px
+                            val imageHorizontalMargin: Int = getImageHorizontalMargin(
+                                imageWidth.toFloat() / imageHeight,
+                                this@PostDetailActivity
+                            ) // in px
                             val imageVerticalMargin = dpConvertPx(38, this@PostDetailActivity)
-                            params.setMargins(imageHorizontalMargin, imageVerticalMargin, imageHorizontalMargin, imageVerticalMargin)
+                            params.setMargins(
+                                imageHorizontalMargin,
+                                imageVerticalMargin,
+                                imageHorizontalMargin,
+                                imageVerticalMargin
+                            )
                             mergeLayoutPostBinding.imageCover.layoutParams = params
 
                         }
 
-                        override fun onBitmapFailed(e: java.lang.Exception, errorDrawable: Drawable) {}
+                        override fun onBitmapFailed(
+                            e: java.lang.Exception,
+                            errorDrawable: Drawable
+                        ) {
+                        }
+
                         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
                     }
 
@@ -290,9 +376,22 @@ class PostDetailActivity : AppCompatActivity() {
                     mergeLayoutPostBinding.imageCover.visibility = View.GONE
                 }
 
+                // display date
+                mergeLayoutPostBinding.date.text =
+                    convertTimeStamp(p.createdTimestamp, Locale.getDefault().language)
+
+                // display topic
+                val rawTopic = p.category
+                val categoryViewModel: CategoriesViewModel =
+                    ViewModelProvider(this).get(CategoriesViewModel::class.java)
+                categoryViewModel.getCategoryTitle(rawTopic)
+                categoryViewModel.categoryTitle.observe(this) { title ->
+                    mergeLayoutPostBinding.topicTv.text = title
+                }
+
                 // display journal text
                 mergeLayoutPostBinding.textViewJournal.text = p.journal
-                mergeLayoutPostBinding.date.text = convertTimeStamp(p.createdTimestamp, Locale.getDefault().language)
+
 
                 // display label
                 var displayLabel = ""
@@ -327,66 +426,82 @@ class PostDetailActivity : AppCompatActivity() {
             Toast.makeText(this, "Comment is empty", Toast.LENGTH_SHORT).show()
             return
         }
-        val docRef = mFirestore.collection("users").document(mAuth.uid!!)
-        docRef.addSnapshotListener(EventListener { value, error ->
-            if (error != null) {
-                System.err.println("Listen failed: $error")
-                return@EventListener
-            }
-            if (value != null && value.exists()) {
-                println("Current data: " + value.data)
-                val user = value.toObject(User::class.java)
-                val authorUid = mAuth.uid
-                val authorUsername = user!!.username
-
-                comment = Comment(authorUid,
-                        authorUsername,
-                        content,
-                        System.currentTimeMillis().toString())
-
-                // add comment to the database
-                mFirestore.collection("posts").document(pid)
-                        .collection("comments")
-                        .add(comment!!)
-                        .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id) }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error adding comment\n", e) }
-
-
-
-            } else {
-                print("Current data: null")
-            }
-        })
+        if (parentCid == null) {
+            // normal comment
+            commentViewModel.uploadComment(content, pid)
+        } else {
+            // sub comment
+            commentViewModel.uploadSubComment(content, pid, parentCid!!)
+            // clear parent cid
+            parentCid = null
+        }
+        commentViewModel.loadComments(mComments, pid)
     }
 
 
     private fun isSaved(pid: String, saveButton: MenuItem) {
         mFirestore.collection("users").document(mAuth.uid!!)
-                .collection("saved")
-                .document(pid)
-                .addSnapshotListener{snapshot, e ->
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e)
-                        return@addSnapshotListener
-                    }
+            .collection("saved")
+            .document(pid)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
 
-                    if (snapshot != null && snapshot.exists()) {
-                        Log.d(TAG, "Current data: ${snapshot.data}")
-                        saveButton.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_bookmark_24)
-                        hashMap["saveButton"] = "saved"
-                    } else {
-                        if (snapshot != null) {
-                            saveButton.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_bookmark_border_24)
-                            hashMap["saveButton"] = "save"
-                        }
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: ${snapshot.data}")
+                    saveButton.icon =
+                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_bookmark_24)
+                    hashMap["saveButton"] = "saved"
+                } else {
+                    if (snapshot != null) {
+                        saveButton.icon = ContextCompat.getDrawable(
+                            this,
+                            R.drawable.ic_baseline_bookmark_border_24
+                        )
+                        hashMap["saveButton"] = "save"
                     }
                 }
+            }
     }
 
     private fun likeComment(comment: Comment) {
         commentViewModel.processCommentLike(comment, pid)
-        commentViewModel.loadComments(mComments, pid)
+        commentViewModel.loadComments(mComments, pid, true)
     }
+
+    private fun likeSubComment(subComment: SubComment) {
+        commentViewModel.processSubCommentLike(subComment, pid)
+        commentViewModel.loadComments(mComments, pid, true)
+    }
+
+    private fun focusEdittextToSubComment(cid: String, username: String) {
+        parentCid = cid
+        parentCommenter = username
+        val editText = binding.commentEt
+
+        // add prefix
+        val prefix = "@$username "
+        val prefixToSpan: Spannable = SpannableString(prefix)
+        prefixToSpan.setSpan(
+            ForegroundColorSpan(resources.getColor(R.color.labelled)),
+            0,
+            prefix.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        editText.setText(prefixToSpan, TextView.BufferType.EDITABLE)
+
+        // set focus and open the soft keyboard
+        editText.requestFocus()
+        val imm: InputMethodManager? =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        imm?.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+
+        // move the cursor to the end
+        editText.setSelection(editText.length())
+    }
+
 
     companion object {
         private const val TAG = "PostDetailedActivity"

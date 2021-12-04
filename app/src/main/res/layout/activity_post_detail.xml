@@ -26,8 +26,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_layout"
-        android:layout_above="@+id/commentLayout">
+        android:layout_above="@+id/commentLayout"
+        android:layout_below="@+id/toolbar_layout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,8 +35,7 @@
             android:orientation="vertical">
 
 
-            <include
-                layout="@layout/layout_post"/>
+            <include layout="@layout/layout_post" />
 
             <!--List of comment-->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,10 +44,10 @@
                 android:layout_marginTop="98dp">
 
                 <FrameLayout
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:background="#7F000000"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
+                    android:layout_height="1dp"
+                    android:background="#7F000000"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycleview"
@@ -62,13 +61,13 @@
                     android:id="@+id/more_comment_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="80dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_baseline_add_circle_outline_24"
-                    app:layout_constraintTop_toBottomOf="@+id/recycleview"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="80dp"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recycleview" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

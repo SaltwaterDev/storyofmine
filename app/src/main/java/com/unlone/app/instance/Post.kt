@@ -12,7 +12,6 @@ data class Post(
         var imagePath: String = "",
         var journal: String = "",
         var author_uid: String = "",
-        var username: String = "",
         var labels: ArrayList<String> = ArrayList<String>(),
         var category:String = "",
         var createdTimestamp: String = "",

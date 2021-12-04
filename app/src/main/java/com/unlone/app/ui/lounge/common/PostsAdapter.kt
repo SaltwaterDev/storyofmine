@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -22,12 +20,6 @@ import com.unlone.app.instance.Post
 import com.unlone.app.utils.PostDiffUtil
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
@@ -49,7 +41,7 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (title, image_path, journal, _, _, _, _, _, _, pid) = postList[position]
+        val (title, image_path, journal, _, _, _, _, _, pid) = postList[position]
 
         // set title
         holder.title.text = title

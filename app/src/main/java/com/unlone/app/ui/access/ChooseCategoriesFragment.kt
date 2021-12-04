@@ -101,6 +101,9 @@ class ChooseCategoriesFragment : Fragment() {
             }
         }
 
+        // default: user follow "Unlone" category
+        selectedCategories.add("unlone")
+
         // write user info into Firestore
         user.followingCategories = selectedCategories
         return user.uid?.let { mFirestore.collection("users").document(it).set(user) }

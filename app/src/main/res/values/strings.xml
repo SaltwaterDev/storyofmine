@@ -98,4 +98,6 @@
     <string name="email_has_been_sent">Email has been sent</string>
     <string name="please_check_your_email">Please check your email</string>
     <string name="you_may_also_need_to_check_n_the_junk_mail">You may also need to check\n the junk mail</string>
+    <string name="topic_label">Topic:</string>
+    <string name="topic">topic</string>
 </resources>

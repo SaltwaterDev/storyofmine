@@ -98,5 +98,8 @@
     <string name="email_has_been_sent">電郵已經寄出</string>
     <string name="please_check_your_email">請查看你的電郵信箱</string>
     <string name="you_may_also_need_to_check_n_the_junk_mail">如果找不到，請查看垃圾郵件</string>
+    <string name="topic_label">類別:</string>
+    <string name="topic">類別</string>
+
 
 </resources>

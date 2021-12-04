@@ -16,4 +16,10 @@ sealed class Report {
         val reportReason: String? = null,
         val reportedBy: String): Report()
 
+    data class SubCommentReport(
+        val type: String = "comment",
+        val subComment: SubComment? = null,
+        val reportReason: String? = null,
+        val reportedBy: String): Report()
+
 }

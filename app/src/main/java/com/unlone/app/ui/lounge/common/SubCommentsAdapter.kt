@@ -8,17 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.google.android.material.card.MaterialCardView
-import com.unlone.app.databinding.RecyclerviewCommentBinding
-import com.unlone.app.instance.Comment
 import com.unlone.app.instance.Report
 import com.unlone.app.utils.convertTimeStamp
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,129 +22,84 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 import com.unlone.app.R
-import com.unlone.app.instance.Post
+import com.unlone.app.databinding.RecyclerviewSubcommentBinding
+import com.unlone.app.instance.Comment
 import com.unlone.app.instance.SubComment
 import com.unlone.app.utils.CommentDiffUtil
-import com.unlone.app.utils.PostDiffUtil
+import com.unlone.app.utils.SubCommentDiffUtil
 
 
-class CommentsAdapter(
-    private val pid: String,
-    private val onLikeCallback: (Comment) -> Unit,
-    private val onSubCommentLikeCallback: (SubComment) -> Unit,
-    private val onFocusEdittextCallback: (String, String) -> Unit
-) :
-    RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
+class SubCommentsAdapter(private val pid: String,
+                         private val onLikeCallback: (SubComment) -> Unit,
+                         private val onFocusEdittextCallback: (String, String) -> Unit
+    ) :
+    RecyclerView.Adapter<SubCommentsAdapter.ViewHolder>() {
 
-    private var commentList = emptyList<Comment>()
+    private var subCommentList = emptyList<SubComment>()
     private lateinit var recyclerView: RecyclerView
-    var selfPost: Boolean = false
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var context: Context? = null
-    private val subCommentsAdapter by lazy {
-        SubCommentsAdapter(
-            pid,
-            onSubCommentLikeCallback,
-            onFocusEdittextCallback
-        )
-    }
-    private val viewPool = RecycledViewPool()
 
-    inner class ViewHolder(val binding: RecyclerviewCommentBinding) :
+    class ViewHolder(val binding: RecyclerviewSubcommentBinding) :
         RecyclerView.ViewHolder(binding.root)
 
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RecyclerviewCommentBinding
+        val binding = RecyclerviewSubcommentBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
         context = parent.context
         return ViewHolder(binding)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Replace the contents of a view (invoked by the layout manager)DataViewHolder
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("TAG", "commentList:　$commentList")
-        // set comment content
-        holder.binding.username.text = commentList[position].username
+        Log.d("TAG", "DISPLAYING SUB COMMENTS")
+        holder.binding.username.text = subCommentList[position].username
         holder.binding.date.text =
-            commentList[position].timestamp?.let { convertTimeStamp(it, "COMMENT") }
-        holder.binding.comment.text = commentList[position].content
-
-        // init "like" button
+            subCommentList[position].timestamp?.let { convertTimeStamp(it, "COMMENT") }
+        holder.binding.comment.text = subCommentList[position].content
         holder.binding.likeButton.setOnClickListener {
-            onLikeCallback(commentList[position])
+            onLikeCallback(subCommentList[position])
         }
-        isLiked(holder.binding.likeButton, commentList[position])
+        isLiked(holder.binding.likeButton, subCommentList[position])
 
         // init "more" button
         holder.binding.moreButton.setOnClickListener { v: View ->
-            showMenu(v, R.menu.comment_popup_menu, commentList[position], holder.binding.cardView)
-        }
-
-        // sub comments recycler view
-        commentList[position].subComments?.let {
-            subCommentsAdapter.setSubCommentList(it)
-            subCommentsAdapter.notifyDataSetChanged()
-        }
-        holder.binding.subCommentRv.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = subCommentsAdapter
-            setRecycledViewPool(viewPool)
-        }
-
-
-        // init "comment" button
-        if (commentList[position].subComments?.size ?: 0 > 0) {
-            holder.binding.commentButton.setImageResource(R.drawable.ic_chat_filled)
-            holder.binding.commentButton.tag = "to read"
-        } else {
-            holder.binding.commentButton.tag = "to write"
+            showMenu(v, R.menu.comment_popup_menu, subCommentList[position], holder.binding.cardView)
         }
         holder.binding.commentButton.setOnClickListener {
-            val repliedName = commentList[position].username
-            val repliedCid = commentList[position].cid
-            // if the comment icon is outlined
-            if (holder.binding.commentButton.tag == "to write") {
-                if (repliedName != null && repliedCid != null) {
-                    onFocusEdittextCallback(repliedCid, repliedName)
-                }
-            } else if (holder.binding.commentButton.tag == "to read") {
-                Log.d("TAG", "subComments recyclerview: ${commentList[position].subComments}")
-                holder.binding.subCommentRv.visibility = View.VISIBLE
-                holder.binding.commentButton.setImageResource(R.drawable.ic_chat)
-                holder.binding.commentButton.tag = "to write"
-            } else {
-                Toast.makeText(
-                    context, "Unexpected error: no tag for commentButton ",
-                    Toast.LENGTH_SHORT
-                ).show()
+            val repliedName = subCommentList[position].username
+            val repliedCid = subCommentList[position].parent_cid
+            if (repliedName != null && repliedCid!= null) {
+                onFocusEdittextCallback(repliedCid, repliedName)
             }
-
         }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = commentList.size
+    override fun getItemCount() = subCommentList.size
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
     }
 
-    fun setCommentList(newCommentList: List<Comment>) {
-        Log.d("TAG", "setPostList oldPostList: ${this.commentList}")
-        Log.d("TAG", "setPostList newPostList: $commentList")
-        val diffUtil = CommentDiffUtil(this.commentList, newCommentList)
+
+    fun setSubCommentList(newSubCommentList: List<SubComment>) {
+        Log.d("TAG", "setPostList oldPostList: ${this.subCommentList}")
+        Log.d("TAG", "setPostList newPostList: $newSubCommentList")
+        val diffUtil = SubCommentDiffUtil(this.subCommentList, newSubCommentList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
-        this.commentList = newCommentList
+        this.subCommentList = newSubCommentList
         diffResults.dispatchUpdatesTo(this)
     }
 
-    private fun isLiked(likeButton: ImageView, comment: Comment) {
+
+    private fun isLiked(likeButton: ImageView, subComment: SubComment) {
         mFirestore.collection("posts").document(pid)
-            .collection("comments").document(comment.cid!!)
+            .collection("comments").document(subComment.cid!!)
             .collection("likes").whereEqualTo("likedBy", mAuth.uid)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
@@ -176,12 +125,7 @@ class CommentsAdapter(
             }
     }
 
-    private fun showMenu(
-        v: View,
-        @MenuRes menuRes: Int,
-        comment: Comment,
-        commentView: MaterialCardView
-    ) {
+    private fun showMenu(v: View, @MenuRes menuRes: Int, subComment: SubComment, commentView: MaterialCardView) {
         val popup = PopupMenu(context!!, v)
         popup.menuInflater.inflate(menuRes, popup.menu)
 
@@ -209,8 +153,8 @@ class CommentsAdapter(
                                 // Respond to positive button press
                                 Log.d("TAG", singleItems[checkedItem])
                                 val report = mAuth.uid?.let { it1 ->
-                                    Report.CommentReport(
-                                        comment = comment,
+                                    Report.SubCommentReport(
+                                        subComment = subComment,
                                         reportReason = reportMap[singleItems[checkedItem]],
                                         reportedBy = it1
                                     )
@@ -221,19 +165,10 @@ class CommentsAdapter(
                                     mFirestore.collection("reports")
                                         .add(report)
                                         .addOnSuccessListener {
-                                            Log.d(
-                                                "TAG",
-                                                "Report DocumentSnapshot successfully written!"
-                                            )
+                                            Log.d("TAG", "Report DocumentSnapshot successfully written!")
                                             showConfirmation(commentView)
                                         }
-                                        .addOnFailureListener { e ->
-                                            Log.w(
-                                                "TAG",
-                                                "Error saving post\n",
-                                                e
-                                            )
-                                        }
+                                        .addOnFailureListener { e -> Log.w("TAG", "Error saving post\n", e) }
                                 }
 
                             }// Single-choice items (initialized with checked item)
@@ -259,7 +194,7 @@ class CommentsAdapter(
     }
 
     private fun showConfirmation(commentView: MaterialCardView) {
-        context?.let {
+        context?.let{
             MaterialAlertDialogBuilder(it)
                 .setTitle(it.getString(R.string.thank_you))
                 .setMessage(it.getString(R.string.report_text))
