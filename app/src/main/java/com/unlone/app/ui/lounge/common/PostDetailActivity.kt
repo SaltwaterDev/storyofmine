@@ -49,19 +49,13 @@ class PostDetailActivity : AppCompatActivity() {
 
     // declare viewModel
     private lateinit var detailedPostViewModel: DetailedPostViewModel
-    private lateinit var commentViewModel: CommentViewModel
+    private val commentViewModel: CommentViewModel by lazy {
+        ViewModelProvider(this).get(CommentViewModel::class.java)
+    }
 
     // init firebase
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val commentsAdapter by lazy {
-        CommentsAdapter(
-            pid,
-            ::likeComment,
-            ::likeSubComment,
-            ::focusEdittextToSubComment
-        )
-    }
 
     // detail of user and the post
     var uid: String? = mAuth.uid
@@ -74,6 +68,15 @@ class PostDetailActivity : AppCompatActivity() {
     private var post: Post? = null
     private var comment: Comment? = null
     private val mComments: Long = 4   // how many comment loaded each time
+
+    private val commentsAdapter by lazy{
+        CommentsAdapter(
+            pid,
+            ::likeComment,
+            ::likeSubComment,
+            ::focusEdittextToSubComment
+        )
+    }
 
     // sub comment
     private var parentCid: String? = null
@@ -234,277 +237,291 @@ class PostDetailActivity : AppCompatActivity() {
         val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
         isSaved(pid, saveButton)
 
+
         val layoutManager = LinearLayoutManager(this)
         binding.recycleview.layoutManager = layoutManager
         binding.recycleview.adapter = commentsAdapter
 
         // load comment
-        commentViewModel = ViewModelProvider(this).get(CommentViewModel::class.java)
         commentViewModel.loadComments(mComments, pid)
-        commentViewModel.comments.observe(this, { comments ->
-            Log.d("TAG", "comments in post detail activity: $comments")
-            commentsAdapter.setCommentList(comments)
-            commentsAdapter.notifyDataSetChanged()
-        })
+        commentViewModel.comments.observe(
+            this, {
+                    it?.let {
+                        Log.d("TAG", "comments in post detail activity: $it")
+                        // commentsAdapter.submitList(null)
+                        commentsAdapter.submitList(it)
+                        commentsAdapter.notifyDataSetChanged()
+                    }
+                })
 
-        // init load_more_comment button
-        binding.moreCommentButton.setOnClickListener {
-            commentViewModel.loadComments(mComments, pid, true)
-            if (commentViewModel.endOfComments) {
-                binding.moreCommentButton.visibility = View.INVISIBLE
-            }
-        }
-
-        // send comment button click
-        binding.sendBtn.setOnClickListener {
-            postComment()
-            binding.commentEt.text.clear()
-            val imm: InputMethodManager? =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
-            binding.moreCommentButton.visibility = View.VISIBLE
-        }
-        binding.commentEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if (parentCid != null && parentCommenter.toString() !in binding.commentEt.text) {
-                    // replying prefix is destroyed
-                    parentCid = null
-                    parentCommenter = null
-                    // remove the prefix directly
-                    val arr = binding.commentEt.text.split(" ").toTypedArray()
-                    val trimmedContent =
-                        arr.filterNot { it == arr[0] }     // the content with the "@user" prefix"
-                    if (trimmedContent.isEmpty()) {
-                        binding.commentEt.setText("")
-                    } else {
-                        binding.commentEt.setText(trimmedContent[0])
+                // init load_more_comment button
+                binding.moreCommentButton.setOnClickListener {
+                    commentViewModel.loadComments(mComments, pid, true)
+                    if (commentViewModel.endOfComments) {
+                        binding.moreCommentButton.visibility = View.INVISIBLE
                     }
                 }
-            }
 
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-    }
-
-    private fun showConfirmation() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.thank_you))
-            .setMessage(getString(R.string.report_text))
-            .setPositiveButton(getString(R.string.confirm)) { dialog, which ->
-                // Respond to positive button press
-                finish()
-            }
-            .show()
-    }
-
-    private fun loadPostInfo(binding: ActivityPostDetailBinding) {
-        detailedPostViewModel.observablePost.observe(this, { p ->
-            p?.let {
-                post = p
-                // control the comment layout display (e.g. whether they have like button)
-                commentsAdapter.selfPost = (p.author_uid == mAuth.uid)
-
-                // enable or disable the right of delete post
-                val deleteMenuItem = binding.topAppBar.menu.findItem(R.id.actionDelete)
-                deleteMenuItem.isVisible = p.author_uid == mAuth.uid
-
-                // enable or disable save button
-                val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
-                if (!p.save) {
-                    saveButton.isEnabled = false
-                    saveButton.icon.mutate().alpha = 135
+                // send comment button click
+                binding.sendBtn.setOnClickListener {
+                    postComment()
+                    binding.commentEt.text.clear()
+                    val imm: InputMethodManager? =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                    imm?.hideSoftInputFromWindow(view.windowToken, 0)
+                    binding.moreCommentButton.visibility = View.VISIBLE
                 }
+                binding.commentEt.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        if (parentCid != null && parentCommenter.toString() !in binding.commentEt.text) {
+                            // replying prefix is destroyed
+                            parentCid = null
+                            parentCommenter = null
+                            // remove the prefix directly
+                            val arr = binding.commentEt.text.split(" ").toTypedArray()
+                            val trimmedContent =
+                                arr.filterNot { it == arr[0] }     // the content with the "@user" prefix"
+                            if (trimmedContent.isEmpty()) {
+                                binding.commentEt.setText("")
+                            } else {
+                                binding.commentEt.setText(trimmedContent[0])
+                            }
+                        }
+                    }
 
-                // display title
-                mergeLayoutPostBinding.textViewTitle.text = p.title
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
 
-                // display image
-                val imagePath = p.imagePath
-                try {
-                    // load image and resize it
-                    // action wil be done when loading the image
-                    val target: Target = object : Target {
-                        override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom) {
-                            mergeLayoutPostBinding.imageCover.visibility = View.VISIBLE
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                    }
+                })
+            }
 
-                            //get measured image size
-                            val imageWidth = bitmap.width
-                            val imageHeight = bitmap.height
-                            mergeLayoutPostBinding.imageCover.setImageBitmap(bitmap)
-                            Log.d("Bitmap Dimensions: ", imageWidth.toString() + "x" + imageHeight)
-                            val params = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
+                    private fun showConfirmation() {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(resources.getString(R.string.thank_you))
+                    .setMessage(getString(R.string.report_text))
+                    .setPositiveButton(getString(R.string.confirm)) { dialog, which ->
+                        // Respond to positive button press
+                        finish()
+                    }
+                    .show()
+            }
+
+                    private fun loadPostInfo(binding: ActivityPostDetailBinding) {
+                detailedPostViewModel.observablePost.observe(this, { p ->
+                    p?.let {
+                        post = p
+                        // control the comment layout display (e.g. whether they have like button)
+                        commentsAdapter.selfPost = (p.author_uid == mAuth.uid)
+
+                        // enable or disable the right of delete post
+                        val deleteMenuItem = binding.topAppBar.menu.findItem(R.id.actionDelete)
+                        deleteMenuItem.isVisible = p.author_uid == mAuth.uid
+
+                        // enable or disable save button
+                        val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
+                        if (!p.save) {
+                            saveButton.isEnabled = false
+                            saveButton.icon.mutate().alpha = 135
+                        }
+
+                        // display title
+                        mergeLayoutPostBinding.textViewTitle.text = p.title
+
+                        // display image
+                        val imagePath = p.imagePath
+                        try {
+                            // load image and resize it
+                            // action wil be done when loading the image
+                            val target: Target = object : Target {
+                                override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom) {
+                                    mergeLayoutPostBinding.imageCover.visibility = View.VISIBLE
+
+                                    //get measured image size
+                                    val imageWidth = bitmap.width
+                                    val imageHeight = bitmap.height
+                                    mergeLayoutPostBinding.imageCover.setImageBitmap(bitmap)
+                                    Log.d(
+                                        "Bitmap Dimensions: ",
+                                        imageWidth.toString() + "x" + imageHeight
+                                    )
+                                    val params = LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                    )
+                                    params.gravity = Gravity.CENTER
+                                    val imageHorizontalMargin: Int = getImageHorizontalMargin(
+                                        imageWidth.toFloat() / imageHeight,
+                                        this@PostDetailActivity
+                                    ) // in px
+                                    val imageVerticalMargin =
+                                        dpConvertPx(38, this@PostDetailActivity)
+                                    params.setMargins(
+                                        imageHorizontalMargin,
+                                        imageVerticalMargin,
+                                        imageHorizontalMargin,
+                                        imageVerticalMargin
+                                    )
+                                    mergeLayoutPostBinding.imageCover.layoutParams = params
+
+                                }
+
+                                override fun onBitmapFailed(
+                                    e: java.lang.Exception,
+                                    errorDrawable: Drawable
+                                ) {
+                                }
+
+                                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+                            }
+
+                            mergeLayoutPostBinding.imageCover.tag = target
+                            Picasso.get().load(imagePath).into(target)
+                        } catch (e: Exception) {
+                            mergeLayoutPostBinding.imageCover.visibility = View.GONE
+                        }
+
+                        // display date
+                        mergeLayoutPostBinding.date.text =
+                            convertTimeStamp(p.createdTimestamp, Locale.getDefault().language)
+
+                        // display topic
+                        val rawTopic = p.category
+                        val categoryViewModel: CategoriesViewModel =
+                            ViewModelProvider(this).get(CategoriesViewModel::class.java)
+                        categoryViewModel.getCategoryTitle(rawTopic)
+                        categoryViewModel.categoryTitle.observe(this) { title ->
+                            mergeLayoutPostBinding.topicTv.text = title
+                        }
+
+                        // display journal text
+                        mergeLayoutPostBinding.textViewJournal.text = p.journal
+
+
+                        // display label
+                        var displayLabel = ""
+                        for (label in p.labels) {
+                            displayLabel += "· "
+                            displayLabel += "$label "
+                            val labelTv = TextView(this)
+                            labelTv.layoutParams = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT
                             )
-                            params.gravity = Gravity.CENTER
-                            val imageHorizontalMargin: Int = getImageHorizontalMargin(
-                                imageWidth.toFloat() / imageHeight,
-                                this@PostDetailActivity
-                            ) // in px
-                            val imageVerticalMargin = dpConvertPx(38, this@PostDetailActivity)
-                            params.setMargins(
-                                imageHorizontalMargin,
-                                imageVerticalMargin,
-                                imageHorizontalMargin,
-                                imageVerticalMargin
-                            )
-                            mergeLayoutPostBinding.imageCover.layoutParams = params
-
+                            labelTv.typeface =
+                                ResourcesCompat.getFont(this, R.font.sf_pro_text_semibold)
+                            labelTv.setTextColor(ContextCompat.getColor(this, R.color.colorText))
+                            labelTv.letterSpacing = 0.01F
+                            labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
+                            labelTv.text = displayLabel
+                            mergeLayoutPostBinding.labelGroup.addView(labelTv)
                         }
-
-                        override fun onBitmapFailed(
-                            e: java.lang.Exception,
-                            errorDrawable: Drawable
-                        ) {
-                        }
-
-                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+                        // if author doesn't allow commenting, will disappear the comment block
+                        if (!p.comment) binding.commentLayout.visibility = View.GONE
                     }
-
-                    mergeLayoutPostBinding.imageCover.tag = target
-                    Picasso.get().load(imagePath).into(target)
-                } catch (e: Exception) {
-                    mergeLayoutPostBinding.imageCover.visibility = View.GONE
-                }
-
-                // display date
-                mergeLayoutPostBinding.date.text =
-                    convertTimeStamp(p.createdTimestamp, Locale.getDefault().language)
-
-                // display topic
-                val rawTopic = p.category
-                val categoryViewModel: CategoriesViewModel =
-                    ViewModelProvider(this).get(CategoriesViewModel::class.java)
-                categoryViewModel.getCategoryTitle(rawTopic)
-                categoryViewModel.categoryTitle.observe(this) { title ->
-                    mergeLayoutPostBinding.topicTv.text = title
-                }
-
-                // display journal text
-                mergeLayoutPostBinding.textViewJournal.text = p.journal
-
-
-                // display label
-                var displayLabel = ""
-                for (label in p.labels) {
-                    displayLabel += "· "
-                    displayLabel += "$label "
-                    val labelTv = TextView(this)
-                    labelTv.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    labelTv.typeface = ResourcesCompat.getFont(this, R.font.sf_pro_text_semibold)
-                    labelTv.setTextColor(ContextCompat.getColor(this, R.color.colorText))
-                    labelTv.letterSpacing = 0.01F
-                    labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
-                    labelTv.text = displayLabel
-                    mergeLayoutPostBinding.labelGroup.addView(labelTv)
-                }
-                // if author doesn't allow commenting, will disappear the comment block
-                if (!p.comment) binding.commentLayout.visibility = View.GONE
+                })
             }
-        })
-    }
 
 
-    private fun postComment() {
-        //get data from comment edit text
-        val content = binding.commentEt.text.toString().trim { it <= ' ' }
-        // validate
-        if (TextUtils.isEmpty(content)) {
-            // no value is entered
-            Toast.makeText(this, "Comment is empty", Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (parentCid == null) {
-            // normal comment
-            commentViewModel.uploadComment(content, pid)
-        } else {
-            // sub comment
-            commentViewModel.uploadSubComment(content, pid, parentCid!!)
-            // clear parent cid
-            parentCid = null
-        }
-        commentViewModel.loadComments(mComments, pid)
-    }
-
-
-    private fun isSaved(pid: String, saveButton: MenuItem) {
-        mFirestore.collection("users").document(mAuth.uid!!)
-            .collection("saved")
-            .document(pid)
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e)
-                    return@addSnapshotListener
+                    private fun postComment() {
+                //get data from comment edit text
+                val content = binding.commentEt.text.toString().trim { it <= ' ' }
+                // validate
+                if (TextUtils.isEmpty(content)) {
+                    // no value is entered
+                    Toast.makeText(this, "Comment is empty", Toast.LENGTH_SHORT).show()
+                    return
                 }
-
-                if (snapshot != null && snapshot.exists()) {
-                    Log.d(TAG, "Current data: ${snapshot.data}")
-                    saveButton.icon =
-                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_bookmark_24)
-                    hashMap["saveButton"] = "saved"
+                if (parentCid == null) {
+                    // normal comment
+                    commentViewModel.uploadComment(content, pid)
                 } else {
-                    if (snapshot != null) {
-                        saveButton.icon = ContextCompat.getDrawable(
-                            this,
-                            R.drawable.ic_baseline_bookmark_border_24
-                        )
-                        hashMap["saveButton"] = "save"
-                    }
+                    // sub comment
+                    commentViewModel.uploadSubComment(content, pid, parentCid!!)
+                    // clear parent cid
+                    parentCid = null
                 }
+                commentViewModel.loadComments(mComments, pid)
             }
+
+
+                    private fun isSaved(pid: String, saveButton: MenuItem) {
+                mFirestore.collection("users").document(mAuth.uid!!)
+                    .collection("saved")
+                    .document(pid)
+                    .addSnapshotListener { snapshot, e ->
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e)
+                            return@addSnapshotListener
+                        }
+
+                        if (snapshot != null && snapshot.exists()) {
+                            Log.d(TAG, "Current data: ${snapshot.data}")
+                            saveButton.icon =
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_bookmark_24)
+                            hashMap["saveButton"] = "saved"
+                        } else {
+                            if (snapshot != null) {
+                                saveButton.icon = ContextCompat.getDrawable(
+                                    this,
+                                    R.drawable.ic_baseline_bookmark_border_24
+                                )
+                                hashMap["saveButton"] = "save"
+                            }
+                        }
+                    }
+            }
+
+                    private fun likeComment(comment: Comment) {
+                commentViewModel.processCommentLike(comment, pid)
+                commentViewModel.loadComments(mComments, pid, true)
+            }
+
+                    private fun likeSubComment(subComment: SubComment) {
+                commentViewModel.processSubCommentLike(subComment, pid)
+                commentViewModel.loadComments(mComments, pid, true)
+            }
+
+                    private fun focusEdittextToSubComment(cid: String, username: String) {
+                parentCid = cid
+                parentCommenter = username
+                val editText = binding.commentEt
+
+                // add prefix
+                val prefix = "@$username "
+                val prefixToSpan: Spannable = SpannableString(prefix)
+                prefixToSpan.setSpan(
+                    ForegroundColorSpan(resources.getColor(R.color.labelled)),
+                    0,
+                    prefix.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                editText.setText(prefixToSpan, TextView.BufferType.EDITABLE)
+
+                // set focus and open the soft keyboard
+                editText.requestFocus()
+                val imm: InputMethodManager? =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                imm?.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+
+                // move the cursor to the end
+                editText.setSelection(editText.length())
+            }
+
+
+                    companion object {
+                private const val TAG = "PostDetailedActivity"
+            }
+
     }
-
-    private fun likeComment(comment: Comment) {
-        commentViewModel.processCommentLike(comment, pid)
-        commentViewModel.loadComments(mComments, pid, true)
-    }
-
-    private fun likeSubComment(subComment: SubComment) {
-        commentViewModel.processSubCommentLike(subComment, pid)
-        commentViewModel.loadComments(mComments, pid, true)
-    }
-
-    private fun focusEdittextToSubComment(cid: String, username: String) {
-        parentCid = cid
-        parentCommenter = username
-        val editText = binding.commentEt
-
-        // add prefix
-        val prefix = "@$username "
-        val prefixToSpan: Spannable = SpannableString(prefix)
-        prefixToSpan.setSpan(
-            ForegroundColorSpan(resources.getColor(R.color.labelled)),
-            0,
-            prefix.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        editText.setText(prefixToSpan, TextView.BufferType.EDITABLE)
-
-        // set focus and open the soft keyboard
-        editText.requestFocus()
-        val imm: InputMethodManager? =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm?.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-
-        // move the cursor to the end
-        editText.setSelection(editText.length())
-    }
-
-
-    companion object {
-        private const val TAG = "PostDetailedActivity"
-    }
-
-}

@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -18,7 +17,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class LoungeAllViewModel : ViewModel() {
-    val posts: MutableLiveData<List<Post>> = MutableLiveData()
+    private val posts: MutableLiveData<List<Post>> = MutableLiveData()
     private val postList: MutableList<Post>
     private val mAuth = FirebaseAuth.getInstance()
     private val mFirestore: FirebaseFirestore

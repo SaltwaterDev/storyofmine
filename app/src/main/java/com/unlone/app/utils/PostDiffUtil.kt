@@ -39,9 +39,6 @@ class PostDiffUtil(
             oldList[oldItemPosition].author_uid != newList[newItemPosition].author_uid -> {
                 false
             }
-            oldList[oldItemPosition].username != newList[newItemPosition].username -> {
-                false
-            }
             oldList[oldItemPosition].labels != newList[newItemPosition].labels -> {
                 false
             }

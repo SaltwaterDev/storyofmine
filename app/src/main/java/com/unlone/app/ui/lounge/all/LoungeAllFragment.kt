@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ import com.unlone.app.ui.lounge.common.PostsAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class LoungeAllFragment : Fragment() {
-    private var viewModel: LoungeAllViewModel? = null
+    private var allViewModel: LoungeAllViewModel? = null
     private var postsAdapter: PostsAdapter? = null
     private val mPosts = 100
     private var isLoading = false
@@ -57,47 +58,29 @@ class LoungeAllFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         postsAdapter = PostsAdapter(requireActivity())
         recyclerView.adapter = postsAdapter
-        viewModel = ViewModelProvider(this).get(LoungeAllViewModel::class.java)
-        viewModel!!.loadPosts(mPosts, false)
-        viewModel!!.posts.observe(
+        allViewModel = ViewModelProvider(this).get(LoungeAllViewModel::class.java)
+        allViewModel!!.loadPosts(mPosts, false)
+        allViewModel!!.getPosts().observe(
             viewLifecycleOwner,
-            { postList: List<Post> ->
-                postsAdapter!!.setPostList(postList) })
+            { postList ->
+                //postsAdapter!!.submitList(postList)
+                postsAdapter!!.setPostList(postList)
+            })
 
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
-            viewModel!!.loadPosts(mPosts, false)
+            allViewModel!!.loadPosts(mPosts, false)
             swipeRefreshLayout.isRefreshing = false
         }
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                //super.onScrolled(recyclerView, dx, dy);
-                /*
-                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
-                val totalItem = linearLayoutManager!!.itemCount
-                val lastVisible = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                if (totalItem < lastVisible + 3) {
-                    if (!isLoading) {
-                        isLoading = true
-                        // load more posts
-                        viewModel!!.loadPosts(mPosts, true)
-                        viewModel!!.posts.observe(
-                            viewLifecycleOwner,
-                            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
-                        isLoading = false
-                    }
-                }
-                 */
-            }
-        })
+
 
 
         // init search bar
         binding.inputSearch.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                viewModel!!.searchPost(s.toString())
+                allViewModel!!.searchPost(s.toString())
             }
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {}

@@ -29,17 +29,18 @@ import com.unlone.app.utils.CommentDiffUtil
 import com.unlone.app.utils.SubCommentDiffUtil
 
 
-class SubCommentsAdapter(private val pid: String,
-                         private val onLikeCallback: (SubComment) -> Unit,
-                         private val onFocusEdittextCallback: (String, String) -> Unit
-    ) :
+class SubCommentsAdapter(
+    private val context:Context,
+    private val pid: String,
+    private val onLikeCallback: (SubComment) -> Unit,
+    private val onFocusEdittextCallback: (String, String) -> Unit
+) :
     RecyclerView.Adapter<SubCommentsAdapter.ViewHolder>() {
 
     private var subCommentList = emptyList<SubComment>()
     private lateinit var recyclerView: RecyclerView
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var context: Context? = null
 
     class ViewHolder(val binding: RecyclerviewSubcommentBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -49,17 +50,18 @@ class SubCommentsAdapter(private val pid: String,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = RecyclerviewSubcommentBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
-        context = parent.context
         return ViewHolder(binding)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)DataViewHolder
+    // Replace the contents of a view (invoked by the layout manager) DataViewHolder
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("TAG", "DISPLAYING SUB COMMENTS")
+        Log.d("TAG", "DISPLAYING SUB COMMENTS: $subCommentList")
         holder.binding.username.text = subCommentList[position].username
         holder.binding.date.text =
             subCommentList[position].timestamp?.let { convertTimeStamp(it, "COMMENT") }
         holder.binding.comment.text = subCommentList[position].content
+
+        // init "like" button
         holder.binding.likeButton.setOnClickListener {
             onLikeCallback(subCommentList[position])
         }
@@ -67,12 +69,17 @@ class SubCommentsAdapter(private val pid: String,
 
         // init "more" button
         holder.binding.moreButton.setOnClickListener { v: View ->
-            showMenu(v, R.menu.comment_popup_menu, subCommentList[position], holder.binding.cardView)
+            showMenu(
+                v,
+                R.menu.comment_popup_menu,
+                subCommentList[position],
+                holder.binding.cardView
+            )
         }
         holder.binding.commentButton.setOnClickListener {
             val repliedName = subCommentList[position].username
             val repliedCid = subCommentList[position].parent_cid
-            if (repliedName != null && repliedCid!= null) {
+            if (repliedName != null && repliedCid != null) {
                 onFocusEdittextCallback(repliedCid, repliedName)
             }
         }
@@ -88,8 +95,8 @@ class SubCommentsAdapter(private val pid: String,
 
 
     fun setSubCommentList(newSubCommentList: List<SubComment>) {
-        Log.d("TAG", "setPostList oldPostList: ${this.subCommentList}")
-        Log.d("TAG", "setPostList newPostList: $newSubCommentList")
+        Log.d("TAG", "setSubCommentList oldSubCommentList: ${this.subCommentList}")
+        Log.d("TAG", "setSubCommentList newSubCommentList: $newSubCommentList")
         val diffUtil = SubCommentDiffUtil(this.subCommentList, newSubCommentList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         this.subCommentList = newSubCommentList
@@ -125,15 +132,20 @@ class SubCommentsAdapter(private val pid: String,
             }
     }
 
-    private fun showMenu(v: View, @MenuRes menuRes: Int, subComment: SubComment, commentView: MaterialCardView) {
-        val popup = PopupMenu(context!!, v)
+    private fun showMenu(
+        v: View,
+        @MenuRes menuRes: Int,
+        subComment: SubComment,
+        commentView: MaterialCardView
+    ) {
+        val popup = PopupMenu(context, v)
         popup.menuInflater.inflate(menuRes, popup.menu)
 
         popup.setOnMenuItemClickListener { menuItem: MenuItem ->
             // Respond to menu item click.
             when (menuItem.itemId) {
                 R.id.action_comment_report -> {
-                    context?.let { it ->
+                    context.let { it ->
                         val reportMap = mapOf(
                             it.getString(R.string.hate_speech) to "Hate Speech",
                             it.getString(R.string.span_or_irrelevant) to "Span or Irrelevant",
@@ -165,10 +177,19 @@ class SubCommentsAdapter(private val pid: String,
                                     mFirestore.collection("reports")
                                         .add(report)
                                         .addOnSuccessListener {
-                                            Log.d("TAG", "Report DocumentSnapshot successfully written!")
+                                            Log.d(
+                                                "TAG",
+                                                "Report DocumentSnapshot successfully written!"
+                                            )
                                             showConfirmation(commentView)
                                         }
-                                        .addOnFailureListener { e -> Log.w("TAG", "Error saving post\n", e) }
+                                        .addOnFailureListener { e ->
+                                            Log.w(
+                                                "TAG",
+                                                "Error saving post\n",
+                                                e
+                                            )
+                                        }
                                 }
 
                             }// Single-choice items (initialized with checked item)
@@ -194,7 +215,7 @@ class SubCommentsAdapter(private val pid: String,
     }
 
     private fun showConfirmation(commentView: MaterialCardView) {
-        context?.let{
+        context.let {
             MaterialAlertDialogBuilder(it)
                 .setTitle(it.getString(R.string.thank_you))
                 .setMessage(it.getString(R.string.report_text))

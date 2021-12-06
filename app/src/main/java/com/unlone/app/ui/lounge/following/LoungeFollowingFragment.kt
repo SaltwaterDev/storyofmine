@@ -65,35 +65,15 @@ class LoungeFollowingFragment : Fragment() {
         homeViewModel!!.posts.observe(
             viewLifecycleOwner,
             { postList: List<Post> ->
-                postsAdapter!!.setPostList(postList) })
+                //postsAdapter!!.submitList(postList)
+                postsAdapter!!.setPostList(postList)
+            })
 
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
             homeViewModel!!.loadPosts(mPosts, false)
             swipeRefreshLayout.isRefreshing = false
         }
-
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                //super.onScrolled(recyclerView, dx, dy);
-                /*
-                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
-                val totalItem = linearLayoutManager!!.itemCount
-                val lastVisible = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                if (totalItem < lastVisible + 3) {
-                    if (!isLoading) {
-                        isLoading = true
-                        // load more posts
-                        homeViewModel!!.loadPosts(mPosts, true)
-                        homeViewModel!!.posts.observe(
-                            viewLifecycleOwner,
-                            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
-                        isLoading = false
-                    }
-                }
-                 */
-            }
-        })
 
 
         // init search bar

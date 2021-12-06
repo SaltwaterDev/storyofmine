@@ -217,34 +217,19 @@ class ConfigFragment : Fragment() {
 
 
     private fun uploadText(post: Post) {
-        val docRef = mFirestore.collection("users").document(post.author_uid)
-        docRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val document = task.result
-                if (document.exists()) {
-                    Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.data)
-                    val user = document.toObject<User>()
-                    post.username = user!!.username.toString()
-                    val stamp = System.currentTimeMillis()
-                    post.createdTimestamp = stamp.toString()
-                    post.createdDate = convertTimeStamp(stamp.toString(), Locale.getDefault().language)
+        val stamp = System.currentTimeMillis()
+        post.createdTimestamp = stamp.toString()
+        post.createdDate = convertTimeStamp(stamp.toString(), Locale.getDefault().language)
 
-                    try {
-                        saveNewPost(post)
-                    } catch (e: ParseException) {
-                        e.printStackTrace()
-                    }
-                    val returnIntent = Intent()
-                    returnIntent.putExtra("result", 1)
-                    activity?.setResult(AppCompatActivity.RESULT_OK, returnIntent)
-                    activity?.finish()
-                } else {
-                    Log.d(ContentValues.TAG, "No such document")
-                }
-            } else {
-                Log.d(ContentValues.TAG, "get failed with ", task.exception)
-            }
+        try {
+            saveNewPost(post)
+        } catch (e: ParseException) {
+            e.printStackTrace()
         }
+        val returnIntent = Intent()
+        returnIntent.putExtra("result", 1)
+        activity?.setResult(AppCompatActivity.RESULT_OK, returnIntent)
+        activity?.finish()
     }
 
     companion object

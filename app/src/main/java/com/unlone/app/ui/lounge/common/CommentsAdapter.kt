@@ -8,12 +8,14 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.google.android.material.card.MaterialCardView
@@ -34,103 +36,110 @@ import com.unlone.app.utils.CommentDiffUtil
 import com.unlone.app.utils.PostDiffUtil
 
 
-class CommentsAdapter(
+open class CommentsAdapter(
     private val pid: String,
     private val onLikeCallback: (Comment) -> Unit,
     private val onSubCommentLikeCallback: (SubComment) -> Unit,
     private val onFocusEdittextCallback: (String, String) -> Unit
 ) :
-    RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
+    ListAdapter<Comment, CommentsAdapter.ViewHolder>(CommentDiffCallback) {
 
     private var commentList = emptyList<Comment>()
-    private lateinit var recyclerView: RecyclerView
     var selfPost: Boolean = false
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var context: Context? = null
-    private val subCommentsAdapter by lazy {
-        SubCommentsAdapter(
-            pid,
-            onSubCommentLikeCallback,
-            onFocusEdittextCallback
-        )
-    }
+
     private val viewPool = RecycledViewPool()
 
-    inner class ViewHolder(val binding: RecyclerviewCommentBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        private var username: TextView = itemView.findViewById(R.id.username)
+        private var date: TextView = itemView.findViewById(R.id.date)
+        private var commentTv: TextView = itemView.findViewById(R.id.comment)
+        private var likeButton: ImageView = itemView.findViewById(R.id.likeButton)
+        private var moreButton: ImageView = itemView.findViewById(R.id.moreButton)
+        private var commentButton: ImageView = itemView.findViewById(R.id.commentButton)
+        private var cardView: MaterialCardView = itemView.findViewById(R.id.cardView)
+        private var subCommentRv: RecyclerView = itemView.findViewById(R.id.subCommentRv)
 
+        fun bind(comment: Comment){
+            // set comment content
+            username.text = comment.username
+            date.text = comment.timestamp?.let { convertTimeStamp(it, "COMMENT") }
+            commentTv.text = comment.content
+
+            // init "like" button
+            likeButton.setOnClickListener {
+                onLikeCallback(comment)
+            }
+            isLiked(likeButton, comment)
+
+            // init "more" button
+            moreButton.setOnClickListener { v: View ->
+                showMenu(v, R.menu.comment_popup_menu, comment, cardView)
+            }
+
+            // set sub comments recycler view
+            val subCommentAdapter = SubCommentsAdapter(
+                subCommentRv.context,
+                pid,
+                onSubCommentLikeCallback,
+                onFocusEdittextCallback
+            )
+            subCommentRv.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = subCommentAdapter
+                setRecycledViewPool(viewPool)
+                setHasFixedSize(true)
+            }
+            comment.subComments?.let {
+                subCommentAdapter.setSubCommentList(it)
+            }
+
+
+            // init "comment" button
+            if (comment.subComments?.size ?: 0 > 0) {
+                commentButton.setImageResource(R.drawable.ic_chat_filled)
+                commentButton.tag = "to read"
+            } else {
+                commentButton.tag = "to write"
+            }
+            commentButton.setOnClickListener {
+                val repliedName = comment.username
+                val repliedCid = comment.cid
+                // if the comment icon is outlined
+                if (commentButton.tag == "to write") {
+                    if (repliedName != null && repliedCid != null) {
+                        onFocusEdittextCallback(repliedCid, repliedName)
+                    }
+                } else if (commentButton.tag == "to read") {
+                    Log.d("TAG", "subComments recyclerview: ${comment.subComments}")
+                    subCommentRv.visibility = View.VISIBLE
+                    commentButton.setImageResource(R.drawable.ic_chat)
+                    commentButton.tag = "to write"
+                } else {
+                    Toast.makeText(
+                        context, "Unexpected error: no tag for commentButton ",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RecyclerviewCommentBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false)
         context = parent.context
-        return ViewHolder(binding)
+        return ViewHolder(LayoutInflater.from(parent.context)
+            .inflate(R.layout.recyclerview_comment, parent, false))
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("TAG", "commentList:　$commentList")
-        // set comment content
-        holder.binding.username.text = commentList[position].username
-        holder.binding.date.text =
-            commentList[position].timestamp?.let { convertTimeStamp(it, "COMMENT") }
-        holder.binding.comment.text = commentList[position].content
-
-        // init "like" button
-        holder.binding.likeButton.setOnClickListener {
-            onLikeCallback(commentList[position])
-        }
-        isLiked(holder.binding.likeButton, commentList[position])
-
-        // init "more" button
-        holder.binding.moreButton.setOnClickListener { v: View ->
-            showMenu(v, R.menu.comment_popup_menu, commentList[position], holder.binding.cardView)
-        }
-
-        // sub comments recycler view
-        commentList[position].subComments?.let {
-            subCommentsAdapter.setSubCommentList(it)
-            subCommentsAdapter.notifyDataSetChanged()
-        }
-        holder.binding.subCommentRv.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = subCommentsAdapter
-            setRecycledViewPool(viewPool)
-        }
-
-
-        // init "comment" button
-        if (commentList[position].subComments?.size ?: 0 > 0) {
-            holder.binding.commentButton.setImageResource(R.drawable.ic_chat_filled)
-            holder.binding.commentButton.tag = "to read"
-        } else {
-            holder.binding.commentButton.tag = "to write"
-        }
-        holder.binding.commentButton.setOnClickListener {
-            val repliedName = commentList[position].username
-            val repliedCid = commentList[position].cid
-            // if the comment icon is outlined
-            if (holder.binding.commentButton.tag == "to write") {
-                if (repliedName != null && repliedCid != null) {
-                    onFocusEdittextCallback(repliedCid, repliedName)
-                }
-            } else if (holder.binding.commentButton.tag == "to read") {
-                Log.d("TAG", "subComments recyclerview: ${commentList[position].subComments}")
-                holder.binding.subCommentRv.visibility = View.VISIBLE
-                holder.binding.commentButton.setImageResource(R.drawable.ic_chat)
-                holder.binding.commentButton.tag = "to write"
-            } else {
-                Toast.makeText(
-                    context, "Unexpected error: no tag for commentButton ",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-        }
+        holder.bind(getItem(position))
     }
 
+    /*
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = commentList.size
 
@@ -138,15 +147,18 @@ class CommentsAdapter(
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
     }
+     */
 
+    /*
     fun setCommentList(newCommentList: List<Comment>) {
-        Log.d("TAG", "setPostList oldPostList: ${this.commentList}")
-        Log.d("TAG", "setPostList newPostList: $commentList")
+        Log.d("TAG", "setCommentList oldCommentList: ${this.commentList}")
+        Log.d("TAG", "setCommentList newCommentList: $newCommentList")
         val diffUtil = CommentDiffUtil(this.commentList, newCommentList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         this.commentList = newCommentList
         diffResults.dispatchUpdatesTo(this)
     }
+     */
 
     private fun isLiked(likeButton: ImageView, comment: Comment) {
         mFirestore.collection("posts").document(pid)
@@ -268,6 +280,37 @@ class CommentsAdapter(
                     commentView.visibility = View.GONE
                 }
                 .show()
+        }
+    }
+
+}
+
+object CommentDiffCallback: DiffUtil.ItemCallback<Comment>() {
+    override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
+        return oldItem == newItem
+    }
+
+    override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean {
+        return when {
+            oldItem.cid != newItem.cid -> {
+                false
+            }
+            oldItem.uid != newItem.uid-> {
+                false
+            }
+            oldItem.content != newItem.content -> {
+                false
+            }
+            oldItem.username != newItem.username -> {
+                false
+            }
+            oldItem.score != newItem.score -> {
+                false
+            }
+            oldItem.timestamp != newItem.timestamp -> {
+                false
+            }
+            else -> true
         }
     }
 }

@@ -25,11 +25,11 @@ import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
 
 class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
-    private var postList = emptyList<Post>()
+      var ListOfPosts = emptyList<Post>()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var card: CardView = itemView.findViewById(R.id.card_view)
-        var title: TextView = itemView.findViewById(R.id.textView_title)
+        var card: CardView = itemView.findViewById(R.id.cardView)
+        var title: TextView = itemView.findViewById(R.id.textViewTitle)
         var journal: TextView = itemView.findViewById(R.id.textView_journal)
         val imageCover: ImageView = itemView.findViewById(R.id.imageCover)
     }
@@ -41,7 +41,10 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (title, image_path, journal, _, _, _, _, _, pid) = postList[position]
+        val title = ListOfPosts[position].title
+        val imagePath = ListOfPosts[position].imagePath
+        val journal = ListOfPosts[position].journal
+        val pid = ListOfPosts[position].pid
 
         // set title
         holder.title.text = title
@@ -50,8 +53,8 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
         holder.journal.text = journal
 
         // control what to display on post view
-        if (image_path.isNotEmpty()) {
-            Log.d("TAG", "image path: $image_path")
+        if (imagePath.isNotEmpty()) {
+            Log.d("TAG", "image path: $imagePath")
 
 
 
@@ -95,7 +98,7 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
             }
             // set image
             holder.imageCover.tag = target
-            Picasso.get().load(image_path).into(target)
+            Picasso.get().load(imagePath).into(target)
         } else {
             holder.journal.visibility = View.VISIBLE
             holder.imageCover.visibility = View.GONE
@@ -122,16 +125,16 @@ class PostsAdapter(var context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     }
 
     fun setPostList(postList: List<Post>) {
-        Log.d("TAG", "setPostList oldPostList: ${this.postList}")
+        Log.d("TAG", "setPostList oldPostList: ${this.ListOfPosts}")
         Log.d("TAG", "setPostList newPostList: $postList")
-        val diffUtil = PostDiffUtil(this.postList, postList)
+        val diffUtil = PostDiffUtil(this.ListOfPosts, postList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
-        this.postList = postList
+        this.ListOfPosts = postList
         diffResults.dispatchUpdatesTo(this)
     }
 
     override fun getItemCount(): Int {
-        return postList.size
+        return ListOfPosts.size
     }
 
     companion object {
