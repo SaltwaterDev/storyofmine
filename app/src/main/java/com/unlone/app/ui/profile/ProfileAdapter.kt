@@ -59,10 +59,10 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
         MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(holder.itemView.context.getString(R.string.delete_alert))
             .setMessage(holder.itemView.context.getString(R.string.logout_alert))
-            .setNegativeButton(holder.itemView.context.getString(R.string.cancel)) { dialog, which ->
+            .setNegativeButton(holder.itemView.context.getString(R.string.cancel)) { _, _ ->
                 // Respond to negative button press
             }
-            .setPositiveButton(holder.itemView.context.getString(R.string.logout)) { dialog, which ->
+            .setPositiveButton(holder.itemView.context.getString(R.string.logout)) { _, _ ->
                 val user = FirebaseAuth.getInstance()
                 user.signOut()
                 val intent = Intent(context, FirstAccessActivity::class.java)

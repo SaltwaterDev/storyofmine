@@ -22,10 +22,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 import com.unlone.app.R
-import com.unlone.app.databinding.RecyclerviewSubcommentBinding
-import com.unlone.app.instance.Comment
+import com.unlone.app.databinding.RecyclerviewSubCommentBinding
 import com.unlone.app.instance.SubComment
-import com.unlone.app.utils.CommentDiffUtil
 import com.unlone.app.utils.SubCommentDiffUtil
 
 
@@ -42,13 +40,13 @@ class SubCommentsAdapter(
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    class ViewHolder(val binding: RecyclerviewSubcommentBinding) :
+    class ViewHolder(val binding: RecyclerviewSubCommentBinding) :
         RecyclerView.ViewHolder(binding.root)
 
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RecyclerviewSubcommentBinding
+        val binding = RecyclerviewSubCommentBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }

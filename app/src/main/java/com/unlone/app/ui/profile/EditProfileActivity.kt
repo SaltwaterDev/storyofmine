@@ -39,8 +39,8 @@ class EditProfileActivity : AppCompatActivity() {
         val save = binding.saveButton
         val username = binding.username
         val bio = binding.bio
-        val likes = binding.likes
-        val dislikes = binding.dislikes
+        // val likes = binding.likes
+        // val dislikes = binding.dislikes
 
         cancel.setOnClickListener{ finish() }
         save.setOnClickListener{

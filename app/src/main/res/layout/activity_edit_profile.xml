@@ -113,6 +113,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/likes"
+            android:visibility="gone"
             android:textSize="21sp"
             android:textColor="@color/colorText"/>
 
@@ -120,6 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/likes"
+            android:visibility="gone"
             app:met_floatingLabel="normal"
             android:layout_marginTop="7dp"
             android:hint="@string/others_won_t_see_it"
@@ -135,6 +137,7 @@
             android:layout_marginEnd="16dp"
             android:text="@string/dislikes"
             android:textSize="21sp"
+            android:visibility="gone"
             android:textColor="@color/colorText"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -144,6 +147,7 @@
             app:met_floatingLabel="normal"
             android:hint="@string/others_won_t_see_it"
             android:layout_marginTop="7dp"
+            android:visibility="gone"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 

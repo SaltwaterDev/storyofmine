@@ -11,12 +11,22 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.unlone.app.instance.Comment
 import com.unlone.app.instance.Post
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
+
+@BindingAdapter("android:onClick")
+fun setOnClick(view: View, item: Post) {
+    view.setOnClickListener{
+        val intent = Intent(view.context, PostDetailActivity::class.java)
+        intent.putExtra("postId", item.pid)
+        view.context.startActivity(intent)
+    }
+}
 
 @BindingAdapter("title")
 fun TextView.setTitle(item: Post) {
