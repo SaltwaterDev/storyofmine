@@ -45,17 +45,19 @@ class MyStoriesFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        postsAdapter = PostsAdapter(requireActivity())
+        postsAdapter = PostsAdapter()
         recyclerView.adapter = postsAdapter
         viewModel = ViewModelProvider(this).get(MyStoriesViewModel::class.java)
         viewModel!!.loadPosts(mPosts, false)
         viewModel!!.posts.observe(
             viewLifecycleOwner,
-            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+            { postList: List<Post> ->
+                postsAdapter!!.submitList(postList) })
 
 
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            /*
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 //super.onScrolled(recyclerView, dx, dy);
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
@@ -73,6 +75,8 @@ class MyStoriesFragment : Fragment() {
                     }
                 }
             }
+
+             */
         })
 
 

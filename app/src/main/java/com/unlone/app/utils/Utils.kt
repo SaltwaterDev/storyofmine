@@ -5,6 +5,8 @@ package com.unlone.app.utils
 
 import android.content.Context
 import android.util.DisplayMetrics
+import android.view.View
+import android.widget.TextView
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,4 +48,16 @@ fun getImageHorizontalMargin(ratio: Float, context: Context): Int {
     val slope = deviceWidth / 6 - deviceWidth / 4 * 45 / 44
     val margin = slope * (ratio - 4 / 5f) + deviceWidth / 4
     return margin.toInt()
+}
+
+fun getHeight(context: Context, textView: TextView): Int {
+    val displayMetrics = context.resources.displayMetrics
+    // val deviceHeight = displayMetrics.heightPixels
+    val deviceWidth = displayMetrics.widthPixels
+    val widthMeasureSpec =
+        View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST)
+    val heightMeasureSpec =
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    textView.measure(widthMeasureSpec, heightMeasureSpec)
+    return textView.measuredHeight
 }

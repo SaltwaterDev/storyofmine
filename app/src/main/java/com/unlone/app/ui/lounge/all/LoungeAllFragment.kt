@@ -56,15 +56,14 @@ class LoungeAllFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        postsAdapter = PostsAdapter(requireActivity())
+        postsAdapter = PostsAdapter()
         recyclerView.adapter = postsAdapter
         allViewModel = ViewModelProvider(this).get(LoungeAllViewModel::class.java)
         allViewModel!!.loadPosts(mPosts, false)
         allViewModel!!.getPosts().observe(
             viewLifecycleOwner,
             { postList ->
-                //postsAdapter!!.submitList(postList)
-                postsAdapter!!.setPostList(postList)
+                postsAdapter!!.submitList(postList)
             })
 
         swipeRefreshLayout.setOnRefreshListener {

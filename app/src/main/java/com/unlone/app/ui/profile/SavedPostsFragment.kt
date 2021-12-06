@@ -45,12 +45,12 @@ class SavedPostsFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        postsAdapter = PostsAdapter(requireActivity())
+        postsAdapter = PostsAdapter()
         recyclerView.adapter = postsAdapter
         savePostsViewModel = ViewModelProvider(this).get(SavedPostsViewModel::class.java)
         savePostsViewModel!!.posts.observe(
             viewLifecycleOwner,
-            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+            { postList: List<Post> -> postsAdapter!!.submitList(postList) })
         savePostsViewModel!!.loadPosts()
 
 
@@ -67,7 +67,7 @@ class SavedPostsFragment : Fragment() {
                         savePostsViewModel!!.loadPosts()
                         savePostsViewModel!!.posts.observe(
                             viewLifecycleOwner,
-                            { postList: List<Post> -> postsAdapter!!.setPostList(postList) })
+                            { postList: List<Post> -> postsAdapter!!.submitList(postList) })
                         isLoading = false
                     }
                 }

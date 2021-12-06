@@ -105,12 +105,15 @@ class CategoryPostFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        postsAdapter = PostsAdapter(requireActivity())
+        postsAdapter = PostsAdapter()
+        // postsAdapter = PostsAdapter(requireActivity()) todo (may remove)
         recyclerView.adapter = postsAdapter
         categoryViewModel!!.loadPosts(category, mPosts, false)
         categoryViewModel!!.posts.observe(
             viewLifecycleOwner
-        ) { postList: List<Post> -> postsAdapter!!.setPostList(postList) }
+        ) { postList: List<Post> ->
+            postsAdapter!!.submitList(postList) }
+            // postsAdapter!!.setPostList(postList) } todo (may remove)
 
 
         // set refresh layout

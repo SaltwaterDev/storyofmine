@@ -11,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.unlone.app.ui.create.PostActivity
 import com.google.firebase.auth.FirebaseAuth
 import androidx.recyclerview.widget.RecyclerView
@@ -58,15 +59,13 @@ class LoungeFollowingFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        postsAdapter = PostsAdapter(requireActivity())
+        postsAdapter = PostsAdapter()
         recyclerView.adapter = postsAdapter
         homeViewModel = ViewModelProvider(this).get(LoungeFollowingViewModel::class.java)
         homeViewModel!!.loadPosts(mPosts, false)
         homeViewModel!!.posts.observe(
-            viewLifecycleOwner,
-            { postList: List<Post> ->
-                //postsAdapter!!.submitList(postList)
-                postsAdapter!!.setPostList(postList)
+            viewLifecycleOwner, { postList: List<Post> ->
+                postsAdapter!!.submitList(postList)
             })
 
         swipeRefreshLayout.setOnRefreshListener {
