@@ -25,18 +25,19 @@ class SavedPostsViewModel : ViewModel() {
     }
 
     // retrieve the list of saved posts
-    private suspend fun savedPostsReference(): List<DocumentSnapshot> {
+    private suspend fun savedPostsReference(numberPost: Int): List<DocumentSnapshot> {
         return mFirestore.collection("users").document(mAuth.uid!!)
             .collection("saved")
+            .limit(numberPost.toLong())
             .get()
             .await()
             .documents
     }
 
-    fun loadPosts() { // this: CoroutineScope
+    fun loadPosts(numberPost: Int) { // this: CoroutineScope
         val savedPostList: ArrayList<String> = ArrayList()
         viewModelScope.launch (Dispatchers.IO){ // launch a new coroutine and continue
-            val savedPostsReference = async { savedPostsReference() }
+            val savedPostsReference = async { savedPostsReference(numberPost) }
             for (document in savedPostsReference.await()) {
                 savedPostList.add(document.id)
             }

@@ -18,7 +18,7 @@ abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@Lay
     private var _binding : T? = null
     var viewModel : VM? = null
     val postsAdapter: PostsAdapter by lazy {PostsAdapter()}
-    val mPosts = 100
+    open var mPosts = 100
     private var isLoading = false
 
     val binding : T get() = _binding!!
