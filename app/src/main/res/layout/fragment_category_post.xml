@@ -1,106 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.lounge.category.CategoryPostFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/search_bar"
-        android:visibility="gone"
-        app:startIconDrawable="@drawable/ic_search"
-        app:startIconTint="@color/colorSearchIcon"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:shapeAppearanceOverlay="@style/searchBarView">
+    <data>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/inputSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorText"
-            android:imeOptions="actionDone"
-            android:importantForAutofill="no"
-            android:includeFontPadding="false"
-            android:inputType="text"/>
+        <variable
+            name="user"
+            type="com.unlone.app.instance.Post" />
+    </data>
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <LinearLayout
-        android:id="@+id/titleField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/search_bar"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/_15sdp">
-
-        <TextView
-            android:id="@+id/categoryTitleTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/_21ssp"
-            android:textColor="@color/colorText"
-            android:fontFamily="@font/averia_serif_libre_regular"
-            android:layout_marginStart="@dimen/_16sdp"/>
-
-        <TextView
-            android:id="@+id/isFollowingTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/follow"
-            android:layout_gravity="bottom"
-            android:textSize="@dimen/_10ssp"
-            android:textColor="@color/colorText"
-            android:fontFamily="@font/sf_compact_display_medium"
-            android:layout_marginStart="@dimen/_5sdp"/>
-
-
-    </LinearLayout>
-
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_below="@id/titleField">
+        tools:context=".ui.lounge.category.CategoryPostFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleviewPosts"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/search_bar"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:shapeAppearanceOverlay="@style/searchBarView"
+            app:startIconDrawable="@drawable/ic_search"
+            app:startIconTint="@color/colorSearchIcon">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="text"
+                android:textColor="@color/colorText" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <LinearLayout
+            android:id="@+id/titleField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search_bar"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/categoryTitleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:fontFamily="@font/averia_serif_libre_regular"
+                android:textColor="@color/colorText"
+                android:textSize="@dimen/_21ssp" />
+
+            <TextView
+                android:id="@+id/isFollowingTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:fontFamily="@font/sf_compact_display_medium"
+                android:text="@string/follow"
+                android:textColor="@color/colorText"
+                android:textSize="@dimen/_10ssp" />
+
+
+        </LinearLayout>
+
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="0dp"
-            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_below="@id/titleField"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleviewPosts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:elevation="0dp"
+                app:cardElevation="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                tools:listitem="@layout/recyclerview_post" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="21dp"
+            android:layout_marginBottom="21dp"
+            android:contentDescription="@string/write_story"
+            android:src="@drawable/ic_pen_tool"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:cardElevation="1dp"
-            tools:listitem="@layout/recyclerview_post" />
+            app:tint="#545454" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="21dp"
-        android:layout_marginBottom="21dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="#545454"
-        android:src="@drawable/ic_pen_tool"
-        android:contentDescription="@string/write_story" />
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

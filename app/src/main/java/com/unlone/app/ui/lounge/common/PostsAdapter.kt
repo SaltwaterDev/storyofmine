@@ -1,5 +1,6 @@
 package com.unlone.app.ui.lounge.common
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,7 +11,6 @@ import com.unlone.app.databinding.RecyclerviewPostBinding
 
 class PostsAdapter :
     ListAdapter<Post, PostsAdapter.ViewHolder>(PostDiffCallback()) {
-
 
     class ViewHolder private constructor(val binding: RecyclerviewPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -33,12 +33,11 @@ class PostsAdapter :
         return ViewHolder.from(parent)
     }
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
+        Log.d("TAG", "item loaded: $item")
         holder.bind(item)
     }
-
 }
 
 class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
@@ -51,6 +50,4 @@ class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem == newItem
     }
-
-
 }

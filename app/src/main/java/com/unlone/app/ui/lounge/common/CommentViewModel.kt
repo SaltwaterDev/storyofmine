@@ -27,8 +27,7 @@ class CommentViewModel : ViewModel() {
     // private var lastVisible: DocumentSnapshot? = null
     private var lastVisible: Float? = null
     var endOfComments: Boolean = false
-
-
+    
     fun loadComments(numberPost: Long, pid: String, loadMore: Boolean = false) {
 
         if (lastVisible == null || !loadMore) {
@@ -68,10 +67,13 @@ class CommentViewModel : ViewModel() {
                         lastVisible = comment.score
                     }
                 }
-                withContext(Dispatchers.Main){
-                    _comments.value = _commentList
-                    Log.d("TAG", "commentsss: " + _comments.value)
+                // sort the postList
+                val sortedCommentList = _commentList.sortedByDescending { it.score }
+                withContext(Dispatchers.Main) {
+                    Log.d("TAG", "sorted postList: $sortedCommentList")
+                    _comments.value = sortedCommentList
                 }
+
             }
 
         } else {
@@ -120,9 +122,11 @@ class CommentViewModel : ViewModel() {
                         _commentList.add(comment)
                     }
                 }
+                // sort the postList
+                val sortedCommentList = _commentList.sortedByDescending { it.score }
                 withContext(Dispatchers.Main) {
-                    Log.d("TAG", "comments: " + _comments.value)
-                    _comments.value = _commentList
+                    Log.d("TAG", "sorted postList: $sortedCommentList")
+                    _comments.value = sortedCommentList
                 }
             }
         }
@@ -157,7 +161,8 @@ class CommentViewModel : ViewModel() {
                     }
                     subCommentList.add(subComment)
                 }
-                comment.subComments = subCommentList
+                val sortedSubCommentList = subCommentList.sortedByDescending { it.timestamp }
+                comment.subComments = sortedSubCommentList
                 Log.d(TAG, "comment with sub comments added: $comment")
             }
         }
@@ -199,7 +204,6 @@ class CommentViewModel : ViewModel() {
             }
         }
     }
-
 
     fun processSubCommentLike(subComment: SubComment, pid: String) {
         Log.d("TAG", "subComment: $subComment")

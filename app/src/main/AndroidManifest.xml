@@ -39,23 +39,28 @@
         </activity>
         <activity
             android:name="com.unlone.app.ui.lounge.common.PostDetailActivity"
+            android:exported="true"
             android:parentActivityName="com.unlone.app.ui.MainActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:exported="false"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name="com.unlone.app.ui.create.PostActivity"
             android:parentActivityName="com.unlone.app.ui.MainActivity"
-            android:screenOrientation="portrait"
+            android:exported="true"
+            android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unlone.app.ui.MainActivity" />
         </activity>
         <activity android:name="com.unlone.app.ui.access.FirstAccessActivity"
+            android:exported="true"
             android:theme="@style/AppTheme.Dark"
             />
-        <activity android:name="com.unlone.app.ui.profile.EditProfileActivity" />
+        <activity android:name="com.unlone.app.ui.profile.EditProfileActivity"
+            android:exported="false"/>
         <activity
             android:name="com.unlone.app.ui.access.LoadActivity"
             android:exported="true">

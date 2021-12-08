@@ -122,8 +122,7 @@ class LoungeFollowingViewModel : ViewModel() {
                                 postList.add(post)
                             }
                         }
-                        lastVisible =
-                            results.documents[results.size() - 1]
+                        lastVisible = results.documents[results.size() - 1]
                     } else {
                         Log.d(ContentValues.TAG, "End of posts")
                     }

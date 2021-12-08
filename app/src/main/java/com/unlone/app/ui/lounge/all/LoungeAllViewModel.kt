@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class LoungeAllViewModel : ViewModel() {
-    private val posts: MutableLiveData<List<Post>> = MutableLiveData()
+    val posts: MutableLiveData<List<Post>> = MutableLiveData()
     private val postList: MutableList<Post>
     private val mAuth = FirebaseAuth.getInstance()
     private val mFirestore: FirebaseFirestore
@@ -27,7 +27,7 @@ class LoungeAllViewModel : ViewModel() {
     }
 
     init {
-        val uid = mAuth.uid
+        val uid = mAuth.uid     // TODO set up a Room database to store user data
         postList = ArrayList()
         mFirestore = FirebaseFirestore.getInstance()
     }
@@ -58,9 +58,11 @@ class LoungeAllViewModel : ViewModel() {
                         }
                     }
                 }
+                // sort the postList
+                val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
                 withContext(Dispatchers.Main) {
-                    Log.d("TAG", "postList: $postList")
-                    posts.value = postList
+                    Log.d("TAG", "sorted postList: $sortedPostList")
+                    posts.value = sortedPostList
                 }
             } else {
                 val allDocs = mFirestore.collection("posts")
@@ -72,20 +74,24 @@ class LoungeAllViewModel : ViewModel() {
 
                 if (allDocs != null) {
                     if (allDocs.size() > 0) {
-                        lastVisible = allDocs.documents[allDocs.size() - 1]
-                    }
-                    for (document in allDocs) {
-                        Log.d(ContentValues.TAG, document.id + " => " + document.data)
-                        val post = document.toObject<Post>()
-                        post.pid = document.id
-                        if (!postList.contains(post)) {
-                            postList.add(post)
+                        for (document in allDocs) {
+                            Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                            val post = document.toObject(Post::class.java)
+                            post.pid = document.id
+                            if (!postList.contains(post)) {
+                                postList.add(post)
+                            }
                         }
+                        lastVisible = allDocs.documents[allDocs.size() - 1]
+                    }else {
+                        Log.d(ContentValues.TAG, "End of posts")
                     }
                 }
+                // sort the postList
+                val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
                 withContext(Dispatchers.Main) {
-                    Log.d("TAG", "postList: $postList")
-                    posts.value = postList
+                    Log.d("TAG", "sorted postList: $sortedPostList")
+                    posts.value = sortedPostList
                 }
             }
         }
