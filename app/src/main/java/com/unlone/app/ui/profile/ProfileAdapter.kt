@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
-import com.unlone.app.databinding.RecyclerviewProfileCardBinding
+import com.unlone.app.databinding.ListItemProfileCardBinding
 import com.unlone.app.ui.access.FirstAccessActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
@@ -24,11 +24,11 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
         this.dataList = dataList
     }
 
-    class ViewHolder(val binding: RecyclerviewProfileCardBinding)
+    class ViewHolder(val binding: ListItemProfileCardBinding)
         :RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RecyclerviewProfileCardBinding
+        val binding = ListItemProfileCardBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }

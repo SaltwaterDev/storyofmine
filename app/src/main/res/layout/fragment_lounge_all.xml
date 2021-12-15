@@ -61,7 +61,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
-                tools:listitem="@layout/recyclerview_post" />
+                tools:listitem="@layout/list_item_post" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

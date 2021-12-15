@@ -12,5 +12,5 @@ data class Comment (    var uid: String? = null,
                         var timestamp: String? = null,
                         var score: Float = 0f,
                         var cid: String? = null,
-                        var subComments: List<SubComment>? = null
-                        ): Parcelable
+                        var referringPid: String? = null
+): Parcelable

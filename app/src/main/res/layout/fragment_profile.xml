@@ -96,7 +96,7 @@
             android:elevation="1dp"
             android:layout_marginTop="86dp"
             app:cardElevation="1dp"
-            tools:listitem="@layout/recyclerview_profile_card"
+            tools:listitem="@layout/list_item_profile_card"
             android:nestedScrollingEnabled="false"/>
     </LinearLayout>
 

@@ -3,28 +3,23 @@ package com.unlone.app.ui.access
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentLoginBinding
 import com.unlone.app.ui.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -59,7 +54,7 @@ class LoginFragment : Fragment() {
             val strPassword = password.text.toString()
             if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword)) {
                 progressBar.visibility = View.INVISIBLE
-                Toast.makeText(context, "All fields are required!", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 mAuth.signInWithEmailAndPassword(strEmail, strPassword)
@@ -67,23 +62,18 @@ class LoginFragment : Fragment() {
                         if (task.isSuccessful) {
                             val reference = mFireStore.collection("users")
                                 .document(mAuth.currentUser!!.uid)
-                            reference.get().addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
+                            viewLifecycleOwner.lifecycleScope.launch{
+                                try{
+                                    val result = reference.get().await()
+                                    Log.d("TAG", "result = $result")
                                     val intent = Intent(context, MainActivity::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     activity?.startActivity(intent)
                                     activity?.finish()
-                                } else {
-                                    progressBar.visibility = View.INVISIBLE
-                                    startActivity(Intent(context, OnBoardingActivity::class.java))
-                                    activity?.finish()
-
-                                    /* Toast.makeText(
-                                        context,
-                                        "Unknown error",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                     */
+                                }catch (e: FirebaseFirestoreException){
+                                        progressBar.visibility = View.INVISIBLE
+                                        startActivity(Intent(context, OnBoardingActivity::class.java))
+                                        activity?.finish()
                                 }
                             }
                         } else {

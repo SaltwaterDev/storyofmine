@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.instance.Post
-import com.unlone.app.databinding.RecyclerviewPostBinding
+import com.unlone.app.databinding.ListItemPostBinding
 
 class PostsAdapter :
     ListAdapter<Post, PostsAdapter.ViewHolder>(PostDiffCallback()) {
 
-    class ViewHolder private constructor(val binding: RecyclerviewPostBinding) :
+    class ViewHolder private constructor(val binding: ListItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Post) {
@@ -23,7 +23,7 @@ class PostsAdapter :
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RecyclerviewPostBinding.inflate(layoutInflater, parent, false)
+                val binding = ListItemPostBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }

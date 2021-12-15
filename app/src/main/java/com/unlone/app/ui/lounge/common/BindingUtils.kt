@@ -6,21 +6,21 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.databinding.BindingAdapter
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import com.unlone.app.instance.Comment
-import com.unlone.app.instance.Post
+import com.unlone.app.R
+import com.unlone.app.instance.*
+import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
 
 @BindingAdapter("android:onClick")
 fun setOnClick(view: View, item: Post) {
-    view.setOnClickListener{
+    view.setOnClickListener {
         val intent = Intent(view.context, PostDetailActivity::class.java)
         intent.putExtra("postId", item.pid)
         view.context.startActivity(intent)
@@ -39,7 +39,7 @@ fun TextView.setJournal(item: Post) {
 
 
 @BindingAdapter("postImage")
-fun ImageView.setSleepImage(item: Post) {
+fun ImageView.setPostImage(item: Post) {
     // TODO set the image space
     if (item.imagePath.isNotEmpty()) {
         Log.d("TAG", "image path: ${item.imagePath}")
@@ -106,10 +106,9 @@ fun ImageView.setSleepImage(item: Post) {
     } else {
         // journal.visibility = View.VISIBLE todo
         visibility = View.GONE
-        val params: LinearLayout.LayoutParams
         // holder.title.visibility = View.VISIBLE todo
         // journal top margin
-        params = LinearLayout.LayoutParams(
+        val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -145,7 +144,6 @@ fun ImageView.setSleepImage(item: Post) {
 }
 
 
-
 @BindingAdapter("commentUsername")
 fun TextView.setCommentUsername(item: Comment) {
     text = item.username
@@ -153,8 +151,9 @@ fun TextView.setCommentUsername(item: Comment) {
 
 @BindingAdapter("commentDate")
 fun TextView.setDate(item: Comment) {
-    text = item.timestamp
-    // todo: format timestamp
+    text = item.timestamp?.let {
+        convertTimeStamp(it, "COMMENT")
+    }
 }
 
 @BindingAdapter("commentContent")
@@ -168,22 +167,37 @@ fun TextView.setCommentReadMore(item: Comment) {
 }
 
 
-@BindingAdapter("commentReadMoreButton")
-fun ImageView.setReadMoreButton(item: Comment) {
-    // todo (Not implemented)
+@BindingAdapter("android:src")
+fun ImageView.setSrc(isLiked: Boolean) {
+    tag = if (isLiked) {
+        setImageResource(R.drawable.ic_heart_filled)
+        "liked"
+    } else {
+        setImageResource(R.drawable.ic_heart)
+        "like"
+    }
 }
 
-@BindingAdapter("commentAddCommentButton")
-fun ImageView.setAddCommentButton(item: Comment) {
-    // todo (Not implemented)
-}
 
-@BindingAdapter("commentLikeButton")
-fun ImageView.setLikeButton(item: Comment) {
-    // todo (Not implemented)
-}
 
-@BindingAdapter("subComments")
+@BindingAdapter("app:comment")
 fun RecyclerView.setSubComment(item: Comment) {
-    // todo (Not implemented)
+    // set sub comments recycler view
+    /*
+    val subCommentAdapter: SubCommentsAdapter = SubCommentsAdapter()
+    apply {
+        layoutManager = LinearLayoutManager(context)
+        adapter = subCommentAdapter
+        setRecycledViewPool(RecyclerView.RecycledViewPool())
+        setHasFixedSize(true)
+    }
+    item.subComments?.let {
+        subCommentAdapter.submitList(it)
+    }
+     */
 }
+
+
+
+
+
