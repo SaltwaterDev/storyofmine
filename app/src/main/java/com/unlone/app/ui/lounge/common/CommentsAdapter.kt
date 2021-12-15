@@ -27,6 +27,8 @@ open class CommentsAdapter(
 ) :
     ListAdapter<UiComment, CommentsAdapter.ViewHolder>(DiffCallback) {
 
+
+
     class ViewHolder private constructor(
         val binding: ListItemCommentBinding,
         val viewModel: DetailedPostViewModel,
@@ -34,6 +36,12 @@ open class CommentsAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
+        private val subCommentsAdapter by lazy {
+            SubCommentsAdapter(
+                viewModel,
+                lifecycleOwner,
+            )
+        }
         fun bind(item: UiComment) {
             Log.d("TAG", "viewModel: $viewModel")
             binding.uiComment = item
@@ -64,9 +72,12 @@ open class CommentsAdapter(
                     }
                 }else{
                     // open sub comments
-                    // binding.subCommentRv.visibility = View.VISIBLE
+                    (it as ImageView).setImageResource(R.drawable.ic_chat)
+                    binding.subCommentRv.visibility = View.VISIBLE
                 }
             }
+            binding.subCommentRv.adapter = subCommentsAdapter
+            subCommentsAdapter.submitList(item.uiSubComments)
             binding.executePendingBindings()
         }
 

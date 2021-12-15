@@ -145,20 +145,18 @@ fun ImageView.setPostImage(item: Post) {
 
 
 @BindingAdapter("commentUsername")
-fun TextView.setCommentUsername(item: Comment) {
-    text = item.username
+fun TextView.setCommentUsername(item: String?) {
+    text = item
 }
 
 @BindingAdapter("commentDate")
-fun TextView.setDate(item: Comment) {
-    text = item.timestamp?.let {
-        convertTimeStamp(it, "COMMENT")
-    }
+fun TextView.setDate(item: String) {
+    text = convertTimeStamp(item, "COMMENT")
 }
 
 @BindingAdapter("commentContent")
-fun TextView.setContent(item: Comment) {
-    text = item.content
+fun TextView.setContent(item: String) {
+    text = item
 }
 
 @BindingAdapter("commentReadMore")
@@ -177,7 +175,6 @@ fun ImageView.setSrc(isLiked: Boolean) {
         "like"
     }
 }
-
 
 
 @BindingAdapter("app:comment")

@@ -45,7 +45,7 @@
                         android:text="@string/username"
                         android:textColor="@color/colorText"
                         android:textSize="16sp"
-                        app:commentUsername="@{uiComment.comment}" />
+                        app:commentUsername="@{uiComment.comment.username}" />
 
                     <TextView
                         android:id="@+id/date"
@@ -59,7 +59,7 @@
                         android:text="@string/date"
                         android:textColor="@color/colorText"
                         android:textSize="13sp"
-                        app:commentDate="@{uiComment.comment}" />
+                        app:commentDate="@{uiComment.comment.timestamp}" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -76,7 +76,7 @@
                         android:text="@string/comment"
                         android:textColor="@color/colorText"
                         android:textSize="15sp"
-                        app:commentContent="@{uiComment.comment}" />
+                        app:commentContent="@{uiComment.comment.content}" />
 
                     <ImageView
                         android:id="@+id/likeButton"
@@ -141,16 +141,13 @@
 
             </LinearLayout>
 
-            <!--
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/subCommentRv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:comment="@{uiComment.comment}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:submitList="@{uiComment.uiSubComments}"
-                tools:listitem="@layout/list_item_sub_comment" />-->
+                android:visibility="gone" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

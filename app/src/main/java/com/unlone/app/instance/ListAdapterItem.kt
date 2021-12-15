@@ -1,3 +1,5 @@
 package com.unlone.app.instance
 
-interface ListAdapterItem
+interface ListAdapterItem{
+    val id : Long
+}

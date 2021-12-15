@@ -11,17 +11,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.instance.ListAdapterItem
 
-abstract class BaseAdapter<BINDING : ViewDataBinding, T : ListAdapterItem>(
-    var data: List<T>
-) : ListAdapter<T, BaseAdapter.BaseViewHolder<BINDING>>(DiffCallback()) {
+abstract class BaseAdapter<BINDING : ViewDataBinding, T : ListAdapterItem>
+    : ListAdapter<T, BaseAdapter.BaseViewHolder<BINDING>>(DiffCallback()) {
 
     @get:LayoutRes
     abstract val layoutId: Int
 
-    open class BaseViewHolder<BINDING : ViewDataBinding>(private val binder: BINDING) :
-        RecyclerView.ViewHolder(binder.root) {
-        open fun <T> bind(item: T) {}
-    }
+    abstract fun bind(binding: BINDING, item: T)
+
+    open class BaseViewHolder<BINDING : ViewDataBinding>(val binder: BINDING) :
+        RecyclerView.ViewHolder(binder.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<BINDING> {
         val binder = DataBindingUtil.inflate<BINDING>(
@@ -37,7 +36,7 @@ abstract class BaseAdapter<BINDING : ViewDataBinding, T : ListAdapterItem>(
     override fun onBindViewHolder(holder: BaseViewHolder<BINDING>, position: Int) {
         val item = getItem(position)
         Log.d("TAG", "item loaded: $item")
-        holder.bind(item)
+        bind(holder.binder, item)
     }
 
     open class DiffCallback<T>: DiffUtil.ItemCallback<T>() {
