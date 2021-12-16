@@ -5,8 +5,7 @@
     <string name="username">用戶名稱</string>
     <string name="action_register">註冊</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="create_post_fragment">Create post fragment</string>
-    <string name="tutorial">tutorial</string>
+    <string name="create_post_fragment">創建 post fragment</string>
     <string name="btn_submit">post</string>
     <string name="todo">…</string>
     <string name="blank" />
@@ -68,7 +67,7 @@
     <string name="logout">登出</string>
     <string name="what_type_of_issue">請問是關於甚麼類型？</string>
     <string name="details">詳情</string>
-    <string name="we_will_reply_you_as_soon_as_possible">我們會儘快回應你的！</string>
+    <string name="we_will_reply_you_as_soon_as_possible">告訴更多！</string>
     <string name="save">儲存</string>
     <string name="name">名稱</string>
     <string name="bio">個人簡介</string>

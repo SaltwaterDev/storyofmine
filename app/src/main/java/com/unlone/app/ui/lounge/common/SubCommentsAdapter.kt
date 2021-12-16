@@ -121,7 +121,7 @@ class SubCommentsAdapter(
                                     Log.d("TAG", report.toString())
                                     if (report != null) {
                                         viewModel.uploadReport(report)
-                                        showConfirmation(v.parent as MaterialCardView)
+                                        showConfirmation(v.parent.parent as MaterialCardView)
                                     }
 
                                 }// Single-choice items (initialized with checked item)
@@ -150,8 +150,6 @@ class SubCommentsAdapter(
                     .setTitle(it.getString(R.string.thank_you))
                     .setMessage(it.getString(R.string.report_text))
                     .setPositiveButton(it.getString(R.string.confirm)) { dialog, which ->
-                        // Hide the comment
-                        commentView.visibility = View.GONE
                     }
                     .show()
             }

@@ -24,12 +24,6 @@
             android:elevation="0dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/commenter_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -107,7 +101,6 @@
 
                 </RelativeLayout>
 
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -138,9 +131,6 @@
                         android:src="@{uiComment.uiSubComments.isEmpty() ? @drawable/ic_chat : @drawable/ic_chat_filled}"
                         android:visibility="visible" />
                 </RelativeLayout>
-
-            </LinearLayout>
-
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/subCommentRv"

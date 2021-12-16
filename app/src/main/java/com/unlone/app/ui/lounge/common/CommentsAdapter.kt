@@ -168,8 +168,6 @@ open class CommentsAdapter(
                     .setTitle(it.getString(R.string.thank_you))
                     .setMessage(it.getString(R.string.report_text))
                     .setPositiveButton(it.getString(R.string.confirm)) { dialog, which ->
-                        // Hide the comment
-                        commentView.visibility = View.GONE
                     }
                     .show()
             }

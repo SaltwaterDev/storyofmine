@@ -24,8 +24,6 @@ class ContactUsViewModel : ViewModel() {
     private var _issueList: MutableLiveData<List<String>> = MutableLiveData()
     var issueList:  LiveData<List<String>> = _issueList
 
-
-
     fun loadIssueList() {
 
         viewModelScope.launch(Dispatchers.IO) { // launch a new coroutine and continue

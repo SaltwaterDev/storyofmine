@@ -47,7 +47,7 @@ class ProfileFragment : Fragment() {
         // profileList.add(ProfileCard(getString(R.string.setting), "#B0B0B0"))   TODO
         profileList.add(ProfileCard(getString(R.string.contact), "#B5CEF0"))
         profileList.add(ProfileCard(getString(R.string.logout), "#B9CAB7"))
-        profileAdapter.setDataList(profileList)
+        profileAdapter.setDataList(profileList.distinct())
 
         val docRef = mFirestore!!.collection("users").document(
             currentUser!!.uid
@@ -62,7 +62,7 @@ class ProfileFragment : Fragment() {
                 val user = value.toObject<User>()
                 if (user != null) {
                     binding.name.text = user.username
-                    if(user.bio != null){
+                    if(!user.bio.isNullOrBlank()){
                         binding.bio.text = user.bio
                         binding.bio.visibility = View.VISIBLE
                     }

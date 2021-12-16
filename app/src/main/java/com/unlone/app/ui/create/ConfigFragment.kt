@@ -33,6 +33,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import com.unlone.app.ui.lounge.category.CategoriesViewModel
 import java.text.ParseException
 import java.util.*
 
@@ -49,6 +50,8 @@ class ConfigFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var mFirestore: FirebaseFirestore
     private lateinit var storageReference: StorageReference
+    private val model by lazy { ViewModelProvider(this).get(CategoriesViewModel::class.java) }
+
 
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -122,7 +125,6 @@ class ConfigFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // load categories
-        val model = ViewModelProvider(this).get(ConfigViewModel::class.java)
         model.loadCategories()
         model.categories.observe(viewLifecycleOwner, { categories ->
             Log.d("TAG category config", categories.toString())
@@ -157,7 +159,6 @@ class ConfigFragment : Fragment() {
         }
         // Since the displaying category name may have varied language,
         // it has to be stored as the default language
-        val model = ViewModelProvider(this).get(ConfigViewModel::class.java)
         model.retrieveDefaultCategory(postData.category)?.let {
             post.category = it
         }

@@ -36,50 +36,32 @@ class CategoriesViewModel : ViewModel() {
 
     @Suppress("UNCHECKED_CAST")
     fun loadCategories() {
-        val language = Locale.getDefault().language
-        Log.d("TAG", "language: $language")
-        if (language == "zh") {
-            // if the device language is set to Chinese, use chinese text
-            mFirestore.collection("categories")
-                .document("pre_defined_categories")
-                .collection("categories_name")
-                .get()
-                .addOnSuccessListener { result ->
-                    val rawCategoryArrayList = java.util.ArrayList<Pair<String, String>>()
-                    for (document in result) {
-                        val category = Pair(document.id, document.data["zh_hk"])
-                        category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
-
-                    }
-                    _rawCategories.value = rawCategoryArrayList
-                    val c = java.util.ArrayList<String>()
-                    for (rawCategory in rawCategoryArrayList) {
-                        c.add(rawCategory.second)
-                    }
-                    _categories.value = c
-                    Log.d("TAG category", _categories.toString())
-                }
-        } else {
-            // default language (english)
-            mFirestore.collection("categories")
-                .document("pre_defined_categories")
-                .collection("categories_name")
-                .get()
-                .addOnSuccessListener { result ->
-                    val rawCategoryArrayList = java.util.ArrayList<Pair<String, String>>()
-                    for (document in result) {
-                        val category = Pair(document.id, document.data["default"])
-                        category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
-                    }
-                    _rawCategories.value = rawCategoryArrayList
-                    val c = java.util.ArrayList<String>()
-                    for (rawCategory in rawCategoryArrayList) {
-                        c.add(rawCategory.second)
-                    }
-                    _categories.value = c
-                    Log.d("TAG category", _categories.toString())
-                }
+        val deviceLanguage = Locale.getDefault().language
+        Log.d("TAG", "device Language: $deviceLanguage")
+        val appLanguage = when (deviceLanguage) {
+            "zh" -> "zh_hk"          // if the device language is set to Chinese, use chinese text
+            else -> "default"        // default language (english)
         }
+        mFirestore.collection("categories")
+            .document("pre_defined_categories")
+            .collection("categories_name")
+            .whereEqualTo("visibility", true)
+            .get()
+            .addOnSuccessListener { result ->
+                val rawCategoryArrayList = java.util.ArrayList<Pair<String, String>>()
+                for (document in result) {
+                    val category = Pair(document.id, document.data[appLanguage])
+                    category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
+
+                }
+                _rawCategories.value = rawCategoryArrayList
+                val c = java.util.ArrayList<String>()
+                for (rawCategory in rawCategoryArrayList) {
+                    c.add(rawCategory.second)
+                }
+                _categories.value = c
+                Log.d("TAG category", _categories.toString())
+            }
     }
 
 

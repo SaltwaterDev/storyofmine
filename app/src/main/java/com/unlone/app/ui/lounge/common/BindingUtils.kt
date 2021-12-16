@@ -1,8 +1,10 @@
 package com.unlone.app.ui.lounge.common
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.opengl.ETC1.getHeight
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -37,18 +39,24 @@ fun TextView.setJournal(item: Post) {
     text = item.journal
 }
 
+fun getHeight(context: Context, textView: TextView): Int {
+    val displayMetrics = context.resources.displayMetrics
+    val deviceHeight = displayMetrics.heightPixels
+    val deviceWidth = displayMetrics.widthPixels
+    val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST)
+    val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    textView.measure(widthMeasureSpec, heightMeasureSpec)
+    return textView.measuredHeight
+}
 
-@BindingAdapter("postImage")
-fun ImageView.setPostImage(item: Post) {
+@BindingAdapter("postImage", "title")
+fun ImageView.setPostImage(item: Post, title: TextView) {
     // TODO set the image space
     if (item.imagePath.isNotEmpty()) {
         Log.d("TAG", "image path: ${item.imagePath}")
         val target: Target = object : Target {
             override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
                 visibility = View.VISIBLE
-                visibility = View.VISIBLE
-                visibility = View.GONE
-                // holder.title.gravity = Gravity.CENTER todo
 
                 //get measured image size
                 val imageWidth = bitmap.width
@@ -72,26 +80,24 @@ fun ImageView.setPostImage(item: Post) {
                 layoutParams = params
 
                 // reset bottom margin
-                // val textHeight = PostsAdapter.getHeight(context, holder.title) todo
-                // val textWhitespace = (imageVerticalMargin + imageHeight) / 3 - textHeight todo
-                // Log.d("whitespace", textWhitespace.toString()) todo
-                // Log.d("whitespace_text", textHeight.toString()) todo
-                // val textTopMargin = (textWhitespace / (1 + 1.5)).toInt() todo
-                // val textBottomMargin = (textWhitespace * 1.5 / (1 + 1.5)).toInt() todo
+                val textHeight = getHeight(context, title)
+                val textWhitespace = (imageVerticalMargin + imageHeight) / 3 - textHeight
+                Log.d("whitespace", textWhitespace.toString())
+                Log.d("whitespace_text", textHeight.toString())
+                val textTopMargin = (textWhitespace / (1 + 1.5)).toInt()
+                val textBottomMargin = (textWhitespace * 1.5 / (1 + 1.5)).toInt()
                 params = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-                /*
-                params.setMargins( todo
+
+                params.setMargins(
                     dpConvertPx(18, context),
                     textTopMargin,
                     dpConvertPx(18, context),
                     textBottomMargin
                 )
-                 */
-                // holder.title.layoutParams = params   todo
-                //holder.title.visibility = View.VISIBLE    todo
+                title.layoutParams = params
             }
 
             override fun onBitmapFailed(e: Exception, errorDrawable: Drawable) {}
@@ -103,22 +109,6 @@ fun ImageView.setPostImage(item: Post) {
         // set image
         tag = target
         Picasso.get().load(item.imagePath).into(target)
-    } else {
-        // journal.visibility = View.VISIBLE todo
-        visibility = View.GONE
-        // holder.title.visibility = View.VISIBLE todo
-        // journal top margin
-        val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(
-            dpConvertPx(16, context),
-            dpConvertPx(21, context),
-            dpConvertPx(16, context),
-            dpConvertPx(41, context)
-        )
-        // holder.journal.layoutParams = params todo
     }
     /* todo
     holder.card.setOnClickListener {
@@ -146,7 +136,7 @@ fun ImageView.setPostImage(item: Post) {
 
 @BindingAdapter("commentUsername")
 fun TextView.setCommentUsername(item: String?) {
-    text = item
+    text = item?: "User"
 }
 
 @BindingAdapter("commentDate")

@@ -383,12 +383,12 @@ class DetailedPostViewModel : ViewModel() {
     fun processSubCommentLike(subComment: SubComment) {
         Log.d("TAG", "subComment: $subComment")
 
-        val docRef = subComment.cid?.let {
-            subComment.parent_cid?.let { it1 ->
-                subComment.parent_pid?.let { it2 ->
-                    mFirestore.collection("posts").document(it2)
-                        .collection("comments").document(it1)
-                        .collection("sub comments").document(it)
+        val docRef = subComment.cid?.let {commentCid ->
+            subComment.parent_cid?.let { parentCid ->
+                subComment.parent_pid?.let { ParentPid ->
+                    mFirestore.collection("posts").document(ParentPid)
+                        .collection("comments").document(parentCid)
+                        .collection("sub comments").document(commentCid)
                         .collection("likes")
                 }
             }
@@ -420,6 +420,7 @@ class DetailedPostViewModel : ViewModel() {
                     "timeStamp" to (System.currentTimeMillis() / 1000).toString()
                 )
                 val docRefId = docRef?.add(data)?.await()?.id
+                Log.d("TAG", "like doc added: $docRefId")
             }
         }
     }

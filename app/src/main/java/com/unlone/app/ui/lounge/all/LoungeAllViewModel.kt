@@ -100,4 +100,5 @@ class LoungeAllViewModel : ViewModel() {
     fun searchPost(text: String) {
         // TODO ("After using firebase function")
     }
+
 }

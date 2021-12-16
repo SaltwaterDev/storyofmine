@@ -6,7 +6,6 @@
     <string name="action_register">Register</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="create_post_fragment">Create post fragment</string>
-    <string name="tutorial">tutorial</string>
     <string name="btn_submit">post</string>
     <string name="todo">…</string>
     <string name="blank" />
@@ -67,7 +66,7 @@
     <string name="logout">Logout</string>
     <string name="what_type_of_issue">What type of issue?</string>
     <string name="details">Details</string>
-    <string name="we_will_reply_you_as_soon_as_possible">We will reply you as soon as possible!</string>
+    <string name="we_will_reply_you_as_soon_as_possible">Tell us more</string>
     <string name="save">Save</string>
     <string name="name">Name</string>
     <string name="bio">Bio</string>

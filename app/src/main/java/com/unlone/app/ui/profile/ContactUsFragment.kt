@@ -57,7 +57,6 @@ class ContactUsFragment : Fragment() {
         }
 
 
-
         return view
     }
 
