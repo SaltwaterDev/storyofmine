@@ -28,7 +28,7 @@ import com.squareup.picasso.Target
 import com.unlone.app.R
 import com.unlone.app.databinding.ActivityPostDetailBinding
 import com.unlone.app.databinding.LayoutPostBinding
-import com.unlone.app.instance.*
+import com.unlone.app.model.*
 import com.unlone.app.ui.lounge.category.CategoriesViewModel
 import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
@@ -217,10 +217,8 @@ class PostDetailActivity : AppCompatActivity() {
                                 }
 
                                 Log.d("TAG", report.toString())
-                                if (report != null) {
-                                    detailedPostViewModel.uploadReport(report)
-                                    showConfirmation()
-                                }
+                                detailedPostViewModel.uploadReport(report)
+                                showConfirmation()
 
                             }// Single-choice items (initialized with checked item)
                             .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
@@ -402,7 +400,7 @@ class PostDetailActivity : AppCompatActivity() {
     private fun isSaved(pid: String, saveButton: MenuItem) {
         val c: Context = this
         lifecycleScope.launch(Dispatchers.IO) {
-            if (detailedPostViewModel.isSaved(pid)) {
+            if (detailedPostViewModel.isSaved(pid) || hashMap["saveButton"] == "saved") {
                 withContext(Dispatchers.Main) {
                     saveButton.icon =
                         ContextCompat.getDrawable(c, R.drawable.ic_baseline_bookmark_24)

@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
-import com.unlone.app.instance.*
+import com.unlone.app.model.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.ArrayList

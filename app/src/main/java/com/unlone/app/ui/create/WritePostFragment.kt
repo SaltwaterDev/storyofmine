@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -15,41 +14,32 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.theartofdev.edmodo.cropper.CropImage
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentWritePostBinding
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.theartofdev.edmodo.cropper.CropImage
 import java.util.*
 
 
 class WritePostFragment : Fragment() {
-    private lateinit var mAuth: FirebaseAuth
-    private lateinit var mFirestore: FirebaseFirestore
-    private lateinit var storageReference: StorageReference
-
-    private lateinit var setSelectedImagePath: String
     private var selectedImageUri: Uri? = null
     private var labels = ArrayList<String>()
 
     private lateinit var labelChipGroup: ChipGroup
-
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -67,7 +57,7 @@ class WritePostFragment : Fragment() {
     }
 
     private lateinit var cropActivityResultLauncher: ActivityResultLauncher<Any?>
-    private val savedStateModel: SavedStateModel by activityViewModels()
+    private val savedStateModel: SavedStateModel by viewModels()
     private lateinit var postData: PostData
 
 
@@ -78,11 +68,6 @@ class WritePostFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentWritePostBinding.inflate(inflater, container, false)
         val view = binding.root
-
-        // init database storing
-        mAuth = FirebaseAuth.getInstance()
-        mFirestore = FirebaseFirestore.getInstance()
-        storageReference = FirebaseStorage.getInstance().getReference("posts")
 
         // restore UI state if any
         savedStateModel.postData.observe(viewLifecycleOwner, {postData ->
@@ -101,7 +86,7 @@ class WritePostFragment : Fragment() {
         })
 
         // init toolbar
-        binding.cancelButton.setOnClickListener { activity?.finish() }
+        binding.cancelButton.setOnClickListener { findNavController().navigate(R.id.cancel_and_back_to_lounge) }
         val nextButton = binding.nextButton.setOnClickListener {
             if (binding.inputPostContext.text.toString().isEmpty()) {
                 Toast.makeText(activity, "You haven't wrote the context", Toast.LENGTH_SHORT).show()
@@ -112,7 +97,7 @@ class WritePostFragment : Fragment() {
                 postData.title = binding.inputPostTitle.text.toString()
                 postData.imageUri = selectedImageUri
                 postData.journal = binding.inputPostContext.text.toString()
-                postData.uid = mAuth.uid!!
+                postData.uid = savedStateModel.uid!!
                 postData.labels.clear()
                 postData.labels.addAll(labels)
                 Log.d("TAG", "labels in write fragment: $labels")

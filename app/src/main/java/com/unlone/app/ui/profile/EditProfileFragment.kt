@@ -1,10 +1,11 @@
 package com.unlone.app.ui.profile
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.unlone.app.R
-import com.unlone.app.databinding.ActivityEditProfileBinding
-import com.unlone.app.instance.User
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.EventListener
@@ -12,28 +13,25 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.rengwuxian.materialedittext.MaterialEditText
+import com.unlone.app.R
+import com.unlone.app.databinding.FragmentEditProfileBinding
+import com.unlone.app.model.User
 import java.util.*
 
-class EditProfileActivity : AppCompatActivity() {
-    var username: MaterialEditText? = null
-    var bio: MaterialEditText? = null
+class EditProfileFragment : Fragment() {
     var currentUser: FirebaseUser? = null
     private var storageReference: StorageReference? = null
     private var mFirestore: FirebaseFirestore? = null
 
-    private lateinit var binding: ActivityEditProfileBinding
+    private var _binding: FragmentEditProfileBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
-        if (supportActionBar != null) {
-            supportActionBar!!.hide()
-        }
-
-        binding = ActivityEditProfileBinding.inflate(layoutInflater)
+        _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
         val view = binding.root
-        setContentView(view)
 
         val cancel = binding.cancelButton
         val save = binding.saveButton
@@ -42,12 +40,12 @@ class EditProfileActivity : AppCompatActivity() {
         // val likes = binding.likes
         // val dislikes = binding.dislikes
 
-        cancel.setOnClickListener{ finish() }
-        save.setOnClickListener{
+        cancel.setOnClickListener { findNavController().navigate(R.id.action_editProfileFragment_to_navigation_profile) }
+        save.setOnClickListener {
             save.isEnabled = false
             cancel.isEnabled = false
             updateProfile(username.text.toString(), bio.text.toString())
-            finish()
+            findNavController().navigate(R.id.action_editProfileFragment_to_navigation_profile)
             save.isEnabled = true
             cancel.isEnabled = true
         }
@@ -74,6 +72,7 @@ class EditProfileActivity : AppCompatActivity() {
                 print("Current data: null")
             }
         })
+    return view
     }
 
     private fun updateProfile(username: String, bio: String) {
@@ -85,7 +84,7 @@ class EditProfileActivity : AppCompatActivity() {
                 .update(
                     "username", username,
                     "bio", bio
-                // TODO (set likes and dislikes)
+                    // TODO (set likes and dislikes)
                 )
         }
     }

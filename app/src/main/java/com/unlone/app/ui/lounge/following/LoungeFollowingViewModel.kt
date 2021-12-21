@@ -2,7 +2,7 @@ package com.unlone.app.ui.lounge.following
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
-import com.unlone.app.instance.Post
+import com.unlone.app.model.Post
 import androidx.lifecycle.LiveData
 import android.content.ContentValues
 import android.util.Log

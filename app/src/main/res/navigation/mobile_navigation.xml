@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.unlone.app.ui.lounge.HomeFragment"
         android:label="@string/lounge"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_fragment_to_create_post"
+            app:destination="@id/create_post_navigation" />
+    </fragment>
 
 
     <fragment
@@ -26,6 +30,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_contactUsFragment"
             app:destination="@id/contactUsFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/myStoriesFragment"
@@ -54,6 +61,17 @@
         tools:layout="@layout/fragment_contact_us" >
         <action
             android:id="@+id/action_contactUsFragment_to_navigation_profile"
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@id/navigation_profile"/>
+    </fragment>
+
+    <include app:graph="@navigation/create_post_navigation" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.unlone.app.ui.profile.EditProfileFragment"
+        android:label="EditProfileFragment" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_navigation_profile"
             app:destination="@id/navigation_profile"
             app:popUpTo="@id/navigation_profile"/>
     </fragment>

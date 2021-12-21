@@ -11,7 +11,7 @@ import androidx.core.view.iterator
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.unlone.app.databinding.FragmentChooseCategoriesBinding
-import com.unlone.app.instance.User
+import com.unlone.app.model.User
 import com.unlone.app.ui.MainActivity
 import com.unlone.app.ui.lounge.category.CategoriesViewModel
 import com.google.android.gms.tasks.Task

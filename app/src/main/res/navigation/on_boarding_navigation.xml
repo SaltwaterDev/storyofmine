@@ -21,6 +21,6 @@
         tools:layout="@layout/fragment_choose_categories" >
         <argument
             android:name="user"
-            app:argType="com.unlone.app.instance.User" />
+            app:argType="com.unlone.app.model.User" />
     </fragment>
 </navigation>

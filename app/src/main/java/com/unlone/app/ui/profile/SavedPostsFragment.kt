@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentSavedPostsBinding
-import com.unlone.app.instance.Post
+import com.unlone.app.model.Post
 import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
 
 class SavedPostsFragment :

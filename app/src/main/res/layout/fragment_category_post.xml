@@ -5,7 +5,7 @@
 
         <variable
             name="user"
-            type="com.unlone.app.instance.Post" />
+            type="com.unlone.app.model.Post" />
     </data>
 
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"

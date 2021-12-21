@@ -5,12 +5,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
-import com.unlone.app.ui.create.PostActivity
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentLoungeFollowingBinding
-import com.unlone.app.instance.Post
+import com.unlone.app.model.Post
 import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
 
 class LoungeFollowingFragment :
@@ -33,8 +34,7 @@ class LoungeFollowingFragment :
             fab.tooltipText = resources.getString(R.string.write_a_post)
         }
         fab.setOnClickListener {
-            val intent = Intent(context, PostActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.action_fragment_to_create_post)
         }
     }
 

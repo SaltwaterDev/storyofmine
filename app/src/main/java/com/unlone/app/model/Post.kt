@@ -1,4 +1,4 @@
-package com.unlone.app.instance
+package com.unlone.app.model
 
 import android.os.Parcelable
 import androidx.annotation.Keep

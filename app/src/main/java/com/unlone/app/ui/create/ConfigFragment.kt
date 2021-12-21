@@ -20,16 +20,15 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentConfigBinding
 import com.unlone.app.databinding.LayoutPostBinding
-import com.unlone.app.instance.Post
-import com.unlone.app.instance.User
+import com.unlone.app.model.Post
 import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
@@ -211,7 +210,7 @@ class ConfigFragment : Fragment() {
         mFirestore.collection("posts").add(post).addOnSuccessListener { documentReference -> Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: " + documentReference.id) }
                 .addOnFailureListener { e ->
                     Log.w(ContentValues.TAG, "Error adding document", e)
-                    activity?.finish()
+                    findNavController().navigate(R.id.post_create_to_lounge)
                 }
     }
 
@@ -227,10 +226,7 @@ class ConfigFragment : Fragment() {
         } catch (e: ParseException) {
             e.printStackTrace()
         }
-        val returnIntent = Intent()
-        returnIntent.putExtra("result", 1)
-        activity?.setResult(AppCompatActivity.RESULT_OK, returnIntent)
-        activity?.finish()
+        findNavController().navigate(R.id.post_create_to_lounge)
     }
 
     companion object

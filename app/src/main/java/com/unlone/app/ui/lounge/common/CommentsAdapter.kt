@@ -16,9 +16,9 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
 import com.unlone.app.databinding.ListItemCommentBinding
-import com.unlone.app.instance.Comment
-import com.unlone.app.instance.Report
-import com.unlone.app.instance.UiComment
+import com.unlone.app.model.Comment
+import com.unlone.app.model.Report
+import com.unlone.app.model.UiComment
 
 
 open class CommentsAdapter(

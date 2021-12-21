@@ -10,10 +10,10 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.ListItemProfileCardBinding
-import com.unlone.app.ui.access.FirstAccessActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
-import com.unlone.app.instance.ProfileCard
+import com.unlone.app.model.ProfileCard
+import com.unlone.app.ui.access.StartupActivity
 
 
 class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
@@ -55,20 +55,17 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
         }
     }
 
+    // TODO (move it to viewModel)
     private fun logout(holder: ViewHolder) {
         MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(holder.itemView.context.getString(R.string.delete_alert))
             .setMessage(holder.itemView.context.getString(R.string.logout_alert))
-            .setNegativeButton(holder.itemView.context.getString(R.string.cancel)) { _, _ ->
-                // Respond to negative button press
-            }
             .setPositiveButton(holder.itemView.context.getString(R.string.logout)) { _, _ ->
                 val user = FirebaseAuth.getInstance()
                 user.signOut()
-                val intent = Intent(context, FirstAccessActivity::class.java)
+                val intent = Intent(context, StartupActivity::class.java)
                 context.startActivity(intent)
                 (context as Activity).finish()
-
             }
             .show()
     }

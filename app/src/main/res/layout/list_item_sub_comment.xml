@@ -7,7 +7,7 @@
 
         <variable
             name="uiSubComment"
-            type="com.unlone.app.instance.UiSubComment" />
+            type="com.unlone.app.model.UiSubComment" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.unlone.app.instance.Post
+import com.unlone.app.model.Post
 import com.unlone.app.databinding.ListItemPostBinding
 
 class PostsAdapter :

@@ -9,14 +9,15 @@ import com.google.firebase.auth.FirebaseAuth
 import android.content.Intent
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentProfileBinding
-import com.unlone.app.instance.User
+import com.unlone.app.model.User
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.toObject
-import com.unlone.app.instance.ProfileCard
+import com.unlone.app.model.ProfileCard
 
 class ProfileFragment : Fragment() {
     private var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -62,7 +63,7 @@ class ProfileFragment : Fragment() {
                 val user = value.toObject<User>()
                 if (user != null) {
                     binding.name.text = user.username
-                    if(!user.bio.isNullOrBlank()){
+                    if (!user.bio.isNullOrBlank()) {
                         binding.bio.text = user.bio
                         binding.bio.visibility = View.VISIBLE
                     }
@@ -72,13 +73,8 @@ class ProfileFragment : Fragment() {
             }
         })
 
-        binding.editButton.setOnClickListener{
-            startActivity(
-                Intent(
-                    context,
-                    EditProfileActivity::class.java
-                )
-            )
+        binding.editButton.setOnClickListener {
+            findNavController().navigate(R.id.editProfileFragment)
         }
 
         return view

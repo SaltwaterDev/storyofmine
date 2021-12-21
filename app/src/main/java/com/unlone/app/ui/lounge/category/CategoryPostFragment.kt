@@ -1,39 +1,28 @@
 package com.unlone.app.ui.lounge.category
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.addCallback
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentCategoryPostBinding
-import com.unlone.app.instance.Post
-import com.unlone.app.ui.create.PostActivity
-import com.unlone.app.ui.lounge.common.PostsAdapter
+import com.unlone.app.model.Post
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.unlone.app.databinding.FragmentLoungeFollowingBinding
 import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
-import com.unlone.app.ui.lounge.following.LoungeFollowingViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -143,8 +132,7 @@ class CategoryPostFragment :
             fab.tooltipText = resources.getString(R.string.write_a_post)
         }
         fab.setOnClickListener {
-            val intent = Intent(context, PostActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.action_fragment_to_create_post)
         }
     }
 

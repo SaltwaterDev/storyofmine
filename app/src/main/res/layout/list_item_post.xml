@@ -7,7 +7,7 @@
     <data>
         <variable
             name="post"
-            type="com.unlone.app.instance.Post" />
+            type="com.unlone.app.model.Post" />
         <import type="android.view.Gravity"/>
         <import type="android.view.View"/>
     </data>

@@ -8,7 +8,7 @@
 
         <variable
             name="uiComment"
-            type="com.unlone.app.instance.UiComment" />
+            type="com.unlone.app.model.UiComment" />
 
     </data>
 

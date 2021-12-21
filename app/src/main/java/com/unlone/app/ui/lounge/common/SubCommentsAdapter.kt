@@ -16,7 +16,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
 import com.unlone.app.databinding.ListItemSubCommentBinding
-import com.unlone.app.instance.*
+import com.unlone.app.model.*
 
 
 class SubCommentsAdapter(

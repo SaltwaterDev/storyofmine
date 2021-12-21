@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.unlone.app.databinding.FragmentUserSetupBinding
-import com.unlone.app.instance.User
+import com.unlone.app.model.User
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth

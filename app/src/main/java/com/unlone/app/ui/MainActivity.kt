@@ -26,13 +26,20 @@ class MainActivity : AppCompatActivity() {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
         setContentView(R.layout.activity_main)
 
-
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        findViewById<BottomNavigationView>(R.id.nav_view)
-            .setupWithNavController(navController)
+        val navBottomBar = findViewById<BottomNavigationView>(R.id.nav_view)
+        navBottomBar.setupWithNavController(navController)
 
+        // hide the bottom navigation bar when they are not lounge and profile
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_home -> navBottomBar.visibility = View.VISIBLE
+                R.id.navigation_profile -> navBottomBar.visibility = View.VISIBLE
+                else -> navBottomBar.visibility = View.GONE
+            }
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -79,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
-            if (data?.getIntExtra("result", 0) == 1){
+            if (data?.getIntExtra("result", 0) == 1) {
                 Log.d("Refresh_", "success")
                 finish()
                 startActivity(intent)
