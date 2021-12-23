@@ -24,11 +24,6 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RegistrationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RegistrationFragment : Fragment() {
     private var _binding: FragmentRegistrationBinding? = null
     private val binding get() = _binding!!

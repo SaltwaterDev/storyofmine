@@ -15,16 +15,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class ContactUsFragment : Fragment() {
-    private lateinit var viewModel: ContactUsViewModel
-
     // This property is only valid between onCreateView and onDestroyView.
     private var _binding: FragmentContactUsBinding? = null
     private val binding get() = _binding!!
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ContactUsViewModel::class.java)
-
+    private val viewModel: ContactUsViewModel by lazy{
+        ViewModelProvider(this).get(ContactUsViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -34,7 +30,6 @@ class ContactUsFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentContactUsBinding.inflate(inflater, container, false)
         val view = binding.root
-
 
         // return button
         binding.cancelButton.setOnClickListener {
@@ -55,7 +50,6 @@ class ContactUsFragment : Fragment() {
                 }
                 .show()
         }
-
 
         return view
     }

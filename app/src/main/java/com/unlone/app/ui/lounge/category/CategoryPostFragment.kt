@@ -62,12 +62,6 @@ class CategoryPostFragment :
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = postsAdapter
-        viewModel!!.loadPosts(category, mPosts, false)
-        viewModel!!.posts.observe(
-            viewLifecycleOwner
-        ) { postList: List<Post> ->
-            postsAdapter.submitList(postList)
-        }
 
         return binding.root
     }
@@ -76,12 +70,13 @@ class CategoryPostFragment :
         super.onStart()
 
         // load posts
-        viewModel!!.loadPosts(category, mPosts, false)
-        viewModel!!.posts.observe(
+        // TODO (move this function into viewModel)
+        viewModel!!.postListUiItems.observe(
             viewLifecycleOwner
-        ) { postList: List<Post> ->
+        ) { postList ->
             postsAdapter.submitList(postList)
         }
+        viewModel!!.loadPosts(category, mPosts, false)
     }
 
     private fun initFollowingButton() {

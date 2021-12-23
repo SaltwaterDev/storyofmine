@@ -6,24 +6,35 @@ import com.unlone.app.model.Post
 import androidx.lifecycle.LiveData
 import android.content.ContentValues
 import android.util.Log
+import androidx.lifecycle.map
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
+import com.unlone.app.model.PostItemUiState
 import java.util.*
 
 class MyStoriesViewModel : ViewModel() {
-    val posts: MutableLiveData<List<Post>> = MutableLiveData()
-    private val postList: MutableList<Post>
-    private val mFirestore: FirebaseFirestore
-    val mAuth = FirebaseAuth.getInstance()
+    private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
+    val posts: LiveData<List<Post>> = _posts
+    private val mPosts = 100
+    private val postList: MutableList<Post> = ArrayList()
+    private val mAuth = FirebaseAuth.getInstance()
+    private val mFirestore = FirebaseFirestore.getInstance()
     private var lastVisible: DocumentSnapshot? = null
-    fun getPosts(): LiveData<List<Post>> {
-        return posts
+    val postListUiItems = posts.map { posts ->
+        posts.map {
+            PostItemUiState(
+                it.title,
+                it.imagePath,
+                it.journal.substring(0,120.coerceAtMost(it.journal.length)),
+                it.pid
+            )
+        }
     }
 
     init {
-        postList = ArrayList()
-        mFirestore = FirebaseFirestore.getInstance()
+        val uid = mAuth.uid     // TODO set up a Room database to store user data
+        loadPosts(mPosts, false)
     }
 
     fun loadPosts(numberPost: Int, loadMore: Boolean?) {
@@ -46,7 +57,7 @@ class MyStoriesViewModel : ViewModel() {
                             post.pid = document.id
                             if (!postList.contains(post)) {
                                 postList.add(post)
-                                posts.value = postList
+                                _posts.value = postList
                             }
                         }
                     }
@@ -67,7 +78,7 @@ class MyStoriesViewModel : ViewModel() {
                                 post.pid = document.id
                                 if (!postList.contains(post)) {
                                     postList.add(post)
-                                    posts.value = postList
+                                    _posts.value = postList
                                 }
                             }
                             lastVisible =

@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.*
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.unlone.app.R
@@ -19,18 +20,14 @@ import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
 
 @BindingAdapter("android:onClick")
-fun setOnClick(view: View, item: Post) {
-    view.setOnClickListener {
-        val intent = Intent(view.context, PostDetailActivity::class.java)
+fun MaterialCardView.setOnClick(item: Post) {
+    setOnClickListener {
+        val intent = Intent(context, PostDetailActivity::class.java)
         intent.putExtra("postId", item.pid)
-        view.context.startActivity(intent)
+        context.startActivity(intent)
     }
 }
 
-@BindingAdapter("title")
-fun TextView.setTitle(item: Post) {
-    text = item.title
-}
 
 @BindingAdapter("journal")
 fun TextView.setJournal(item: Post) {
@@ -48,10 +45,10 @@ fun getHeight(context: Context, textView: TextView): Int {
 }
 
 @BindingAdapter("postImage", "title")
-fun ImageView.setPostImage(item: Post, title: TextView) {
+fun ImageView.setPostImage(imagePath: String, title: TextView) {
     // TODO set the image space
-    if (item.imagePath.isNotEmpty()) {
-        Log.d("TAG", "image path: ${item.imagePath}")
+    if (imagePath.isNotEmpty()) {
+        Log.d("TAG", "image path: $imagePath")
         val target: Target = object : Target {
             override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
                 visibility = View.VISIBLE
@@ -106,29 +103,8 @@ fun ImageView.setPostImage(item: Post, title: TextView) {
         }
         // set image
         tag = target
-        Picasso.get().load(item.imagePath).into(target)
+        Picasso.get().load(imagePath).into(target)
     }
-    /* todo
-    holder.card.setOnClickListener {
-        val intent = Intent(context, PostDetailActivity::class.java)
-        intent.putExtra("postId", pid)
-        context.startActivity(intent)
-    }
-     */
-
-    /*
-    setImageResource(when (item.sleepQuality) {
-        0 -> R.drawable.ic_sleep_0
-        1 -> R.drawable.ic_sleep_1
-        2 -> R.drawable.ic_sleep_2
-
-        3 -> R.drawable.ic_sleep_3
-
-        4 -> R.drawable.ic_sleep_4
-        5 -> R.drawable.ic_sleep_5
-        else -> R.drawable.ic_sleep_active
-    })
-     */
 }
 
 

@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import android.content.Intent
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,13 +21,14 @@ import com.google.firebase.firestore.ktx.toObject
 import com.unlone.app.model.ProfileCard
 
 class ProfileFragment : Fragment() {
-    private var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    private var mFirestore: FirebaseFirestore? = FirebaseFirestore.getInstance()
-
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
     private var profileList = mutableListOf<ProfileCard>()
+    private val viewModel: ProfileViewModel by lazy {
+        ViewModelProvider(this)[ProfileViewModel::class.java]
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +38,7 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        viewModel.loadUserProfile()
         val recyclerView: RecyclerView = binding.recyclerviewProfile
         val profileAdapter = ProfileAdapter(requireActivity())
         val layoutManager = GridLayoutManager(activity, 2)
@@ -50,32 +53,13 @@ class ProfileFragment : Fragment() {
         profileList.add(ProfileCard(getString(R.string.logout), "#B9CAB7"))
         profileAdapter.setDataList(profileList.distinct())
 
-        val docRef = mFirestore!!.collection("users").document(
-            currentUser!!.uid
-        )
-        docRef.addSnapshotListener(EventListener { value, error ->
-            if (error != null) {
-                System.err.println("Listen failed: $error")
-                return@EventListener
-            }
-            if (value != null && value.exists()) {
-                println("Current data: " + value.data)
-                val user = value.toObject<User>()
-                if (user != null) {
-                    binding.name.text = user.username
-                    if (!user.bio.isNullOrBlank()) {
-                        binding.bio.text = user.bio
-                        binding.bio.visibility = View.VISIBLE
-                    }
-                }
-            } else {
-                print("Current data: null")
-            }
-        })
-
         binding.editButton.setOnClickListener {
             findNavController().navigate(R.id.editProfileFragment)
         }
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
 
         return view
     }

@@ -2,10 +2,7 @@ package com.unlone.app.ui.lounge.category
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.unlone.app.model.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -13,6 +10,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
+import com.unlone.app.model.PostItemUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -23,15 +21,27 @@ import kotlin.collections.ArrayList
 class CategoriesViewModel : ViewModel() {
     private var _categories: MutableLiveData<List<String>> = MutableLiveData()
     private var _rawCategories: MutableLiveData<List<Pair<String, String>>> = MutableLiveData()
-    var categories: LiveData<List<String>> = _categories
+    val categories: LiveData<List<String>> = _categories
     private var _categoryTitle = MutableLiveData<String>()
     val categoryTitle: LiveData<String> = _categoryTitle
 
-    private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    val posts: MutableLiveData<List<Post>> = MutableLiveData()
+    private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
+    val posts: LiveData<List<Post>> = _posts
+    private val mPosts = 100
+    private val postList: MutableList<Post> = java.util.ArrayList()
     private val mAuth = FirebaseAuth.getInstance()
-    private val postList: MutableList<Post>
+    private val mFirestore = FirebaseFirestore.getInstance()
     private var lastVisible: DocumentSnapshot? = null
+    val postListUiItems = posts.map { posts ->
+        posts.map {
+            PostItemUiState(
+                it.title,
+                it.imagePath,
+                it.journal.substring(0, 120.coerceAtMost(it.journal.length)),
+                it.pid
+            )
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     fun loadCategories() {
@@ -64,10 +74,6 @@ class CategoriesViewModel : ViewModel() {
     }
 
 
-    init {
-        postList = ArrayList()
-    }
-
     fun loadPosts(category: String, numberPost: Int, loadMore: Boolean?) {
         Log.d("TAG", "category: $category")
         viewModelScope.launch(Dispatchers.IO) {
@@ -98,7 +104,7 @@ class CategoriesViewModel : ViewModel() {
                 val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
                 withContext(Dispatchers.Main) {
                     Log.d("TAG", "sorted postList: $sortedPostList")
-                    posts.value = sortedPostList
+                    _posts.value = sortedPostList
                 }
             } else {
                 val thisCategoryDocs = mFirestore.collection("posts")
@@ -125,7 +131,7 @@ class CategoriesViewModel : ViewModel() {
                 val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
                 withContext(Dispatchers.Main) {
                     Log.d("TAG", "sorted postList: $sortedPostList")
-                    posts.value = sortedPostList
+                    _posts.value = sortedPostList
                 }
             }
         }
@@ -162,33 +168,21 @@ class CategoriesViewModel : ViewModel() {
     }
 
     fun getCategoryTitle(categoryId: String) {
-        when (Locale.getDefault().language) {
-            "zh" -> {
-                viewModelScope.launch(Dispatchers.Main) {
-                    _categoryTitle.value = withContext(Dispatchers.IO) {
-                        mFirestore.collection("categories")
-                            .document("pre_defined_categories")
-                            .collection("categories_name")
-                            .document(categoryId)
-                            .get()
-                            .await()
-                            .data?.get("zh_hk") as String?
-                    }!!
-                }
-            }
-            else -> {
-                viewModelScope.launch(Dispatchers.Main) {
-                    _categoryTitle.value = withContext(Dispatchers.IO) {
-                        mFirestore.collection("categories")
-                            .document("pre_defined_categories")
-                            .collection("categories_name")
-                            .document(categoryId)
-                            .get()
-                            .await()
-                            .data?.get("default") as String?
-                    }!!
-                }
-            }
+        val appLanguage = when (Locale.getDefault().language) {
+            "zh" -> "zh_hk"          // if the device language is set to Chinese, use chinese text
+            else -> "default"        // default language (english)
+        }
+
+        viewModelScope.launch(Dispatchers.Main) {
+            _categoryTitle.value = withContext(Dispatchers.IO) {
+                mFirestore.collection("categories")
+                    .document("pre_defined_categories")
+                    .collection("categories_name")
+                    .document(categoryId)
+                    .get()
+                    .await()
+                    .data?.get(appLanguage) as String?
+            }!!
         }
 
     }

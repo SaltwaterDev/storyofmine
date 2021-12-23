@@ -1,15 +1,15 @@
 package com.unlone.app.ui.lounge.following
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.MutableLiveData
-import com.unlone.app.model.Post
-import androidx.lifecycle.LiveData
 import android.content.ContentValues
 import android.util.Log
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
+import com.unlone.app.model.Post
+import com.unlone.app.model.PostItemUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -18,19 +18,26 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class LoungeFollowingViewModel : ViewModel() {
-    val posts: MutableLiveData<List<Post>> = MutableLiveData()
-    private val postList: MutableList<Post>
+    private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
+    val posts: LiveData<List<Post>> = _posts
+    private val mPosts = 100
+    private val postList: MutableList<Post> = ArrayList()
     private val mAuth = FirebaseAuth.getInstance()
-    private val mFirestore: FirebaseFirestore
+    private val mFirestore = FirebaseFirestore.getInstance()
     private var lastVisible: DocumentSnapshot? = null
-    fun getPosts(): LiveData<List<Post>> {
-        return posts
+    val postListUiItems = posts.map { posts ->
+        posts.map {
+            PostItemUiState(
+                it.title,
+                it.imagePath,
+                it.journal.substring(0,120.coerceAtMost(it.journal.length)),
+                it.pid
+            )
+        }
     }
 
     init {
         val uid = mAuth.uid     // TODO set up a Room database to store user data
-        postList = ArrayList()
-        mFirestore = FirebaseFirestore.getInstance()
     }
 
 
@@ -97,7 +104,7 @@ class LoungeFollowingViewModel : ViewModel() {
                 val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
                 withContext(Dispatchers.Main) {
                     Log.d("TAG", "sorted postList: $sortedPostList")
-                    posts.value = sortedPostList
+                    _posts.value = sortedPostList
                 }
             } else {
                 // TODO ("fixing the paging")
@@ -146,7 +153,7 @@ class LoungeFollowingViewModel : ViewModel() {
                 val sortedPostList = postList.sortedByDescending { it.createdTimestamp }
                 withContext(Dispatchers.Main) {
                     Log.d("TAG", "sorted postList: $sortedPostList")
-                    posts.value = sortedPostList
+                    _posts.value = sortedPostList
                 }
             }
         }

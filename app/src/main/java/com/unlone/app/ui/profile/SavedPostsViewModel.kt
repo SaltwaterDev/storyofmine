@@ -1,27 +1,39 @@
 package com.unlone.app.ui.profile
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.MutableLiveData
 import com.unlone.app.model.Post
-import androidx.lifecycle.LiveData
 import android.content.ContentValues
 import android.util.Log
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
+import com.unlone.app.model.PostItemUiState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import kotlin.collections.ArrayList
 
 class SavedPostsViewModel : ViewModel() {
-    val posts: MutableLiveData<List<Post>> = MutableLiveData()
-    private val postList: MutableList<Post> = ArrayList()
-    val mAuth = FirebaseAuth.getInstance()
-    private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
+    private val posts: LiveData<List<Post>> = _posts
+    private val mPosts = 100
+    private val postList: MutableList<Post> = java.util.ArrayList()
+    private val mAuth = FirebaseAuth.getInstance()
+    private val mFirestore = FirebaseFirestore.getInstance()
     private var lastVisible: DocumentSnapshot? = null
-    fun getPosts(): LiveData<List<Post>> {
-        return posts
+    val postListUiItems = posts.map { posts ->
+        posts.map {
+            PostItemUiState(
+                it.title,
+                it.imagePath,
+                it.journal.substring(0,120.coerceAtMost(it.journal.length)),
+                it.pid
+            )
+        }
+    }
+
+    init {
+        val uid = mAuth.uid     // TODO set up a Room database to store user data
+        loadPosts(mPosts)
     }
 
     // retrieve the list of saved posts
@@ -59,11 +71,10 @@ class SavedPostsViewModel : ViewModel() {
                     }
                 }
             }
-            posts.postValue(postList)
+            _posts.postValue(postList)
             Log.d(ContentValues.TAG, "added posts: ${posts.value}")
             Log.d(ContentValues.TAG, "added postList: $postList")
         }
     }
-
 
 }

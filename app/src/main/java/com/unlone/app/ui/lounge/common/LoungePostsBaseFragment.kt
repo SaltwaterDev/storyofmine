@@ -1,5 +1,6 @@
 package com.unlone.app.ui.lounge.common
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@LayoutRes private val layoutResId : Int) : Fragment(){
+abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@LayoutRes private val layoutResId : Int)
+    : Fragment(), ItemClickListener{
 
     private var _binding : T? = null
     var viewModel : VM? = null
-    val postsAdapter: PostsAdapter by lazy {PostsAdapter()}
+    val postsAdapter: PostsAdapter by lazy {PostsAdapter(this)}
     open var mPosts = 100
     private var isLoading = false
 
@@ -33,7 +35,7 @@ abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@Lay
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DataBindingUtil.inflate(inflater, layoutResId, container, false)
-        viewModel = ViewModelProvider(this).get(getViewModelClass())
+        viewModel = ViewModelProvider(this)[getViewModelClass()]
         binding.initialize()
         return binding.root
     }
@@ -49,6 +51,16 @@ abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@Lay
     abstract fun initRv()
     abstract fun initSwipeRefreshLayout()
     abstract fun initSearchBar()
+
+    override fun onClick(pid: String) {
+        val intent = Intent(context, PostDetailActivity::class.java)
+        intent.putExtra("postId", pid)
+        context?.startActivity(intent)
+    }
+
 }
 
+interface ItemClickListener{
+    fun onClick(pid: String)
+}
 

@@ -19,8 +19,8 @@ class SavedPostsFragment :
     override fun onStart() {
         super.onStart()
         viewModel?.loadPosts(mPosts)
-        viewModel?.posts?.observe(
-            viewLifecycleOwner, { postList: List<Post> ->
+        viewModel?.postListUiItems?.observe(
+            viewLifecycleOwner, { postList ->
                 postsAdapter.submitList(postList)
             })
     }

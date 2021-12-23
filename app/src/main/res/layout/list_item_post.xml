@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
-            name="post"
-            type="com.unlone.app.model.Post" />
+            name="postUiState"
+            type="com.unlone.app.model.PostItemUiState" />
         <import type="android.view.Gravity"/>
         <import type="android.view.View"/>
     </data>
@@ -16,7 +15,6 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{post}"
         android:elevation="0dp">
 
 
@@ -40,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 app:layout_constraintTop_toTopOf="parent"
-                postImage="@{post}"
+                postImage="@{postUiState.imagePath}"
                 title="@{textViewTitle}"/>
 
             <TextView
@@ -51,14 +49,13 @@
                 android:layout_marginTop="33dp"
                 android:layout_marginRight="16dp"
                 android:fontFamily="@font/notosans_tc_medium"
-                android:gravity="@{post.imagePath.isEmpty()? Gravity.START: Gravity.CENTER}"
+                android:gravity="@{postUiState.imagePath.isEmpty()? Gravity.START: Gravity.CENTER}"
                 android:letterSpacing="0.05"
-                android:text="@string/title"
+                android:text='@{postUiState.title ?? "Title"}'
                 android:textColor="@color/colorText"
                 android:textSize="18sp"
                 android:visibility="visible"
-                app:layout_constraintTop_toBottomOf="@id/imageCover"
-                app:title="@{post}"/>
+                app:layout_constraintTop_toBottomOf="@id/imageCover"/>
 
 
             <TextView
@@ -72,11 +69,10 @@
                 android:letterSpacing="0.1"
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="5"
-                android:text="@string/journal"
+                android:text='@{postUiState.content ?? "content"}'
                 android:textColor="@color/colorText"
                 android:textSize="14sp"
-                android:visibility="@{post.imagePath.isEmpty()? View.VISIBLE: View.GONE}"
-                app:journal="@{post}"/>
+                android:visibility="@{postUiState.imagePath.isEmpty()? View.VISIBLE: View.GONE}" />
 
 
 

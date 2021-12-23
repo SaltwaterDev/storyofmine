@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentLoungeAllBinding
 import com.unlone.app.model.Post
+import com.unlone.app.model.PostItemUiState
 import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
 
 class LoungeAllFragment :
@@ -18,9 +19,9 @@ class LoungeAllFragment :
 
     override fun onStart() {
         super.onStart()
-        viewModel?.loadPosts(mPosts, false)
-        viewModel?.posts?.observe(
-            viewLifecycleOwner, { postList: List<Post> ->
+        viewModel?.loadPosts()
+        viewModel?.postListUiItems?.observe(
+            viewLifecycleOwner, { postList: List<PostItemUiState> ->
                 postsAdapter.submitList(postList)
             })
     }
@@ -40,8 +41,7 @@ class LoungeAllFragment :
     override fun initRv() {
         val recyclerView: RecyclerView = binding.recycleviewPosts
         recyclerView.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(activity)
-        recyclerView.layoutManager = layoutManager
+        recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = postsAdapter
     }
 

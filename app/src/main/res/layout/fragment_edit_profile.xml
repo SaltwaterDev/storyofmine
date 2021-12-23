@@ -1,157 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.profile.EditProfileFragment"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?android:attr/windowBackground"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <TextView
-                android:id="@+id/cancelButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="19dp"
-                android:text="@string/cancel"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="19dp"
-                android:fontFamily="@font/sf_compact_display_medium"
-                android:textColor="@color/colorText"
-                android:text="@string/save"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </com.google.android.material.appbar.AppBarLayout>
-
+        <variable
+            name="viewModel"
+            type="com.unlone.app.ui.profile.EditProfileViewModel" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp">
+        tools:context=".ui.profile.EditProfileFragment">
 
-        <TextView
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?android:attr/windowBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/cancelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="19dp"
+                    android:enabled="@{viewModel.isCancelEnabled}"
+                    android:onClick="@{() -> viewModel.goBack()}"
+                    android:text="@string/cancel"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/saveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="19dp"
+                    android:enabled="@{viewModel.isSavedEnabled}"
+                    android:fontFamily="@font/sf_compact_display_medium"
+                    android:onClick="@{() -> viewModel.updateProfile(username.getText().toString(), bio.getText().toString())}"
+                    android:text="@string/save"
+                    android:textColor="@color/colorText"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/usernameTv"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/name"
-            android:textSize="21sp"
-            android:textColor="@color/colorText"/>
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/usernameTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/name"
+                android:textColor="@color/colorText"
+                android:textSize="21sp" />
 
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/username"
-            app:met_floatingLabel="normal"
-            android:layout_marginTop="7dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{viewModel.username}"
+                app:met_floatingLabel="normal" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/bioTv"
-            android:layout_marginTop="34dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/bio"
-            android:textSize="21sp"
-            android:textColor="@color/colorText"/>
+            <TextView
+                android:id="@+id/bioTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/bio"
+                android:textColor="@color/colorText"
+                android:textSize="21sp" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/bio"
-            android:hint="@string/others_won_t_see_it"
-            app:met_floatingLabel="normal"
-            android:layout_marginTop="7dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/others_won_t_see_it"
+                android:text="@{viewModel.bio}"
+                app:met_floatingLabel="normal" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/likesTv"
-            android:layout_marginTop="34dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/likes"
-            android:visibility="gone"
-            android:textSize="21sp"
-            android:textColor="@color/colorText"/>
+            <TextView
+                android:id="@+id/likesTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/likes"
+                android:textColor="@color/colorText"
+                android:textSize="21sp"
+                android:visibility="gone" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/likes"
-            android:visibility="gone"
-            app:met_floatingLabel="normal"
-            android:layout_marginTop="7dp"
-            android:hint="@string/others_won_t_see_it"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/likes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/others_won_t_see_it"
+                android:visibility="gone"
+                app:met_floatingLabel="normal" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/dislikesTv"
-            android:layout_marginTop="34dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/dislikes"
-            android:textSize="21sp"
-            android:visibility="gone"
-            android:textColor="@color/colorText"/>
+            <TextView
+                android:id="@+id/dislikesTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/dislikes"
+                android:textColor="@color/colorText"
+                android:textSize="21sp"
+                android:visibility="gone" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/dislikes"
-            app:met_floatingLabel="normal"
-            android:hint="@string/others_won_t_see_it"
-            android:layout_marginTop="7dp"
-            android:visibility="gone"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/dislikes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/others_won_t_see_it"
+                android:visibility="gone"
+                app:met_floatingLabel="normal" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
-
-</LinearLayout>
+</layout>
