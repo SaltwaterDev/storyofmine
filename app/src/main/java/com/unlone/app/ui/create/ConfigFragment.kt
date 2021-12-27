@@ -219,7 +219,6 @@ class ConfigFragment : Fragment() {
     private fun uploadText(post: Post) {
         val stamp = System.currentTimeMillis()
         post.createdTimestamp = stamp.toString()
-        post.createdDate = convertTimeStamp(stamp.toString(), Locale.getDefault().language)
 
         try {
             saveNewPost(post)

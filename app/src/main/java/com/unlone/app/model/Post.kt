@@ -15,7 +15,6 @@ data class Post(
         var labels: ArrayList<String> = ArrayList<String>(),
         var category:String = "",
         var createdTimestamp: String = "",
-        var createdDate: String = "",
         var pid: String = "",
         var comment: Boolean = true,
         var save: Boolean = true,

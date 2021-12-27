@@ -2,21 +2,24 @@ package com.unlone.app.ui.lounge.common
 
 import android.content.ContentValues
 import android.util.Log
+import androidx.databinding.Bindable
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
+import com.unlone.app.BR
 import com.unlone.app.R
 import com.unlone.app.model.*
 import com.unlone.app.ui.lounge.category.CategoriesViewModel
+import com.unlone.app.utils.ObservableViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
 
-class DetailedPostViewModel(val pid: String) : ViewModel() {
+class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val mFirestore = FirebaseFirestore.getInstance()
@@ -26,9 +29,11 @@ class DetailedPostViewModel(val pid: String) : ViewModel() {
     private val post: MutableLiveData<Post?> = MutableLiveData()
     val observablePost: LiveData<Post?>
         get() = post
-    private var isPostSaved: Boolean = false
     private val _category: MutableLiveData<String?> = MutableLiveData()
     val category: LiveData<String?> = _category
+    private val _isPostSaved: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isPostSaved: LiveData<Boolean> = _isPostSaved
+
 
     // comments list field
     private val mComments: Long = 4   // how many comment loaded each time
@@ -61,6 +66,7 @@ class DetailedPostViewModel(val pid: String) : ViewModel() {
     init {
         loadPost()
         getCategoryTitle()
+        isSaved()
     }
 
 
@@ -89,7 +95,7 @@ class DetailedPostViewModel(val pid: String) : ViewModel() {
     }
 
     fun savePost() {
-        if (isPostSaved) {
+        if (_isPostSaved.value != true) {
             val timestamp =
                 hashMapOf("saveTime" to System.currentTimeMillis().toString())
             mAuth.uid?.let { uid ->
@@ -100,6 +106,7 @@ class DetailedPostViewModel(val pid: String) : ViewModel() {
                     .addOnSuccessListener {}
                     .addOnFailureListener {}
             }
+            _isPostSaved.value = true
         } else {
             // User uncheck chose the "Saving" item, save the post...
             mAuth.uid?.let { uid ->
@@ -110,6 +117,7 @@ class DetailedPostViewModel(val pid: String) : ViewModel() {
                     .addOnSuccessListener {}
                     .addOnFailureListener {}
             }
+            _isPostSaved.value = false
         }
     }
 
@@ -134,13 +142,15 @@ class DetailedPostViewModel(val pid: String) : ViewModel() {
             }
     }
 
-    suspend fun isSaved(pid: String): Boolean {
-        val result = mFirestore.collection("users").document(mAuth.uid!!)
-            .collection("saved")
-            .document(pid)
-            .get()
-            .await()
-        return result != null && result.exists()
+    private fun isSaved() {
+        viewModelScope.launch {
+            val result = mFirestore.collection("users").document(mAuth.uid!!)
+                .collection("saved")
+                .document(pid)
+                .get()
+                .await()
+            _isPostSaved.value = (result != null && result.exists())
+        }
     }
 
     fun loadUiComments(loadMore: Boolean = false) {

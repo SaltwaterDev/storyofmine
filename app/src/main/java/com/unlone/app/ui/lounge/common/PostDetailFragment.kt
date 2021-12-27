@@ -27,7 +27,6 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentPostDetailBinding
-import com.unlone.app.databinding.LayoutPostBinding
 import com.unlone.app.utils.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,8 +53,6 @@ class PostDetailFragment : Fragment() {
             this,
         )
     }
-    var hashMap: HashMap<String, String>  // tag storing the save state
-            = HashMap<String, String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,12 +87,9 @@ class PostDetailFragment : Fragment() {
         // listen to the subComment call
         detailedPostViewModel.commentEditTextFocused.observe(this, {
             detailedPostViewModel.parentCid?.let { it1 ->
-                detailedPostViewModel.parentCommenter?.let { it2 ->
-                    focusEdittextToSubComment(
-                        it1,
-                        it2
-                    )
-                }
+                focusEdittextToSubComment(
+                    it1
+                )
             }
         })
 
@@ -141,7 +135,8 @@ class PostDetailFragment : Fragment() {
                 }
                 R.id.actionReport -> {
                     // write the pid into the Report collection in Firestore
-                    val singleItems: Array<String> = detailedPostViewModel.singleItems.map { getString(it) }.toTypedArray()
+                    val singleItems: Array<String> =
+                        detailedPostViewModel.singleItems.map { getString(it) }.toTypedArray()
                     var checkedItem = 1
 
                     // show dialog
@@ -150,7 +145,7 @@ class PostDetailFragment : Fragment() {
                         R.style.ThemeOverlay_App_MaterialAlertDialog
                     )
                         .setTitle(getString(R.string.why_report))
-                        .setNeutralButton(getString(R.string.cancel)){_, _ ->}
+                        .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
                         .setPositiveButton(getString(R.string.report)) { dialog, which ->
                             // Respond to positive button press
                             Log.d("TAG", singleItems[checkedItem])
@@ -255,25 +250,15 @@ class PostDetailFragment : Fragment() {
 
     private fun isSaved(saveButton: MenuItem) {
         val c: Context = requireContext()
-        lifecycleScope.launch(Dispatchers.IO) {
-            if (detailedPostViewModel.isSaved(pid) || hashMap["saveButton"] == "saved") {
-                withContext(Dispatchers.Main) {
-                    saveButton.icon =
-                        ContextCompat.getDrawable(c, R.drawable.ic_baseline_bookmark_24)
-                    hashMap["saveButton"] = "saved"
-                }
-            } else {
-                withContext(Dispatchers.Main) {
-                    saveButton.icon = ContextCompat.getDrawable(
-                        c, R.drawable.ic_baseline_bookmark_border_24
-                    )
-                    hashMap["saveButton"] = "save"
-                }
+        detailedPostViewModel.isPostSaved.observe(this, { saved ->
+            saveButton.icon = when (saved) {
+                true -> ContextCompat.getDrawable(c, R.drawable.ic_baseline_bookmark_24)
+                else -> ContextCompat.getDrawable(c, R.drawable.ic_baseline_bookmark_border_24)
             }
-        }
+        })
     }
 
-    private fun focusEdittextToSubComment(cid: String, username: String) {
+    private fun focusEdittextToSubComment(username: String) {
         val editText = binding.commentEt
 
         // add prefix
