@@ -46,27 +46,6 @@ class LoungeFollowingFragment :
         recyclerView.adapter = postsAdapter
     }
 
-    override fun initSearchBar() {
-        binding.inputSearch.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-                viewModel?.searchPost(s.toString())
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-    }
-
     override fun initSwipeRefreshLayout() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = true

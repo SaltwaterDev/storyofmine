@@ -50,7 +50,7 @@
             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
-            android:name="com.unlone.app.ui.lounge.common.PostDetailActivity"
+            android:name="com.unlone.app.ui.lounge.common.PostDetailFragment"
             android:exported="true"
             android:parentActivityName="com.unlone.app.ui.MainActivity" />
         <activity

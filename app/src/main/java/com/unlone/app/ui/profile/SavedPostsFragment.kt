@@ -53,7 +53,6 @@ class SavedPostsFragment :
 
     override fun initSwipeRefreshLayout() {}
 
-    override fun initSearchBar() {}
 
     companion object {
         const val REQUEST_CODE_ADD_POST = 1

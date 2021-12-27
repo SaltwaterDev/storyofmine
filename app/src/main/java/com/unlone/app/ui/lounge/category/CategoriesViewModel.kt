@@ -26,7 +26,7 @@ class CategoriesViewModel : ViewModel() {
     val categoryTitle: LiveData<String> = _categoryTitle
 
     private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
-    val posts: LiveData<List<Post>> = _posts
+    private val posts: LiveData<List<Post>> = _posts
     private val mPosts = 100
     private val postList: MutableList<Post> = java.util.ArrayList()
     private val mAuth = FirebaseAuth.getInstance()
@@ -184,7 +184,6 @@ class CategoriesViewModel : ViewModel() {
                     .data?.get(appLanguage) as String?
             }!!
         }
-
     }
 
     suspend fun isFollowing(category: String): Boolean {

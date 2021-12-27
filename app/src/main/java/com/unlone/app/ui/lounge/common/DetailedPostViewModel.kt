@@ -2,20 +2,21 @@ package com.unlone.app.ui.lounge.common
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
+import com.unlone.app.R
 import com.unlone.app.model.*
+import com.unlone.app.ui.lounge.category.CategoriesViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import java.util.ArrayList
+import java.util.*
+import javax.inject.Inject
 
-class DetailedPostViewModel : ViewModel() {
+class DetailedPostViewModel(val pid: String) : ViewModel() {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val mFirestore = FirebaseFirestore.getInstance()
@@ -25,6 +26,9 @@ class DetailedPostViewModel : ViewModel() {
     private val post: MutableLiveData<Post?> = MutableLiveData()
     val observablePost: LiveData<Post?>
         get() = post
+    private var isPostSaved: Boolean = false
+    private val _category: MutableLiveData<String?> = MutableLiveData()
+    val category: LiveData<String?> = _category
 
     // comments list field
     private val mComments: Long = 4   // how many comment loaded each time
@@ -35,13 +39,30 @@ class DetailedPostViewModel : ViewModel() {
     val uiComments: LiveData<List<UiComment>> = _uiComments
 
     private var lastVisible: Float? = null
-    var endOfComments: Boolean = false
+    var endOfComments: Boolean = true
 
     // type comment edittext field
     private var _commentEditTextFocused: MutableLiveData<Boolean> = MutableLiveData()
     val commentEditTextFocused: LiveData<Boolean> = _commentEditTextFocused
     var parentCid: String? = null
     var parentCommenter: String? = null
+    val isSelfPost by lazy { post.value?.author_uid == uid }
+
+    // Report
+    private val reportMap = mapOf(
+        (R.string.hate_speech) to "Hate Speech",
+        (R.string.span_or_irrelevant) to "Span or Irrelevant",
+        (R.string.sexual_or_inappropriate) to "Sexual or Inappropriate",
+        (R.string.just_dont_like) to "I just don’t like it"
+    )
+    val singleItems = reportMap.keys.toList().toTypedArray()
+    var reportSuccessful: Boolean? = null
+
+    init {
+        loadPost()
+        getCategoryTitle()
+    }
+
 
     fun focusEdittextToSubComment(parentCid: String, parentCommenter: String) {
         _commentEditTextFocused.value = true
@@ -49,20 +70,17 @@ class DetailedPostViewModel : ViewModel() {
         this.parentCommenter = parentCommenter
     }
 
-    fun loadPost(pid: String) {
+    private fun loadPost() {
         mFirestore.collection("posts")
             .document(pid)
             .get()
             .addOnSuccessListener { documentSnapshot ->
                 val p = documentSnapshot.toObject<Post>()
                 post.value = p
-                Log.d("TAG", "detailedPost: ${post.value.toString()}")
-                Log.d("TAG", "pid: $pid")
             }
     }
 
     fun deletePost(pid: String) {
-
         mFirestore.collection("posts")
             .document(pid)
             .delete()
@@ -70,33 +88,50 @@ class DetailedPostViewModel : ViewModel() {
             .addOnFailureListener { e -> Log.w("TAG", "Error deleting document", e) }
     }
 
-    fun savePost(pid: String, timestamp: HashMap<String, String>) {
-        mAuth.uid?.let { uid ->
-            mFirestore.collection("users").document(uid)
-                .collection("saved")
-                .document(pid)
-                .set(timestamp)
-                .addOnSuccessListener {}
-                .addOnFailureListener {}
+    fun savePost() {
+        if (isPostSaved) {
+            val timestamp =
+                hashMapOf("saveTime" to System.currentTimeMillis().toString())
+            mAuth.uid?.let { uid ->
+                mFirestore.collection("users").document(uid)
+                    .collection("saved")
+                    .document(pid)
+                    .set(timestamp)
+                    .addOnSuccessListener {}
+                    .addOnFailureListener {}
+            }
+        } else {
+            // User uncheck chose the "Saving" item, save the post...
+            mAuth.uid?.let { uid ->
+                mFirestore.collection("users").document(uid)
+                    .collection("saved")
+                    .document(pid)
+                    .delete()
+                    .addOnSuccessListener {}
+                    .addOnFailureListener {}
+            }
         }
     }
 
-    fun unsavePost(pid: String) {
-        mAuth.uid?.let { uid ->
-            mFirestore.collection("users").document(uid)
-                .collection("saved")
-                .document(pid)
-                .delete()
-                .addOnSuccessListener {}
-                .addOnFailureListener {}
-        }
+    fun reportPost(checkedItem: Int) {
+        val report = Report.PostReport(
+            post = post.value,
+            reportReason = reportMap[singleItems[checkedItem]],
+            reportedBy = uid
+        )
+        Log.d("TAG", report.toString())
+        uploadReport(report)
     }
 
     fun uploadReport(report: Report) {
         mFirestore.collection("reports")
             .add(report)
-            .addOnSuccessListener {}
-            .addOnFailureListener {}
+            .addOnSuccessListener {
+                reportSuccessful = true
+            }
+            .addOnFailureListener {
+                reportSuccessful = false
+            }
     }
 
     suspend fun isSaved(pid: String): Boolean {
@@ -106,44 +141,37 @@ class DetailedPostViewModel : ViewModel() {
             .get()
             .await()
         return result != null && result.exists()
-
     }
 
-    fun loadUiComments(pid: String, loadMore: Boolean = false, numberPost: Long = mComments) {
+    fun loadUiComments(loadMore: Boolean = false) {
         val uiCommentList: ArrayList<UiComment> = ArrayList()
         viewModelScope.launch(Dispatchers.IO) {
-            loadComments(pid, loadMore, numberPost)
-
+            loadComments(loadMore, mComments)
             withContext(Dispatchers.Main) {
                 for (comment in _comments.value!!) {
                     val isLiked = fireStoreIsLike(comment)
                     // load sub comments
-                    val uiSubComments = loadUiSubComments(pid, comment, numberPost)
+                    val uiSubComments = loadUiSubComments(comment, mComments)
                     uiCommentList.add(UiComment(comment, isLiked, uiSubComments))
                 }
                 _uiComments.value = uiCommentList.distinct()
             }
         }
-
     }
 
     private suspend fun loadComments(
-        pid: String,
         loadMore: Boolean,
         numberPost: Long
     ) {
-
         if (lastVisible == null || !loadMore) {
             _commentList.clear()
             withContext(Dispatchers.IO) {
-
                 val commentCollection =
                     mFirestore.collection("posts").document(pid).collection("comments")
                         .orderBy("score", Query.Direction.DESCENDING)
                         .limit(numberPost)
                         .get()
                         .await()
-
                 endOfComments = commentCollection.size() < numberPost
 
                 Log.d("TAG", "number of comments: " + commentCollection.size())
@@ -173,9 +201,7 @@ class DetailedPostViewModel : ViewModel() {
                     Log.d("TAG", "sorted postList: $sortedCommentList")
                     _comments.value = sortedCommentList
                 }
-
             }
-
         } else {
             // run when order more comments
             Log.d("TAG", "lastVisible: $lastVisible")
@@ -230,12 +256,11 @@ class DetailedPostViewModel : ViewModel() {
     }
 
     private suspend fun loadUiSubComments(
-        pid: String,
         comment: Comment,
         numberPost: Long = mComments
     ): ArrayList<UiSubComment> {
         val uiSubCommentList = ArrayList<UiSubComment>()
-        val subCommentList = loadSubComments(pid, comment, numberPost)
+        val subCommentList = loadSubComments(comment, numberPost)
         for (sc in subCommentList) {
             val isLiked = fireStoreSubCommentIsLike(sc)
             uiSubCommentList.add(UiSubComment(sc, isLiked))
@@ -244,11 +269,9 @@ class DetailedPostViewModel : ViewModel() {
     }
 
     private suspend fun loadSubComments(
-        pid: String,
         comment: Comment,
         numberPost: Long = mComments
     ): MutableList<SubComment> {
-
         val subCommentList: MutableList<SubComment> = mutableListOf()
         val subCommentCollection = comment.cid?.let {
             mFirestore.collection("posts").document(pid)
@@ -383,7 +406,7 @@ class DetailedPostViewModel : ViewModel() {
     fun processSubCommentLike(subComment: SubComment) {
         Log.d("TAG", "subComment: $subComment")
 
-        val docRef = subComment.cid?.let {commentCid ->
+        val docRef = subComment.cid?.let { commentCid ->
             subComment.parent_cid?.let { parentCid ->
                 subComment.parent_pid?.let { ParentPid ->
                     mFirestore.collection("posts").document(ParentPid)
@@ -425,41 +448,70 @@ class DetailedPostViewModel : ViewModel() {
         }
     }
 
-    fun uploadComment(commentContent: String, pid: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val comment = Comment(
-                uid = mAuth.uid!!,
-                content = commentContent,
-                timestamp = System.currentTimeMillis().toString(),
-                referringPid = pid
-            )
-            mFirestore.collection("posts").document(pid)
-                .collection("comments")
-                .add(comment)
-                .await()
+    fun uploadComment(commentContent: String) {
+        if (parentCid == null) {
+            // normal comment
+            viewModelScope.launch(Dispatchers.IO) {
+                val comment = Comment(
+                    uid = mAuth.uid!!,
+                    content = commentContent,
+                    timestamp = System.currentTimeMillis().toString(),
+                    referringPid = pid
+                )
+                mFirestore.collection("posts").document(pid)
+                    .collection("comments")
+                    .add(comment)
+                    .await()
+            }
+        } else {
+            // sub comment
+            uploadSubComment(commentContent)
         }
+        // clear parent cid and username
+        clearSubCommentPrerequisite()
     }
 
-    fun uploadSubComment(commentContent: String, pid: String, cid: String) {
+    private fun uploadSubComment(commentContent: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val subComment = SubComment(
                 uid = mAuth.uid!!,
                 content = commentContent,
                 timestamp = System.currentTimeMillis().toString(),
-                parent_cid = cid,
+                parent_cid = parentCid,
                 parent_pid = pid
             )
-            mFirestore.collection("posts").document(pid)
-                .collection("comments").document(cid)
-                .collection("sub comments")
-                .add(subComment)
-                .await()
+            parentCid?.let {
+                mFirestore.collection("posts").document(pid)
+                    .collection("comments").document(it)
+                    .collection("sub comments")
+                    .add(subComment)
+                    .await()
+            }
         }
     }
-
 
     fun clearSubCommentPrerequisite() {
         parentCid = null
         parentCommenter = null
+    }
+
+    // display topic
+    private fun getCategoryTitle() {
+        val categoryId = post.value?.category
+        val appLanguage = when (Locale.getDefault().language) {
+            "zh" -> "zh_hk"          // if the device language is set to Chinese, use chinese text
+            else -> "default"        // default language (english)
+        }
+        viewModelScope.launch {
+            _category.value = categoryId?.let {
+                mFirestore.collection("categories")
+                    .document("pre_defined_categories")
+                    .collection("categories_name")
+                    .document(it)
+                    .get()
+                    .await()
+                    .data?.get(appLanguage)
+            } as String?
+        }
     }
 }

@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.unlone.app.R
-import com.unlone.app.ui.lounge.common.PostDetailActivity
+import com.unlone.app.ui.lounge.common.PostDetailFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG
@@ -68,7 +68,7 @@ class FirebaseMessagingService : FirebaseMessagingService() {
 
         Log.d("TAG", "FCM message received: $message")
         // Create an Intent for the activity you want to start
-        val resultIntent = Intent(this, PostDetailActivity::class.java)
+        val resultIntent = Intent(this, PostDetailFragment::class.java)
         resultIntent.putExtra("postId", message.data["pid"])
         Log.d("TAG", "postId to open: ${message.data["pid"]}")
         // Create the TaskStackBuilder

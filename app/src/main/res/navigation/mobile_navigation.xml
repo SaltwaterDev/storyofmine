@@ -76,5 +76,18 @@
             app:popUpTo="@id/navigation_profile"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.unlone.app.ui.lounge.common.PostDetailFragment"
+        android:label="fragment_post_detail"
+        tools:layout="@layout/fragment_post_detail">
+        <argument
+            android:name="pid"
+            android:defaultValue="nothing"
+            app:argType="string" />
+    </fragment>
+
+    <action android:id="@+id/action_global_postDetailFragment"
+        app:destination="@id/postDetailFragment"/>
 
 </navigation>

@@ -1,10 +1,7 @@
 package com.unlone.app.ui.lounge.category
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +15,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentCategoryPostBinding
-import com.unlone.app.model.Post
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -148,26 +144,6 @@ class CategoryPostFragment :
         }
     }
 
-    override fun initSearchBar() {
-        binding.inputSearch.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-                viewModel?.searchPost(s.toString())
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-    }
 
     companion object {
         fun newInstance(arg: String) =
@@ -176,7 +152,5 @@ class CategoryPostFragment :
                     putString("category", arg)
                 }
             }
-
     }
-
 }

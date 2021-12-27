@@ -5,8 +5,8 @@
         android:id="@+id/actionSave"
         android:icon="@drawable/ic_baseline_bookmark_border_24"
         app:tint="@color/colorBarIcon"
-        android:title="report"
-        app:showAsAction="always" />
+        android:title="@string/save"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/actionReport"

@@ -11,6 +11,10 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import com.unlone.app.MobileNavigationDirections
+import com.unlone.app.ui.lounge.category.CategoryListFragmentDirections
 
 abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@LayoutRes private val layoutResId : Int)
     : Fragment(), ItemClickListener{
@@ -30,7 +34,6 @@ abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@Lay
         initFab()
         initRv()
         initSwipeRefreshLayout()
-        initSearchBar()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,12 +53,10 @@ abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@Lay
     abstract fun initFab()
     abstract fun initRv()
     abstract fun initSwipeRefreshLayout()
-    abstract fun initSearchBar()
 
     override fun onClick(pid: String) {
-        val intent = Intent(context, PostDetailActivity::class.java)
-        intent.putExtra("postId", pid)
-        context?.startActivity(intent)
+        val action = MobileNavigationDirections.actionGlobalPostDetailFragment(pid)
+        view?.findNavController()?.navigate(action)
     }
 
 }
