@@ -58,7 +58,7 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_common.xml" value="0.22105263157894736" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_following.xml" value="0.1956140350877193" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_my_stories.xml" value="0.30432900432900434" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_post_detail.xml" value="0.30432900432900434" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_post_detail.xml" value="0.1" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_profile.xml" value="0.1824074074074074" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_registration.xml" value="0.2574561403508772" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_saved_posts.xml" value="0.20614035087719298" />
@@ -90,5 +90,5 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>

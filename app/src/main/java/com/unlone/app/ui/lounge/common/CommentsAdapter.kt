@@ -60,7 +60,7 @@ open class CommentsAdapter(
                 showMenu(v, R.menu.comment_popup_menu, item.comment, viewModel)
             }
             binding.commentButton.setOnClickListener {
-                if (item.uiSubComments.isNullOrEmpty()){
+                if (item.commentExpanded){
                     // focus text
                     item.comment.cid?.let { cid ->
                         item.comment.username?.let { username ->
@@ -74,6 +74,7 @@ open class CommentsAdapter(
                     // open sub comments
                     (it as ImageView).setImageResource(R.drawable.ic_chat)
                     binding.subCommentRv.visibility = View.VISIBLE
+                    item.commentExpanded = true
                 }
             }
             binding.subCommentRv.adapter = subCommentsAdapter

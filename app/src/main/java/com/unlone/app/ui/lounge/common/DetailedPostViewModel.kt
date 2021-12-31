@@ -2,24 +2,19 @@ package com.unlone.app.ui.lounge.common
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.databinding.Bindable
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
-import com.unlone.app.BR
 import com.unlone.app.R
 import com.unlone.app.model.*
-import com.unlone.app.ui.lounge.category.CategoriesViewModel
 import com.unlone.app.utils.ObservableViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
-import javax.inject.Inject
 
-class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
+class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val mFirestore = FirebaseFirestore.getInstance()
@@ -47,7 +42,7 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
     var endOfComments: Boolean = true
 
     // type comment edittext field
-    private var _commentEditTextFocused: MutableLiveData<Boolean> = MutableLiveData()
+    private var _commentEditTextFocused: MutableLiveData<Boolean> = MutableLiveData(false)
     val commentEditTextFocused: LiveData<Boolean> = _commentEditTextFocused
     var parentCid: String? = null
     var parentCommenter: String? = null
@@ -64,26 +59,23 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
     var reportSuccessful: Boolean? = null
 
     init {
-        loadPost()
-        getCategoryTitle()
-        isSaved()
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) { loadPost() }
+            getCategoryTitle()
+            isSaved()
+        }
     }
 
-
-    fun focusEdittextToSubComment(parentCid: String, parentCommenter: String) {
-        _commentEditTextFocused.value = true
-        this.parentCid = parentCid
-        this.parentCommenter = parentCommenter
-    }
-
-    private fun loadPost() {
-        mFirestore.collection("posts")
+    private suspend fun loadPost() {
+        val documentSnapshot = mFirestore.collection("posts")
             .document(pid)
             .get()
-            .addOnSuccessListener { documentSnapshot ->
-                val p = documentSnapshot.toObject<Post>()
-                post.value = p
-            }
+            .await()
+        val p = documentSnapshot.toObject<Post>()
+
+        withContext(Dispatchers.Main){
+            post.value = p
+        }
     }
 
     fun deletePost(pid: String) {
@@ -162,7 +154,7 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
                     val isLiked = fireStoreIsLike(comment)
                     // load sub comments
                     val uiSubComments = loadUiSubComments(comment, mComments)
-                    uiCommentList.add(UiComment(comment, isLiked, uiSubComments))
+                    uiCommentList.add(UiComment(comment, isLiked, false, uiSubComments))
                 }
                 _uiComments.value = uiCommentList.distinct()
             }
@@ -231,6 +223,7 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
                     Log.d(ContentValues.TAG, document.id + " ==> " + document.data)
                     val comment = document.toObject<Comment>()
                     comment.cid = document.id
+
                     // check if comment already existed
                     fun List<Comment>.filterByCid(cid: String) = this.filter { it.cid == cid }
                     val containedComments = _commentList.filterByCid(document.id)
@@ -244,12 +237,12 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
                         .get()
                         .await()
                     val user = userDoc.toObject(User::class.java)
+
                     withContext(Dispatchers.Main) {
                         comment.username = user?.username
                         if (comment.referringPid == null) {
                             comment.referringPid = pid
                         }
-
                         lastVisible = comment.score
                         Log.d("TAG", "comment object LOADED: $comment")
                         _commentList.add(comment)
@@ -320,7 +313,6 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
 
         return subCommentList
     }
-
 
     private suspend fun fireStoreIsLike(comment: Comment): Boolean {
         val result = comment.referringPid?.let {
@@ -500,7 +492,14 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel(){
         }
     }
 
+    fun focusEdittextToSubComment(parentCid: String, parentCommenter: String) {
+        _commentEditTextFocused.value = true
+        this.parentCid = parentCid
+        this.parentCommenter = parentCommenter
+    }
+
     fun clearSubCommentPrerequisite() {
+        _commentEditTextFocused.value = false
         parentCid = null
         parentCommenter = null
     }

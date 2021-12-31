@@ -6,5 +6,6 @@ import androidx.annotation.Keep
 data class UiComment(
     val comment: Comment,
     var likedByUser: Boolean,
+    var commentExpanded: Boolean,
     var uiSubComments: List<UiSubComment>?
 )

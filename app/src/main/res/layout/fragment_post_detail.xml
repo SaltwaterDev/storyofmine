@@ -47,47 +47,33 @@
                 <include
                     android:id="@+id/layoutPost"
                     layout="@layout/layout_post"
-                    app:viewModelInstance="@{viewModel}" />
+                    app:category="@{viewModel.category}"
+                    app:post="@{viewModel.observablePost}" />
 
-                <!--List of comment-->
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="98dp"
+                    android:background="#7F000000" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="98dp">
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#7F000000"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycleview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <ImageView
-                        android:id="@+id/more_comment_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="80dp"
-                        android:onClick="@{() -> viewModel.loadUiComments(true)}"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_baseline_add_circle_outline_24"
-                        android:visibility="@{viewModel.endOfComments? View.GONE: View.VISIBLE}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recycleview" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/more_comment_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="80dp"
+                    android:onClick="@{() -> viewModel.loadUiComments(true)}"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_baseline_add_circle_outline_24"
+                    android:visibility="@{viewModel.endOfComments? View.GONE: View.VISIBLE}" />
 
                 <!--Related Posts, will do next time-->
             </LinearLayout>
-
 
         </androidx.core.widget.NestedScrollView>
 

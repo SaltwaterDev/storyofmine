@@ -7,31 +7,23 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentPostDetailBinding
 import com.unlone.app.utils.ViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.*
 
 
 class PostDetailFragment : Fragment() {
@@ -86,10 +78,9 @@ class PostDetailFragment : Fragment() {
 
         // listen to the subComment call
         detailedPostViewModel.commentEditTextFocused.observe(this, {
-            detailedPostViewModel.parentCid?.let { it1 ->
-                focusEdittextToSubComment(
-                    it1
-                )
+            detailedPostViewModel.parentCommenter?.let { it1 ->
+                Log.d("tag", "commentEditTextFocused = $it")
+                focusEdittextToSubComment(it1)
             }
         })
 
@@ -102,22 +93,17 @@ class PostDetailFragment : Fragment() {
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
             binding.moreCommentButton.visibility = View.VISIBLE
         }
+
         binding.commentEt.doAfterTextChanged {
             if (detailedPostViewModel.parentCid != null && detailedPostViewModel.parentCommenter.toString() !in binding.commentEt.text) {
-                // replying prefix is destroyed
-                // remove the prefix directly
+                // replying prefix is destroyed, remove the prefix directly
                 val arr = binding.commentEt.text.split(" ").toTypedArray()
-                val trimmedContent =
-                    arr.filterNot { it == arr[0] }     // the content with the "@user" prefix"
-                if (trimmedContent.isEmpty()) {
-                    binding.commentEt.setText("")
-                } else {
-                    binding.commentEt.setText(trimmedContent[0])
-                }
+                val trimmedContent = arr.filterNot { it == arr[0] }     // the content with the "@user" prefix"
+                val replaceText = if (trimmedContent.isEmpty()) "" else trimmedContent[0]
+                binding.commentEt.setText(replaceText)
                 detailedPostViewModel.clearSubCommentPrerequisite()
             }
         }
-
         return view
     }
 
@@ -210,29 +196,6 @@ class PostDetailFragment : Fragment() {
                     saveButton.icon.mutate().alpha = 135
                 }
 
-                // display label
-                var displayLabel = ""
-                for (label in p.labels) {
-                    displayLabel += "· "
-                    displayLabel += "$label "
-                    val labelTv = TextView(requireContext())
-                    labelTv.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    labelTv.typeface =
-                        ResourcesCompat.getFont(requireContext(), R.font.sf_pro_text_semibold)
-                    labelTv.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.colorText
-                        )
-                    )
-                    labelTv.letterSpacing = 0.01F
-                    labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
-                    labelTv.text = displayLabel
-                    binding.layoutPost.labelGroup.addView(labelTv)
-                }
                 // others will be implemented BY data binding
             }
         })
@@ -243,6 +206,7 @@ class PostDetailFragment : Fragment() {
         if (!TextUtils.isEmpty(content)) {
             detailedPostViewModel.uploadComment(content)
             detailedPostViewModel.loadUiComments(false)
+            return
         }
         // no value is entered, shouldn't go here if have comment
         Toast.makeText(requireContext(), "Comment is empty", Toast.LENGTH_SHORT).show()

@@ -89,6 +89,7 @@
 
     <action android:id="@+id/action_global_postDetailFragment"
         app:destination="@id/postDetailFragment"/>
+
     <include app:graph="@navigation/category_navigation" />
 
 </navigation>

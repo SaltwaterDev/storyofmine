@@ -19,8 +19,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class CategoriesViewModel : ViewModel() {
-    private var _categories: MutableLiveData<List<String>> = MutableLiveData()
     private var _rawCategories: MutableLiveData<List<Pair<String, String>>> = MutableLiveData()
+    private var _categories: MutableLiveData<List<String>> = MutableLiveData()
     val categories: LiveData<List<String>> = _categories
     private var _categoryTitle = MutableLiveData<String>()
     val categoryTitle: LiveData<String> = _categoryTitle

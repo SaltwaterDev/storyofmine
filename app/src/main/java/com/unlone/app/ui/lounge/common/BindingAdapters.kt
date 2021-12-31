@@ -4,25 +4,36 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.unlone.app.R
-import com.unlone.app.model.*
+import com.unlone.app.model.Comment
+import com.unlone.app.model.Post
 import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
 import java.util.*
 
+
 object BindingAdapters {
     @BindingAdapter("android:onClick")
-    @JvmStatic fun MaterialCardView.setOnClick(item: Post) {
+    @JvmStatic
+    fun MaterialCardView.setOnClick(item: Post) {
         setOnClickListener {
             val intent = Intent(context, PostDetailFragment::class.java)
             intent.putExtra("postId", item.pid)
@@ -30,14 +41,9 @@ object BindingAdapters {
         }
     }
 
-
-    @BindingAdapter("journal")
-    @JvmStatic fun TextView.setJournal(item: Post) {
-        text = item.journal
-    }
-
     @BindingAdapter("postImage")
-    @JvmStatic fun ImageView.setPostImage(imagePath: String?) {
+    @JvmStatic
+    fun ImageView.setPostImage(imagePath: String?) {
         try {
             val target: Target = object : Target {
                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
@@ -62,7 +68,8 @@ object BindingAdapters {
     }
 
     @BindingAdapter("postImage", "title")
-    @JvmStatic fun ImageView.setPostImage(imagePath: String, title: TextView) {
+    @JvmStatic
+    fun ImageView.setPostImage(imagePath: String, title: TextView) {
         // TODO set the image space
         if (imagePath.isNotEmpty()) {
             Log.d("TAG", "image path: $imagePath")
@@ -155,33 +162,64 @@ object BindingAdapters {
     }
 
     @BindingAdapter("commentUsername")
-    @JvmStatic fun TextView.setCommentUsername(item: String?) {
+    @JvmStatic
+    fun TextView.setCommentUsername(item: String?) {
         text = item ?: "User"
     }
 
     @BindingAdapter("date")
-    @JvmStatic fun TextView.setDate(item: String?) {
+    @JvmStatic
+    fun TextView.setDate(item: String?) {
         text = item?.let { convertTimeStamp(it, Locale.getDefault().language) }
     }
 
     @BindingAdapter("commentDate")
-    @JvmStatic fun TextView.setCommentDate(item: String) {
+    @JvmStatic
+    fun TextView.setCommentDate(item: String) {
         text = convertTimeStamp(item, "COMMENT")
     }
 
     @BindingAdapter("commentContent")
-    @JvmStatic fun TextView.setContent(item: String) {
+    @JvmStatic
+    fun TextView.setContent(item: String) {
         text = item
     }
 
     @BindingAdapter("commentReadMore")
-    @JvmStatic fun TextView.setCommentReadMore(item: Comment) {
+    @JvmStatic
+    fun TextView.setCommentReadMore(item: Comment) {
         // todo (Not implemented)
+    }
+
+    @BindingAdapter("labels")
+    @JvmStatic
+    fun TextView.setLabels(labels: ArrayList<String>?) {
+        // display label
+        val spb = SpannableStringBuilder()
+        if (labels != null) {
+            for (label in labels) {
+                val clickableSpan: ClickableSpan = object : ClickableSpan() {
+                    override fun onClick(view: View) {
+                        // todo (open the label's post)
+                    }
+                }
+                val displayLabel = SpannableString("·$label  ")
+                displayLabel.setSpan(
+                    clickableSpan,
+                    1,
+                    label.length + 1,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
+                spb.append(displayLabel)
+            }
+        }
+        text = spb
     }
 
 
     @BindingAdapter("android:src")
-    @JvmStatic fun ImageView.setSrc(isLiked: Boolean) {
+    @JvmStatic
+    fun ImageView.setSrc(isLiked: Boolean) {
         tag = if (isLiked) {
             setImageResource(R.drawable.ic_heart_filled)
             "liked"
@@ -189,5 +227,40 @@ object BindingAdapters {
             setImageResource(R.drawable.ic_heart)
             "like"
         }
+    }
+
+
+    @BindingAdapter(value = ["focus", "username"], requireAll = true)
+    @JvmStatic
+    fun EditText.setFocus(isFocus: Boolean, username: String?) {
+        /*
+        if (isFocus) {
+            // add prefix
+            Log.d("tag", "isFocus = $isFocus")
+            username?.let {
+                val prefix = "@$username "
+                val prefixToSpan: Spannable = SpannableString(prefix)
+                prefixToSpan.setSpan(
+                    ForegroundColorSpan(resources.getColor(R.color.labelled)),
+                    0,
+                    prefix.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                setText(prefixToSpan, TextView.BufferType.EDITABLE)
+
+                // set focus and open the soft keyboard
+                requestFocus()
+                /*
+                val imm: InputMethodManager? =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                imm?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+                 */
+
+                // move the cursor to the end
+                setSelection(this.length())
+            }
+        }
+
+         */
     }
 }

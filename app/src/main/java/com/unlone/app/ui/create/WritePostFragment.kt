@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -57,7 +58,7 @@ class WritePostFragment : Fragment() {
     }
 
     private lateinit var cropActivityResultLauncher: ActivityResultLauncher<Any?>
-    private val savedStateModel: SavedStateModel by viewModels()
+    private val savedStateModel: SavedStateModel by activityViewModels()
     private lateinit var postData: PostData
 
 
@@ -97,7 +98,6 @@ class WritePostFragment : Fragment() {
                 postData.title = binding.inputPostTitle.text.toString()
                 postData.imageUri = selectedImageUri
                 postData.journal = binding.inputPostContext.text.toString()
-                postData.uid = savedStateModel.uid!!
                 postData.labels.clear()
                 postData.labels.addAll(labels)
                 Log.d("TAG", "labels in write fragment: $labels")
