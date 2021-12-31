@@ -57,14 +57,18 @@ class LoadFragment : Fragment() {
             mFirestore.collection("users").document(currentUser.uid).get()
                 .addOnSuccessListener { documentSnapshot: DocumentSnapshot ->
                     Log.d("LOADACTIVITY", "GET USER")
-                    val current = documentSnapshot.toObject<User>()!!
-                    Toast.makeText(
-                        context, "Welcome Back " + current.username,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    Log.d("LOADACTIVITY", "login: " + currentUser.uid)
-                    startActivity(Intent(activity, MainActivity::class.java))
-                    activity?.finish()
+                    if (documentSnapshot.data != null){
+                        val current = documentSnapshot.toObject<User>()!!
+                        Toast.makeText(
+                            context, "Welcome Back " + current.username,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("LOADACTIVITY", "login: " + currentUser.uid)
+                        startActivity(Intent(activity, MainActivity::class.java))
+                        activity?.finish()
+                    } else{
+                        findNavController().navigate(R.id.action_loadFragment_to_first_access_navigation)
+                    }
                 }
                 .addOnFailureListener { e ->
                     Log.d("LOADACTIVITY", "exception: \n$e")

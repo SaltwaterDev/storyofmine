@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:theme="@style/AppTheme"
     tools:context="ui.access.EmailVerificationFragment">
 
 
@@ -15,7 +17,7 @@
         android:text="@string/welcome_to_unlone"
         android:textColor="@color/colorText"
         android:textSize="26sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
@@ -25,7 +27,7 @@
         android:text="@string/to_ensure_to_community_safety_nwe_d_like_to_confirm_your_identity"
         android:textColor="@color/colorText"
         android:textSize="16sp"
-        android:textStyle="normal"/>
+        android:textStyle="normal" />
 
     <TextView
         android:layout_width="match_parent"
@@ -35,14 +37,15 @@
         android:text="@string/please_click_the_button_below_nto_send_verification_email"
         android:textColor="@color/colorText"
         android:textSize="15sp"
-        android:textStyle="normal"/>
+        android:textStyle="normal" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/sendEmailBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="45dp"
-        android:text="@string/send_verification_email"/>
+        android:text="@string/send_verification_email"
+        android:textAllCaps="false" />
 
 </LinearLayout>

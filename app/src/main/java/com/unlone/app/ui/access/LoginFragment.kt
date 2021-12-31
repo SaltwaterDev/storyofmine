@@ -40,7 +40,6 @@ class LoginFragment : Fragment() {
         val register = binding.buttonRegister
         val progressBar = binding.progressBar
 
-
         register.setOnClickListener {
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_loginFragment_to_registrationFragment)
@@ -67,14 +66,18 @@ class LoginFragment : Fragment() {
                                 try {
                                     val result = reference.get().await()
                                     Log.d("TAG", "result = $result")
-                                    val intent = Intent(context, MainActivity::class.java)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                    activity?.startActivity(intent)
-                                    activity?.finish()
+                                    if (result.data == null){
+                                        // user data is not written to fireStore yet
+                                        progressBar.visibility = View.INVISIBLE
+                                        findNavController().navigate(R.id.action_loginFragment_to_on_boarding_navigation)
+                                    } else{
+                                        val intent = Intent(context, MainActivity::class.java)
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                        activity?.startActivity(intent)
+                                        activity?.finish()
+                                    }
                                 } catch (e: FirebaseFirestoreException) {
-                                    // user data is not written to fireStore yet
-                                    progressBar.visibility = View.INVISIBLE
-                                    findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
+                                    Log.d("TAG", "FirebaseFirestoreException: $e")
                                 }
                             }
                         } else {
@@ -91,19 +94,5 @@ class LoginFragment : Fragment() {
             }
         }
         return binding.root
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() =
-            LoginFragment().apply {
-            }
     }
 }

@@ -4,24 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="40dp"
-    android:layout_marginEnd="40dp"
     android:orientation="vertical"
-    tools:context=".ui.access.onBoarding.ChooseCategoriesFragment">
+    tools:context=".ui.access.onBoarding.ChooseInterestFragment">
 
     <TextView
         android:id="@+id/questionTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="154dp"
-        android:fontFamily="@font/sf_pro_text_medium"
-        android:text="@string/pick_categories_greeting"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:text="@string/pick_interests_greeting"
         android:textColor="@color/colorText"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
@@ -35,13 +32,12 @@
         android:foregroundGravity="center"
         app:chipSpacingHorizontal="10dp" />
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="97dp"
+        android:layout_marginBottom="90dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton

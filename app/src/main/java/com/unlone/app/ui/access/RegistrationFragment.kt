@@ -135,27 +135,6 @@ class RegistrationFragment : Fragment() {
 
     private suspend fun performRegister(email: String, password: String, mAuth: FirebaseAuth) {
         binding.registerBtn.isEnabled = false
-        //TODO: this is signInAnonymously
-        /*mAuth.signInAnonymously()
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d("REGISTRATION", "start perform registration");
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d("REGISTRATION", "signInAnonymously:success");
-                                progressBar.setVisibility(View.VISIBLE);
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                saveUser();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w("REGISTRATION", "signInAnonymously:failure", task.getException());
-                                Toast.makeText(context, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });*/
 
         // Sign in with email
         binding.progressBar.visibility = View.VISIBLE
@@ -203,20 +182,4 @@ class RegistrationFragment : Fragment() {
             }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RegistrationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() =
-            RegistrationFragment().apply {
-
-            }
-    }
 }

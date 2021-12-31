@@ -12,12 +12,16 @@
         <action
             android:id="@+id/action_loadFragment_to_first_access_navigation"
             app:destination="@id/first_access_navigation" />
+        <action
+            android:id="@+id/action_loadFragment_to_on_boarding_navigation"
+            app:destination="@id/on_boarding_navigation" />
     </fragment>
+
+    <include app:graph="@navigation/on_boarding_navigation" />
 
     <navigation     android:id="@+id/first_access_navigation"
         app:startDestination="@id/loginFragment">
 
-        <include app:graph="@navigation/on_boarding_navigation" />
 
         <fragment
             android:id="@+id/loginFragment"

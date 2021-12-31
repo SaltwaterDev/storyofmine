@@ -20,8 +20,7 @@
         tools:targetApi="q">
         <activity
             android:name="com.unlone.app.ui.access.StartupActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme.Dark">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -35,12 +34,6 @@
                     android:host="unlone.page.link"
                     android:scheme="https" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.unlone.app.ui.access.OnBoardingActivity"
-            android:exported="true"
-            android:parentActivityName="com.unlone.app.ui.access.StartupActivity">
-
         </activity>
         <activity
             android:name="com.unlone.app.ui.MainActivity"

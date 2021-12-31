@@ -75,10 +75,9 @@
     <string name="dislikes">Dislikes</string>
     <string name="why_report">Why do you want to report?</string>
     <string name="logout_alert">Are you sure to logout?</string>
-    <string name="pick_categories_greeting">Pick 3 or more topics that interest you</string>
-    <string name="start">Start!</string>
+    <string name="pick_categories_greeting">Your interested topics?</string>
+    <string name="start">Start</string>
     <string name="type_your_name">Type your name</string>
-    <string name="for_now_what_is_your_main_reason_for_downloading_this_app">For now, what is your main reason for downloading this app?</string>
     <string name="look_for_connection">Look for connection</string>
     <string name="express_my_feelings">Express my feelings</string>
     <string name="help_people_in_need">Help people in need</string>
@@ -88,7 +87,7 @@
     <string name="welcome_to_unlone">Welcome to Unlone</string>
     <string name="to_ensure_to_community_safety_nwe_d_like_to_confirm_your_identity">To ensure to community safety,\nwe’d like to confirm your identity</string>
     <string name="please_click_the_button_below_nto_send_verification_email">Please click the button below\nto send verification email</string>
-    <string name="send_verification_email">send verification email</string>
+    <string name="send_verification_email">Send verification email</string>
     <string name="school_email_description">"No matter you’re a student or graduated, you can still register via school email.  "</string>
     <string name="validate_school_email">Validating your school email…</string>
     <string name="continue_text">continue</string>
@@ -99,4 +98,8 @@
     <string name="you_may_also_need_to_check_n_the_junk_mail">You may also need to check\n the junk mail</string>
     <string name="topic_label">Topic:</string>
     <string name="topic">topic</string>
+    <string name="hello">Hello!</string>
+    <string name="greetingText">We want to know you more. So that you could benefit most from our app. \n\nWe have prepared 5 questions and 2 pages of guiding principles for you. \n\n(Some questions may be longer, but you can skip for now)</string>
+    <string name="for_now_what_is_your_overall_goal_downloading_this_app">For now, what is your overall goal downloading this app?</string>
+    <string name="pick_interests_greeting">What is your interest(s)?</string>
 </resources>

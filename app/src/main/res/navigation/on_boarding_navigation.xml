@@ -3,24 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/on_boarding_navigation"
-    app:startDestination="@id/userSetupFragment">
+    app:startDestination="@id/greetingFragment">
+
 
     <fragment
-        android:id="@+id/userSetupFragment"
-        android:name="com.unlone.app.ui.access.UserSetupFragment"
-        android:label="fragment_user_setup"
-        tools:layout="@layout/fragment_user_setup" >
+        android:id="@+id/greetingFragment"
+        android:name="com.unlone.app.ui.access.onBoarding.GreetingFragment"
+        android:label="fragment_greeting"
+        tools:layout="@layout/fragment_greeting">
         <action
-            android:id="@+id/toChooseCategoriesFragment"
-            app:destination="@id/chooseCategoriesFragment" />
+            android:id="@+id/action_greetingFragment_to_chooseIdentityFragment"
+            app:destination="@id/chooseIdentityFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chooseIdentityFragment"
+        android:name="com.unlone.app.ui.access.onBoarding.ChooseIdentityFragment"
+        android:label="fragment_choose_user_identity"
+        tools:layout="@layout/fragment_choose_identity">
+        <action
+            android:id="@+id/chooseIdentityFragment_to_chooseInterestFragment"
+            app:destination="@id/chooseInterestFragment" />
     </fragment>
     <fragment
-        android:id="@+id/chooseCategoriesFragment"
-        android:name="com.unlone.app.ui.access.ChooseCategoriesFragment"
-        android:label="fragment_choose_categories"
-        tools:layout="@layout/fragment_choose_categories" >
-        <argument
-            android:name="user"
-            app:argType="com.unlone.app.model.User" />
+        android:id="@+id/chooseInterestFragment"
+        android:name="com.unlone.app.ui.access.onBoarding.ChooseInterestFragment"
+        android:label="fragment_choose_interest"
+        tools:layout="@layout/fragment_choose_interest">
+        <action
+            android:id="@+id/action_chooseInterestFragment_to_chooseCategoriesFragment"
+            app:destination="@id/chooseCategoriesFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/chooseCategoriesFragment"
+        android:name="com.unlone.app.ui.access.onBoarding.ChooseCategoriesFragment"
+        android:label="fragment_choose_categories"
+        tools:layout="@layout/fragment_choose_categories"/>
 </navigation>

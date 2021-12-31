@@ -78,7 +78,6 @@
     <string name="pick_categories_greeting">請選擇3個或以上你感興趣的主題</string>
     <string name="start">開始!</string>
     <string name="type_your_name">輸入你的名稱</string>
-    <string name="for_now_what_is_your_main_reason_for_downloading_this_app">到目前為止，你下載Unlone最主要的原因是甚麼?</string>
     <string name="look_for_connection">希望被理解,\n找個同路人</string>
     <string name="express_my_feelings">暢所欲言</string>
     <string name="help_people_in_need">幫助別人</string>
@@ -99,6 +98,10 @@
     <string name="you_may_also_need_to_check_n_the_junk_mail">如果找不到，請查看垃圾郵件</string>
     <string name="topic_label">類別:</string>
     <string name="topic">類別</string>
+    <string name="hello">Hello!</string>
+    <string name="for_now_what_is_your_overall_goal_downloading_this_app">For now, what is your overall goal downloading this app?</string>
+    <string name="pick_interests_greeting">What is your interest(s)?</string>
+    <string name="greetingText">We want to know you more. So that you could benefit most from our app. \n\nWe have prepared 5 questions and 2 pages of guiding principles for you. \n\n(Some questions may be longer, but you can skip for now)</string>
 
 
 </resources>

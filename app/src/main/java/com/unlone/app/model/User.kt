@@ -14,6 +14,7 @@ data class User (
     var persona: String? = null,
     var bio: String? = null,
     var followingCategories: ArrayList<String>? = null,
+    var interests: ArrayList<String>? = null,
     var notificationToken: String? = null,
     var identity:String? = null
 ): Parcelable
