@@ -62,7 +62,6 @@ class EmailVerificationFragment : Fragment() {
             ).show()
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_emailVerificationFragment_to_emailVerification2)
-
         }
 
         return view

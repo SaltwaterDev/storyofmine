@@ -16,6 +16,9 @@
 
     <navigation     android:id="@+id/first_access_navigation"
         app:startDestination="@id/loginFragment">
+
+        <include app:graph="@navigation/on_boarding_navigation" />
+
         <fragment
             android:id="@+id/loginFragment"
             android:name="com.unlone.app.ui.access.LoginFragment"
@@ -24,6 +27,9 @@
             <action
                 android:id="@+id/action_loginFragment_to_registrationFragment"
                 app:destination="@id/registrationFragment" />
+            <action
+                android:id="@+id/action_loginFragment_to_on_boarding_navigation"
+                app:destination="@id/on_boarding_navigation" />
         </fragment>
         <fragment
             android:id="@+id/registrationFragment"
@@ -53,4 +59,6 @@
                 app:destination="@id/emailVerificationFragment2" />
         </fragment>
     </navigation>
+
+
 </navigation>

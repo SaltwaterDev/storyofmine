@@ -9,14 +9,14 @@
 
     <application
         android:name=".UnloneApplication"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:allowBackup="false"
-        android:fullBackupContent="false"
         tools:targetApi="q">
         <activity
             android:name="com.unlone.app.ui.access.StartupActivity"
@@ -24,16 +24,10 @@
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.unlone.app.ui.access.OnBoardingActivity"
-            android:exported="true"
-            android:parentActivityName="com.unlone.app.ui.access.StartupActivity">
-            <intent-filter>
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -43,12 +37,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.unlone.app.ui.access.OnBoardingActivity"
+            android:exported="true"
+            android:parentActivityName="com.unlone.app.ui.access.StartupActivity">
+
+        </activity>
+        <activity
             android:name="com.unlone.app.ui.MainActivity"
             android:exported="true"
             android:label="Home"
             android:parentActivityName="com.unlone.app.ui.access.StartupActivity"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:exported="false"

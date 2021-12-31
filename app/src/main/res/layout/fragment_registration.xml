@@ -101,24 +101,25 @@
         android:layout_marginTop="19dp"
         android:backgroundTint="#C4C4C4"
         android:checked="false"
+        android:visibility="gone"
         android:fontFamily="@font/sf_pro_display_bold"
         android:text="@string/user_term_confirmation"
         android:textColor="@color/colorWhiteText" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/registerBtn"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="90dp"
+        android:backgroundTint="@color/colorWhite"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textAllCaps = "false"
         android:text="@string/action_register"
-        android:textColor="@color/colorWhiteText"
-        app:cornerRadius="15dp"
-        app:strokeColor="@color/colorWhiteText"
-        app:strokeWidth="1dp" />
+        android:textColor="@color/colorText"
+        app:cornerRadius="15dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"

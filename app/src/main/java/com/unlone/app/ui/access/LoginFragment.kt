@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentLoginBinding
 import com.unlone.app.ui.MainActivity
@@ -62,18 +63,18 @@ class LoginFragment : Fragment() {
                         if (task.isSuccessful) {
                             val reference = mFireStore.collection("users")
                                 .document(mAuth.currentUser!!.uid)
-                            viewLifecycleOwner.lifecycleScope.launch{
-                                try{
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                try {
                                     val result = reference.get().await()
                                     Log.d("TAG", "result = $result")
                                     val intent = Intent(context, MainActivity::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     activity?.startActivity(intent)
                                     activity?.finish()
-                                }catch (e: FirebaseFirestoreException){
-                                        progressBar.visibility = View.INVISIBLE
-                                        startActivity(Intent(context, OnBoardingActivity::class.java))
-                                        activity?.finish()
+                                } catch (e: FirebaseFirestoreException) {
+                                    // user data is not written to fireStore yet
+                                    progressBar.visibility = View.INVISIBLE
+                                    findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
                                 }
                             }
                         } else {
