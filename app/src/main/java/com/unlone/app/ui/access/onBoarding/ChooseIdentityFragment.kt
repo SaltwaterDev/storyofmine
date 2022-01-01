@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import com.unlone.app.R
@@ -47,13 +48,13 @@ class ChooseIdentityFragment : Fragment() {
 
         binding.nextBtn.setOnClickListener {
             userSetupViewModel.setIdentity(identity)
-            findNavController().navigate(R.id.chooseIdentityFragment_to_chooseInterestFragment)
+            if (findNavController().currentDestination?.id == R.id.chooseIdentityFragment)
+                findNavController().navigate(R.id.chooseIdentityFragment_to_chooseInterestFragment)
         }
         binding.backBtn.setOnClickListener {
-            val fragmentManager = (activity as FragmentActivity).supportFragmentManager
-            fragmentManager.popBackStack()
+            if (findNavController().currentDestination?.id == R.id.chooseIdentityFragment)
+                findNavController().navigate(R.id.action_chooseIdentityFragment_to_greetingFragment)
         }
-
 
         return view
     }

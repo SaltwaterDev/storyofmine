@@ -9,8 +9,11 @@ import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.unlone.app.R
 import com.unlone.app.databinding.FragmentChooseCategoriesBinding
 
 
@@ -36,13 +39,16 @@ class ChooseCategoriesFragment : Fragment() {
         binding.nextBtn.setOnClickListener {
             // save user
             saveUserCategories()
-            Log.d("TAG", "user saved successfully")
             binding.nextBtn.isEnabled = false
-            // TODO ("navigate to next fragment")
+            if (findNavController().currentDestination?.id == R.id.chooseCategoriesFragment)
+                findNavController()
+                    .navigate(R.id.action_chooseCategoriesFragment_to_guidingPrinciple1Fragment)
         }
+
         binding.backBtn.setOnClickListener {
-            val fragmentManager = (activity as FragmentActivity).supportFragmentManager
-            fragmentManager.popBackStack()
+            if (findNavController().currentDestination?.id == R.id.chooseCategoriesFragment)
+                findNavController()
+                    .navigate(R.id.action_chooseCategoriesFragment_to_chooseInterestFragment)
         }
 
         return view

@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="40dp"
-    android:layout_marginEnd="40dp"
     android:orientation="vertical"
     tools:context=".ui.access.onBoarding.ChooseIdentityFragment">
 
@@ -20,6 +18,7 @@
         android:textColor="@color/colorText"
         android:textSize="16sp"
         android:textStyle="normal"
+        android:layout_marginHorizontal="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
         android:layout_marginBottom="30dp"
+        android:layout_marginHorizontal="40dp"
         android:columnCount="2"
         android:rowCount="2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,36 +128,42 @@
 
     </GridLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/backBtn"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="90dp"
-        android:text="@string/back"
-        android:textAllCaps="false"
-        app:cornerRadius="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nextBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="@color/colorText"
-        app:strokeWidth="1dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/nextBtn"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="90dp"
-        android:text="@string/next"
-        android:textAllCaps="false"
-        app:cornerRadius="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backBtn" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backBtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="50dp"
+            android:text="@string/back"
+            android:textAllCaps="false"
+            app:cornerRadius="15dp"
+            app:strokeColor="@color/colorText"
+            app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nextBtn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="0dp"
+            android:text="@string/next"
+            android:textAllCaps="false"
+            app:cornerRadius="15dp" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

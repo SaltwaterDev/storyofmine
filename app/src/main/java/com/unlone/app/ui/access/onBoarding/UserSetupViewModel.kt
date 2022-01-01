@@ -18,7 +18,7 @@ import java.util.*
 class UserSetupViewModel : ViewModel() {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val mFirestore = Firebase.firestore
-    private val user = User(uid = mAuth.uid)
+    val user = User(uid = mAuth.uid)
     private val appLanguage = when (Locale.getDefault().language) {
         "zh" -> "zh_hk"          // if the device language is set to Chinese, use chinese text
         else -> "default"        // default language (english)
@@ -81,7 +81,7 @@ class UserSetupViewModel : ViewModel() {
 
     fun setUserName(username: String) {
         user.username = username
-        uploadUserData()
+        uploadUserAuthData()
     }
 
     fun setIdentity(identity: String) {
@@ -126,7 +126,7 @@ class UserSetupViewModel : ViewModel() {
         return null
     }
 
-    private fun uploadUserData() {
+    private fun uploadUserAuthData() {
         CoroutineScope(Dispatchers.IO).launch {
             val profileUpdates = userProfileChangeRequest {
                 displayName = user.username
@@ -136,6 +136,14 @@ class UserSetupViewModel : ViewModel() {
         }
     }
 
+    fun saveUser() {
+        // write user info into Firestore
+        val uid = mAuth.uid
+        uid?.let {
+            mFirestore.collection("users").document(it).set(user)
+            Log.d("TAG", "user saved successfully")
+        }
+    }
 
 
 }

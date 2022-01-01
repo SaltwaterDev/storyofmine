@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
@@ -29,6 +30,10 @@ class GreetingFragment : Fragment() {
         _binding = FragmentGreetingBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        if (userSetupViewModel.user.username != null){
+            binding.usernameEv.text
+        }
+
 
         binding.startBtn.setOnClickListener {
             if (binding.usernameEv.text.toString().isNotEmpty()) {
@@ -40,7 +45,8 @@ class GreetingFragment : Fragment() {
                 val profileUpdates = userProfileChangeRequest {
                     displayName = username
                 }
-                findNavController().navigate(R.id.action_greetingFragment_to_chooseIdentityFragment)
+                if (findNavController().currentDestination?.id == R.id.greetingFragment)
+                    findNavController().navigate(R.id.action_greetingFragment_to_chooseIdentityFragment)
             } else {
                 Toast.makeText(
                     context,

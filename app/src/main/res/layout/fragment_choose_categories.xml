@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="40dp"
-    android:layout_marginEnd="40dp"
     android:orientation="vertical"
     tools:context=".ui.access.onBoarding.ChooseCategoriesFragment">
 
@@ -13,6 +11,7 @@
         android:id="@+id/questionTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
         android:layout_marginTop="154dp"
         android:fontFamily="@font/sf_pro_text_medium"
         android:text="@string/pick_categories_greeting"
@@ -29,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/questionTv"
+        android:layout_marginHorizontal="40dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="28dp"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="97dp"
+        android:layout_marginBottom="50dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
