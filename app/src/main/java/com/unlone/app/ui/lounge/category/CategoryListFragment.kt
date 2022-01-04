@@ -3,12 +3,12 @@ package com.unlone.app.ui.lounge.category
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.unlone.app.databinding.FragmentCategoryListBinding
@@ -16,8 +16,6 @@ import com.unlone.app.databinding.FragmentCategoryListBinding
 class CategoryListFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentCategoryListBinding? = null
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +34,6 @@ class CategoryListFragment : Fragment() {
                 categories
             )
             binding.listview.adapter = adapter
-
         })
 
         binding.listview.onItemClickListener =

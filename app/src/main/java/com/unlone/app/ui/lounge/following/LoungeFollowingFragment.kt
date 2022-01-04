@@ -19,7 +19,7 @@ class LoungeFollowingFragment :
 
     override fun onStart() {
         super.onStart()
-        viewModel?.loadPosts(mPosts, false)
+        viewModel?.loadPosts(mPosts)
         viewModel?.postListUiItems?.observe(
             viewLifecycleOwner, { postList ->
                 postsAdapter.submitList(postList)
@@ -49,7 +49,7 @@ class LoungeFollowingFragment :
     override fun initSwipeRefreshLayout() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = true
-            viewModel?.loadPosts(mPosts, false)
+            viewModel?.loadPosts(mPosts)
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }
