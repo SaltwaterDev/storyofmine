@@ -118,6 +118,12 @@
     <string name="convey_empathy_text">1. Digest the context\n\n2. Reflect the feelings you perceived.\n\n3. You might discuss more about his/her feelings part if he/she doesn’t mind.</string>
     <string name="debrief">You might find that there’s much to learn. Don’t worry, you’ll get to know more and more. Enjoy!</string>
     <string name="let_s_go">Let\'s go!</string>
+    <string name="type_email">Please type your email</string>
+    <string name="type_password">Please type your password</string>
+    <string name="longer_password">Password must have at least 6 characters</string>
+    <string name="confirm_password_incorrect">Password is not the same as Confirm Password</string>
+    <string name="auth_fail">Authentication failed!</string>
+    <string name="login_require_all">All fields are required</string>
 
 
 </resources>

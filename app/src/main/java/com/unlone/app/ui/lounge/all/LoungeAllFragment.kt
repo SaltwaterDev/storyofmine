@@ -1,16 +1,12 @@
 package com.unlone.app.ui.lounge.all
 
 import android.os.Build
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import android.content.Intent
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentLoungeAllBinding
-import com.unlone.app.model.Post
 import com.unlone.app.model.PostItemUiState
 import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
 
@@ -49,7 +45,7 @@ class LoungeAllFragment :
     override fun initSwipeRefreshLayout() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = true
-            viewModel?.loadPosts(mPosts, false)
+            viewModel?.loadPosts(mPosts)
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }

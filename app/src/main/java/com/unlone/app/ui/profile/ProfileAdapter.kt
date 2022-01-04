@@ -14,8 +14,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.unlone.app.model.ProfileCard
 import com.unlone.app.ui.access.StartupActivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 
-
+@InternalCoroutinesApi
 class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
     var dataList = emptyList<ProfileCard>()
@@ -56,6 +58,7 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
     }
 
     // TODO (move it to viewModel)
+    @ExperimentalCoroutinesApi
     private fun logout(holder: ViewHolder) {
         MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(holder.itemView.context.getString(R.string.delete_alert))

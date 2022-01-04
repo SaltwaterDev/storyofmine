@@ -1,13 +1,9 @@
 package com.unlone.app.ui.profile
 
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.os.Bundle
-import com.google.firebase.auth.FirebaseAuth
-import android.content.Intent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -15,11 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentProfileBinding
-import com.unlone.app.model.User
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.ktx.toObject
 import com.unlone.app.model.ProfileCard
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!

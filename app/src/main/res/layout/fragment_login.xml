@@ -1,130 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/dark_gray"
-    android:theme="@style/AppTheme.Dark"
-    tools:context=".ui.access.LoginFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <ImageView
-        android:id="@+id/title"
-        style="@style/AppTheme"
-        android:layout_width="@dimen/_179sdp"
-        android:layout_height="@dimen/_124sdp"
-        android:fontFamily="@font/averia_serif_libre_bold"
-        android:letterSpacing="0.03"
-        android:src="@drawable/logo"
-        android:textColor="#FFFFFF"
-        android:textSize="27sp"
-        app:layout_constraintBottom_toTopOf="@+id/login_field"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.93" />
+        <import type="android.view.View" />
 
-    <RelativeLayout
-        android:id="@+id/login_field"
+        <variable
+            name="viewModel"
+            type="com.unlone.app.ui.access.LoginViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_34sdp"
-        android:layout_marginEnd="@dimen/_34sdp"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="match_parent"
+        android:background="@color/dark_gray"
+        android:theme="@style/AppTheme.Dark"
+        tools:context=".ui.access.LoginFragment">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email_field"
-            style="@style/Widget.App.TextInputLayout"
+
+        <ImageView
+            android:id="@+id/title"
+            style="@style/AppTheme"
+            android:layout_width="@dimen/_179sdp"
+            android:layout_height="@dimen/_124sdp"
+            android:fontFamily="@font/averia_serif_libre_bold"
+            android:letterSpacing="0.03"
+            android:src="@drawable/logo"
+            android:textColor="#FFFFFF"
+            android:textSize="27sp"
+            app:layout_constraintBottom_toTopOf="@+id/login_field"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.93" />
+
+        <RelativeLayout
+            android:id="@+id/login_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email">
+            android:layout_marginStart="@dimen/_34sdp"
+            android:layout_marginEnd="@dimen/_34sdp"
+            android:layout_marginBottom="80dp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_field"
+                style="@style/Widget.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:textColor="@color/colorWhiteText" />
+                android:hint="@string/email">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/colorWhiteText" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password_field"
-            style="@style/Widget.App.TextInputLayout"
-            android:layout_width="match_parent"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_field"
+                style="@style/Widget.App.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/email_field"
+                android:layout_marginTop="23dp"
+                android:hint="@string/password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:textColor="@color/colorWhiteText" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </RelativeLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRegister"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="139dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/email_field"
-            android:layout_marginTop="23dp"
-            android:hint="@string/password">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textColor="@color/colorWhiteText" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-    </RelativeLayout>
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonRegister"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="139dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:fontFamily="@font/sf_pro_display_regular"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        android:text="@string/action_sign_up"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/colorWhiteText"
-        android:textSize="18sp"
-        app:cornerRadius="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toStartOf="@id/buttonLogin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="@color/colorWhiteText"
-        app:strokeWidth="1dp" />
+            android:layout_marginBottom="15dp"
+            android:enabled="@{viewModel.btnEnable}"
+            android:fontFamily="@font/sf_pro_display_regular"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:text="@string/action_sign_up"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="18sp"
+            app:cornerRadius="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar"
+            app:layout_constraintEnd_toStartOf="@id/buttonLogin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="@color/colorWhiteText"
+            app:strokeWidth="1dp" />
 
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonLogin"
-        android:layout_width="139dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        android:backgroundTint="@color/colorWhite"
-        android:fontFamily="@font/sf_pro_display_regular"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        android:text="@string/action_login"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/colorText"
-        android:textSize="18sp"
-        app:cornerRadius="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonRegister"
-        app:strokeWidth="1dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonLogin"
+            android:layout_width="139dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:backgroundTint="@color/colorWhite"
+            android:enabled="@{viewModel.btnEnable}"
+            android:fontFamily="@font/sf_pro_display_regular"
+            android:onClick="@{() -> viewModel.performLogin(email, password)}"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:text="@string/action_login"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/colorText"
+            android:textSize="18sp"
+            app:cornerRadius="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/buttonRegister"
+            app:strokeWidth="1dp" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="140dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="140dp"
+            android:visibility="@{viewModel.showProgressBar? View.VISIBLE: View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
