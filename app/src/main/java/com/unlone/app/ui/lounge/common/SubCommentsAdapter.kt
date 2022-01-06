@@ -110,19 +110,8 @@ class SubCommentsAdapter(
                                 .setPositiveButton(it.getString(R.string.report)) { _, _ ->
                                     // Respond to positive button press
                                     Log.d("TAG", singleItems[checkedItem])
-                                    val report = subComment.uid?.let { it1 ->
-                                        Report.SubCommentReport(
-                                            subComment = subComment,
-                                            reportReason = reportMap[singleItems[checkedItem]],
-                                            reportedBy = it1
-                                        )
-                                    }
-
-                                    Log.d("TAG", report.toString())
-                                    if (report != null) {
-                                        viewModel.uploadReport(report)
-                                        showConfirmation(v.parent.parent as MaterialCardView)
-                                    }
+                                    viewModel.reportSubComment(subComment, checkedItem)
+                                    showConfirmation(v.parent as MaterialCardView)
 
                                 }// Single-choice items (initialized with checked item)
                                 .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->

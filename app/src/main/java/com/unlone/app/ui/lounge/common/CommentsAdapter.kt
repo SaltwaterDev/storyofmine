@@ -129,20 +129,8 @@ open class CommentsAdapter(
                                 .setPositiveButton(it.getString(R.string.report)) { _, _ ->
                                     // Respond to positive button press
                                     Log.d("TAG", singleItems[checkedItem])
-                                    val report = comment.uid?.let { it1 ->
-                                        Report.CommentReport(
-                                            comment = comment,
-                                            reportReason = reportMap[singleItems[checkedItem]],
-                                            reportedBy = it1
-                                        )
-                                    }
-
-                                    Log.d("TAG", report.toString())
-                                    if (report != null) {
-                                        viewModel.uploadReport(report)
-                                        showConfirmation(v.parent as MaterialCardView)
-                                    }
-
+                                    viewModel.reportComment(comment, checkedItem)
+                                    showConfirmation(v.parent as MaterialCardView)
                                 }// Single-choice items (initialized with checked item)
                                 .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
                                     // Respond to item chosen

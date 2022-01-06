@@ -116,7 +116,7 @@ class PostDetailFragment : Fragment() {
             when (menuItem.itemId) {
                 R.id.actionSave -> {
                     // User check the "Saving" item, save the post...
-                    detailedPostViewModel.savePost()
+                    detailedPostViewModel.performSavePost()
                     true
                 }
                 R.id.actionReport -> {
@@ -154,7 +154,7 @@ class PostDetailFragment : Fragment() {
                             .setMessage(getString(R.string.report_alert_context))
                             .setPositiveButton(getString(R.string.action_delete)) { dialog, which ->
                                 // Respond to positive button press
-                                detailedPostViewModel.deletePost(pid)
+                                detailedPostViewModel.deletePost()
                                 fragmentManager.popBackStack()
                             }
                             .setNeutralButton(getString(R.string.cancel)) { dialog, which ->

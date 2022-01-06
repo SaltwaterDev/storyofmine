@@ -11,6 +11,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.squareup.okhttp.Dispatcher
 import com.unlone.app.model.Post
+import com.unlone.app.model.Report
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -23,7 +24,6 @@ class PostsRepository {
     private val mFirestore = Firebase.firestore
     private var lastVisible: DocumentSnapshot? = null
     private val mPosts = 100
-    private val categoriesRepository: CategoriesRepository = CategoriesRepository()
 
     suspend fun loadAllPosts(numberPost: Int = mPosts): List<Post> {
         val allDocs = withContext(Dispatchers.IO) {
@@ -150,5 +150,62 @@ class PostsRepository {
         // return the sorted postList
         return postList.sortedByDescending { it.createdTimestamp }
     }
+
+    suspend fun loadPost(pid: String): Post? = withContext(Dispatchers.IO){
+        val documentSnapshot = mFirestore.collection("posts")
+            .document(pid)
+            .get()
+            .await()
+        documentSnapshot.toObject<Post>()
+    }
+
+    fun deletePost(pid: String) {
+        mFirestore.collection("posts")
+            .document(pid)
+            .delete()
+            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w("TAG", "Error deleting document", e) }
+    }
+
+    fun savePost(pid: String): Boolean {
+        val timestamp =
+            hashMapOf("saveTime" to System.currentTimeMillis().toString())
+        mAuth.uid?.let { uid ->
+            mFirestore.collection("users").document(uid)
+                .collection("saved")
+                .document(pid)
+                .set(timestamp)
+                .addOnSuccessListener {}
+                .addOnFailureListener {}
+        }
+        return true
+    }
+
+    fun unsavePost(pid: String): Boolean {
+        // User uncheck chose the "Saving" item, save the post...
+        mAuth.uid?.let { uid ->
+            mFirestore.collection("users").document(uid)
+                .collection("saved")
+                .document(pid)
+                .delete()
+        }
+        return false
+    }
+
+    fun uploadReport(report: Report) {
+        mFirestore.collection("reports")
+            .add(report)
+    }
+
+    suspend fun isSaved(pid: String): Boolean {
+            val result = mFirestore.collection("users").document(mAuth.uid!!)
+                .collection("saved")
+                .document(pid)
+                .get()
+                .await()
+            return (result != null && result.exists())
+    }
+
+
 
 }
