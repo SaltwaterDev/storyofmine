@@ -126,6 +126,7 @@
                         android:layout_marginStart="23dp"
                         android:layout_toEndOf="@+id/moreButton"
                         android:background="@null"
+                        app:tint="@color/colorText"
                         android:gravity="center"
                         android:padding="4dp"
                         android:src="@{uiComment.uiSubComments.isEmpty() ? @drawable/ic_chat : @drawable/ic_chat_filled}"

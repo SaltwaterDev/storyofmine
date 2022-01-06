@@ -25,6 +25,7 @@
         android:layout_marginEnd="0dp"
         android:background="?android:attr/windowBackground"
         app:itemHorizontalTranslationEnabled="false"
+        app:itemTextColor="@drawable/bottom_nav_icon_color_selector"
         app:itemIconTint="@drawable/bottom_nav_icon_color_selector"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_nav" />

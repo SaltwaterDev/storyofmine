@@ -3,44 +3,40 @@
     <color name="dark_gray">#4D4D4D</color>
     <color name="darker_gray">#404040</color>
     <color name="lighter_gray">#707070</color>
-    <color name="colorAccent">#7A7452</color>
+    <color name="colorAccent">#EBE9DC</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorToolbarText">#FDFDFC</color>
-    <color name="colorText">#c4000000</color>
+    <color name="colorText">#F3FFFFFF</color>
     <color name="colorDivider">#7FFFFFFF</color>
-    <color name="colorTextHint">#7B7B7B</color>
+    <color name="colorTextHint">#F3FFFFFF</color>
     <color name="colorWhiteText">#E6FFFFFF</color>
-    <color name="colorOverlay">#C33F3F3F</color>
     <color name="colorTextSubtitle">#CECECE</color>
     <color name="colorBarIcon">#F2FFFFFF</color>
-    <color name="colorSearchIcon">#DD000000</color>
-    <color name="colorSearchBar">#7FFFFFFF</color>
+    <color name="colorSearchIcon">#F3FFFFFF</color>
     <color name="colorQuickActionBackground">#2F2D2E</color>
     <color name="colorIcons">#A4A4A4</color>
     <color name="colorDefaultNoteColor">#333333</color>
     <color name="colorNoteSubtitleText">#FAFAFA</color>
     <color name="colorMiscellaneousBackground">#1F1F1F</color>
-    <color name="colorWarn">#b00020</color>
+    <color name="colorWarn">#CF6679</color>
     <color name="colorHeart">#FF7A7A</color>
-    <color name="colorGreen">#346546</color>
+    <color name="colorGreen">#78BA91</color>
     <color name="colorSearchBackground">#808080</color>
-    <color name="ActiveBottomNavIconColor">#4E4E4E</color>
-    <color name="InactiveBottomNavIconColor">#B0B0B0</color>
+    <color name="ActiveBottomNavIconColor">#FFFFFF</color>
+    <color name="InactiveBottomNavIconColor">#868686</color>
     <color name="menuItem">#FFFFFF</color>
     <color name="lightYellow">#F2F0E3</color>
     <color name="onLightYellow">#C7BE8A</color>
     <color name="labelled">#004C8B</color>
     <color name="filledChatIcon">#474B57</color>
-    <color name="colorProfileCardText">#C42D2D2D</color>
     <color name="colorMyStoriesProfileCard">#EDC678</color>
     <color name="colorMyJourneyProfileCard">#E2E0EE</color>
     <color name="colorSavedProfileCard">#E6E2CB</color>
     <color name="colorHelpfulLinkProfileCard">#B9CAB7</color>
     <color name="colorSettingProfileCard">#B0B0B0</color>
     <color name="colorContactProfileCard">#B5CEF0</color>
-    <color name="colorGradientStart">#E2E0D4</color>
-    <color name="colorGradientEnd">#FFFFFF</color>
-
+    <color name="colorGradientStart">#121212</color>
+    <color name="colorGradientEnd">#1F1F1F</color>
 
 
 

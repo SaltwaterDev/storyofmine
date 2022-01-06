@@ -18,7 +18,7 @@
         android:includeFontPadding="false"
         android:fontFamily="@font/sf_compact_display_medium"
         android:text="@string/more"
-        android:textColor="@color/colorText"
+        android:textColor="@color/colorWhiteText"
         android:textSize="@dimen/_13ssp"/>
     
     <LinearLayout
@@ -43,7 +43,7 @@
             android:layout_height="@dimen/_22ssp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_baseline_image_24"
-            app:tint="@color/colorText" />
+            app:tint="@color/colorWhiteText" />
         
         <TextView
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:fontFamily="@font/sf_pro_display_regular"
             android:includeFontPadding="false"
             android:text="@string/add_image"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorWhiteText"
             android:textSize="@dimen/_12ssp"/>
 
 

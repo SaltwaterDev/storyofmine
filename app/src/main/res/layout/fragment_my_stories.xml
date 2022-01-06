@@ -28,6 +28,7 @@
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
                 app:title="@string/my_stories"
                 app:titleCentered="true"
+                app:titleTextColor="@color/colorToolbarText"
                 app:titleTextAppearance="@style/Toolbar.TextAppearance" />
 
         </com.google.android.material.appbar.AppBarLayout>
