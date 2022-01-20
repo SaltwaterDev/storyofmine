@@ -122,7 +122,7 @@
             android:text="@string/action_login"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorBlackText"
             android:textSize="18sp"
             app:cornerRadius="15dp"
             app:layout_constraintBottom_toTopOf="@+id/progressBar"

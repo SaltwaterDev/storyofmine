@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge.common
+package com.unlone.app.ui.lounge
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,6 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.View

@@ -7,6 +7,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorToolbarText">#FDFDFC</color>
     <color name="colorText">#F3FFFFFF</color>
+    <color name="colorButtonText">#F2FFFFFF</color>
     <color name="colorDivider">#7FFFFFFF</color>
     <color name="colorTextHint">#F3FFFFFF</color>
     <color name="colorWhiteText">#E6FFFFFF</color>
@@ -15,6 +16,7 @@
     <color name="colorSearchIcon">#F3FFFFFF</color>
     <color name="colorQuickActionBackground">#2F2D2E</color>
     <color name="colorIcons">#A4A4A4</color>
+    <color name="colorButton">#66FFFFFF</color>
     <color name="colorDefaultNoteColor">#333333</color>
     <color name="colorNoteSubtitleText">#FAFAFA</color>
     <color name="colorMiscellaneousBackground">#1F1F1F</color>
@@ -37,7 +39,11 @@
     <color name="colorContactProfileCard">#B5CEF0</color>
     <color name="colorGradientStart">#121212</color>
     <color name="colorGradientEnd">#1F1F1F</color>
-
+    <color name="ColorCardPost">#353535</color>
+    <color name="categoryColor1">#E7E2C9</color>
+    <color name="categoryColor2">#D6BEB6</color>
+    <color name="categoryColor3">#DDC1C1</color>
+    <color name="categoryLoadMoreColor">#B6D3B3</color>
 
 
 </resources>

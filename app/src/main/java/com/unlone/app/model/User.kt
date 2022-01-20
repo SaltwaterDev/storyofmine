@@ -13,8 +13,8 @@ data class User (
     var personae: ArrayList<String>? = null,
     var persona: String? = null,
     var bio: String? = null,
-    var followingCategories: ArrayList<String>? = null,
-    var interests: ArrayList<String>? = null,
+    var followingCategories: List<String>? = null,
+    var interests: List<String>? = null,
     var notificationToken: String? = null,
     var identity:String? = null
 ): Parcelable

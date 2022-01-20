@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentMyStoriesBinding
-import com.unlone.app.model.Post
-import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
+import com.unlone.app.ui.lounge.LoungePostsBaseFragment
 
 
 class MyStoriesFragment :
@@ -22,7 +21,7 @@ class MyStoriesFragment :
         viewModel?.loadPosts(mPosts, false)
         viewModel?.postListUiItems?.observe(
             viewLifecycleOwner, { postList ->
-                postsAdapter.submitList(postList)
+                postListAdapter.submitList(postList)
             })
     }
 
@@ -49,7 +48,7 @@ class MyStoriesFragment :
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = postsAdapter
+        recyclerView.adapter = postListAdapter
     }
 
     override fun initSwipeRefreshLayout() {}

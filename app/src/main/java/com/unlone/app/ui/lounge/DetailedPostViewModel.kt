@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge.common
+package com.unlone.app.ui.lounge
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -193,7 +193,7 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
     // display topic
     private suspend fun getCategoryTitle(): String? {
         post.value?.category?.let{ categoryId ->
-            return categoriesRepository.getCategoryTitle(categoryId)}
+            return categoriesRepository.getTopicTitle(categoryId)}
         return null
     }
 }

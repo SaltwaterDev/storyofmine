@@ -30,16 +30,20 @@ class CategoriesViewModel : ViewModel() {
         }
     }
 
+    init {
+        _categoryTitle.value?.let { loadPosts(it) }
+    }
+
     fun loadCategories() {
         viewModelScope.launch {
             _categories.value = categoriesRepository.loadCategories()
         }
     }
 
-    fun loadPosts(category: String, numberPost: Int, loadMore: Boolean?) {
+    fun loadPosts(category: String, loadMore: Boolean? = false) {
         Log.d("TAG", "category: $category")
         viewModelScope.launch {
-            _posts.value = postsRepository.getSingleCategoryPosts(category, numberPost)
+            _posts.value = postsRepository.getSingleCategoryPosts(category)
         }
     }
 
@@ -52,12 +56,12 @@ class CategoriesViewModel : ViewModel() {
     }
 
     fun retrieveDefaultCategory(selectedCategory: String): String? {
-        return categoriesRepository.retrieveDefaultCategory(selectedCategory)
+        return categoriesRepository.retrieveDefaultTopic(selectedCategory)
     }
 
     fun getCategoryTitle(categoryId: String) {
         viewModelScope.launch {
-            _categoryTitle.value = categoriesRepository.getCategoryTitle(categoryId)
+            _categoryTitle.value = categoriesRepository.getTopicTitle(categoryId)
         }
     }
 

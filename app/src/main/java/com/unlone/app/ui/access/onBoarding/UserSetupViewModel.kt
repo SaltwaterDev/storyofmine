@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UserSetupViewModel : ViewModel() {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -63,14 +64,15 @@ class UserSetupViewModel : ViewModel() {
             .whereEqualTo("visibility", true)
             .get()
             .addOnSuccessListener { result ->
-                val rawCategoryArrayList = java.util.ArrayList<Pair<String, String>>()
+                val rawCategoryArrayList = ArrayList<Pair<String, String>>()
                 for (document in result) {
                     val category = Pair(document.id, document.data[appLanguage])
+                    // For each Pair, first value is the key and second value is
+                    // the category name (with specified language)
                     category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
-
                 }
                 _rawCategories.value = rawCategoryArrayList
-                val c = java.util.ArrayList<String>()
+                val c = ArrayList<String>()
                 for (rawCategory in rawCategoryArrayList) {
                     c.add(rawCategory.second)
                 }
@@ -89,15 +91,16 @@ class UserSetupViewModel : ViewModel() {
     }
 
     fun setCategories(selectedCategories: ArrayList<String>) {
-        for (i in selectedCategories) {
-            selectedCategories.map { retrieveDefaultCategory(it) }
-        }
+        selectedCategories.map { retrieveDefaultCategory(it) }
+
+        val assignSelectedCategories =
+            selectedCategories.map { retrieveDefaultCategory(it) ?: "null" } as ArrayList<String>
         // default: user follow "Unlone" category
-        selectedCategories.add("unlone")
-        Log.d("TAG", "added: $selectedCategories")
+        assignSelectedCategories.add("unlone")
+        Log.d("TAG", "added: $assignSelectedCategories")
 
         // write user info into Firestore
-        user.followingCategories = selectedCategories
+        user.followingCategories = selectedCategories.map { retrieveDefaultCategory(it) ?: "null" }
     }
 
     private fun retrieveDefaultCategory(selectedCategory: String): String? {
@@ -110,11 +113,9 @@ class UserSetupViewModel : ViewModel() {
     }
 
     fun setInterests(selectedInterests: ArrayList<String>) {
-        for (i in selectedInterests) {
-            selectedInterests.map { retrieveDefaultInterest(it) }
-        }
         // write user info into Firestore
-        user.interests = selectedInterests
+        user.interests = selectedInterests.map { retrieveDefaultInterest(it) ?: "null" }
+
     }
 
     private fun retrieveDefaultInterest(it: String): String? {

@@ -14,8 +14,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.unlone.app.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.nav_startup_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val navBottomBar = findViewById<BottomNavigationView>(R.id.nav_view)
         navBottomBar.setupWithNavController(navController)
@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
                 else -> navBottomBar.visibility = View.GONE
             }
         }
+
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -73,15 +74,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /*
     override fun onBackPressed() {
-        val count = supportFragmentManager.backStackEntryCount
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_startup_host_fragment) as NavHostFragment
+        val count = navHostFragment.childFragmentManager.backStackEntryCount
+        Log.d("TAG", "backstack count: $count")
         if (count == 0) {
-            super.onBackPressed()
             //additional code
-        } else {
-            supportFragmentManager.popBackStack()
+            MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+                .setTitle(this.getString(R.string.reminding))
+                .setMessage(this.getString(R.string.leaving_app))
+                .setPositiveButton(this.getString(R.string.proceed)) { _, _ ->
+                    super.onBackPressed()
+                }
+                .show()
+        }else {
+            super.onBackPressed()
         }
     }
+
+     */
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentSavedPostsBinding
-import com.unlone.app.model.Post
-import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
+import com.unlone.app.ui.lounge.LoungePostsBaseFragment
 
 class SavedPostsFragment :
     LoungePostsBaseFragment<FragmentSavedPostsBinding, SavedPostsViewModel>(R.layout.fragment_saved_posts) {
@@ -21,7 +20,7 @@ class SavedPostsFragment :
         viewModel?.loadPosts(mPosts)
         viewModel?.postListUiItems?.observe(
             viewLifecycleOwner, { postList ->
-                postsAdapter.submitList(postList)
+                postListAdapter.submitList(postList)
             })
     }
 
@@ -48,7 +47,7 @@ class SavedPostsFragment :
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = postsAdapter
+        recyclerView.adapter = postListAdapter
     }
 
     override fun initSwipeRefreshLayout() {}

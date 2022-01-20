@@ -5,27 +5,5 @@
     android:id="@+id/category_navigation"
     app:startDestination="@id/categoryListFragment">
 
-    <fragment
-        android:id="@+id/categoryListFragment"
-        android:name="com.unlone.app.ui.lounge.category.CategoryListFragment"
-        android:label="CategoryListFragment" >
-        <action
-            android:id="@+id/navigateToCategoryPostFragment"
-            app:destination="@id/categoryPostFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/categoryPostFragment"
-        android:name="com.unlone.app.ui.lounge.category.CategoryPostFragment"
-        android:label="fragment_lounge_category"
-        tools:layout="@layout/fragment_category_post">
-        <argument
-            android:name="category"
-            app:argType="string"
-            android:defaultValue="nothing" />
-        <action
-            android:id="@+id/navigateToCategoryListFragment"
-            app:destination="@id/categoryListFragment"
-            app:popUpTo="@+id/categoryListFragment"/>
-    </fragment>
 
 </navigation>

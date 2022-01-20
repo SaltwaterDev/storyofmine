@@ -1,6 +1,5 @@
 package com.unlone.app.ui.access
 
-import android.text.Editable
 import android.util.Log
 import android.widget.EditText
 import androidx.annotation.StringRes
@@ -33,12 +32,12 @@ class RegistrationViewModel @Inject constructor() : ViewModel() {
     val mFireStore = Firebase.firestore
     private var functions: FirebaseFunctions = Firebase.functions
 
-    private val _navToVerification: MutableLiveData<Boolean?> = MutableLiveData(false)
+    private val _navToVerification: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     private val _regBtnEnable: MutableLiveData<Boolean> = MutableLiveData(true)
     private val _showProgressBar: MutableLiveData<Boolean> = MutableLiveData(false)
     private val _showValidationErrorMsg: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    val navToVerification: MutableLiveData<Boolean?> = _navToVerification
+    val navToVerification: MutableLiveData<Boolean> = _navToVerification
     val regBtnEnable: MutableLiveData<Boolean> = _regBtnEnable
     val showProgressBar: MutableLiveData<Boolean> = _showProgressBar
     val showValidationErrorMsg: MutableLiveData<Boolean> = _showValidationErrorMsg

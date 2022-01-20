@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge.common
+package com.unlone.app.ui.lounge
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,36 +15,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
-import com.unlone.app.databinding.ListItemCommentBinding
-import com.unlone.app.model.Comment
-import com.unlone.app.model.Report
-import com.unlone.app.model.UiComment
+import com.unlone.app.databinding.ListItemSubCommentBinding
+import com.unlone.app.model.*
 
 
-open class CommentsAdapter(
+class SubCommentsAdapter(
     val viewModel: DetailedPostViewModel,
     private val lifecycleOwner: LifecycleOwner
 ) :
-    ListAdapter<UiComment, CommentsAdapter.ViewHolder>(DiffCallback) {
-
-
+    ListAdapter<UiSubComment, SubCommentsAdapter.ViewHolder>(DiffCallback) {
 
     class ViewHolder private constructor(
-        val binding: ListItemCommentBinding,
+        val binding: ListItemSubCommentBinding,
         val viewModel: DetailedPostViewModel,
         private val lifecycleOwner: LifecycleOwner
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val subCommentsAdapter by lazy {
-            SubCommentsAdapter(
-                viewModel,
-                lifecycleOwner,
-            )
-        }
-        fun bind(item: UiComment) {
+        fun bind(item: UiSubComment) {
             Log.d("TAG", "viewModel: $viewModel")
-            binding.uiComment = item
+            binding.uiSubComment = item
             binding.lifecycleOwner = lifecycleOwner
             binding.likeButton.setOnClickListener {
                 if (it.tag == "liked") {
@@ -54,31 +44,22 @@ open class CommentsAdapter(
                     it.tag = "liked"
                     (it as ImageView).setImageResource(R.drawable.ic_heart_filled)
                 }
-                viewModel.processCommentLike(item)
+                viewModel.processSubCommentLike(item.subComment)
             }
             binding.moreButton.setOnClickListener { v: View ->
-                showMenu(v, R.menu.comment_popup_menu, item.comment, viewModel)
+                showMenu(v, R.menu.comment_popup_menu, item.subComment, viewModel)
             }
             binding.commentButton.setOnClickListener {
-                if (item.commentExpanded){
-                    // focus text
-                    item.comment.cid?.let { cid ->
-                        item.comment.username?.let { username ->
-                            viewModel.focusEdittextToSubComment(
-                                cid,
-                                username
-                            )
-                        }
+                // focus text
+                item.subComment.cid?.let { cid ->
+                    item.subComment.username?.let { username ->
+                        viewModel.focusEdittextToSubComment(
+                            cid,
+                            username
+                        )
                     }
-                }else{
-                    // open sub comments
-                    (it as ImageView).setImageResource(R.drawable.ic_chat)
-                    binding.subCommentRv.visibility = View.VISIBLE
-                    item.commentExpanded = true
                 }
             }
-            binding.subCommentRv.adapter = subCommentsAdapter
-            subCommentsAdapter.submitList(item.uiSubComments)
             binding.executePendingBindings()
         }
 
@@ -89,7 +70,7 @@ open class CommentsAdapter(
                 lifecycleOwner: LifecycleOwner
             ): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemCommentBinding.inflate(layoutInflater, parent, false)
+                val binding = ListItemSubCommentBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding, viewModel, lifecycleOwner)
             }
         }
@@ -97,7 +78,7 @@ open class CommentsAdapter(
         private fun showMenu(
             v: View,
             @MenuRes menuRes: Int,
-            comment: Comment,
+            subComment: SubComment,
             viewModel: DetailedPostViewModel
         ) {
             val popup = PopupMenu(v.context!!, v)
@@ -129,8 +110,9 @@ open class CommentsAdapter(
                                 .setPositiveButton(it.getString(R.string.report)) { _, _ ->
                                     // Respond to positive button press
                                     Log.d("TAG", singleItems[checkedItem])
-                                    viewModel.reportComment(comment, checkedItem)
+                                    viewModel.reportSubComment(subComment, checkedItem)
                                     showConfirmation(v.parent as MaterialCardView)
+
                                 }// Single-choice items (initialized with checked item)
                                 .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
                                     // Respond to item chosen
@@ -174,32 +156,38 @@ open class CommentsAdapter(
         holder.bind(item)
     }
 
-    object DiffCallback : DiffUtil.ItemCallback<UiComment>() {
-        override fun areItemsTheSame(oldItem: UiComment, newItem: UiComment): Boolean {
+    object DiffCallback : DiffUtil.ItemCallback<UiSubComment>() {
+        override fun areItemsTheSame(
+            oldItem: UiSubComment,
+            newItem: UiSubComment
+        ): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: UiComment, newItem: UiComment): Boolean {
+        override fun areContentsTheSame(
+            oldItem: UiSubComment,
+            newItem: UiSubComment
+        ): Boolean {
             return when {
-                oldItem.likedByUser != newItem.likedByUser -> {
+                oldItem.subComment.cid != newItem.subComment.cid -> {
                     false
                 }
-                oldItem.comment.cid != newItem.comment.cid -> {
+                oldItem.subComment.uid != newItem.subComment.uid -> {
                     false
                 }
-                oldItem.comment.uid != newItem.comment.uid -> {
+                oldItem.subComment.content != newItem.subComment.content -> {
                     false
                 }
-                oldItem.comment.content != newItem.comment.content -> {
+                oldItem.subComment.username != newItem.subComment.username -> {
                     false
                 }
-                oldItem.comment.username != newItem.comment.username -> {
+                oldItem.subComment.score != newItem.subComment.score -> {
                     false
                 }
-                oldItem.comment.score != newItem.comment.score -> {
+                oldItem.subComment.timestamp != newItem.subComment.timestamp -> {
                     false
                 }
-                oldItem.comment.timestamp != newItem.comment.timestamp -> {
+                oldItem.subComment.parent_cid != newItem.subComment.parent_cid -> {
                     false
                 }
                 else -> true

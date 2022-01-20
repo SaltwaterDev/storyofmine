@@ -17,7 +17,7 @@
     <string name="create_post_greet">It is not easy to open up, so we are glad to having you here…</string>
     <string name="comment">Comment</string>
     <string name="comment_hint">Comment…</string>
-    <string name="action_login">Login</string>
+    <string name="action_login">Log in</string>
     <string name="action_sign_up">Sign up</string>
     <string name="report">Report</string>
     <string name="delete">Delete</string>
@@ -99,7 +99,7 @@
     <string name="topic_label">Topic:</string>
     <string name="topic">topic</string>
     <string name="hello">Hello!</string>
-    <string name="greetingText">We want to know you more. So that you could benefit most from our app. \n\nWe have prepared 5 questions and 2 pages of guiding principles for you. \n\n(Some questions may be longer, but you can skip for now)</string>
+    <string name="greetingText">We want to know you more, so that you could get the most from our app. \n\nWe prepared 5 questions and 2 pages of guiding principles for you. \n\nSome questions may be longer, which you may skip for now.</string>
     <string name="for_now_what_is_your_overall_goal_downloading_this_app">For now, what is your overall goal downloading this app?</string>
     <string name="pick_interests_greeting">What is your interest(s)?</string>
     <string name="guiding_principle">Guiding principle</string>
@@ -124,4 +124,10 @@
     <string name="confirm_password_incorrect">Password is not the same as Confirm Password</string>
     <string name="auth_fail">Authentication failed!</string>
     <string name="login_require_all">All fields are required</string>
+    <string name="topic_more">More…</string>
+    <string name="email_verification_alert">If you go back to last page, you need to sign up again.</string>
+    <string name="proceed">Proceed</string>
+    <string name="reminding">Reminding</string>
+    <string name="email_verification_redirect">You will be redirected to Login Page</string>
+    <string name="leaving_app">Are you suring to leave?</string>
 </resources>

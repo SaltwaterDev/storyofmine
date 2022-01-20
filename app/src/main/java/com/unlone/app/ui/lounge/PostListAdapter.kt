@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge.common
+package com.unlone.app.ui.lounge
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.databinding.ListItemPostBinding
 import com.unlone.app.model.PostItemUiState
 
-class PostsAdapter(private val itemClickListener: ItemClickListener) :
-    ListAdapter<PostItemUiState, PostsAdapter.ViewHolder>(PostDiffCallback()) {
+class PostListAdapter(private val itemClickListener: ItemClickListener) :
+    ListAdapter<PostItemUiState, PostListAdapter.ViewHolder>(PostDiffCallback()) {
 
     class ViewHolder private constructor(
         val binding: ListItemPostBinding,

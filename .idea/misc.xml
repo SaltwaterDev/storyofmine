@@ -11,6 +11,7 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/bottom_nav_icon_color_selector.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/button_background.xml" value="0.19342105263157894" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/button_black.xml" value="0.19342105263157894" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/card_post_divider.xml" value="0.25" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/edittext_background.xml" value="0.19342105263157894" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/gradient_background.xml" value="0.21255411255411255" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_arrow_back.xml" value="0.3055555555555556" />
@@ -18,6 +19,7 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_bookmark_24.xml" value="0.3219298245614035" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_bookmark_border_24.xml" value="0.3219298245614035" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.3177489177489177" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_expand_less_24.xml" value="0.3177489177489177" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_help_outline_24.xml" value="0.3219298245614035" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_more_horiz_24.xml" value="0.3055555555555556" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.20555555555555555" />
@@ -40,25 +42,27 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/activity_post_detail.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/activity_registration.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/blank_fragment.xml" value="0.193859649122807" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/category_row_posts_list_item.xml" value="0.30432900432900434" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/contact_us_fragment.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_category.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_category_list.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_category_post.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_choose_categories.xml" value="0.20175438596491227" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_choose_identity.xml" value="0.20175438596491227" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_choose_identity.xml" value="0.23703703703703705" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_choose_interest.xml" value="0.19913419913419914" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_config.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_contact_us.xml" value="0.2064814814814815" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_edit_profile.xml" value="0.20657894736842106" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_email_verification.xml" value="0.1" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_email_verification2.xml" value="0.22" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_email_verification.xml" value="0.30432900432900434" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_email_verification2.xml" value="0.30432900432900434" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_explore.xml" value="0.30833333333333335" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_greeting.xml" value="0.17456140350877192" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_guiding_principle1.xml" value="0.1" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_greeting.xml" value="0.30432900432900434" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_guiding_principle1.xml" value="0.23703703703703705" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_guiding_principle2.xml" value="0.20175438596491227" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_home.xml" value="0.22327898550724637" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_load.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_login.xml" value="0.22149122807017543" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge.xml" value="0.2456324248777079" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_all.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_category.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_lounge_common.xml" value="0.22105263157894736" />
@@ -67,7 +71,7 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_pick_interest.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_post_detail.xml" value="0.2064814814814815" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_profile.xml" value="0.1824074074074074" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_registration.xml" value="0.30833333333333335" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_registration.xml" value="0.1" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_saved_posts.xml" value="0.20614035087719298" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_saved_stories.xml" value="0.30432900432900434" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_startup.xml" value="0.30833333333333335" />
@@ -77,6 +81,8 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/layout_more.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/layout_post.xml" value="0.18903508771929825" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item.xml" value="0.18640350877192982" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_card_category.xml" value="0.23703703703703705" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_card_post.xml" value="0.2074074074074074" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_comment.xml" value="0.2064814814814815" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_post.xml" value="0.21924144310823312" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_profile_card.xml" value="0.30833333333333335" />
@@ -98,5 +104,5 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>

@@ -2,16 +2,20 @@ package com.unlone.app.data
 
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
+import javax.inject.Inject
 
-class CategoriesRepository {
+class CategoriesRepository @Inject constructor() {
     private var rawCategories = mutableListOf<Pair<String, String>>()
 
     private val mAuth = Firebase.auth
@@ -19,6 +23,12 @@ class CategoriesRepository {
     private var appLanguage: String = when (Locale.getDefault().language) {
         "zh" -> "zh_hk"          // if the device language is set to Chinese, use chinese text
         else -> "default"        // default language (english)
+    }
+
+    init {
+        CoroutineScope(Dispatchers.Default).launch {
+            loadCategories()
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -30,7 +40,7 @@ class CategoriesRepository {
             else -> "default"        // default language (english)
         }
 
-        val rawCategories = withContext(Dispatchers.IO) {
+        val rawCategoriesSnapshot = withContext(Dispatchers.IO) {
             mFirestore.collection("categories")
                 .document("pre_defined_categories")
                 .collection("categories_name")
@@ -40,7 +50,7 @@ class CategoriesRepository {
         }
 
         val rawCategoryArrayList = ArrayList<Pair<String, String>>()
-        for (document in rawCategories) {
+        for (document in rawCategoriesSnapshot) {
             val category = Pair(document.id, document.data[appLanguage])
             category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
         }
@@ -49,6 +59,7 @@ class CategoriesRepository {
         for (rawCategory in rawCategoryArrayList) {
             categories.add(rawCategory.second)
         }
+        rawCategories = rawCategoryArrayList
 
         Log.d("TAG category", categories.toString())
         return categories
@@ -59,7 +70,7 @@ class CategoriesRepository {
         return category in (result.data?.get("followingCategories") as ArrayList<*>)
     }
 
-    suspend fun getCategoryTitle(categoryId: String) = withContext(Dispatchers.IO) {
+    suspend fun getTopicTitle(categoryId: String) = withContext(Dispatchers.IO) {
         mFirestore.collection("categories")
             .document("pre_defined_categories")
             .collection("categories_name")
@@ -67,11 +78,11 @@ class CategoriesRepository {
             .get()
             .await()
             .data?.get(appLanguage) as String?
-    }!!
+    }
 
-    fun retrieveDefaultCategory(selectedCategory: String): String? {
+    fun retrieveDefaultTopic(selectedTopic: String): String? {
         for (c in rawCategories) {
-            if (selectedCategory in c.toList()) {
+            if (selectedTopic in c.toList()) {
                 return c.first
             }
         }
@@ -95,4 +106,23 @@ class CategoriesRepository {
         }
     }
 
+    suspend fun loadFollowingCategories(): List<String> {
+        // retrieve the following categories first
+        val topicKeys = withContext(Dispatchers.IO) {
+            mFirestore.collection("users")
+                .document(mAuth.uid!!)
+                .get()
+                .await()
+                .data
+                ?.get("followingCategories") as List<String>
+        }
+        return if (topicKeys.isNullOrEmpty()) emptyList()
+        else {
+            topicKeys.map {
+                Log.d("TAG", "following topic key: ${(it)}")
+                Log.d("TAG", "following topic: ${getTopicTitle(it)}")
+                getTopicTitle(it)?: "No Such Topic"
+            }
+        }
+    }
 }

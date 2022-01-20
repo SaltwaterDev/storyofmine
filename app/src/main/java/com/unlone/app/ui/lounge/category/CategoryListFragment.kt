@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.unlone.app.databinding.FragmentCategoryListBinding
+import com.unlone.app.ui.lounge.LoungeCategoryFragment
 
 class CategoryListFragment : Fragment() {
     private val binding get() = _binding!!

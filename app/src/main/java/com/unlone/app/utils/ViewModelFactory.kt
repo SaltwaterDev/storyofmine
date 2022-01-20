@@ -2,7 +2,7 @@ package com.unlone.app.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.unlone.app.ui.lounge.common.DetailedPostViewModel
+import com.unlone.app.ui.lounge.DetailedPostViewModel
 
 
 @Suppress("UNCHECKED_CAST")

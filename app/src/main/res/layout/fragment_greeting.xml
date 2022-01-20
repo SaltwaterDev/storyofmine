@@ -69,6 +69,8 @@
         android:gravity="center"
         android:text="@string/start"
         app:cornerRadius="15dp"
+        android:paddingHorizontal="30dp"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

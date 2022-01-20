@@ -18,12 +18,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
+import javax.inject.Inject
 
-class PostsRepository {
+class PostsRepository @Inject constructor() {
     private val mAuth = Firebase.auth
     private val mFirestore = Firebase.firestore
     private var lastVisible: DocumentSnapshot? = null
     private val mPosts = 100
+    private val categoriesRepository = CategoriesRepository()
 
     suspend fun loadAllPosts(numberPost: Int = mPosts): List<Post> {
         val allDocs = withContext(Dispatchers.IO) {
@@ -53,24 +55,11 @@ class PostsRepository {
         return postList.sortedByDescending { it.createdTimestamp }
     }
 
-    private suspend fun loadFollowingCategories(): ArrayList<String>? {
-        // retrieve the following categories first
-        val result = withContext(Dispatchers.IO) {
-            mFirestore.collection("users")
-                .document(mAuth.uid!!)
-                .get()
-                .await()
-                .data
-                ?.get("followingCategories")
-        }
-        return if (result != null) result as ArrayList<String> else null
-    }
-
     suspend fun getCategoriesAndSelfPosts(numberPost: Int = mPosts): List<Post> {
 
         // retrieve the following categories
         val followingCategories = withContext(Dispatchers.IO) {
-            async { loadFollowingCategories() }
+            async { categoriesRepository.loadFollowingCategories() }
         }
         // load the post with the following categories AND self-written posts
         Log.d(ContentValues.TAG, "followingCategories: $followingCategories")
@@ -78,7 +67,7 @@ class PostsRepository {
         val postList: MutableList<Post> = ArrayList()
         // add the following categories
         val followingDocs = withContext(Dispatchers.IO) {
-            followingCategories.await()?.let {
+            followingCategories.await().let {
                 mFirestore.collection("posts")
                     .whereIn("category", it)
                     .limit(numberPost.toLong())
@@ -124,14 +113,18 @@ class PostsRepository {
         numberPost: Int = mPosts
     ): List<Post> {
         Log.d("TAG", "category: $category")
+        val categoryKey = categoriesRepository.retrieveDefaultTopic(category)
+        Log.d("TAG", "category key: $categoryKey")
 
-        val thisCategoryDocs = withContext(Dispatchers.IO) {
-            mFirestore.collection("posts")
-                .whereEqualTo("category", category)
-                .limit(numberPost.toLong())
-                .orderBy("createdTimestamp", Query.Direction.DESCENDING)
-                .get()
-                .await()
+        val thisCategoryDocs = categoryKey?.let {
+            withContext(Dispatchers.IO) {
+                mFirestore.collection("posts")
+                    .whereEqualTo("category", it)
+                    .limit(numberPost.toLong())
+                    .orderBy("createdTimestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+            }
         }
         val postList: MutableList<Post> = ArrayList()
         if (thisCategoryDocs != null) {
@@ -148,10 +141,11 @@ class PostsRepository {
             }
         }
         // return the sorted postList
+        Log.d("TAG", "postList: $postList")
         return postList.sortedByDescending { it.createdTimestamp }
     }
 
-    suspend fun loadPost(pid: String): Post? = withContext(Dispatchers.IO){
+    suspend fun loadPost(pid: String): Post? = withContext(Dispatchers.IO) {
         val documentSnapshot = mFirestore.collection("posts")
             .document(pid)
             .get()
@@ -198,14 +192,13 @@ class PostsRepository {
     }
 
     suspend fun isSaved(pid: String): Boolean {
-            val result = mFirestore.collection("users").document(mAuth.uid!!)
-                .collection("saved")
-                .document(pid)
-                .get()
-                .await()
-            return (result != null && result.exists())
+        val result = mFirestore.collection("users").document(mAuth.uid!!)
+            .collection("saved")
+            .document(pid)
+            .get()
+            .await()
+        return (result != null && result.exists())
     }
-
 
 
 }

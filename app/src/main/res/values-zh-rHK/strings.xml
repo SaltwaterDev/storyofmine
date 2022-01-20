@@ -124,6 +124,11 @@
     <string name="confirm_password_incorrect">Password is not the same as Confirm Password</string>
     <string name="auth_fail">Authentication failed!</string>
     <string name="login_require_all">All fields are required</string>
-
+    <string name="topic_more">更多…</string>
+    <string name="email_verification_alert">If you go back to last page, you need to sign up again.</string>
+    <string name="proceed">Proceed</string>
+    <string name="reminding">Reminding</string>
+    <string name="email_verification_redirect">You will be redirected to Login Page</string>
+    <string name="leaving_app">Are you suring to leave?</string>
 
 </resources>

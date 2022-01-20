@@ -1,6 +1,5 @@
-package com.unlone.app.ui.lounge.common
+package com.unlone.app.ui.lounge
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +10,15 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.unlone.app.MobileNavigationDirections
-import com.unlone.app.ui.lounge.category.CategoryListFragmentDirections
 
 abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@LayoutRes private val layoutResId : Int)
-    : Fragment(), ItemClickListener{
+    : Fragment(), ItemClickListener {
 
     private var _binding : T? = null
     var viewModel : VM? = null
-    val postsAdapter: PostsAdapter by lazy {PostsAdapter(this)}
+    val postListAdapter: PostListAdapter by lazy { PostListAdapter(this) }
     open var mPosts = 100
     private var isLoading = false
 

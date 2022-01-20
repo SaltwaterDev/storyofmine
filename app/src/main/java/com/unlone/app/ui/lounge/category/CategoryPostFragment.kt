@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentCategoryPostBinding
-import com.unlone.app.ui.lounge.common.LoungePostsBaseFragment
+import com.unlone.app.ui.lounge.LoungePostsBaseFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,16 +28,7 @@ class CategoryPostFragment :
         args.category
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // This callback will only be called when CategoryPostFragment is at least Started.
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            // Handle the back button event
-            view?.let {
-                Navigation.findNavController(it).navigate(R.id.navigateToCategoryListFragment)
-            }
-        }
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,22 +46,19 @@ class CategoryPostFragment :
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = postsAdapter
+        recyclerView.adapter = postListAdapter
 
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-
         // load posts
-        // TODO (move this function into viewModel)
         viewModel!!.postListUiItems.observe(
             viewLifecycleOwner
         ) { postList ->
-            postsAdapter.submitList(postList)
+            postListAdapter.submitList(postList)
         }
-        viewModel!!.loadPosts(category, mPosts, false)
     }
 
     private fun initFollowingButton() {
@@ -132,14 +118,14 @@ class CategoryPostFragment :
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = postsAdapter
+        recyclerView.adapter = postListAdapter
     }
 
     override fun initSwipeRefreshLayout() {
         val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
-            viewModel!!.loadPosts(category, mPosts, false)
+            viewModel!!.loadPosts(category)
             swipeRefreshLayout.isRefreshing = false
         }
     }

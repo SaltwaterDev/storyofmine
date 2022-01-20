@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="parentPostItemUiState"
+            type="com.unlone.app.model.ParentPostItemUiState" />
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/postsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="@{parentPostItemUiState.postsUiStateItemList.isEmpty()? View.GONE: View.VISIBLE}">
+
+        <TextView
+            android:id="@+id/categoryTitleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="5dp"
+            android:text="@{parentPostItemUiState.category}"
+            android:textColor="@color/colorText"
+            android:textSize="20sp"
+            android:visibility="@{parentPostItemUiState.postsUiStateItemList.isEmpty()? View.GONE: View.VISIBLE}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/child_posts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categoryTitleTv"
+            android:orientation="horizontal"
+            android:visibility="@{parentPostItemUiState.postsUiStateItemList.isEmpty()? View.GONE: View.VISIBLE}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/list_item_card_post" />
+
+
+    </RelativeLayout>
+</layout>

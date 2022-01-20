@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.unlone.app.R
-import com.unlone.app.ui.lounge.common.PostDetailFragment
+import com.unlone.app.ui.lounge.PostDetailFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG

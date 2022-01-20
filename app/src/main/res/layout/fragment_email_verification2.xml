@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/colorWhite"
     android:theme="@style/AppTheme"
     android:orientation="vertical"
     tools:context=".ui.access.EmailVerificationFragment2">

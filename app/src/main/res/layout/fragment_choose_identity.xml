@@ -12,13 +12,13 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
         android:layout_marginTop="220dp"
         android:fontFamily="@font/sf_pro_text_medium"
         android:text="@string/for_now_what_is_your_overall_goal_downloading_this_app"
         android:textColor="@color/colorText"
         android:textSize="16sp"
         android:textStyle="normal"
-        android:layout_marginHorizontal="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,9 +27,9 @@
         android:id="@+id/identityBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
         android:layout_marginTop="22dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginHorizontal="40dp"
         android:columnCount="2"
         android:rowCount="2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -149,6 +149,7 @@
             android:layout_marginEnd="50dp"
             android:text="@string/back"
             android:textAllCaps="false"
+            android:textColor="@color/colorButtonText"
             app:cornerRadius="15dp"
             app:strokeColor="@color/colorText"
             app:strokeWidth="1dp" />
@@ -161,6 +162,7 @@
             android:elevation="0dp"
             android:text="@string/next"
             android:textAllCaps="false"
+            android:textColor="@color/colorButtonText"
             app:cornerRadius="15dp" />
 
     </LinearLayout>

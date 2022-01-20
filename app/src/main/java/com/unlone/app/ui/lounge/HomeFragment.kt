@@ -1,51 +1,152 @@
 package com.unlone.app.ui.lounge
 
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager2.widget.ViewPager2
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.content.ContentValues
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.unlone.app.MobileNavigationDirections
 import com.unlone.app.R
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import androidx.navigation.fragment.NavHostFragment
+import com.unlone.app.databinding.FragmentHomeBinding
+import com.unlone.app.ui.lounge.category.CategoriesAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
-    lateinit var tabLayout: TabLayout
-    lateinit var pager2: ViewPager2
-    lateinit var adapter: FragmentAdapter
+@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+class HomeFragment : Fragment(), ItemClickListener {
+
+    private lateinit var _binding: FragmentHomeBinding
+    private val binding get() = _binding
+    private val parentPostsAdapter: ParentPostsAdapter by lazy {
+        ParentPostsAdapter(
+            this,
+            { pid -> onClick(pid) })
+    }
+    private val categoriesAdapter: CategoriesAdapter by lazy {
+        CategoriesAdapter { titleId ->
+            adapterTopicOnClick(
+                titleId
+            )
+        }
+    }
+
+    private val viewModel: HomeViewModel by lazy {
+        ViewModelProvider(this)[HomeViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This callback will only be called when Fragment is at least Started.
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                context?.let {
+                    MaterialAlertDialogBuilder(it, R.style.ThemeOverlay_App_MaterialAlertDialog)
+                        .setTitle(it.getString(R.string.reminding))
+                        .setMessage(it.getString(R.string.leaving_app))
+                        .setPositiveButton(it.getString(R.string.proceed))
+                        { _, _ ->
+                            activity?.finish()
+                        }
+                        .show()
+                }
+            }
+        })
+        // The callback can be enabled or disabled here or in the lambda
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val root = inflater.inflate(R.layout.fragment_home, container, false) as ViewGroup
-        tabLayout = root.findViewById(R.id.tab_layout)
-        pager2 = root.findViewById(R.id.view_pager2)
-        val fm = childFragmentManager
-        adapter = FragmentAdapter(fm, lifecycle)
-        pager2.adapter = adapter
-        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                pager2.currentItem = tab.position
-            }
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
+        binding.categoriesListRv.adapter = categoriesAdapter
+        binding.postPerCategoriesRv.adapter = parentPostsAdapter
+        initFab()
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {// TODO ("scroll to the top")
-            }
+        // load topics
+        viewModel.displayingTopicsUiState.observe(this, {
+            categoriesAdapter.submitList(it)
         })
-        pager2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                tabLayout.selectTab(tabLayout.getTabAt(position))
+
+
+        lifecycleScope.launch {
+            // repeatOnLifecycle launches the block in a new coroutine every time the
+            // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Trigger the flow and start listening for values.
+                // Note that this happens when lifecycle is STARTED and stops
+                // collecting when the lifecycle is STOPPED
+                viewModel.parentPostItemUiStateItems.collect { uiState ->
+                    // New value received
+                    Log.d("TAG", "uiState: $uiState")
+                    parentPostsAdapter.submitList(uiState.filter { it.postsUiStateItemList.isNotEmpty() })
+                }
             }
-        })
-        val navController = NavHostFragment.findNavController(this)
-        return root
+        }
+
+        return view
+    }
+
+
+
+    private fun initFab() {
+        val fab: FloatingActionButton = binding.fab
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            fab.tooltipText = resources.getString(R.string.write_a_post)
+        }
+        fab.setOnClickListener {
+            findNavController().navigate(R.id.action_fragment_to_create_post)
+        }
+    }
+
+    override fun onClick(pid: String) {
+        val action = MobileNavigationDirections.actionGlobalPostDetailFragment(pid)
+        view?.findNavController()?.navigate(action)
+    }
+
+    private fun adapterTopicOnClick(topic: String) {
+        if (topic == R.string.topic_more.toString()) navToLoadMoreTopics() else openSpecificTopic(
+            topic
+        )
+    }
+
+
+    // navigate to specific topic
+    private fun openSpecificTopic(topic: String) {
+        Log.d("TAG", "selected topic: $topic")
+        val topicKey = viewModel.retrieveDefaultCategory(topic).toString()
+        if (topicKey != "null") {
+            // open the post with specific topic
+            val action = HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(topicKey)
+            findNavController().navigate(action)
+        } else {
+            Log.d(ContentValues.TAG, "couldn't find the category")
+        }
+    }
+
+    // navigate to topic list
+    private fun navToLoadMoreTopics() {
+        findNavController().navigate(R.id.action_navigation_home_to_categoryListFragment)
     }
 }

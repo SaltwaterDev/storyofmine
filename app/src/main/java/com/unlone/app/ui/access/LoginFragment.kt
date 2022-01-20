@@ -2,11 +2,11 @@ package com.unlone.app.ui.access
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentLoginBinding
 import com.unlone.app.ui.MainActivity
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
@@ -52,6 +51,13 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.action_loginFragment_to_on_boarding_navigation)
             }
         })
+
+        // This callback will only be called when Fragment is at least Started.
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            // Handle the back button event
+            activity?.finish()
+        }
+
 
         return binding.root
     }

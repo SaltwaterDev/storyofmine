@@ -11,8 +11,9 @@ import com.google.firebase.ktx.Firebase
 import com.unlone.app.model.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class CommentsRepository {
+class CommentsRepository @Inject constructor() {
     private var lastVisible: Float? = null
     var endOfComments: Boolean = true
     private val mAuth = Firebase.auth

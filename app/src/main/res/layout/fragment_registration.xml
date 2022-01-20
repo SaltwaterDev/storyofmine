@@ -131,7 +131,7 @@
             android:paddingEnd="30dp"
             android:text="@string/action_register"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorBlackText"
             app:cornerRadius="15dp" />
 
         <ProgressBar

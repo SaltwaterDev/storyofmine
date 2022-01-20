@@ -136,6 +136,7 @@
                 android:textAllCaps="false"
                 app:cornerRadius="15dp"
                 app:strokeColor="@color/colorText"
+                android:textColor="@color/colorButtonText"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -146,6 +147,7 @@
                 android:elevation="0dp"
                 android:text="@string/let_s_go"
                 android:textAllCaps="false"
+                android:textColor="@color/colorButtonText"
                 app:cornerRadius="15dp" />
 
         </LinearLayout>
