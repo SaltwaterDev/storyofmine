@@ -74,6 +74,14 @@
         <item name="android:textColor">@color/colorToolbarText</item>
     </style>
 
+    <style name="Toolbar.TextAppearance2" parent="">
+        <item name="fontFamily">@font/averia_serif_libre_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:textColor">@color/colorToolbarText</item>
+    </style>
+
     <style name="ThemeOverlay_App_MaterialAlertDialog" parent="MaterialAlertDialog.MaterialComponents">
         <item name="buttonBarPositiveButtonStyle">@style/Dialog.Warning.Button</item>
     </style>

@@ -36,6 +36,7 @@ class MyStoriesFragment :
             Navigation.findNavController(it)
                 .navigate(R.id.action_myStoriesFragment_to_navigation_profile)
         }
+
         return binding.root
     }
 

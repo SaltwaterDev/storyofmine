@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="12dp"
             android:text="@{parentPostItemUiState.category}"
             android:textColor="@color/colorText"
             android:textSize="20sp"

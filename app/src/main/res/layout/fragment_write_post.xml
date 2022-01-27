@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.create.WritePostFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -21,7 +21,7 @@
                 android:background="?android:attr/windowBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/cancelButton"
@@ -40,13 +40,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/sf_compact_display_medium"
-                android:textColor="@color/colorText"
                 android:text="@string/next"
+                android:textColor="@color/colorText"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -59,16 +58,16 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/_10sdp"
         android:clipToPadding="false"
+        android:fillViewport="true"
         android:isScrollContainer="true"
         android:paddingTop="?attr/actionBarSize"
-        android:fillViewport="true"
         android:paddingBottom="@dimen/_30sdp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@+id/imagePost"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            app:layout_constraintTop_toTopOf="@+id/imagePost">
 
 
             <ImageView
@@ -77,9 +76,9 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="60dp"
-                android:visibility="gone"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -94,37 +93,42 @@
                 android:layout_marginEnd="18dp"
                 android:background="@null"
                 android:fontFamily="@font/notosans_tc_medium"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
-                android:inputType="textMultiLine"
+                android:inputType="textCapSentences"
+                android:letterSpacing="0.04"
+                android:maxLength="90"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="25sp"
-                android:maxLength="90"
-                android:letterSpacing="0.04"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imagePost"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imagePost">
+
+                <requestFocus
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </EditText>
 
 
             <EditText
                 android:id="@+id/inputPostContext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="43dp"
+                android:layout_marginEnd="18dp"
                 android:background="@null"
                 android:fontFamily="@font/sf_compact_text_regular"
                 android:gravity="top"
                 android:hint="@string/create_post_greet"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
-                android:inputType="textMultiLine"
-                android:textColorHint="@color/colorTextHint"
-                android:textSize="17sp"
+                android:inputType="textMultiLine|textCapSentences"
                 android:letterSpacing="0.1"
                 android:lineSpacingExtra="10dp"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
+                android:textColorHint="@color/colorTextHint"
+                android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/inputPostTitle" />
@@ -143,27 +147,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
-                    android:textColor="@color/colorText"
                     android:fontFamily="@font/notosans_tc_medium"
-                    android:textSize="15sp"
-                    android:text="@string/label" />
+                    android:text="@string/label"
+                    android:textColor="@color/colorText"
+                    android:textSize="15sp" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/label_chip_group"
-                    android:gravity="top"
-                    android:layout_marginStart="6dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="100dp"
-                    android:layout_toEndOf="@id/labelTv"/>
+                    android:layout_marginStart="6dp"
+                    android:layout_toEndOf="@id/labelTv"
+                    android:gravity="top"
+                    android:maxWidth="100dp" />
 
                 <EditText
                     android:id="@+id/labelEv"
                     android:layout_width="match_parent"
                     android:layout_height="20sp"
+                    android:layout_alignBaseline="@+id/labelTv"
                     android:layout_marginStart="4dp"
                     android:layout_toEndOf="@id/label_chip_group"
-                    android:layout_alignBaseline="@+id/labelTv"
                     android:background="@null"
                     android:imeOptions="actionDone"
                     android:inputType="text"
@@ -178,7 +182,7 @@
 
     <include
         android:id="@+id/more_overlay"
-        layout="@layout/layout_more"/>
+        layout="@layout/layout_more" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

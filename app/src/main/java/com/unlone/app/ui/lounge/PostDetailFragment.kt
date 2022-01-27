@@ -15,9 +15,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
@@ -64,6 +67,17 @@ class PostDetailFragment : Fragment() {
         val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
         isSaved(saveButton)
 
+        // navigate to category list
+        binding.layoutPost.topicTv.setOnClickListener {
+            detailedPostViewModel.defaultCategory?.let { it1 ->
+                val action =
+                    PostDetailFragmentDirections.actionPostDetailFragmentToCategoryPostFragment(
+                        it1
+                    )
+                findNavController().navigate(action)
+            }
+        }
+
         // load comment
         detailedPostViewModel.loadUiComments()
         binding.recycleview.adapter = commentsAdapter
@@ -97,7 +111,8 @@ class PostDetailFragment : Fragment() {
             if (detailedPostViewModel.parentCid != null && detailedPostViewModel.parentCommenter.toString() !in binding.commentEt.text) {
                 // replying prefix is destroyed, remove the prefix directly
                 val arr = binding.commentEt.text.split(" ").toTypedArray()
-                val trimmedContent = arr.filterNot { it == arr[0] }     // the content with the "@user" prefix"
+                val trimmedContent =
+                    arr.filterNot { it == arr[0] }     // the content with the "@user" prefix"
                 val replaceText = if (trimmedContent.isEmpty()) "" else trimmedContent[0]
                 binding.commentEt.setText(replaceText)
                 detailedPostViewModel.clearSubCommentPrerequisite()
@@ -109,7 +124,7 @@ class PostDetailFragment : Fragment() {
     private fun initToolbar() {
         val fragmentManager = (activity as FragmentActivity).supportFragmentManager
         binding.topAppBar.setNavigationOnClickListener {
-            fragmentManager.popBackStack()
+            findNavController().navigateUp()
         }
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {

@@ -3,8 +3,6 @@ package com.unlone.app.data
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +12,10 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+
+@Singleton
 class CategoriesRepository @Inject constructor() {
     private var rawCategories = mutableListOf<Pair<String, String>>()
 
@@ -106,7 +107,7 @@ class CategoriesRepository @Inject constructor() {
         }
     }
 
-    suspend fun loadFollowingCategories(): List<String> {
+    suspend fun loadFollowingTopics(): List<String> {
         // retrieve the following categories first
         val topicKeys = withContext(Dispatchers.IO) {
             mFirestore.collection("users")
@@ -116,13 +117,19 @@ class CategoriesRepository @Inject constructor() {
                 .data
                 ?.get("followingCategories") as List<String>
         }
-        return if (topicKeys.isNullOrEmpty()) emptyList()
-        else {
-            topicKeys.map {
-                Log.d("TAG", "following topic key: ${(it)}")
-                Log.d("TAG", "following topic: ${getTopicTitle(it)}")
-                getTopicTitle(it)?: "No Such Topic"
+
+        val topics = if (topicKeys.isNullOrEmpty()) emptyList() else topicKeys.map {
+            Log.d("TAG", "following topic key: ${(it)}")
+            val isLabel = it.first() == '#'
+            if (!isLabel){
+                Log.d("TAG", "following categories: ${getTopicTitle(it)}")
+                getTopicTitle(it) ?: "No Such Topic"
+            }
+            else{
+                it
             }
         }
+
+        return topics
     }
 }

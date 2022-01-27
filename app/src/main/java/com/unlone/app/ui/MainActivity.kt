@@ -1,9 +1,7 @@
 package com.unlone.app.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
@@ -12,9 +10,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.unlone.app.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.unlone.app.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,78 +37,5 @@ class MainActivity : AppCompatActivity() {
                 else -> navBottomBar.visibility = View.GONE
             }
         }
-
     }
-
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (ev.action == MotionEvent.ACTION_DOWN) {
-            val v = currentFocus
-            if (isShouldHideKeyboard(v, ev)) {
-                hideKeyboard(v!!.windowToken)
-            }
-        }
-        return super.dispatchTouchEvent(ev)
-    }
-
-    private fun isShouldHideKeyboard(v: View?, event: MotionEvent): Boolean {
-        if (v is EditText) {
-            val l = intArrayOf(0, 0)
-            v.getLocationInWindow(l)
-            val left = l[0]
-            val top = l[1]
-            val bottom = top + v.getHeight()
-            val right = left + v.getWidth()
-            return (event.x <= left || event.x >= right
-                    || event.y <= top || event.y >= bottom)
-        }
-        return false
-    }
-
-    private fun hideKeyboard(token: IBinder?) {
-        if (token != null) {
-            val im = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS)
-        }
-    }
-
-    /*
-    override fun onBackPressed() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_startup_host_fragment) as NavHostFragment
-        val count = navHostFragment.childFragmentManager.backStackEntryCount
-        Log.d("TAG", "backstack count: $count")
-        if (count == 0) {
-            //additional code
-            MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
-                .setTitle(this.getString(R.string.reminding))
-                .setMessage(this.getString(R.string.leaving_app))
-                .setPositiveButton(this.getString(R.string.proceed)) { _, _ ->
-                    super.onBackPressed()
-                }
-                .show()
-        }else {
-            super.onBackPressed()
-        }
-    }
-
-     */
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if (data?.getIntExtra("result", 0) == 1) {
-                Log.d("Refresh_", "success")
-                finish()
-                startActivity(intent)
-                return
-            }
-        }
-        if (resultCode == RESULT_CANCELED) {
-            //Do nothing?
-            Log.d("Refresh_", resultCode.toString())
-            Log.d("Refresh_", "fail")
-        }
-    } //onActivityResult
-
-
 }

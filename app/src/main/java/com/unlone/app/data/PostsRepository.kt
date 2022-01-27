@@ -2,24 +2,23 @@ package com.unlone.app.data
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.squareup.okhttp.Dispatcher
 import com.unlone.app.model.Post
 import com.unlone.app.model.Report
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PostsRepository @Inject constructor() {
     private val mAuth = Firebase.auth
     private val mFirestore = Firebase.firestore
@@ -59,7 +58,7 @@ class PostsRepository @Inject constructor() {
 
         // retrieve the following categories
         val followingCategories = withContext(Dispatchers.IO) {
-            async { categoriesRepository.loadFollowingCategories() }
+            async { categoriesRepository.loadFollowingTopics() }
         }
         // load the post with the following categories AND self-written posts
         Log.d(ContentValues.TAG, "followingCategories: $followingCategories")
@@ -144,6 +143,45 @@ class PostsRepository @Inject constructor() {
         Log.d("TAG", "postList: $postList")
         return postList.sortedByDescending { it.createdTimestamp }
     }
+
+    suspend fun getSingleLabelPosts(
+        labelText: String,
+        numberPost: Int = mPosts
+    ): List<Post> {
+
+        Log.d("TAG", "labelText: $labelText")
+        // since that label string is "#xxxx", need to remove "#" first
+        val label = labelText.drop(1)
+        Log.d("TAG", "label: $label")
+
+        val thisLabelDocs = label.let {
+            withContext(Dispatchers.IO) {
+                mFirestore.collection("posts")
+                    .whereArrayContains ("labels", it)
+                    .limit(numberPost.toLong())
+                    .get()
+                    .await()
+            }
+        }
+        val postList: MutableList<Post> = ArrayList()
+        if (thisLabelDocs != null) {
+            if (thisLabelDocs.size() > 0) {
+                lastVisible = thisLabelDocs.documents[thisLabelDocs.size() - 1]
+            }
+            for (document in thisLabelDocs) {
+                Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                val post = document.toObject<Post>()
+                post.pid = document.id
+                if (!postList.contains(post)) {
+                    postList.add(post)
+                }
+            }
+        }
+        // return the sorted postList
+        Log.d("TAG", "postList: $postList")
+        return postList.sortedByDescending { it.createdTimestamp }
+    }
+
 
     suspend fun loadPost(pid: String): Post? = withContext(Dispatchers.IO) {
         val documentSnapshot = mFirestore.collection("posts")

@@ -3,9 +3,9 @@ package com.unlone.app.ui.lounge.category
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -38,7 +38,8 @@ class CategoryPostFragment :
         super.onCreateView(inflater, container, savedInstanceState)
         // set category title
         setCategoryTitle()
-        isFollowing(binding.isFollowingTv)
+        val followingButton = binding.topAppBar.menu.findItem(R.id.followBtn)
+        isFollowing(followingButton)
         initFollowingButton()
 
         // load posts
@@ -47,6 +48,12 @@ class CategoryPostFragment :
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = postListAdapter
+        viewModel?.loadPosts(category)
+
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
 
         return binding.root
     }
@@ -78,23 +85,25 @@ class CategoryPostFragment :
     }
 
     private fun setCategoryTitle() {
-        viewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
-        viewModel?.getCategoryTitle(args.category)
-        viewModel?.categoryTitle?.observe(viewLifecycleOwner) { title ->
-            binding.categoryTitleTv.text = title
-        }
+        if (category.first() != '#'){
+            viewModel?.getCategoryTitle(args.category)
+            viewModel?.categoryTitle?.observe(viewLifecycleOwner) { title ->
+                binding.topAppBar.title = title
+            }
+        } else
+            binding.topAppBar.title = category
     }
 
-    private fun isFollowing(followingTv: TextView) {
+    private fun isFollowing(followingBtn: MenuItem) {
         lifecycleScope.launch(Dispatchers.IO) {
             val isFollowing = viewModel?.isFollowing(category) == true
             withContext(Dispatchers.Main) {
                 if (isFollowing) {
-                    followingTv.text = getString(R.string.following)
-                    followingTv.tag = "following"
+                    followingBtn.title = getString(R.string.following)
+                    followingBtn.actionView = view?.findViewById(R.id.followBtn)
                 } else {
-                    followingTv.text = getString(R.string.follow)
-                    followingTv.tag = "follow"
+                    followingBtn.title = getString(R.string.following)
+                    followingBtn.actionView = view?.findViewById(R.id.followBtn)
                 }
             }
         }

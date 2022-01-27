@@ -3,6 +3,7 @@ package com.unlone.app.ui.lounge
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.unlone.app.R
@@ -13,6 +14,7 @@ import com.unlone.app.model.*
 import com.unlone.app.utils.ObservableViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -26,24 +28,27 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
     private val postsRepository = PostsRepository()
     private val commentsRepository = CommentsRepository()
 
+
     // post field
     private val post: MutableLiveData<Post?> = MutableLiveData()
     val observablePost: LiveData<Post?>
         get() = post
     private val _category: MutableLiveData<String?> = MutableLiveData()
     val category: LiveData<String?> = _category
+    val defaultCategory = category.value?.let { categoriesRepository.retrieveDefaultTopic(it) }
+
     private val _isPostSaved: MutableLiveData<Boolean> = MutableLiveData(false)
     val isPostSaved: LiveData<Boolean> = _isPostSaved
 
 
     // comments list field
     private val mComments: Long = 4   // how many comment loaded each time
-    private var _comments: MutableLiveData<List<Comment>> = MutableLiveData()
-
-    private var _uiComments: MutableLiveData<List<UiComment>> = MutableLiveData()
+    private var _lastVisible: Float? = null
+    private var _uiComments: MutableLiveData<List<UiComment>> =
+        MutableLiveData(emptyList())
     val uiComments: LiveData<List<UiComment>> = _uiComments
+    val endOfComments: LiveData<Boolean> = commentsRepository.endOfComments.asLiveData()
 
-    var endOfComments: Boolean = true
 
     // type comment edittext field
     private var _commentEditTextFocused: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -51,6 +56,7 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
     var parentCid: String? = null
     var parentCommenter: String? = null
     val isSelfPost by lazy { post.value?.author_uid == uid }
+
 
     // Report
     private val reportMap = mapOf(
@@ -122,16 +128,27 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
     fun loadUiComments(loadMore: Boolean = false) {
         val uiCommentList: ArrayList<UiComment> = ArrayList()
         viewModelScope.launch(Dispatchers.IO) {
-            val comments = commentsRepository.loadComments(pid, loadMore, mComments)
+            val (comments, lastVisible) = commentsRepository.loadComments(
+                pid,
+                loadMore,
+                mComments,
+                _lastVisible
+            )
             withContext(Dispatchers.Main) {
-                comments.let{ comments ->
+                _lastVisible = lastVisible
+                comments.let { comments ->
                     for (comment in comments) {
                         val isLiked = commentsRepository.fireStoreIsLike(comment)
                         // load sub comments
                         val uiSubComments = loadUiSubComments(comment, mComments)
                         uiCommentList.add(UiComment(comment, isLiked, false, uiSubComments))
                     }
-                    _uiComments.value = uiCommentList.distinct()
+                    if (!loadMore)
+                        _uiComments.value = uiCommentList
+                    else {
+                        _uiComments.value = _uiComments.value?.plus(uiCommentList)
+                            ?.sortedByDescending { it.comment.score }?.distinct()
+                    }
                 }
             }
         }
@@ -192,8 +209,9 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
 
     // display topic
     private suspend fun getCategoryTitle(): String? {
-        post.value?.category?.let{ categoryId ->
-            return categoriesRepository.getTopicTitle(categoryId)}
+        post.value?.category?.let { categoryId ->
+            return categoriesRepository.getTopicTitle(categoryId)
+        }
         return null
     }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/followBtn"
+        android:actionLayout="@layout/following_button"
+        android:checkable="true"
+        android:contentDescription="@string/follow"
+        android:title="@string/follow"
+        app:actionViewClass="com.google.android.material.button.MaterialButton"
+        app:showAsAction="always" />
+</menu>

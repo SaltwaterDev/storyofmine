@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.Gravity
@@ -17,12 +18,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.unlone.app.R
 import com.unlone.app.model.Comment
 import com.unlone.app.model.Post
+import com.unlone.app.ui.lounge.category.CategoryListFragmentDirections
 import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
@@ -190,16 +194,24 @@ object BindingAdapters {
         // todo (Not implemented)
     }
 
+
+
+
     @BindingAdapter("labels")
     @JvmStatic
     fun TextView.setLabels(labels: ArrayList<String>?) {
+        movementMethod = LinkMovementMethod.getInstance()
         // display label
         val spb = SpannableStringBuilder()
         if (labels != null) {
             for (label in labels) {
                 val clickableSpan: ClickableSpan = object : ClickableSpan() {
                     override fun onClick(view: View) {
-                        // todo (open the label's post)
+                        Log.d("TAG", "onClick: I am clicked")
+                        val inputLabel = "#$label"
+                        val action = PostDetailFragmentDirections.actionPostDetailFragmentToCategoryPostFragment(inputLabel)
+                        findNavController().navigate(action)
+
                     }
                 }
                 val displayLabel = SpannableString("·$label  ")

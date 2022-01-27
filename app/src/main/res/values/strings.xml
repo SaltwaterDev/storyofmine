@@ -44,7 +44,7 @@
     <string name="disable_saving">Disable saving</string>
     <string name="preview">Preview</string>
     <string name="tab_following">Following</string>
-    <string name="tab_all">All</string>
+    <string name="all">All</string>
     <string name="tab_categories">Categories</string>
     <string name="write_a_post">Write something</string>
     <string name="thank_you">Thank you!</string>
@@ -97,7 +97,7 @@
     <string name="please_check_your_email">Please check your email</string>
     <string name="you_may_also_need_to_check_n_the_junk_mail">You may also need to check\n the junk mail</string>
     <string name="topic_label">Topic:</string>
-    <string name="topic">topic</string>
+    <string name="topic">Topic</string>
     <string name="hello">Hello!</string>
     <string name="greetingText">We want to know you more, so that you could get the most from our app. \n\nWe prepared 5 questions and 2 pages of guiding principles for you. \n\nSome questions may be longer, which you may skip for now.</string>
     <string name="for_now_what_is_your_overall_goal_downloading_this_app">For now, what is your overall goal downloading this app?</string>

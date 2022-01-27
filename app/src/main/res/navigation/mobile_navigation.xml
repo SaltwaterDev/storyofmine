@@ -91,6 +91,9 @@
             android:name="pid"
             android:defaultValue="nothing"
             app:argType="string" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_categoryPostFragment"
+            app:destination="@id/categoryPostFragment" />
     </fragment>
 
     <action

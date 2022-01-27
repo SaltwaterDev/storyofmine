@@ -1,6 +1,5 @@
 package com.unlone.app.ui.lounge.category
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.unlone.app.data.CategoriesRepository
 import com.unlone.app.data.PostsRepository
@@ -11,6 +10,9 @@ import kotlinx.coroutines.launch
 class CategoriesViewModel : ViewModel() {
     private val _categories: MutableLiveData<List<String>> = MutableLiveData()
     val categories: LiveData<List<String>> = _categories
+
+    private val _followingCategories: MutableLiveData<List<String>> = MutableLiveData()
+    val followingCategories: LiveData<List<String>> = _followingCategories
     private var _categoryTitle = MutableLiveData<String>()
     val categoryTitle: LiveData<String> = _categoryTitle
 
@@ -32,18 +34,29 @@ class CategoriesViewModel : ViewModel() {
 
     init {
         _categoryTitle.value?.let { loadPosts(it) }
+        loadCategories()
+        loadFollowingCategories()
     }
 
-    fun loadCategories() {
+    private fun loadCategories() {
         viewModelScope.launch {
             _categories.value = categoriesRepository.loadCategories()
         }
     }
 
-    fun loadPosts(category: String, loadMore: Boolean? = false) {
-        Log.d("TAG", "category: $category")
+    private fun loadFollowingCategories() {
         viewModelScope.launch {
-            _posts.value = postsRepository.getSingleCategoryPosts(category)
+            _followingCategories.value = categoriesRepository.loadFollowingTopics()
+        }
+    }
+
+    fun loadPosts(category: String, loadMore: Boolean? = false) {
+        val isLabel = category.first() == '#'
+        viewModelScope.launch {
+            if (!isLabel)
+                _posts.value = postsRepository.getSingleCategoryPosts(category)
+            else
+                _posts.value = postsRepository.getSingleLabelPosts(category)
         }
     }
 

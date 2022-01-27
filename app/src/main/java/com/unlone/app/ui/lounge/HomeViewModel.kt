@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _followingCategories.value = categoriesRepository.loadFollowingCategories()
+            _followingCategories.value = categoriesRepository.loadFollowingTopics()
             _categories.value = categoriesRepository.loadCategories()
         }
     }
@@ -98,11 +98,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun getBestComment(pid: String): Comment? {
-        val commentList = commentRepository.loadComments(pid, false, mComments)
+        val (commentList, _) = commentRepository.loadComments(pid, false, mComments)
         return if (commentList.isEmpty())
             null
         else
-            commentRepository.loadComments(pid, false, mComments)[0]
+            commentList[0]
     }
 
 

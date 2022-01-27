@@ -2,7 +2,6 @@ package com.unlone.app.data
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -10,20 +9,26 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.unlone.app.model.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class CommentsRepository @Inject constructor() {
     private var lastVisible: Float? = null
-    var endOfComments: Boolean = true
+    private val _endOfComments = MutableStateFlow(true)
+    val endOfComments: Flow<Boolean> = _endOfComments
+
     private val mAuth = Firebase.auth
     private val mFirestore = Firebase.firestore
 
     suspend fun loadComments(
         pid: String,
         loadMore: Boolean,
-        numberPost: Long
-    ): List<Comment> {
+        numberPost: Long,
+        lastVisible: Float? = null,
+    ): Pair<List<Comment>, Float?> {
         val commentList = ArrayList<Comment>()
         if (lastVisible == null || !loadMore) {
             withContext(Dispatchers.IO) {
@@ -33,7 +38,8 @@ class CommentsRepository @Inject constructor() {
                         .limit(numberPost)
                         .get()
                         .await()
-                endOfComments = commentCollection.size() < numberPost
+
+                _endOfComments.value = commentCollection.size() < numberPost
 
                 Log.d("TAG", "number of comments: " + commentCollection.size())
                 for (document in commentCollection) {
@@ -53,12 +59,13 @@ class CommentsRepository @Inject constructor() {
 
                         Log.d("TAG", "comment object: $comment")
                         commentList.add(comment)
-                        lastVisible = comment.score
+                        comment.score
                     }
                 }
             }
-            // sort the postList
-            return commentList.sortedByDescending { it.score }.distinct()
+            val returnList = commentList.sortedByDescending { it.score }.distinct()
+            val newLastVisible = if (returnList.isEmpty()) null else returnList.last().score
+            return Pair(returnList, newLastVisible)
 
         } else {
             // run when order more comments
@@ -72,7 +79,7 @@ class CommentsRepository @Inject constructor() {
                         .get()
                         .await()
 
-                endOfComments = commentCollection.size() < numberPost
+                _endOfComments.value = commentCollection.size() < numberPost
 
                 Log.d("TAG", "number of NEXT comments: " + commentCollection.size())
                 for (document in commentCollection) {
@@ -99,16 +106,15 @@ class CommentsRepository @Inject constructor() {
                         if (comment.referringPid == null) {
                             comment.referringPid = pid
                         }
-                        lastVisible = comment.score
                         Log.d("TAG", "comment object LOADED: $comment")
                         commentList.add(comment)
                     }
                 }
-
             }
         }
-        // sort the postList
-        return commentList.sortedByDescending { it.score }.distinct()
+        val returnList = commentList.sortedByDescending { it.score }.distinct()
+        val newLastVisible = if (returnList.isEmpty()) null else returnList.last().score
+        return Pair(returnList, newLastVisible)
     }
 
     suspend fun loadSubComments(
