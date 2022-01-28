@@ -31,7 +31,7 @@ android {
         applicationId 'com.unlone.app'
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 10
+        versionCode 11
         versionName "1.0.0-a.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
