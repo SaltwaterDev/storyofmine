@@ -130,4 +130,5 @@
     <string name="reminding">Reminding</string>
     <string name="email_verification_redirect">You will be redirected to Login Page</string>
     <string name="leaving_app">Are you suring to leave?</string>
+    <string name="cate_post_layout" translatable="false">%1$s  |  </string>
 </resources>

@@ -36,7 +36,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="Topic Title"
                         android:textColor="@color/colorWhiteText"/>
 
                     <ImageView
@@ -62,6 +61,7 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone"
@@ -87,14 +87,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/search_bar"
-            android:layout_marginTop="@dimen/_8sdp"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycleviewPosts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/_12sdp"
                 android:elevation="0dp"
                 app:cardElevation="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"

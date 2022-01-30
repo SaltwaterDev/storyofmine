@@ -7,10 +7,12 @@
         <variable
             name="post"
             type="com.unlone.app.model.Post" />
+
         <variable
             name="category"
             type="String" />
     </data>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,11 +46,9 @@
                 android:id="@+id/topicTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginTop="19dp"
                 android:fontFamily="@font/sf_pro_text_semibold"
                 android:letterSpacing="0.01"
-                android:text='@{category + "  |  "}'
+                android:text="@{@string/cate_post_layout(category)}"
                 android:textSize="14sp" />
 
             <TextView
@@ -56,7 +56,6 @@
                 date="@{post.createdTimestamp}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
                 android:letterSpacing="0.01"
                 android:text="@string/date"
                 android:textSize="14sp" />
@@ -91,15 +90,15 @@
             android:id="@+id/labelGroup"
             labels="@{post.labels}"
             android:layout_width="wrap_content"
-            android:layout_marginTop="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginStart="16dp"
-            android:fontFamily="@font/sf_pro_text_semibold"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="16dp"
+            android:fontFamily="@font/sf_pro_text_semibold"
             android:letterSpacing="0.01"
             android:textColor="@color/colorText"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 </layout>

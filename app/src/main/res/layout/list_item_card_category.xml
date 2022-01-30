@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="7.5dp"
         android:layout_marginVertical="5dp"
-        android:elevation="5dp"
+        android:elevation="0dp"
         android:paddingHorizontal="15dp"
         app:cardCornerRadius="10dp">
 
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageCover"
-            android:fontFamily="@font/notosans_tc_medium"
+            android:fontFamily="@font/notosans_tc_regular"
             android:gravity="center"
             android:letterSpacing="0.05"
             android:text='@{topic ?? "Topic"}'

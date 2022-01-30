@@ -2,6 +2,7 @@ package com.unlone.app.ui.lounge.category
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -27,6 +28,8 @@ import kotlin.properties.Delegates
 class CategoryPostFragment :
     LoungePostsBaseFragment<FragmentCategoryPostBinding, CategoriesViewModel>(R.layout.fragment_category_post) {
     private val args: CategoryPostFragmentArgs by navArgs()
+
+    // this is category key
     private val category by lazy {
         args.category
     }
@@ -56,8 +59,6 @@ class CategoryPostFragment :
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-
-
 
 
         return binding.root
@@ -112,6 +113,7 @@ class CategoryPostFragment :
     }
 
     private fun setCategoryTitle() {
+        Log.d("TAG", "setCategoryTitle: $category")
         if (category.first() != '#') {
             viewModel?.getCategoryTitle(args.category)
             viewModel?.categoryTitle?.observe(viewLifecycleOwner) { title ->

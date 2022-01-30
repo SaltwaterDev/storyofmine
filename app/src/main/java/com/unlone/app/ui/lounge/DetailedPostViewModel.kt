@@ -1,10 +1,7 @@
 package com.unlone.app.ui.lounge
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.unlone.app.R
 import com.unlone.app.data.CategoriesRepository
@@ -14,7 +11,6 @@ import com.unlone.app.model.*
 import com.unlone.app.utils.ObservableViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -35,7 +31,20 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
         get() = post
     private val _category: MutableLiveData<String?> = MutableLiveData()
     val category: LiveData<String?> = _category
-    val defaultCategory = category.value?.let { categoriesRepository.retrieveDefaultTopic(it) }
+    val ctgNavAction =
+        category.switchMap {
+            liveData {
+                it?.let { it1 ->
+                    emit(
+                        retrieveDefaultCategory(it1)?.let { it2 ->
+                            PostDetailFragmentDirections.actionPostDetailFragmentToCategoryPostFragment(
+                                it2
+                            )
+                        }
+                    )
+                }
+            }
+        }
 
     private val _isPostSaved: MutableLiveData<Boolean> = MutableLiveData(false)
     val isPostSaved: LiveData<Boolean> = _isPostSaved
@@ -209,9 +218,12 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
 
     // display topic
     private suspend fun getCategoryTitle(): String? {
-        post.value?.category?.let { categoryId ->
-            return categoriesRepository.getTopicTitle(categoryId)
+        return post.value?.category?.let { categoryId ->
+            categoriesRepository.getTopicTitle(categoryId)
         }
-        return null
+    }
+
+    fun retrieveDefaultCategory(selectedCategory: String): String? {
+        return categoriesRepository.retrieveDefaultTopic(selectedCategory)
     }
 }

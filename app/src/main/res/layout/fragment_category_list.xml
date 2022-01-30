@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewmodel"
             type="com.unlone.app.ui.lounge.category.CategoriesViewModel" />
@@ -34,45 +35,49 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/followingTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                android:paddingHorizontal="14dp"
-                android:paddingBottom="10dp"
-                android:text="@string/following"
-                android:textColor="@color/colorText"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/followingTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36dp"
+                    android:paddingHorizontal="14dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/following"
+                    android:textColor="@color/colorText"
+                    android:textSize="20sp" />
 
-            <ListView
-                android:id="@+id/followingTopicListview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/followingTopicListview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/list_item" />
 
 
-            <TextView
-                android:id="@+id/allTopicTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:paddingHorizontal="14dp"
-                android:paddingBottom="10dp"
-                android:text="@string/all"
-                android:textColor="@color/colorText"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/allTopicTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:paddingHorizontal="14dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/all"
+                    android:textColor="@color/colorText"
+                    android:textSize="20sp" />
 
-            <ListView
-                android:id="@+id/allTopicListview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allTopicListview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/list_item" />
 
             </LinearLayout>
 

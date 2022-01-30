@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge.category
+package com.unlone.app.ui.lounge
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.ListItemCardCategoryBinding
-import com.unlone.app.ui.lounge.TopicCard
 
 class CategoriesAdapter(private val onTopicClick: (String) -> Unit) :
     ListAdapter<TopicCard, CategoriesAdapter.ViewHolder>(CategoryDiffCallback()) {

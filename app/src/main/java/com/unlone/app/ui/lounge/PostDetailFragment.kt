@@ -69,33 +69,34 @@ class PostDetailFragment : Fragment() {
 
         // navigate to category list
         binding.layoutPost.topicTv.setOnClickListener {
-            detailedPostViewModel.defaultCategory?.let { it1 ->
-                val action =
-                    PostDetailFragmentDirections.actionPostDetailFragmentToCategoryPostFragment(
-                        it1
-                    )
-                findNavController().navigate(action)
+            detailedPostViewModel.ctgNavAction.observe(viewLifecycleOwner) { it1 ->
+                Log.d("TAG", "onCreateView: $it1")
+                if (it1 != null) {
+                    findNavController().navigate(it1)
+                }
             }
         }
+
 
         // load comment
         detailedPostViewModel.loadUiComments()
         binding.recycleview.adapter = commentsAdapter
         detailedPostViewModel.uiComments.observe(
-            this, {
-                it?.let {
-                    Log.d("TAG", "comments in post detail activity: $it")
-                    commentsAdapter.submitList(it)
-                }
-            })
+            viewLifecycleOwner
+        ) {
+            it?.let {
+                Log.d("TAG", "comments in post detail activity: $it")
+                commentsAdapter.submitList(it)
+            }
+        }
 
         // listen to the subComment call
-        detailedPostViewModel.commentEditTextFocused.observe(this, {
+        detailedPostViewModel.commentEditTextFocused.observe(viewLifecycleOwner) {
             detailedPostViewModel.parentCommenter?.let { it1 ->
                 Log.d("tag", "commentEditTextFocused = $it")
                 focusEdittextToSubComment(it1)
             }
-        })
+        }
 
         // send comment button click
         binding.sendBtn.setOnClickListener {
@@ -197,7 +198,7 @@ class PostDetailFragment : Fragment() {
     }
 
     private fun loadPostInfo() {
-        detailedPostViewModel.observablePost.observe(this, { p ->
+        detailedPostViewModel.observablePost.observe(viewLifecycleOwner) { p ->
             p?.let {
                 // enable or disable the permission of deleting post
                 val deleteMenuItem = binding.topAppBar.menu.findItem(R.id.actionDelete)
@@ -209,10 +210,9 @@ class PostDetailFragment : Fragment() {
                     saveButton.isEnabled = false
                     saveButton.icon.mutate().alpha = 135
                 }
-
                 // others will be implemented BY data binding
             }
-        })
+        }
     }
 
     private fun postComment() {
@@ -228,12 +228,12 @@ class PostDetailFragment : Fragment() {
 
     private fun isSaved(saveButton: MenuItem) {
         val c: Context = requireContext()
-        detailedPostViewModel.isPostSaved.observe(this, { saved ->
+        detailedPostViewModel.isPostSaved.observe(viewLifecycleOwner) { saved ->
             saveButton.icon = when (saved) {
                 true -> ContextCompat.getDrawable(c, R.drawable.ic_baseline_bookmark_24)
                 else -> ContextCompat.getDrawable(c, R.drawable.ic_baseline_bookmark_border_24)
             }
-        })
+        }
     }
 
     private fun focusEdittextToSubComment(username: String) {

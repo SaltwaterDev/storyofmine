@@ -5,6 +5,7 @@ import com.unlone.app.data.CategoriesRepository
 import com.unlone.app.data.PostsRepository
 import com.unlone.app.model.Post
 import com.unlone.app.model.PostItemUiState
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class CategoriesViewModel : ViewModel() {
@@ -20,7 +21,19 @@ class CategoriesViewModel : ViewModel() {
     private val postsRepository: PostsRepository = PostsRepository()
 
     private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
-    private val posts: LiveData<List<Post>> = _posts
+    private val posts: LiveData<List<Post>> = categoryTitle.switchMap {
+        liveData {
+            retrieveDefaultCategory(it)?.let { it1 ->
+                val isLabel = it1.first() == '#'
+                if (!isLabel)
+                    emit(postsRepository.getSingleCategoryPosts(it1))
+                else
+                    emit(postsRepository.getSingleLabelPosts(it1))
+
+            }
+        }
+    }
+
     val postListUiItems = posts.map { posts ->
         posts.map {
             PostItemUiState(

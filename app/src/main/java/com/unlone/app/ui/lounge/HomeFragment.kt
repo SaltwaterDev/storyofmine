@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -20,7 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.MobileNavigationDirections
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentHomeBinding
-import com.unlone.app.ui.lounge.category.CategoriesAdapter
+import com.unlone.app.ui.lounge.category.CategoryListFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -36,8 +37,8 @@ class HomeFragment : Fragment(), ItemClickListener {
     private val binding get() = _binding
     private val parentPostsAdapter: ParentPostsAdapter by lazy {
         ParentPostsAdapter(
-            this,
-            { pid -> onClick(pid) })
+            this
+        ) { pid -> onClick(pid) }
     }
     private val categoriesAdapter: CategoriesAdapter by lazy {
         CategoriesAdapter { titleId ->
@@ -85,9 +86,9 @@ class HomeFragment : Fragment(), ItemClickListener {
         initFab()
 
         // load topics
-        viewModel.displayingTopicsUiState.observe(this, {
+        viewModel.displayingTopicsUiState.observe(viewLifecycleOwner) {
             categoriesAdapter.submitList(it)
-        })
+        }
 
 
         lifecycleScope.launch {
@@ -134,13 +135,14 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     // navigate to specific topic
     private fun openSpecificTopic(topic: String) {
-        Log.d("TAG", "selected topic: $topic")
-        val topicKey = viewModel.retrieveDefaultCategory(topic).toString()
-        if (topicKey != "null") {
-            // open the post with specific topic
-            val action = HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(topicKey)
-            findNavController().navigate(action)
-        } else {
+        Log.d(ContentValues.TAG, "selected topic: $topic")
+        val selectedTopic = if (topic.first() != '#') viewModel.retrieveDefaultCategory(topic).toString() else topic
+        if (selectedTopic != "null"){
+            // open the post with specific category
+            val action = CategoryListFragmentDirections.navigateToCategoryPostFragment(selectedTopic)
+            view?.let { Navigation.findNavController(it).navigate(action) }
+        }
+        else{
             Log.d(ContentValues.TAG, "couldn't find the category")
         }
     }
