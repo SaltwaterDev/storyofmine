@@ -25,15 +25,12 @@ class GuidingPrinciple2Fragment : Fragment() {
         _binding = FragmentGuidingPrinciple2Binding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.finishBtn.setOnClickListener {
+        binding.nextBtn.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.guidingPrinciple2Fragment)
-                findNavController().navigate(R.id.action_guidingPrinciple2Fragment_to_MainActivityDestination)
+                findNavController().navigate(R.id.action_guidingPrinciple2Fragment_to_guidingPrinciple3Fragment)
         }
         binding.backBtn.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.guidingPrinciple2Fragment)
-                findNavController().navigate(
-                    R.id.action_guidingPrinciple2Fragment_to_guidingPrinciple1Fragment
-                )
+            findNavController().popBackStack()
         }
 
 

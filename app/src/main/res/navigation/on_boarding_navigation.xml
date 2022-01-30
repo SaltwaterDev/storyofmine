@@ -24,11 +24,6 @@
         <action
             android:id="@+id/chooseIdentityFragment_to_chooseInterestFragment"
             app:destination="@id/chooseInterestFragment" />
-        <action
-            android:id="@+id/action_chooseIdentityFragment_to_greetingFragment"
-            app:destination="@id/greetingFragment"
-            app:popUpTo="@id/greetingFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/chooseInterestFragment"
@@ -38,11 +33,6 @@
         <action
             android:id="@+id/action_chooseInterestFragment_to_chooseCategoriesFragment"
             app:destination="@id/chooseCategoriesFragment" />
-        <action
-            android:id="@+id/action_chooseInterestFragment_to_chooseIdentityFragment"
-            app:destination="@id/chooseIdentityFragment"
-            app:popUpTo="@id/chooseIdentityFragment"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -53,11 +43,6 @@
         <action
             android:id="@+id/action_chooseCategoriesFragment_to_guidingPrinciple1Fragment"
             app:destination="@id/guidingPrinciple1Fragment" />
-        <action
-            android:id="@+id/action_chooseCategoriesFragment_to_chooseInterestFragment"
-            app:destination="@id/chooseInterestFragment"
-            app:popUpTo="@id/chooseInterestFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/guidingPrinciple1Fragment"
@@ -67,11 +52,6 @@
         <action
             android:id="@+id/action_guidingPrinciple1Fragment_to_guidingPrinciple2Fragment"
             app:destination="@id/guidingPrinciple2Fragment" />
-        <action
-            android:id="@+id/action_guidingPrinciple1Fragment_to_chooseCategoriesFragment"
-            app:destination="@id/chooseCategoriesFragment"
-            app:popUpTo="@id/chooseCategoriesFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/guidingPrinciple2Fragment"
@@ -79,17 +59,30 @@
         android:label="fragment_guiding_principle2"
         tools:layout="@layout/fragment_guiding_principle2" >
         <action
-            android:id="@+id/action_guidingPrinciple2Fragment_to_MainActivityDestination"
-            app:destination="@id/MainActivityDestination" />
-        <action
-            android:id="@+id/action_guidingPrinciple2Fragment_to_guidingPrinciple1Fragment"
-            app:destination="@id/guidingPrinciple1Fragment"
-            app:popUpTo="@id/chooseCategoriesFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_guidingPrinciple2Fragment_to_guidingPrinciple3Fragment"
+            app:destination="@id/guidingPrinciple3Fragment" />
     </fragment>
 
     <activity
         android:id="@+id/MainActivityDestination"
         android:name="com.unlone.app.ui.MainActivity"
         android:label="activity_main" />
+    <fragment
+        android:id="@+id/guidingPrinciple3Fragment"
+        android:name="com.unlone.app.ui.access.onBoarding.GuidingPrinciple3Fragment"
+        android:label="GuidingPrinciple3Fragment"
+        tools:layout="@layout/fragment_guiding_principle3" >
+        <action
+            android:id="@+id/action_guidingPrinciple3Fragment_to_guidingPrinciple4Fragment"
+            app:destination="@id/guidingPrinciple4Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/guidingPrinciple4Fragment"
+        android:name="com.unlone.app.ui.access.onBoarding.GuidingPrinciple4Fragment"
+        android:label="GuidingPrinciple4Fragment"
+        tools:layout="@layout/fragment_guiding_principle4" >
+        <action
+            android:id="@+id/action_guidingPrinciple4Fragment_to_MainActivityDestination"
+            app:destination="@id/MainActivityDestination" />
+    </fragment>
 </navigation>

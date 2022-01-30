@@ -52,21 +52,20 @@ class ChooseIdentityFragment : Fragment() {
                 findNavController().navigate(R.id.chooseIdentityFragment_to_chooseInterestFragment)
         }
         binding.backBtn.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.chooseIdentityFragment)
-                findNavController().navigate(R.id.action_chooseIdentityFragment_to_greetingFragment)
+            findNavController().popBackStack()
         }
 
-        return view
+            return view
+        }
+
+        private fun uncheckOtherCards(it: MaterialCardView) {
+            binding.nextBtn.isEnabled = true
+
+            binding.helpSeeker.isChecked = false
+            binding.expressor.isChecked = false
+            binding.helper.isChecked = false
+            binding.reader.isChecked = false
+
+            it.isChecked = true
+        }
     }
-
-    private fun uncheckOtherCards(it: MaterialCardView) {
-        binding.nextBtn.isEnabled = true
-
-        binding.helpSeeker.isChecked = false
-        binding.expressor.isChecked = false
-        binding.helper.isChecked = false
-        binding.reader.isChecked = false
-
-        it.isChecked = true
-    }
-}

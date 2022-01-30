@@ -19,79 +19,58 @@
         android:textSize="26sp" />
 
     <TextView
-        android:id="@+id/principle_1_title"
+        android:id="@+id/instructionTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/titleTv"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="35dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/notosans_tc_medium"
-        android:text="@string/principle_1_title"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/guiding_spoil_alert"
         android:textColor="@color/colorText"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/principle_1_text"
+        android:id="@+id/empathy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/principle_1_title"
+        android:layout_below="@id/instructionTv"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/notosans_tc_regular"
-        android:text="@string/principle_1_text"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/sf_pro_text_bold"
+        android:text="@string/empathy"
         android:textColor="@color/colorText"
-        android:textSize="18sp" />
+        android:textSize="24sp" />
+
 
     <TextView
-        android:id="@+id/principle_2_title"
+        android:id="@+id/arouse_empathy_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/principle_1_text"
+        android:layout_below="@id/empathy"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="81dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/notosans_tc_medium"
-        android:text="@string/principle_2_title"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/guid_quick_ans"
         android:textColor="@color/colorText"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
+
 
     <TextView
-        android:id="@+id/principle_2_text"
+        android:id="@+id/encourageTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/principle_2_title"
+        android:layout_below="@id/arouse_empathy_text"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="149dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/notosans_tc_regular"
-        android:text="@string/principle_2_text"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/guiding_encourage"
         android:textColor="@color/colorText"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/principle_3_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/principle_2_text"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/notosans_tc_medium"
-        android:text="@string/principle_3_title"
-        android:textColor="@color/colorText"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/principle_3_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/principle_3_title"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/notosans_tc_regular"
-        android:text="@string/principle_3_text"
-        android:textColor="@color/colorText"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
 
     <TextView
@@ -101,7 +80,7 @@
         android:layout_above="@id/buttons"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="21dp"
-        android:text="5/7" />
+        android:text="7/7" />
 
 
     <LinearLayout
@@ -110,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="54dp"
         android:layout_marginBottom="50dp"
         android:orientation="horizontal">
 
@@ -128,12 +108,12 @@
             app:strokeWidth="1dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/nextBtn"
+            android:id="@+id/finishBtn"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:elevation="0dp"
-            android:text="@string/next"
+            android:text="@string/let_s_go"
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
             app:cornerRadius="15dp" />

@@ -46,9 +46,7 @@ class ChooseCategoriesFragment : Fragment() {
         }
 
         binding.backBtn.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.chooseCategoriesFragment)
-                findNavController()
-                    .navigate(R.id.action_chooseCategoriesFragment_to_chooseInterestFragment)
+            findNavController().popBackStack()
         }
 
         return view

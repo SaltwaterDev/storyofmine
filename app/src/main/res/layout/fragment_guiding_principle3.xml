@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.access.onBoarding.ChooseInterestFragment">
+    android:layout_marginBottom="40dp"
+    tools:context=".ui.access.onBoarding.GuidingPrinciple1Fragment">
 
     <TextView
-        android:id="@+id/questionTv"
-        android:layout_width="match_parent"
+        android:id="@+id/titleTv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="154dp"
-        android:fontFamily="@font/sf_pro_text_medium"
-        android:text="@string/pick_interests_greeting"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="68dp"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:text="@string/guiding_principle"
         android:textColor="@color/colorText"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="26sp" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        style="@style/Widget.MaterialComponents.Chip.Choice"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/instructionTv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/questionTv"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="40dp"
-        android:foregroundGravity="center"
-        app:chipSpacingHorizontal="10dp" />
+        android:layout_below="@id/titleTv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="197dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/guiding_question"
+        android:textColor="@color/colorText"
+        android:textSize="20sp" />
+
 
     <TextView
         android:id="@+id/page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/buttons_layout"
+        android:layout_above="@id/buttons"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="21dp"
-        android:text="2/7" />
+        android:text="6/7" />
 
 
     <LinearLayout
-        android:id="@+id/buttons_layout"
+        android:id="@+id/buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -61,8 +62,8 @@
             android:layout_marginEnd="50dp"
             android:text="@string/back"
             android:textAllCaps="false"
-            app:cornerRadius="15dp"
             android:textColor="@color/colorText"
+            app:cornerRadius="15dp"
             app:strokeColor="@color/colorText"
             app:strokeWidth="1dp" />
 
@@ -70,10 +71,11 @@
             android:id="@+id/nextBtn"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorButtonText"
             android:layout_gravity="center"
+            android:elevation="0dp"
             android:text="@string/next"
             android:textAllCaps="false"
+            android:textColor="@color/colorButtonText"
             app:cornerRadius="15dp" />
 
     </LinearLayout>

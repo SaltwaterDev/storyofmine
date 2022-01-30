@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.unlone.app.R
-import com.unlone.app.databinding.FragmentChooseIdentityBinding
 import com.unlone.app.databinding.FragmentGuidingPrinciple1Binding
+import com.unlone.app.databinding.FragmentGuidingPrinciple2Binding
+import com.unlone.app.databinding.FragmentGuidingPrinciple4Binding
 
-class GuidingPrinciple1Fragment : Fragment() {
-    private var _binding: FragmentGuidingPrinciple1Binding? = null
+class GuidingPrinciple4Fragment : Fragment() {
+    private var _binding: FragmentGuidingPrinciple4Binding? = null
     private val binding get() = _binding!!
     private val userSetupViewModel: UserSetupViewModel by activityViewModels()
 
@@ -22,13 +22,11 @@ class GuidingPrinciple1Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGuidingPrinciple1Binding.inflate(inflater, container, false)
+        _binding = FragmentGuidingPrinciple4Binding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.nextBtn.setOnClickListener {
-            userSetupViewModel.saveUser()
-            findNavController()
-                .navigate(R.id.action_guidingPrinciple1Fragment_to_guidingPrinciple2Fragment)
+        binding.finishBtn.setOnClickListener {
+                findNavController().navigate(R.id.action_guidingPrinciple4Fragment_to_MainActivityDestination)
         }
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
@@ -37,5 +35,4 @@ class GuidingPrinciple1Fragment : Fragment() {
 
         return view
     }
-
 }

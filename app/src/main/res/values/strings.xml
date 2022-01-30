@@ -75,13 +75,13 @@
     <string name="dislikes">Dislikes</string>
     <string name="why_report">Why do you want to report?</string>
     <string name="logout_alert">Are you sure to logout?</string>
-    <string name="pick_categories_greeting">Your interested topics?</string>
+    <string name="pick_categories_greeting">What kind of topics you would like to see?\n\nPlease pick at least 3 topics~</string>
     <string name="start">Start</string>
-    <string name="type_your_name">Type your name</string>
-    <string name="look_for_connection">Look for connection</string>
-    <string name="express_my_feelings">Express my feelings</string>
+    <string name="typing_hint">How can I call you?</string>
+    <string name="look_for_connection">Build connection</string>
+    <string name="express_my_feelings">Share/ Unleash my feelings</string>
     <string name="help_people_in_need">Help people in need</string>
-    <string name="wandering_look_for_sth_different">Wandering/ look for sth different</string>
+    <string name="wandering_look_for_sth_different">Looking for interesting topics</string>
     <string name="final_step">Final Step</string>
     <string name="welcome_back">Welcome back</string>
     <string name="welcome_to_unlone">Welcome to Unlone</string>
@@ -99,24 +99,18 @@
     <string name="topic_label">Topic:</string>
     <string name="topic">Topic</string>
     <string name="hello">Hello!</string>
-    <string name="greetingText">We want to know you more, so that you could get the most from our app. \n\nWe prepared 5 questions and 2 pages of guiding principles for you. \n\nSome questions may be longer, which you may skip for now.</string>
-    <string name="for_now_what_is_your_overall_goal_downloading_this_app">For now, what is your overall goal downloading this app?</string>
-    <string name="pick_interests_greeting">What is your interest(s)?</string>
+    <string name="greetingText">Here, you can always find someone connected to you, who share the feelings you have had. \n\nWe have prepared 3 questions and 4 pages of guiding principles. \n\nDon\'t worry, it won\'t take too long!</string>
+    <string name="for_now_what_is_your_overall_goal_downloading_this_app">For now, what is your overall goal using this app?</string>
+    <string name="pick_interests_greeting">What do you usually like to do?\n\nWe can match you with others who have similar interests!</string>
     <string name="guiding_principle">Guiding principle</string>
-    <string name="instruction">Unlone is a place where you can unleash you feelings and thoughts freely. \n\nThat’s because you can always find someone who has the similar experience. \n\nMeanwhile, followings are some writing guides you might find them useful:</string>
+    <string name="instruction">Throughout this journey, we want to help you accomplish your pursuing goal.\n\nSo, here are some tips and reminding for you…</string>
     <string name="principle_1_title">Be mindful</string>
     <string name="principle_1_text">Focus on your feelings and thoughts. It could help express yourself better.</string>
     <string name="principle_2_title">Be kind</string>
     <string name="principle_2_text">What you express could have impact on other members. So please be careful.</string>
     <string name="principle_3_text">Don’t share your personal information to others.</string>
     <string name="principle_3_title">Be safe</string>
-    <string name="instruction2">When conveying to others, we hope our feelings is accepted.\n\nIn turn, please respond others with respect and acceptance.\n\nAnd the best way to do this is through</string>
     <string name="empathy">Empathy</string>
-    <string name="arouse_empathy">Arouse Empathy</string>
-    <string name="convey_empathy">Convey Empathy</string>
-    <string name="_1_let_go_our_subjective_standard_of_values_n2_fit_in_to_their_viewpoint">1. Let go our subjective standard of values.\n2. Fit in to their viewpoint.</string>
-    <string name="convey_empathy_text">1. Digest the context\n\n2. Reflect the feelings you perceived.\n\n3. You might discuss more about his/her feelings part if he/she doesn’t mind.</string>
-    <string name="debrief">You might find that there’s much to learn. Don’t worry, you’ll get to know more and more. Enjoy!</string>
     <string name="let_s_go">Let\'s go!</string>
     <string name="type_email">Please type your email</string>
     <string name="type_password">Please type your password</string>
@@ -129,6 +123,12 @@
     <string name="proceed">Proceed</string>
     <string name="reminding">Reminding</string>
     <string name="email_verification_redirect">You will be redirected to Login Page</string>
-    <string name="leaving_app">Are you suring to leave?</string>
+    <string name="leaving_app">Are you surfing to leave?</string>
     <string name="cate_post_layout" translatable="false">%1$s  |  </string>
+    <string name="guiding_introduce">You can always find people you feel connect.\n\nBecause it is a peer support platform.</string>
+    <string name="guiding_question">We love to see you supporting others!\n\nBut please respond others with kindness. \n\nYou might ask, what exactly should I do?</string>
+    <string name="guiding_spoil_alert">Spoil alert~</string>
+    <string name="guid_quick_ans">My quick answers is, treat others the way you would like others treat you back.</string>
+    <string name="guiding_encourage">You might think it is harder than just saying. Don’t worry, we want to help you achieve that!</string>
+
 </resources>
