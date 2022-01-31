@@ -108,9 +108,7 @@
         android:label="CategoryListFragment" >
         <action
             android:id="@+id/navigateToCategoryPostFragment"
-            app:destination="@id/categoryPostFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+            app:destination="@id/categoryPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryPostFragment"
@@ -121,10 +119,6 @@
             android:name="category"
             android:defaultValue="nothing"
             app:argType="string" />
-        <action
-            android:id="@+id/navigateToCategoryListFragment"
-            app:destination="@id/categoryListFragment"
-            app:popUpTo="@+id/categoryListFragment"/>
     </fragment>
 
 

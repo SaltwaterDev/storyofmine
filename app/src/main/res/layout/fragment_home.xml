@@ -35,9 +35,9 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
-                android:layout_marginBottom="@dimen/_15sdp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:shapeAppearanceOverlay="@style/searchBarView"
                 app:startIconDrawable="@drawable/ic_search"
                 app:startIconTint="@color/colorSearchIcon">
@@ -55,6 +55,7 @@
 
             <LinearLayout
                 android:id="@+id/categoriesList"
+                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

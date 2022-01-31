@@ -139,8 +139,8 @@ class HomeFragment : Fragment(), ItemClickListener {
         val selectedTopic = if (topic.first() != '#') viewModel.retrieveDefaultCategory(topic).toString() else topic
         if (selectedTopic != "null"){
             // open the post with specific category
-            val action = CategoryListFragmentDirections.navigateToCategoryPostFragment(selectedTopic)
-            view?.let { Navigation.findNavController(it).navigate(action) }
+            val action = HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(selectedTopic)
+            findNavController().navigate(action)
         }
         else{
             Log.d(ContentValues.TAG, "couldn't find the category")
