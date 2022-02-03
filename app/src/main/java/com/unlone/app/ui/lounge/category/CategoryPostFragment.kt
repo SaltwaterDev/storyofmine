@@ -4,12 +4,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -67,7 +65,7 @@ class CategoryPostFragment :
     override fun onStart() {
         super.onStart()
         // load posts
-        viewModel!!.postListUiItems.observe(
+        viewModel?.postListUiItems?.observe(
             viewLifecycleOwner
         ) { postList ->
             postListAdapter.submitList(postList)
@@ -113,14 +111,10 @@ class CategoryPostFragment :
     }
 
     private fun setCategoryTitle() {
-        Log.d("TAG", "setCategoryTitle: $category")
-        if (category.first() != '#') {
-            viewModel?.getCategoryTitle(args.category)
-            viewModel?.categoryTitle?.observe(viewLifecycleOwner) { title ->
-                binding.topicTv.text = title
-            }
-        } else
-            binding.topicTv.text = category
+        viewModel?.getTopicTitle(category)
+        viewModel?.topicTitle?.observe(viewLifecycleOwner) { title ->
+            binding.topicTv.text = title
+        }
     }
 
     override fun getViewModelClass(): Class<CategoriesViewModel> =

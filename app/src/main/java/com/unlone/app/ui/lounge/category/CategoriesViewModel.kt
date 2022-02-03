@@ -1,11 +1,11 @@
 package com.unlone.app.ui.lounge.category
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.unlone.app.data.CategoriesRepository
 import com.unlone.app.data.PostsRepository
 import com.unlone.app.model.Post
 import com.unlone.app.model.PostItemUiState
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class CategoriesViewModel : ViewModel() {
@@ -14,23 +14,22 @@ class CategoriesViewModel : ViewModel() {
 
     private val _followingCategories: MutableLiveData<List<String>> = MutableLiveData()
     val followingCategories: LiveData<List<String>> = _followingCategories
-    private var _categoryTitle = MutableLiveData<String>()
-    val categoryTitle: LiveData<String> = _categoryTitle
+    private var _topicTitle = MutableLiveData<String>()
+    val topicTitle: LiveData<String> = _topicTitle
+    private var _topicId = MutableLiveData<String>()
+    private val topicId: LiveData<String> = _topicId
 
     private val categoriesRepository: CategoriesRepository = CategoriesRepository()
     private val postsRepository: PostsRepository = PostsRepository()
 
     private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
-    private val posts: LiveData<List<Post>> = categoryTitle.switchMap {
+    private val posts: LiveData<List<Post>> = topicId.switchMap {
         liveData {
-            retrieveDefaultCategory(it)?.let { it1 ->
-                val isLabel = it1.first() == '#'
-                if (!isLabel)
-                    emit(postsRepository.getSingleCategoryPosts(it1))
-                else
-                    emit(postsRepository.getSingleLabelPosts(it1))
-
-            }
+            Log.d("TAG", "label to search: $it")
+            if (it.first() != '#')
+                emit(postsRepository.getSingleCategoryPosts(it))
+            else
+                emit(postsRepository.getSingleLabelPosts(it))
         }
     }
 
@@ -46,7 +45,6 @@ class CategoriesViewModel : ViewModel() {
     }
 
     init {
-        _categoryTitle.value?.let { loadPosts(it) }
         loadCategories()
         loadFollowingCategories()
     }
@@ -63,15 +61,16 @@ class CategoriesViewModel : ViewModel() {
         }
     }
 
-    fun loadPosts(category: String, loadMore: Boolean? = false) {
-        val isLabel = category.first() == '#'
+
+    fun loadPosts(topic: String, loadMore: Boolean? = false) {
         viewModelScope.launch {
-            if (!isLabel)
-                _posts.value = postsRepository.getSingleCategoryPosts(category)
+            if (topic.first() != '#')
+                _posts.value = postsRepository.getSingleCategoryPosts(topic)
             else
-                _posts.value = postsRepository.getSingleLabelPosts(category)
+                _posts.value = postsRepository.getSingleLabelPosts(topic)
         }
     }
+
 
     fun searchPost(text: String) {
         // TODO ("After using firebase function")
@@ -85,9 +84,15 @@ class CategoriesViewModel : ViewModel() {
         return categoriesRepository.retrieveDefaultTopic(selectedCategory)
     }
 
-    fun getCategoryTitle(categoryId: String) {
-        viewModelScope.launch {
-            _categoryTitle.value = categoriesRepository.getTopicTitle(categoryId)
+    fun getTopicTitle(topicId: String) {
+        Log.d("TAG", "setCategoryTitle: $topicId")
+        _topicId.value = topicId
+        if (topicId.first() != '#') {
+            viewModelScope.launch {
+                _topicTitle.value = categoriesRepository.getTopicTitle(topicId)
+            }
+        } else {
+            _topicTitle.value = topicId
         }
     }
 

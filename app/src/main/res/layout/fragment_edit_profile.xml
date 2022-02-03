@@ -87,7 +87,7 @@
                 android:textSize="21sp" />
 
 
-            <com.rengwuxian.materialedittext.MaterialEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                 android:textColor="@color/colorText"
                 android:textSize="21sp" />
 
-            <com.rengwuxian.materialedittext.MaterialEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                 app:met_floatingLabel="normal" />
 
             <TextView
-                android:id="@+id/likesTv"
+                android:id="@+id/interestsTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -137,7 +137,7 @@
                 android:visibility="gone" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/likes"
+                android:id="@+id/interests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -148,7 +148,7 @@
                 app:met_floatingLabel="normal" />
 
             <TextView
-                android:id="@+id/dislikesTv"
+                android:id="@+id/mentalHealthTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -160,7 +160,7 @@
                 android:visibility="gone" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/dislikes"
+                android:id="@+id/mentalHealth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

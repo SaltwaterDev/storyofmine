@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val parentPostItemUiStateItems: StateFlow<List<ParentPostItemUiState>> =
+    val parentPostItemUiStateItems: StateFlow<List<ParentPostItemUiState?>> =
         categories.mapLatest { it ->
             it.map {
                 loadPostsFromSpecificCategory(it)
@@ -79,9 +79,10 @@ class HomeViewModel @Inject constructor(
     private suspend fun loadPostsFromSpecificCategory(
         category: String,
         numberPost: Int = numPostsPerCategory
-    ): ParentPostItemUiState {
-        val posts = postRepository.getSingleCategoryPosts(category, numberPost)
-        val postUiItemList = posts.map {
+    ): ParentPostItemUiState? {
+        val categoryKey = categoriesRepository.retrieveDefaultTopic(category)
+        val posts = categoryKey?.let { postRepository.getSingleCategoryPosts(it, numberPost) }
+        val postUiItemList = posts?.map {
             PostItemUiState(
                 it.title,
                 it.imagePath,
@@ -90,7 +91,7 @@ class HomeViewModel @Inject constructor(
                 getBestComment(it.pid)
             )
         }
-        val parentUiState = ParentPostItemUiState(category, postUiItemList)
+        val parentUiState = postUiItemList?.let { ParentPostItemUiState(category, it) }
         Log.d("TAG", "parent ui state: $parentUiState")
         return parentUiState
 

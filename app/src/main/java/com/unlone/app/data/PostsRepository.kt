@@ -108,23 +108,20 @@ class PostsRepository @Inject constructor() {
     }
 
     suspend fun getSingleCategoryPosts(
-        category: String,
+        categoryKey: String,
         numberPost: Int = mPosts
     ): List<Post> {
-        Log.d("TAG", "category: $category")
-        val categoryKey = categoriesRepository.retrieveDefaultTopic(category)
         Log.d("TAG", "category key: $categoryKey")
-
-        val thisCategoryDocs = categoryKey?.let {
+        val thisCategoryDocs =
             withContext(Dispatchers.IO) {
                 mFirestore.collection("posts")
-                    .whereEqualTo("category", it)
+                    .whereEqualTo("category", categoryKey)
                     .limit(numberPost.toLong())
                     .orderBy("createdTimestamp", Query.Direction.DESCENDING)
                     .get()
                     .await()
             }
-        }
+        
         val postList: MutableList<Post> = ArrayList()
         if (thisCategoryDocs != null) {
             if (thisCategoryDocs.size() > 0) {
@@ -157,7 +154,7 @@ class PostsRepository @Inject constructor() {
         val thisLabelDocs = label.let {
             withContext(Dispatchers.IO) {
                 mFirestore.collection("posts")
-                    .whereArrayContains ("labels", it)
+                    .whereArrayContains("labels", it)
                     .limit(numberPost.toLong())
                     .get()
                     .await()

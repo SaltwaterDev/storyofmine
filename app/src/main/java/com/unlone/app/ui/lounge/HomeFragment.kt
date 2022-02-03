@@ -101,7 +101,8 @@ class HomeFragment : Fragment(), ItemClickListener {
                 viewModel.parentPostItemUiStateItems.collect { uiState ->
                     // New value received
                     Log.d("TAG", "uiState: $uiState")
-                    parentPostsAdapter.submitList(uiState.filter { it.postsUiStateItemList.isNotEmpty() })
+                    parentPostsAdapter.submitList(uiState.filter { it?.postsUiStateItemList?.isNotEmpty()
+                        ?: it == true  })
                 }
             }
         }
@@ -135,7 +136,7 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     // navigate to specific topic
     private fun openSpecificTopic(topic: String) {
-        Log.d(ContentValues.TAG, "selected topic: $topic")
+        Log.d("TAG", "selected topic: $topic")
         val selectedTopic = if (topic.first() != '#') viewModel.retrieveDefaultCategory(topic).toString() else topic
         if (selectedTopic != "null"){
             // open the post with specific category
@@ -143,7 +144,7 @@ class HomeFragment : Fragment(), ItemClickListener {
             findNavController().navigate(action)
         }
         else{
-            Log.d(ContentValues.TAG, "couldn't find the category")
+            Log.d("TAG", "couldn't find the category")
         }
     }
 
