@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentSavedPostsBinding
 import com.unlone.app.ui.lounge.LoungePostsBaseFragment
+import com.unlone.app.viewmodel.SavedPostsViewModel
 
 class SavedPostsFragment :
     LoungePostsBaseFragment<FragmentSavedPostsBinding, SavedPostsViewModel>(R.layout.fragment_saved_posts) {
@@ -19,9 +20,10 @@ class SavedPostsFragment :
         super.onStart()
         viewModel?.loadPosts(mPosts)
         viewModel?.postListUiItems?.observe(
-            viewLifecycleOwner, { postList ->
-                postListAdapter.submitList(postList)
-            })
+            viewLifecycleOwner
+        ) { postList ->
+            postListAdapter.submitList(postList)
+        }
     }
 
     override fun onCreateView(
@@ -32,8 +34,7 @@ class SavedPostsFragment :
         super.onCreateView(inflater, container, savedInstanceState)
         // set return button on toolbar
         binding.topAppBar.setNavigationOnClickListener {
-            Navigation.findNavController(it)
-                .navigate(R.id.action_savedStoriesFragment_to_navigation_profile)
+            Navigation.findNavController(it).popBackStack()
         }
         return binding.root
     }

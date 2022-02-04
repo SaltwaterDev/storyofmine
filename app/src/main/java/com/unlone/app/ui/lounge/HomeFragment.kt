@@ -1,6 +1,5 @@
 package com.unlone.app.ui.lounge
 
-import android.content.ContentValues
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +12,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -21,7 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.MobileNavigationDirections
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentHomeBinding
-import com.unlone.app.ui.lounge.category.CategoryListFragmentDirections
+import com.unlone.app.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi

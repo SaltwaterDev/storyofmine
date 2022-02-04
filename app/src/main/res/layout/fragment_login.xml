@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.unlone.app.ui.access.LoginViewModel" />
+            type="com.unlone.app.viewmodel.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

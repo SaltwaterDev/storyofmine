@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentLoginBinding
 import com.unlone.app.ui.MainActivity
+import com.unlone.app.viewmodel.LoginViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
@@ -41,7 +42,7 @@ class LoginFragment : Fragment() {
         }
 
 
-        viewModel.userExistedInFireStore.observe(this, {
+        viewModel.userExistedInFireStore.observe(viewLifecycleOwner) {
             if (it == true) {
                 val intent = Intent(context, MainActivity::class.java)
                 activity?.startActivity(intent)
@@ -50,7 +51,7 @@ class LoginFragment : Fragment() {
                 // user data is not written to fireStore yet
                 findNavController().navigate(R.id.action_loginFragment_to_on_boarding_navigation)
             }
-        })
+        }
 
         // This callback will only be called when Fragment is at least Started.
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -63,12 +64,12 @@ class LoginFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.message.observe(this, { event ->
+        viewModel.message.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { message ->
                 // Toast the [message]
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
 }

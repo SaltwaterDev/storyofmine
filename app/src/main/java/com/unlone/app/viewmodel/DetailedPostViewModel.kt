@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge
+package com.unlone.app.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
@@ -8,6 +8,7 @@ import com.unlone.app.data.CategoriesRepository
 import com.unlone.app.data.CommentsRepository
 import com.unlone.app.data.PostsRepository
 import com.unlone.app.model.*
+import com.unlone.app.ui.lounge.PostDetailFragmentDirections
 import com.unlone.app.utils.ObservableViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

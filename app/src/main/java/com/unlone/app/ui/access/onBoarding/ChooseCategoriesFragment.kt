@@ -1,20 +1,18 @@
 package com.unlone.app.ui.access.onBoarding
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentChooseCategoriesBinding
+import com.unlone.app.viewmodel.UserSetupViewModel
 
 
 class ChooseCategoriesFragment : Fragment() {

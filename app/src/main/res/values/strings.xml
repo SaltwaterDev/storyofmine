@@ -130,5 +130,10 @@
     <string name="guiding_spoil_alert">Spoil alert~</string>
     <string name="guid_quick_ans">My quick answers is, treat others the way you would like others treat you back.</string>
     <string name="guiding_encourage">You might think it is harder than just saying. Don’t worry, we want to help you achieve that!</string>
+    <string name="language">Language</string>
+    <string name="theme" translatable="false">Theme</string>
+    <string name="zh">繁體中文</string>
+    <string name="eng">English</string>
+    <string name="ok">OK</string>
 
 </resources>

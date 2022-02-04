@@ -1,8 +1,6 @@
 package com.unlone.app.ui.profile
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,11 +8,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.ListItemProfileCardBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.FirebaseAuth
 import com.unlone.app.model.ProfileCard
-import com.unlone.app.ui.access.StartupActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
@@ -41,36 +35,16 @@ class ProfileAdapter(var context: Context) : RecyclerView.Adapter<ProfileAdapter
             .setCardBackgroundColor(Color.parseColor(dataList[position].backgroundColour))
         holder.binding.cardView.setOnClickListener{ view ->
             when (holder.binding.title.text){
-                // Go to "My Stories"
                 holder.itemView.context.getString(R.string.my_stories) -> view.findNavController().navigate(R.id.action_navigation_profile_to_myStoriesFragment)
-                // Go to "Saved"
                 holder.itemView.context.getString(R.string.saved) -> view.findNavController().navigate(R.id.action_navigation_profile_to_savedStoriesFragment)
-                // Logout
                 holder.itemView.context.getString(R.string.contact) -> view.findNavController().navigate(R.id.action_navigation_profile_to_contactUsFragment)
-                // Logout
-                holder.itemView.context.getString(R.string.logout) -> logout(holder)
+                holder.itemView.context.getString(R.string.setting) -> view.findNavController().navigate(R.id.action_navigation_profile_to_settingFragment)
             }
         }
 
         if(holder.binding.title.text == holder.itemView.context.getString(R.string.logout)){
             holder.binding.title.setTextColor(Color.parseColor("#C10909"))
         }
-    }
-
-    // TODO (move it to viewModel)
-    @ExperimentalCoroutinesApi
-    private fun logout(holder: ViewHolder) {
-        MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
-            .setTitle(holder.itemView.context.getString(R.string.delete_alert))
-            .setMessage(holder.itemView.context.getString(R.string.logout_alert))
-            .setPositiveButton(holder.itemView.context.getString(R.string.logout)) { _, _ ->
-                val user = FirebaseAuth.getInstance()
-                user.signOut()
-                val intent = Intent(context, StartupActivity::class.java)
-                context.startActivity(intent)
-                (context as Activity).finish()
-            }
-            .show()
     }
 
 

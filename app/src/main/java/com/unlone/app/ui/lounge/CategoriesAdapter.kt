@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.ListItemCardCategoryBinding
+import com.unlone.app.viewmodel.TopicCard
 
 class CategoriesAdapter(private val onTopicClick: (String) -> Unit) :
     ListAdapter<TopicCard, CategoriesAdapter.ViewHolder>(CategoryDiffCallback()) {

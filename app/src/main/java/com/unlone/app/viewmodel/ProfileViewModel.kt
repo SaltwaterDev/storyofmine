@@ -1,7 +1,6 @@
-package com.unlone.app.ui.profile
+package com.unlone.app.viewmodel
 
 import android.view.View
-import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

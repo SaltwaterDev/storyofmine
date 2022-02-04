@@ -19,9 +19,9 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentConfigBinding
-import com.unlone.app.databinding.LayoutPostBinding
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
+import com.unlone.app.viewmodel.SavedStateModel
 import kotlinx.parcelize.Parcelize
 import java.util.ArrayList
 
@@ -101,11 +101,11 @@ class ConfigFragment : Fragment() {
             binding.backButton.isEnabled = true
         }
 
-        savedStateModel.navBack.observe(this, {
+        savedStateModel.navBack.observe(viewLifecycleOwner) {
             if (it) {
                 findNavController().navigate(R.id.post_create_to_lounge)
             }
-        })
+        }
 
         return view
     }

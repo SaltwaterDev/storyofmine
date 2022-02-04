@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentGreetingBinding
+import com.unlone.app.viewmodel.UserSetupViewModel
 
 class GreetingFragment : Fragment() {
     private var _binding: FragmentGreetingBinding? = null

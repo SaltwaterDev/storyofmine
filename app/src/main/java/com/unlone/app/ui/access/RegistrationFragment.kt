@@ -1,20 +1,17 @@
 package com.unlone.app.ui.access
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.functions.FirebaseFunctionsException
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentRegistrationBinding
+import com.unlone.app.viewmodel.RegistrationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -46,7 +43,7 @@ class RegistrationFragment : Fragment() {
             }
         }
 
-        viewModel.navToVerification.observe(this, {
+        viewModel.navToVerification.observe(viewLifecycleOwner) {
             if (it == true)
                 Navigation.findNavController(binding.root)
                     .navigate(R.id.action_registrationFragment_to_emailVerificationFragment)
@@ -54,9 +51,9 @@ class RegistrationFragment : Fragment() {
                 context, "register failed for some reason",
                 Toast.LENGTH_SHORT
             ).show()
-        })
+        }
 
-        viewModel.showValidationErrorMsg.observe(this, {
+        viewModel.showValidationErrorMsg.observe(viewLifecycleOwner) {
             if (it) {
                 context?.let { it1 ->
                     MaterialAlertDialogBuilder(it1)
@@ -67,18 +64,18 @@ class RegistrationFragment : Fragment() {
                         .show()
                 }
             }
-        })
+        }
 
         return binding.root
 
     }
 
     private fun initObservers() {
-        viewModel.message.observe(this, { event ->
+        viewModel.message.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { message ->
                 // Toast the [message]
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 }

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentProfileBinding
 import com.unlone.app.model.ProfileCard
+import com.unlone.app.viewmodel.ProfileViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
@@ -25,6 +27,7 @@ class ProfileFragment : Fragment() {
     }
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,9 +46,8 @@ class ProfileFragment : Fragment() {
         profileList.add(ProfileCard(getString(R.string.my_stories), "#EDC678"))
         // profileList.add(ProfileCard(getString(R.string.journey), "#E6E2CB"))   TODO
         profileList.add(ProfileCard(getString(R.string.saved), "#E2E0EE"))
-        // profileList.add(ProfileCard(getString(R.string.setting), "#B0B0B0"))   TODO
+        profileList.add(ProfileCard(getString(R.string.setting), "#B0B0B0"))
         profileList.add(ProfileCard(getString(R.string.contact), "#B5CEF0"))
-        profileList.add(ProfileCard(getString(R.string.logout), "#B9CAB7"))
         profileAdapter.setDataList(profileList.distinct())
 
         binding.editButton.setOnClickListener {
@@ -58,4 +60,6 @@ class ProfileFragment : Fragment() {
 
         return view
     }
+
+
 }

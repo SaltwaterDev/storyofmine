@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.unlone.app.ui.lounge.DetailedPostViewModel" />
+            type="com.unlone.app.viewmodel.DetailedPostViewModel" />
     </data>
 
     <RelativeLayout

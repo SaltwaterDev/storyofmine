@@ -19,13 +19,13 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentPostDetailBinding
 import com.unlone.app.utils.ViewModelFactory
+import com.unlone.app.viewmodel.DetailedPostViewModel
 
 
 class PostDetailFragment : Fragment() {

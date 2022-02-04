@@ -129,5 +129,9 @@
     <string name="guiding_spoil_alert">小劇透~</string>
     <string name="guid_quick_ans">快問快答,\n將心比己,以你希望被對待的方式對待對方。</string>
     <string name="guiding_encourage">當然啦,講就易… 正因如此,我哋先想同你一齊實現呢件事!</string>
+    <string name="language">語言</string>
+    <string name="zh">繁體中文</string>
+    <string name="eng">English</string>
+    <string name="ok">OK</string>
 
 </resources>

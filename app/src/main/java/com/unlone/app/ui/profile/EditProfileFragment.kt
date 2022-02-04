@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentEditProfileBinding
+import com.unlone.app.viewmodel.EditProfileViewModel
 
 class EditProfileFragment : Fragment() {
     private var _binding: FragmentEditProfileBinding? = null
@@ -25,9 +26,9 @@ class EditProfileFragment : Fragment() {
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        viewModel.returnBack.observe(viewLifecycleOwner, {
-            if (it) findNavController().navigate(R.id.action_editProfileFragment_to_navigation_profile)
-        })
+        viewModel.returnBack.observe(viewLifecycleOwner) {
+            if (it) findNavController().popBackStack()
+        }
         return binding.root
     }
 }

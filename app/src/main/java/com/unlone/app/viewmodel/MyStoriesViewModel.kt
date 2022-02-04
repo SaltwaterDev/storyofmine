@@ -1,4 +1,4 @@
-package com.unlone.app.ui.profile
+package com.unlone.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData

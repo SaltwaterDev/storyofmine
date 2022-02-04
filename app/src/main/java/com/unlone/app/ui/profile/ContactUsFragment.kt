@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentContactUsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.unlone.app.viewmodel.ContactUsViewModel
 
 
 class ContactUsFragment : Fragment() {
@@ -33,7 +34,7 @@ class ContactUsFragment : Fragment() {
 
         // return button
         binding.cancelButton.setOnClickListener {
-            view.findNavController().navigate(R.id.action_contactUsFragment_to_navigation_profile)
+            view.findNavController().popBackStack()
         }
 
         // send button
@@ -46,7 +47,7 @@ class ContactUsFragment : Fragment() {
                 .setTitle("Confirm")
                 .setMessage("Thank you for your feedback. We we try to contact you as soon as possible.")
                 .setPositiveButton("Confirm") { dialog, which ->
-                    view.findNavController().navigate(R.id.action_contactUsFragment_to_navigation_profile)
+                    view.findNavController().popBackStack()
                 }
                 .show()
         }
@@ -58,11 +59,11 @@ class ContactUsFragment : Fragment() {
         super.onResume()
         // load type of issues
         val issuesList = viewModel.loadIssueList()
-        viewModel.issueList.observe(viewLifecycleOwner, { issues: List<String> ->
+        viewModel.issueList.observe(viewLifecycleOwner) { issues: List<String> ->
             Log.d("TAG", issuesList.toString())
             val adapter = ArrayAdapter(requireContext(), R.layout.list_item, issues)
             binding.textField.setAdapter(adapter)
-        })
+        }
     }
 
 }

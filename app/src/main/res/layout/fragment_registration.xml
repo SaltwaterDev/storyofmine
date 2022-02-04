@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.unlone.app.ui.access.RegistrationViewModel" />
+            type="com.unlone.app.viewmodel.RegistrationViewModel" />
     </data>
 
     <LinearLayout

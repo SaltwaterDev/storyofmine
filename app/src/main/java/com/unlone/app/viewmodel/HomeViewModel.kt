@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge
+package com.unlone.app.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*

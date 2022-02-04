@@ -1,4 +1,4 @@
-package com.unlone.app.ui.profile
+package com.unlone.app.viewmodel
 
 import com.unlone.app.model.Post
 import android.content.ContentValues

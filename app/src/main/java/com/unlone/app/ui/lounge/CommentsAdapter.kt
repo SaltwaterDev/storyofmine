@@ -18,6 +18,7 @@ import com.unlone.app.R
 import com.unlone.app.databinding.ListItemCommentBinding
 import com.unlone.app.model.Comment
 import com.unlone.app.model.UiComment
+import com.unlone.app.viewmodel.DetailedPostViewModel
 
 
 open class CommentsAdapter(

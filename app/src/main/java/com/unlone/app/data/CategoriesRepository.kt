@@ -72,14 +72,6 @@ class CategoriesRepository @Inject constructor() {
     }
 
     suspend fun getTopicTitle(categoryId: String): String? {
-        val title = mFirestore.collection("categories")
-            .document("pre_defined_categories")
-            .collection("categories_name")
-            .document(categoryId)
-            .get()
-            .await()
-            .data?.get(appLanguage) as String?
-
 
         val titleCollection = withContext(Dispatchers.IO) {
             mFirestore.collection("categories")
@@ -91,9 +83,9 @@ class CategoriesRepository @Inject constructor() {
         }
 
         val result = titleCollection.documents.filter { it.id == categoryId }
-        return if (result.isNullOrEmpty()) {
-           null
-        } else
+        return if (result.isNullOrEmpty())
+            null
+        else
             result[0].data?.get(appLanguage).toString()
     }
 
@@ -137,11 +129,10 @@ class CategoriesRepository @Inject constructor() {
         val topics = if (topicKeys.isNullOrEmpty()) emptyList() else topicKeys.map {
             Log.d("TAG", "following topic key: ${(it)}")
             val isLabel = it.first() == '#'
-            if (!isLabel){
+            if (!isLabel) {
                 Log.d("TAG", "following categories: ${getTopicTitle(it)}")
                 getTopicTitle(it) ?: "null"
-            }
-            else{
+            } else {
                 it
             }
         }

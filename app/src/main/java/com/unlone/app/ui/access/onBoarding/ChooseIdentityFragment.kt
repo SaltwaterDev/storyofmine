@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentChooseIdentityBinding
+import com.unlone.app.viewmodel.UserSetupViewModel
 
 
 class ChooseIdentityFragment : Fragment() {

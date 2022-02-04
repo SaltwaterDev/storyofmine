@@ -1,4 +1,4 @@
-package com.unlone.app.ui.access
+package com.unlone.app.viewmodel
 
 import android.util.Log
 import android.widget.EditText

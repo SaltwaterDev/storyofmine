@@ -1,4 +1,4 @@
-package com.unlone.app.ui.profile
+package com.unlone.app.viewmodel
 
 import android.content.ContentValues.TAG
 import android.util.Log

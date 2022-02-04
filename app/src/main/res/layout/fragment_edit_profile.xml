@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.unlone.app.ui.profile.EditProfileViewModel" />
+            type="com.unlone.app.viewmodel.EditProfileViewModel" />
     </data>
 
     <LinearLayout

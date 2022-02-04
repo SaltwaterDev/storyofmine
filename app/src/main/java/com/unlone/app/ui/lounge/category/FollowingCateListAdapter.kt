@@ -6,12 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.unlone.app.R
 import com.unlone.app.databinding.ListItemBinding
-import com.unlone.app.databinding.ListItemCardCategoryBinding
-import com.unlone.app.databinding.ListItemPostBinding
-import com.unlone.app.model.PostItemUiState
-import com.unlone.app.ui.lounge.TopicCard
 
 class FollowingCateListAdapter(private val onTopicClick: (String) -> Unit) :
     ListAdapter<String, FollowingCateListAdapter.ViewHolder>(CategoryDiffCallback()) {

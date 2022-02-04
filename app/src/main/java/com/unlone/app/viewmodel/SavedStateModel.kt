@@ -1,4 +1,4 @@
-package com.unlone.app.ui.create
+package com.unlone.app.viewmodel
 
 import android.content.ContentValues
 import android.util.Log
@@ -10,6 +10,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.unlone.app.model.Post
+import com.unlone.app.ui.create.PostData
 import java.text.ParseException
 import java.util.*
 
