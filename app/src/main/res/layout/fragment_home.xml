@@ -60,15 +60,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/categoryTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:text="@string/category"
-                    android:textColor="@color/colorText"
-                    android:textSize="20sp" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/categoriesListRv"
                     android:layout_width="match_parent"
@@ -78,7 +69,6 @@
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="2"
                     tools:listitem="@layout/list_item_card_category" />
-
             </LinearLayout>
 
 

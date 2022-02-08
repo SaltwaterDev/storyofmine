@@ -12,6 +12,7 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog.customised</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -161,5 +162,17 @@
         <item name="android:fontFamily">@font/notosans_tc_regular</item>
     </style>
 
+    <style name="ThemeOverlay.App.MaterialAlertDialog.customised" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button.TextButton</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Button.TextButton" parent="">
+        <item name="colorPrimary">@color/colorText</item>
+    </style>
 
 </resources>

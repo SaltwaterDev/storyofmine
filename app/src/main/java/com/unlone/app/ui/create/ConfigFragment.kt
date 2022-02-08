@@ -58,7 +58,7 @@ class ConfigFragment : Fragment() {
         _binding = FragmentConfigBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        savedStateModel.postData.observe(viewLifecycleOwner, { postData ->
+        savedStateModel.postData.observe(viewLifecycleOwner) { postData ->
             this.postData = postData
             Log.d("TAG", "config fragment, postData: $postData")
             binding.commentSwitch.isChecked = !postData.comment
@@ -70,7 +70,7 @@ class ConfigFragment : Fragment() {
             _binding.category = savedStateModel.categoryTitle.value
             _binding.post = savedStateModel.createPostObject(postData)
             _binding.layoutPost.labelGroup.isClickable = false
-        })
+        }
 
 
         val commentSwitch = binding.commentSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -115,11 +115,11 @@ class ConfigFragment : Fragment() {
         super.onResume()
         // load categories
         savedStateModel.loadCategories()
-        savedStateModel.categories.observe(viewLifecycleOwner, { categories ->
+        savedStateModel.categories.observe(viewLifecycleOwner) { categories ->
             Log.d("TAG category config", categories.toString())
             val adapter = ArrayAdapter(requireContext(), R.layout.list_item, categories)
             binding.textField.setAdapter(adapter)
-        })
+        }
     }
 
     private fun displayImage(uri: Uri) {

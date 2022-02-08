@@ -135,5 +135,10 @@
     <string name="zh">繁體中文</string>
     <string name="eng">English</string>
     <string name="ok">OK</string>
+    <string name="setLang">Set language</string>
+    <string name="light_theme">Day mode</string>
+    <string name="dark_theme">Night Mode</string>
+    <string name="system_default_theme">System Default</string>
+    <string name="setDarkTheme">Set Dark Theme</string>
 
 </resources>

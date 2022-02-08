@@ -36,7 +36,7 @@ class ParentPostsAdapter(
             val adapter = ChildPostsAdapter(onClick)
             binding.childPosts.adapter = adapter
             val mDividerItemDecoration = SpaceDividerItemDecoration.from(
-                15,
+                -7,
                 item.postsUiStateItemList.size,
                 binding.childPosts.context,
                 DividerItemDecoration.HORIZONTAL
@@ -94,12 +94,15 @@ class ParentPostsAdapter(
         ) {
             super.getItemOffsets(outRect, view, parent, state)
             outRect.top = 0
-            outRect.right = dpConvertPx(space, context)
+            outRect.left = dpConvertPx(space, context)
+            val rightSpace = 25
+            outRect.right = dpConvertPx(rightSpace, context)
             outRect.bottom = 0
 
             // Add left margin only for the first item to avoid double space between items
             if (parent.getChildAdapterPosition(view) == 0) {
-                outRect.left = dpConvertPx(space, context)
+                outRect.right = 0
+
             }
 
         }
