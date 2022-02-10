@@ -43,7 +43,7 @@
     <color name="colorSettingProfileCard">#B0B0B0</color>
     <color name="colorContactProfileCard">#B5CEF0</color>
     <color name="colorGradientStart">#FFFFFF</color>
-    <color name="colorGradientEnd">#E2E0D4</color>
+    <color name="colorGradientEnd">#FFFFFF</color>
     <color name="ColorCardPost">#FFFFFF</color>
     <color name="categoryColor1">#E7E2C9</color>
     <color name="categoryColor2">#D6BEB6</color>

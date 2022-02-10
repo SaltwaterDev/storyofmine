@@ -13,10 +13,8 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.core.view.marginStart
 import androidx.databinding.BindingAdapter
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -26,6 +24,7 @@ import com.squareup.picasso.Target
 import com.unlone.app.R
 import com.unlone.app.model.Comment
 import com.unlone.app.model.Post
+import com.unlone.app.model.PostItemUiState
 import com.unlone.app.ui.lounge.category.CategoryListFragmentDirections
 import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
@@ -195,8 +194,6 @@ object BindingAdapters {
     }
 
 
-
-
     @BindingAdapter("labels")
     @JvmStatic
     fun TextView.setLabels(labels: ArrayList<String>?) {
@@ -209,7 +206,10 @@ object BindingAdapters {
                     override fun onClick(view: View) {
                         Log.d("TAG", "onClick: I am clicked")
                         val inputLabel = "#$label"
-                        val action = PostDetailFragmentDirections.actionPostDetailFragmentToCategoryPostFragment(inputLabel)
+                        val action =
+                            PostDetailFragmentDirections.actionPostDetailFragmentToCategoryPostFragment(
+                                inputLabel
+                            )
                         findNavController().navigate(action)
 
                     }

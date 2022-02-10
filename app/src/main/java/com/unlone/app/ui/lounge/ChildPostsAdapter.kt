@@ -1,10 +1,17 @@
 package com.unlone.app.ui.lounge
 
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.marginStart
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.unlone.app.databinding.ListItemCardPostBinding
 import com.unlone.app.model.PostItemUiState
 
@@ -19,8 +26,13 @@ class ChildPostsAdapter(private val onClick: (String) -> Unit) :
 
         fun bind(item: PostItemUiState) {
             binding.postUiState = item
-            binding.executePendingBindings()
             binding.cardView.setOnClickListener { onClick(item.pid) }
+            val displayMetrics = binding.cardView.resources.displayMetrics
+            val width = displayMetrics.widthPixels * (2f / 2.8f)
+            Log.d("TAG", "bind: $width")
+
+            // binding.cardView.layoutParams.width = width.toInt()
+            binding.executePendingBindings()
         }
 
         companion object {

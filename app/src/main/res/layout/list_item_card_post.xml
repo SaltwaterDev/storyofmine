@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginBottom="30dp"
-        android:elevation="5dp"
+        android:elevation="15dp"
         android:paddingHorizontal="15dp"
         app:cardBackgroundColor="@color/ColorCardPost"
         app:cardCornerRadius="8dp">
@@ -79,13 +79,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textView_journal"
-                android:visibility="gone"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/ic_baseline_expand_less_24"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:visibility="gone" />
 
 
             <LinearLayout
