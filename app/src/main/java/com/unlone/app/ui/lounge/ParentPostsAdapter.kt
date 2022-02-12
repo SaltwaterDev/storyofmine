@@ -94,7 +94,7 @@ class ParentPostsAdapter(
         ) {
             super.getItemOffsets(outRect, view, parent, state)
             outRect.top = 0
-            outRect.left = dpConvertPx(space, context)
+            outRect.left = -10
             val rightSpace = 25
             outRect.right = dpConvertPx(rightSpace, context)
             outRect.bottom = 0

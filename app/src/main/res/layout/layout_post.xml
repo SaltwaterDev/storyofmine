@@ -14,10 +14,9 @@
     </data>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -37,6 +36,7 @@
             android:id="@+id/topicField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/textViewTitle"
             android:layout_marginStart="24dp"
             android:layout_marginTop="19dp"
             android:layout_marginEnd="24dp"
@@ -74,6 +74,7 @@
             android:id="@+id/textViewJournal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/imageCover"
             android:layout_marginStart="24dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="24dp"
@@ -84,13 +85,14 @@
             android:paddingTop="10dp"
             android:text="@{post.journal ?? @string/journal}"
             android:textColor="@color/colorText"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/labelGroup"
             labels="@{post.labels}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/textViewJournal"
             android:layout_gravity="start"
             android:layout_marginStart="16dp"
             android:layout_marginTop="40dp"
@@ -100,5 +102,5 @@
             android:textColor="@color/colorText"
             android:textSize="15sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

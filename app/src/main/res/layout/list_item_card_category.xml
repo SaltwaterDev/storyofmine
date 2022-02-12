@@ -15,11 +15,10 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="7.5dp"
+        android:layout_marginHorizontal="7dp"
         android:layout_marginVertical="5dp"
-        android:elevation="0dp"
-        android:paddingHorizontal="15dp"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp">
 
 
         <TextView
@@ -27,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageCover"
+            android:layout_marginVertical="5dp"
             android:fontFamily="@font/notosans_tc_regular"
             android:gravity="center"
             android:letterSpacing="0.05"

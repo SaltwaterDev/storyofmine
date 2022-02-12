@@ -31,7 +31,6 @@ class ChildPostsAdapter(private val onClick: (String) -> Unit) :
             val width = displayMetrics.widthPixels * (2f / 2.8f)
             Log.d("TAG", "bind: $width")
 
-            // binding.cardView.layoutParams.width = width.toInt()
             binding.executePendingBindings()
         }
 

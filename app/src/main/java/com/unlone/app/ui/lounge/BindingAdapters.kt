@@ -10,13 +10,12 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import androidx.core.view.marginStart
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
@@ -24,8 +23,6 @@ import com.squareup.picasso.Target
 import com.unlone.app.R
 import com.unlone.app.model.Comment
 import com.unlone.app.model.Post
-import com.unlone.app.model.PostItemUiState
-import com.unlone.app.ui.lounge.category.CategoryListFragmentDirections
 import com.unlone.app.utils.convertTimeStamp
 import com.unlone.app.utils.dpConvertPx
 import com.unlone.app.utils.getImageHorizontalMargin
@@ -72,7 +69,6 @@ object BindingAdapters {
     @BindingAdapter("postImage", "title")
     @JvmStatic
     fun ImageView.setPostImage(imagePath: String, title: TextView) {
-        // TODO set the image space
         if (imagePath.isNotEmpty()) {
             Log.d("TAG", "image path: $imagePath")
             val target: Target = object : Target {
@@ -88,9 +84,9 @@ object BindingAdapters {
                     layoutParams =
                         getImageParams(context, imageWidth, imageHeight, imageVerticalMargin)
 
+
                     // reset bottom margin
                     val textHeight = getHeight(context, title)
-                    Log.d("whitespace_text", textHeight.toString())
                     title.layoutParams =
                         getTitleParams(context, textHeight, imageHeight, imageVerticalMargin)
                 }
@@ -108,13 +104,7 @@ object BindingAdapters {
     }
 
     fun getHeight(context: Context, textView: TextView): Int {
-        val displayMetrics = context.resources.displayMetrics
-        val deviceHeight = displayMetrics.heightPixels
-        val deviceWidth = displayMetrics.widthPixels
-        val widthMeasureSpec =
-            View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST)
-        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        textView.measure(widthMeasureSpec, heightMeasureSpec)
+        textView.measure(0, 0)
         return textView.measuredHeight
     }
 
@@ -123,12 +113,11 @@ object BindingAdapters {
         imageWidth: Int,
         imageHeight: Int,
         imageVerticalMargin: Int
-    ): LinearLayout.LayoutParams {
-        val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+    ): RelativeLayout.LayoutParams {
+        val params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
         )
-        params.gravity = Gravity.CENTER
         val imageHorizontalMargin =
             getImageHorizontalMargin(imageWidth.toFloat() / imageHeight, context) // in px
         params.setMargins(
@@ -137,6 +126,7 @@ object BindingAdapters {
             imageHorizontalMargin,
             0
         )
+        params.addRule(RelativeLayout.BELOW, R.id.topicField)
         return params
     }
 
@@ -145,21 +135,27 @@ object BindingAdapters {
         textHeight: Int,
         imageHeight: Int,
         imageVerticalMargin: Int
-    ): ViewGroup.LayoutParams {
+    ): RelativeLayout.LayoutParams {
         val textWhitespace = (imageVerticalMargin + imageHeight) / 3 - textHeight
+        val textTopMargin = (textWhitespace / ((1 + 1.5) * 3)).toInt()
+        val textBottomMargin = (textWhitespace * 1.5 / ((1 + 1.5) * 3)).toInt()
         Log.d("whitespace", textWhitespace.toString())
-        val textTopMargin = (textWhitespace / (1 + 1.5)).toInt()
-        val textBottomMargin = (textWhitespace * 1.5 / (1 + 1.5)).toInt()
-        val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+        Log.d("textTopMargin", textTopMargin.toString())
+        Log.d("textBottomMargin", textBottomMargin.toString())
+        val params = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
         )
+
         params.setMargins(
             dpConvertPx(18, context),
             textTopMargin,
             dpConvertPx(18, context),
-            textBottomMargin
+            textBottomMargin,
         )
+
+        params.addRule(RelativeLayout.BELOW, R.id.imageCover)
+
         return params
     }
 
@@ -172,7 +168,7 @@ object BindingAdapters {
     @BindingAdapter("date")
     @JvmStatic
     fun TextView.setDate(item: String?) {
-        text = item?.let { convertTimeStamp(it, Locale.getDefault().language) }
+        text = "   |   ${item?.let { convertTimeStamp(it, Locale.getDefault().language) }}"
     }
 
     @BindingAdapter("commentDate")

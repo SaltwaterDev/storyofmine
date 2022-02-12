@@ -124,7 +124,7 @@
     <string name="reminding">Reminding</string>
     <string name="email_verification_redirect">You will be redirected to Login Page</string>
     <string name="leaving_app">Are you surfing to leave?</string>
-    <string name="cate_post_layout" translatable="false">%1$s  |  </string>
+    <string name="cate_post_layout" translatable="false">%1$s</string>
     <string name="guiding_introduce">You can always find people you feel connect.\n\nBecause it is a peer support platform.</string>
     <string name="guiding_question">We love to see you supporting others!\n\nBut please respond others with kindness. \n\nYou might ask, what exactly should I do?</string>
     <string name="guiding_spoil_alert">Spoil alert~</string>

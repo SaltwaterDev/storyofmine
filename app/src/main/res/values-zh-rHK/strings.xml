@@ -133,10 +133,10 @@
     <string name="zh">繁體中文</string>
     <string name="eng">English</string>
     <string name="ok">OK</string>
-    <string name="setLang">Set language</string>
-    <string name="light_theme">Day mode</string>
-    <string name="dark_theme">Night Mode</string>
-    <string name="system_default_theme">System Default</string>
-    <string name="setDarkTheme">Set Dark Theme</string>
+    <string name="setLang">設定語言</string>
+    <string name="light_theme">淺色模式</string>
+    <string name="dark_theme">深色模式</string>
+    <string name="system_default_theme">系統預設</string>
+    <string name="setDarkTheme">設定深色模式</string>
 
 </resources>
