@@ -92,7 +92,6 @@
         android:layout_marginBottom="21dp"
         android:src="@drawable/ic_pen_tool"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="#545454" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </RelativeLayout>

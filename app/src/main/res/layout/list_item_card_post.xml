@@ -9,7 +9,6 @@
             type="com.unlone.app.model.PostItemUiState" />
 
         <import type="android.view.Gravity" />
-
         <import type="android.view.View" />
     </data>
 
@@ -24,7 +23,7 @@
         app:cardElevation="3dp"
         android:paddingHorizontal="15dp"
         app:cardBackgroundColor="@color/ColorCardPost"
-        app:cardCornerRadius="8dp">
+        app:cardCornerRadius="5dp">
 
         <RelativeLayout
             android:id="@+id/imageLayout"

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dark_gray">#4D4D4D</color>
+    <color name="splash_bg">#FFFFFF</color>
+    <color name="splash_icon_tint">#000000</color>
     <color name="darker_gray">#404040</color>
     <color name="transparent">#00000000</color>
     <color name="lighter_gray">#707070</color>
@@ -46,9 +48,13 @@
     <color name="colorGradientEnd">#FFFFFF</color>
     <color name="ColorCardPost">#FFFFFF</color>
     <color name="categoryColor1">#E7E2C9</color>
+    <color name="categoryColor1Transparent">#E1E1E0</color>
     <color name="categoryColor2">#D6BEB6</color>
+    <color name="categoryColor2Transparent">#D5CECB</color>
     <color name="categoryColor3">#DDC1C1</color>
+    <color name="categoryColor3Transparent">#DFD8D8</color>
     <color name="categoryLoadMoreColor">#B6D3B3</color>
+    <color name="categoryLoadMoreColorTransparent">#C9D3C8</color>
     <color name="categoryCardTextColor">#000000</color>
 
 

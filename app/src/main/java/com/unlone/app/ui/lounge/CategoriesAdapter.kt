@@ -27,9 +27,7 @@ class CategoriesAdapter(private val onTopicClick: (String) -> Unit) :
             else
                 binding.topic = item.title
             val resources = binding.root.resources
-            binding.cardView.setCardBackgroundColor(
-                resources.getColor(item.color)
-            )
+            binding.cardView.setBackgroundResource(item.color)
             binding.executePendingBindings()
             if (item.title == "No Such Topic"){
                 binding.cardView.isEnabled = false

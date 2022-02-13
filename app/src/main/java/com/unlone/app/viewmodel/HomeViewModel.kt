@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
                     // special card
                     TopicCard(
                         R.string.topic_more.toString(),
-                        R.color.categoryLoadMoreColor
+                        R.drawable.gradient_ctg_more_selector
                     )
                 )
                 topicCardList.toList()
@@ -113,7 +113,7 @@ class HomeViewModel @Inject constructor(
 
     private fun randomColor(): Int {
         val categoryCardColorList =
-            listOf(R.color.categoryColor1, R.color.categoryColor2, R.color.categoryColor3)
+            listOf(R.drawable.gradient_ctg_selector1, R.drawable.gradient_ctg_selector2, R.drawable.gradient_ctg_selector3)
 
         return categoryCardColorList.random()
 

@@ -114,8 +114,8 @@
     </style>
 
     <style name="ThemeOverlay.App.FloatingActionButton" parent="">
-        <item name="colorSecondary">@color/lightYellow</item>
-        <item name="colorOnSecondary">@color/onLightYellow</item>
+        <item name="colorSecondary">@color/dark_gray</item>
+        <item name="colorOnSecondary">@color/lightYellow</item>
         <item name="colorOnSurface">@color/onLightYellow</item>
     </style>
 
