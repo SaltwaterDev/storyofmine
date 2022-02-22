@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -76,35 +77,35 @@ class CategoryPostFragment :
         binding.followBtn.setOnClickListener {
             if (isFollowing) {
                 // if follow is true, unfollow it
-                viewModel!!.followCategory(category, true)
-                binding.followBtn.setImageDrawable(
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_to_follow_btn)
-                )
+                viewModel!!.followCategory(category, false)
+                binding.followBtn.text = getString(R.string.follow)
+                binding.followBtn.setTextColor(resources.getColor(R.color.colorFollowButtonText))
+                binding.followBtn.setBackgroundColor(resources.getColor(R.color.colorFollowButton))
                 isFollowing = false
 
             } else {
                 // if follow is false, follow it
-                viewModel!!.followCategory(category, false)
-                binding.followBtn.setImageDrawable(
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_following_btn)
-                )
+                viewModel!!.followCategory(category, true)
+                binding.followBtn.text = getString(R.string.following)
+                binding.followBtn.setTextColor(resources.getColor(R.color.colorFollowingButtonText))
+                binding.followBtn.setBackgroundColor(resources.getColor(R.color.colorFollowingButton))
                 isFollowing = true
             }
         }
     }
 
-    private fun isFollowing(followingBtn: ImageView) {
+    private fun isFollowing(followingBtn: Button) {
         lifecycleScope.launch(Dispatchers.IO) {
             isFollowing = viewModel?.isFollowing(category) == true
             withContext(Dispatchers.Main) {
                 if (isFollowing) {
-                    followingBtn.setImageDrawable(
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_following_btn)
-                    )
+                    followingBtn.text = getString(R.string.following)
+                    followingBtn.setTextColor(resources.getColor(R.color.colorFollowingButtonText))
+                    followingBtn.setBackgroundColor(resources.getColor(R.color.colorFollowingButton))
                 } else {
-                    followingBtn.setImageDrawable(
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_to_follow_btn)
-                    )
+                    followingBtn.text = getString(R.string.follow)
+                    followingBtn.setTextColor(resources.getColor(R.color.colorFollowButtonText))
+                    followingBtn.setBackgroundColor(resources.getColor(R.color.colorFollowButton))
                 }
             }
         }

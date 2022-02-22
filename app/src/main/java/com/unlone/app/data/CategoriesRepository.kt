@@ -102,11 +102,13 @@ class CategoriesRepository @Inject constructor() {
         Log.d("TAG", "category: $category")
         mAuth.uid?.let {
             if (follow) {
+                // follow the topic
                 mFirestore.collection("users").document(it)
                     .update(
                         "followingCategories", FieldValue.arrayUnion(category)
                     )
             } else {
+                // unfollow the topic
                 mFirestore.collection("users").document(it)
                     .update(
                         "followingCategories", FieldValue.arrayRemove(category)
