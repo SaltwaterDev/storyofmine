@@ -61,8 +61,8 @@ class ConfigFragment : Fragment() {
         savedStateModel.postData.observe(viewLifecycleOwner) { postData ->
             this.postData = postData
             Log.d("TAG", "config fragment, postData: $postData")
-            binding.commentSwitch.isChecked = !postData.comment
-            binding.saveSwitch.isChecked = !postData.save
+            binding.commentSwitch.isChecked = postData.comment
+            binding.saveSwitch.isChecked = postData.save
             binding.textField.setText(postData.category)
 
             // Preview
@@ -144,6 +144,4 @@ class ConfigFragment : Fragment() {
         _binding.layoutPost.imageCover.layoutParams = params
     }
 
-
-    companion object
 }

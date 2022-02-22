@@ -57,6 +57,7 @@ class HomeFragment : Fragment(), ItemClickListener {
         // This callback will only be called when Fragment is at least Started.
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                if (findNavController().currentDestination?.id == R.id.navigation_home)
                 context?.let {
                     MaterialAlertDialogBuilder(it, R.style.ThemeOverlay_App_MaterialAlertDialog)
                         .setTitle(it.getString(R.string.reminding))
@@ -82,6 +83,7 @@ class HomeFragment : Fragment(), ItemClickListener {
         val view = binding.root
         binding.categoriesListRv.adapter = categoriesAdapter
         binding.postPerCategoriesRv.adapter = parentPostsAdapter
+        binding.progressCircular.visibility = View.VISIBLE
         initFab()
 
         // load topics
@@ -94,14 +96,12 @@ class HomeFragment : Fragment(), ItemClickListener {
             // repeatOnLifecycle launches the block in a new coroutine every time the
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Trigger the flow and start listening for values.
-                // Note that this happens when lifecycle is STARTED and stops
-                // collecting when the lifecycle is STOPPED
                 viewModel.parentPostItemUiStateItems.collect { uiState ->
                     // New value received
                     Log.d("TAG", "uiState: $uiState")
                     parentPostsAdapter.submitList(uiState.filter { it?.postsUiStateItemList?.isNotEmpty()
                         ?: it == true  })
+                    binding.progressCircular.visibility = View.GONE
                 }
             }
         }

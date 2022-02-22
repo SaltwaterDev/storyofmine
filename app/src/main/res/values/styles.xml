@@ -51,15 +51,10 @@
     </style>
 
     <style name="ThemeOverlay.App.Switch" parent="">
-        <item name="colorOnSurface">#000000</item>
-        <item name="colorSecondary">#4F4F4F</item>
-    </style>
-
-    <style name="SwitchAppTheme" parent="AppTheme">
-        <item name="colorAccent">#4F4F4F</item>
-        <item name="colorSecondary">#757575</item>
-        <item name="colorSurface">#757575</item>
-        <item name="android:colorForeground">#BDBDBD</item>
+        <item name="colorSurface">@color/switchThumbUnchecked</item>
+        <item name="colorSecondary">@color/switchThumbChecked</item>
+        <item name="colorOnSurface">@color/switchTrackUnchecked</item>
+        <item name="colorOnSecondary">@color/switchTrackChecked</item>
     </style>
 
     <style name="searchBarView" parent="">

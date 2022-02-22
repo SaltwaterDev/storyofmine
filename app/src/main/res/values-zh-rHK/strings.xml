@@ -14,7 +14,7 @@
     <string name="title">標題</string>
     <string name="add_image">載入相片</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="create_post_greet">敞開心扉從來都不容易。正因如此，我們很高興在這裡見到你踏出第一步…</string>
+    <string name="create_post_greet">敞開心扉從來都不容易。正因如此，踏出第一步當然是一件值得高興的事!</string>
     <string name="comment">Comment</string>
     <string name="comment_hint">回應…</string>
     <string name="action_login">登入</string>
@@ -28,7 +28,7 @@
     <string name="email">電郵</string>
     <string name="password">密碼</string>
     <string name="user_term_confirmation">我同意這條款及細則</string>
-    <string name="school_email">學校電郵</string>
+    <string name="school_email">電郵</string>
     <string name="set_password">設定密碼</string>
     <string name="confirm_password">確認密碼</string>
     <string name="become_part_of_the_community">加入成為我們的一份子</string>
@@ -37,11 +37,11 @@
     <string name="label">標籤：</string>
     <string name="back">返回</string>
     <string name="post">發佈</string>
-    <string name="almost">即將完成！</string>
+    <string name="get_ready">即將完成！</string>
     <string name="category">類別</string>
     <string name="preference">偏好設定</string>
-    <string name="disable_comment">關閉留言功能</string>
-    <string name="disable_saving">關閉收藏功能</string>
+    <string name="allow_comment">留言功能</string>
+    <string name="allow_saving">收藏功能</string>
     <string name="preview">預覽</string>
     <string name="tab_following">追蹤中</string>
     <string name="all">全部</string>

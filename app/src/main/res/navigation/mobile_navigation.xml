@@ -81,9 +81,7 @@
 
     <action
         android:id="@+id/action_global_postDetailFragment"
-        app:destination="@id/postDetailFragment"
-        app:enterAnim="@android:anim/slide_in_left"
-        app:exitAnim="@android:anim/slide_out_right" />
+        app:destination="@id/postDetailFragment" />
 
     <fragment
         android:id="@+id/categoryListFragment"
@@ -100,7 +98,7 @@
         tools:layout="@layout/fragment_category_post">
         <argument
             android:name="category"
-            android:defaultValue="nothing"
+            android:defaultValue="_nothing"
             app:argType="string" />
     </fragment>
     <fragment

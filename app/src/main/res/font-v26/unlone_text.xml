@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+
+    <font
+        android:font="@font/sf_pro_display_regular"
+        android:fontWeight="100" />
+
+    <font
+        android:font="@font/sf_compact_text_regular"
+        android:fontWeight="200" />
+
+    <font
+        android:font="@font/sf_pro_text_regular"
+        android:fontWeight="300" />
+
+    <font
+        android:font="@font/sf_pro_text_medium"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/sf_compact_display_medium"
+        android:fontWeight="600" />
+
+    <font
+        android:font="@font/sf_pro_text_semibold"
+        android:fontWeight="700" />
+
+    <font
+        android:font="@font/sf_pro_display_bold"
+        android:fontWeight="800" />
+
+    <font
+        android:font="@font/sf_pro_text_bold"
+        android:fontWeight="900" />
+</font-family>

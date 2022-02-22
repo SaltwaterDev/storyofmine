@@ -92,37 +92,51 @@ class RegistrationViewModel @Inject constructor() : ViewModel() {
         } else if (password != confirmPassword) {
             setMessage(R.string.confirm_password_incorrect)
         } else {
-            setMessage(R.string.validate_school_email)
-            validateSchoolEmail(email)
-                .addOnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        val e = task.exception
-                        if (e is FirebaseFunctionsException) {
-                            val code = e.code
-                            val details = e.details
-                            Log.e("TAG", "\n$code\n$details")
-                        }
-                        e?.toString()?.let { it1 -> Log.e("TAG", it1) }
-                    } else {
-                        Log.d("TAG", task.result)
-                        if (task.result == "true") {
-                            // school email is validated, perform register process
-                            viewModelScope.launch {
-                                try {
-                                    mAuth.createUserWithEmailAndPassword(email, password).await()
-                                    val user: FirebaseUser? = mAuth.currentUser
-                                    _navToVerification.value = user != null
-                                } catch (e: FirebaseAuthUserCollisionException) {
-                                    _navToVerification.value = false
-                                    e.message?.let { Log.d("TAG", it) }
-
-                                }
+            viewModelScope.launch {
+                try {
+                    mAuth.createUserWithEmailAndPassword(email, password).await()
+                    val user: FirebaseUser? = mAuth.currentUser
+                    _navToVerification.value = user != null
+                } catch (e: FirebaseAuthUserCollisionException) {
+                    _navToVerification.value = false
+                    e.message?.let { Log.d("TAG", it) }
+                }
+                /*
+                // region validating school email
+                setMessage(R.string.validate_school_email)
+                validateSchoolEmail(email)
+                    .addOnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            val e = task.exception
+                            if (e is FirebaseFunctionsException) {
+                                val code = e.code
+                                val details = e.details
+                                Log.e("TAG", "\n$code\n$details")
                             }
+                            e?.toString()?.let { it1 -> Log.e("TAG", it1) }
                         } else {
-                            _showValidationErrorMsg.value = true
+                            Log.d("TAG", task.result)
+                            if (task.result == "true") {
+                                // school email is validated, perform register process
+                                viewModelScope.launch {
+                                    try {
+                                        mAuth.createUserWithEmailAndPassword(email, password)
+                                            .await()
+                                        val user: FirebaseUser? = mAuth.currentUser
+                                        _navToVerification.value = user != null
+                                    } catch (e: FirebaseAuthUserCollisionException) {
+                                        _navToVerification.value = false
+                                        e.message?.let { Log.d("TAG", it) }
+                                    }
+                                }
+                            } else {
+                                _showValidationErrorMsg.value = true
+                            }
                         }
                     }
-                }
+                // endregion
+                 */
+            }
         }
     }
 }

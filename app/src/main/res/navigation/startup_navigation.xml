@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loadFragment"
         android:name="com.unlone.app.ui.access.LoadFragment"
-        android:label="LoadFragment" >
+        android:label="LoadFragment">
         <action
             android:id="@+id/action_loadFragment_to_first_access_navigation"
             app:destination="@id/first_access_navigation" />
@@ -19,7 +19,8 @@
 
     <include app:graph="@navigation/on_boarding_navigation" />
 
-    <navigation     android:id="@+id/first_access_navigation"
+    <navigation
+        android:id="@+id/first_access_navigation"
         app:startDestination="@id/loginFragment">
 
 
@@ -51,7 +52,7 @@
             android:id="@+id/emailVerificationFragment2"
             android:name="com.unlone.app.ui.access.EmailVerificationFragment2"
             android:label="fragment_email_verification2"
-            tools:layout="@layout/fragment_email_verification2" >
+            tools:layout="@layout/fragment_email_verification2">
             <action
                 android:id="@+id/action_emailVerificationFragment2_to_loginFragment"
                 app:destination="@id/loginFragment"

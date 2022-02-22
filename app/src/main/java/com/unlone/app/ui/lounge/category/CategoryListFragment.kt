@@ -17,6 +17,9 @@ class CategoryListFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentCategoryListBinding? = null
     val model: CategoriesViewModel by lazy { ViewModelProvider(this)[CategoriesViewModel::class.java] }
+    private val folAdapter = FollowingCateListAdapter { openSpecificTopic(it) }
+    private val allAdapter = AllCateListAdapter { openSpecificTopic(it) }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,26 +28,28 @@ class CategoryListFragment : Fragment() {
         _binding = FragmentCategoryListBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val folAdapter = FollowingCateListAdapter { openSpecificTopic(it) }
         binding.followingTopicListview.adapter = folAdapter
-        model.followingCategories.observe(viewLifecycleOwner) { followingCategories ->
-            Log.d("TAG", followingCategories.toString())
-            folAdapter.submitList(followingCategories)
-        }
-
-
-        val allAdapter = AllCateListAdapter { openSpecificTopic(it) }
         binding.allTopicListview.adapter = allAdapter
-        model.categories.observe(viewLifecycleOwner) { categories ->
-            Log.d("TAG", categories.toString())
-            allAdapter.submitList(categories)
-        }
+
 
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
 
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        model.followingCategories.observe(viewLifecycleOwner) { followingCategories ->
+            Log.d("TAG", followingCategories.toString())
+            folAdapter.submitList(followingCategories)
+        }
+        model.categories.observe(viewLifecycleOwner) { categories ->
+            Log.d("TAG", categories.toString())
+            allAdapter.submitList(categories)
+        }
     }
 
 

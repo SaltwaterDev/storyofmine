@@ -46,6 +46,11 @@
     <color name="categoryColor2">#D6BEB6</color>
     <color name="categoryColor3">#DDC1C1</color>
     <color name="categoryLoadMoreColor">#B6D3B3</color>
+    <color name="switchThumbChecked">#4F4F4F</color>
+    <color name="switchTrackChecked">#757575</color>
+    <color name="switchThumbUnchecked">#E0E0E0</color>
+    <color name="switchTrackUnchecked">#BDBDBD</color>
+
 
 
 </resources>

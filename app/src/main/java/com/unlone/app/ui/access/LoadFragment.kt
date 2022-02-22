@@ -52,29 +52,32 @@ class LoadFragment : Fragment() {
                     context, "You have not verify the email",
                     Toast.LENGTH_SHORT
                 ).show()
-                return
-            }
-            mFirestore.collection("users").document(currentUser.uid).get()
-                .addOnSuccessListener { documentSnapshot: DocumentSnapshot ->
-                    Log.d("LOADACTIVITY", "GET USER")
-                    if (documentSnapshot.data != null){
-                        val current = documentSnapshot.toObject<User>()!!
-                        Toast.makeText(
-                            context, "Welcome Back " + current.username,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Log.d("LOADACTIVITY", "login: " + currentUser.uid)
-                        startActivity(Intent(activity, MainActivity::class.java))
-                        activity?.finish()
-                    } else{
+                findNavController().navigate(R.id.action_loadFragment_to_first_access_navigation)
+            }else{
+                mFirestore.collection("users").document(currentUser.uid).get()
+                    .addOnSuccessListener { documentSnapshot: DocumentSnapshot ->
+                        Log.d("LOADACTIVITY", "GET USER")
+                        if (documentSnapshot.data != null){
+                            val current = documentSnapshot.toObject<User>()
+                            if (current != null) {
+                                Toast.makeText(
+                                    context, "Welcome Back " + current.username,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            Log.d("LOADACTIVITY", "login: " + currentUser.uid)
+                            startActivity(Intent(activity, MainActivity::class.java))
+                            activity?.finish()
+                        } else{
+                            Log.d("LOADACTIVITY", "user have not set up")
+                            findNavController().navigate(R.id.action_loadFragment_to_first_access_navigation)
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d("LOADACTIVITY", "exception: \n$e")
                         findNavController().navigate(R.id.action_loadFragment_to_first_access_navigation)
                     }
-                }
-                .addOnFailureListener { e ->
-                    Log.d("LOADACTIVITY", "exception: \n$e")
-                    Log.d("LOADACTIVITY", "haven't written in Firestore yet, go to login page")
-                    findNavController().navigate(R.id.action_loadFragment_to_first_access_navigation)
-                }
+            }
         }
     }
 }
