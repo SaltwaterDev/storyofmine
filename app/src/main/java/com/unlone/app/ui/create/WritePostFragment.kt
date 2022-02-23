@@ -71,7 +71,7 @@ class WritePostFragment : Fragment() {
         val view = binding.root
 
         // restore UI state if any
-        savedStateModel.postData.observe(viewLifecycleOwner, {postData ->
+        savedStateModel.postData.observe(viewLifecycleOwner) { postData ->
             this.postData = postData
             binding.inputPostTitle.setText(postData.title)
             binding.inputPostContext.setText(postData.journal)
@@ -83,18 +83,16 @@ class WritePostFragment : Fragment() {
                 addChipToGroup(label)
             }
             postData.imageUri?.let { displayImage(it) }
-
-        })
+        }
 
         // init toolbar
         binding.cancelButton.setOnClickListener { findNavController().navigate(R.id.cancel_and_back_to_lounge) }
         val nextButton = binding.nextButton.setOnClickListener {
             if (binding.inputPostContext.text.toString().isEmpty()) {
-                Toast.makeText(activity, "You haven't wrote the context", Toast.LENGTH_SHORT).show()
-            }else if (binding.inputPostTitle.text.toString().isEmpty()){
-                Toast.makeText(activity, "You haven't wrote the Title", Toast.LENGTH_SHORT).show()
-            }
-            else{
+                Toast.makeText(context, "You haven't wrote the context", Toast.LENGTH_SHORT).show()
+            } else if (binding.inputPostTitle.text.toString().isEmpty()){
+                Toast.makeText(context, "You haven't wrote the Title", Toast.LENGTH_SHORT).show()
+            } else{
                 postData.title = binding.inputPostTitle.text.toString()
                 postData.imageUri = selectedImageUri
                 postData.journal = binding.inputPostContext.text.toString()
