@@ -10,10 +10,8 @@ import com.unlone.app.model.Comment
 import com.unlone.app.model.ParentPostItemUiState
 import com.unlone.app.model.PostItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,15 +36,29 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _followingCategories.value = categoriesRepository.loadFollowingTopics()
-            _categories.value = categoriesRepository.loadCategories()
+            withContext(Dispatchers.Default) {
+                _categories.value = categoriesRepository.loadCategories()
+                val categoryKey =
+                    _categories.value.map { categoriesRepository.retrieveDefaultTopic(it) }
+                categoryKey.forEach {
+                    if (it != null) {
+                        postRepository.storeSingleCategoryPosts(it, numPostsPerCategory)
+                    }
+                }
+            }
         }
     }
 
     val parentPostItemUiStateItems: StateFlow<List<ParentPostItemUiState?>> =
-        categories.mapLatest { it ->
-            it.map {
-                loadPostsFromSpecificCategory(it)
+        categories.flatMapLatest {
+            val a = mutableListOf<ParentPostItemUiState?>()
+            Log.d("TAG", "parentPostItemUiStateItems: category: $it")
+
+            val parentPostItemUiStates = it.map { ctg ->
+                Log.d("TAG", "parentPostItemUiStateItems: category: ${ctg}")
+                loadPostsFromSpecificCategory(ctg)
             }
+            combine(parentPostItemUiStates) { it2 -> it2.toList() }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -79,23 +91,26 @@ class HomeViewModel @Inject constructor(
     private suspend fun loadPostsFromSpecificCategory(
         category: String,
         numberPost: Int = numPostsPerCategory
-    ): ParentPostItemUiState? {
+    ): Flow<ParentPostItemUiState?> = flow {
         val categoryKey = categoriesRepository.retrieveDefaultTopic(category)
-        val posts = categoryKey?.let { postRepository.getSingleCategoryPosts(it, numberPost) }
-        val postUiItemList = posts?.map {
-            PostItemUiState(
-                it.title,
-                it.imagePath,
-                it.journal.substring(0, 120.coerceAtMost(it.journal.length)),
-                it.pid,
-                getBestComment(it.pid)
-            )
+        if (categoryKey != null) {
+            Log.d("TAG", "loadPostsFromSpecificCategory: $categoryKey")
+            postRepository.getSingleCategoryPosts(categoryKey, numberPost).collect { postList ->
+                val parentUiState = ParentPostItemUiState(
+                    category,
+                    postList.map {
+                        PostItemUiState(
+                            it.title,
+                            it.imagePath,
+                            it.journal.substring(0, 120.coerceAtMost(it.journal.length)),
+                            it.pid,
+                            getBestComment(it.pid)
+                        )
+                    }
+                )
+                emit(parentUiState)
+            }
         }
-        val parentUiState = postUiItemList?.let { ParentPostItemUiState(category, it) }
-        Log.d("TAG", "parent ui state: $parentUiState")
-        return parentUiState
-
-
     }
 
     private suspend fun getBestComment(pid: String): Comment? {
@@ -113,7 +128,11 @@ class HomeViewModel @Inject constructor(
 
     private fun randomColor(): Int {
         val categoryCardColorList =
-            listOf(R.drawable.gradient_ctg_selector1, R.drawable.gradient_ctg_selector2, R.drawable.gradient_ctg_selector3)
+            listOf(
+                R.drawable.gradient_ctg_selector1,
+                R.drawable.gradient_ctg_selector2,
+                R.drawable.gradient_ctg_selector3
+            )
 
         return categoryCardColorList.random()
 

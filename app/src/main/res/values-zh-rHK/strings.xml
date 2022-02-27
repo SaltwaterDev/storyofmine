@@ -37,7 +37,7 @@
     <string name="label">標籤：</string>
     <string name="back">返回</string>
     <string name="post">發佈</string>
-    <string name="get_ready">即將完成！</string>
+    <string name="get_ready">準備發佈</string>
     <string name="category">類別</string>
     <string name="preference">偏好設定</string>
     <string name="allow_comment">留言功能</string>

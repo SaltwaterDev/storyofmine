@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.android.application'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "kotlin-parcelize"
-apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
@@ -43,9 +42,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        customDebugType {
-            debuggable true
-        }
     }
 }
 
@@ -62,10 +58,8 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:3.1.0"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
-    implementation 'com.google.dagger:dagger:2.38.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.databinding:databinding-common:7.1.1'
-    kapt 'com.google.dagger:dagger-compiler:2.38.1'
     implementation "com.google.dagger:hilt-android:2.38.1"
     kapt "com.google.dagger:hilt-compiler:2.38.1"
     implementation "androidx.fragment:fragment-ktx:1.4.1"
@@ -78,6 +72,11 @@ dependencies {
     kapt "com.android.databinding:compiler:3.5.0"
     implementation "androidx.datastore:datastore:1.0.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    def room_version = "2.4.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
 
     //noinspection GradleCompatible
     implementation 'com.google.android.material:material:1.5.0'
@@ -99,7 +98,7 @@ dependencies {
 
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.core:core-ktx:1.7.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.30"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
@@ -108,22 +107,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     testImplementation 'com.google.truth:truth:1.0.1'
     androidTestImplementation "androidx.navigation:navigation-testing:2.4.1"
-    // To use the androidx.test.core APIs
     androidTestImplementation "androidx.test:core:1.4.0"
-    // Kotlin extensions for androidx.test.core
     androidTestImplementation "androidx.test:core-ktx:1.4.0"
-    // To use the androidx.test.espresso
     androidTestImplementation "androidx.test:espresso:espresso-core:3.4.0"
-    // To use the JUnit Extension APIs
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
-    // Kotlin extensions for androidx.test.ext.junit
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.3"
-    // To use the Truth Extension APIs
     androidTestImplementation "androidx.test.ext:truth:1.4.0"
-    // To use the androidx.test.runner APIs
     androidTestImplementation "androidx.test.runner:1.3.0"
-    // To use android test orchestrator
     androidTestUtil "androidx.test:orchestrator:1.4.1"
+    testImplementation "androidx.room:room-testing:$room_version"
 
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-moshi:2.4.0"

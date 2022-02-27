@@ -24,17 +24,24 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentPostDetailBinding
+import com.unlone.app.utils.DetailedPostViewModelAssistedFactory
 import com.unlone.app.utils.ViewModelFactory
 import com.unlone.app.viewmodel.DetailedPostViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
-class PostDetailFragment : Fragment() {
+@AndroidEntryPoint
+class PostDetailFragment: Fragment() {
     private val args: PostDetailFragmentArgs by navArgs()
     private val pid by lazy { args.pid }
     private var _binding: FragmentPostDetailBinding? = null
     private val binding get() = _binding!!
 
+
     // declare viewModel
+    @Inject
+    lateinit var assistedFactory: DetailedPostViewModelAssistedFactory
     private lateinit var viewModelFactory: ViewModelFactory
     private val detailedPostViewModel: DetailedPostViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[DetailedPostViewModel::class.java]
@@ -55,7 +62,9 @@ class PostDetailFragment : Fragment() {
 
         _binding = FragmentPostDetailBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModelFactory = ViewModelFactory(pid)
+
+
+        viewModelFactory = ViewModelFactory(pid, assistedFactory)
         binding.viewModel = detailedPostViewModel
         binding.lifecycleOwner = this
 

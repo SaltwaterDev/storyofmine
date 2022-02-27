@@ -2,16 +2,23 @@ package com.unlone.app.data
 
 import android.content.ContentValues
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.unlone.app.data.database.PostDao
+import com.unlone.app.data.database.asDatabasePost
+import com.unlone.app.data.database.asPost
 import com.unlone.app.model.Post
 import com.unlone.app.model.Report
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -19,12 +26,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PostsRepository @Inject constructor() {
-    private val mAuth = Firebase.auth
-    private val mFirestore = Firebase.firestore
+class PostsRepository @Inject constructor(
+    private val categoriesRepository: CategoriesRepository,
+    private val postDao: PostDao,
+) {
+
     private var lastVisible: DocumentSnapshot? = null
-    private val mPosts = 100
-    private val categoriesRepository = CategoriesRepository()
+    private val mPosts: Int = 100
+    private val mAuth: FirebaseAuth = Firebase.auth
+    private val mFirestore: FirebaseFirestore = Firebase.firestore
 
     suspend fun loadAllPosts(numberPost: Int = mPosts): List<Post> {
         val allDocs = withContext(Dispatchers.IO) {
@@ -107,10 +117,17 @@ class PostsRepository @Inject constructor() {
         return postList.sortedByDescending { it.createdTimestamp }
     }
 
-    suspend fun getSingleCategoryPosts(
+    fun getSingleCategoryPosts(
         categoryKey: String,
         numberPost: Int = mPosts
-    ): List<Post> {
+    ) = postDao.getPostsByCtg(categoryKey)
+        .map { it.sortedByDescending { it1 -> it1.createdTimestamp }.map { it1 -> it1.asPost() } }
+
+
+    suspend fun storeSingleCategoryPosts(
+        categoryKey: String,
+        numberPost: Int = mPosts
+    ) {
         Log.d("TAG", "category key: $categoryKey")
         val thisCategoryDocs =
             withContext(Dispatchers.IO) {
@@ -121,7 +138,7 @@ class PostsRepository @Inject constructor() {
                     .get()
                     .await()
             }
-        
+
         val postList: MutableList<Post> = ArrayList()
         if (thisCategoryDocs != null) {
             if (thisCategoryDocs.size() > 0) {
@@ -138,7 +155,8 @@ class PostsRepository @Inject constructor() {
         }
         // return the sorted postList
         Log.d("TAG", "postList: $postList")
-        return postList.sortedByDescending { it.createdTimestamp }
+        postDao.insertAll(postList.map { it.asDatabasePost() })
+
     }
 
     suspend fun getSingleLabelPosts(

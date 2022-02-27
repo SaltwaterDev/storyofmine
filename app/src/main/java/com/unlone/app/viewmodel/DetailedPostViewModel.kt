@@ -3,28 +3,30 @@ package com.unlone.app.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.unlone.app.R
 import com.unlone.app.data.CategoriesRepository
 import com.unlone.app.data.CommentsRepository
 import com.unlone.app.data.PostsRepository
 import com.unlone.app.model.*
 import com.unlone.app.ui.lounge.PostDetailFragmentDirections
-import com.unlone.app.utils.ObservableViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
+class DetailedPostViewModel @AssistedInject constructor(
+    @Assisted val pid: String,
+    private val categoriesRepository: CategoriesRepository,
+    private val postsRepository: PostsRepository,
+    private val commentsRepository: CommentsRepository,
+) : ViewModel() {
 
-    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    val uid = mAuth.uid.toString()
-
-    private val categoriesRepository = CategoriesRepository()
-    private val postsRepository = PostsRepository()
-    private val commentsRepository = CommentsRepository()
-
+    val uid = Firebase.auth.uid.toString()
 
     // post field
     private val post: MutableLiveData<Post?> = MutableLiveData()
@@ -224,7 +226,7 @@ class DetailedPostViewModel(val pid: String) : ObservableViewModel() {
         }
     }
 
-    fun retrieveDefaultCategory(selectedCategory: String): String? {
+    private fun retrieveDefaultCategory(selectedCategory: String): String? {
         return categoriesRepository.retrieveDefaultTopic(selectedCategory)
     }
 }

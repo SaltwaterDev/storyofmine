@@ -6,9 +6,17 @@ import com.unlone.app.data.CategoriesRepository
 import com.unlone.app.data.PostsRepository
 import com.unlone.app.model.Post
 import com.unlone.app.model.PostItemUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CategoriesViewModel : ViewModel() {
+@HiltViewModel
+class CategoriesViewModel @Inject constructor(
+    private val categoriesRepository: CategoriesRepository,
+    private val postsRepository: PostsRepository
+) : ViewModel() {
     private val _categories: MutableLiveData<List<String>> = MutableLiveData()
     val categories: LiveData<List<String>> = _categories
 
@@ -19,15 +27,13 @@ class CategoriesViewModel : ViewModel() {
     private var _topicId = MutableLiveData<String>()
     private val topicId: LiveData<String> = _topicId
 
-    private val categoriesRepository: CategoriesRepository = CategoriesRepository()
-    private val postsRepository: PostsRepository = PostsRepository()
 
     private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
     private val posts: LiveData<List<Post>> = topicId.switchMap {
         liveData {
             Log.d("TAG", "label to search: $it")
             if (it.first() != '#')
-                emit(postsRepository.getSingleCategoryPosts(it))
+                postsRepository.getSingleCategoryPosts(it)
             else
                 emit(postsRepository.getSingleLabelPosts(it))
         }
@@ -62,10 +68,13 @@ class CategoriesViewModel : ViewModel() {
     }
 
 
+    @OptIn(InternalCoroutinesApi::class)
     fun loadPosts(topic: String, loadMore: Boolean? = false) {
         viewModelScope.launch {
             if (topic.first() != '#')
-                _posts.value = postsRepository.getSingleCategoryPosts(topic)
+                postsRepository.getSingleCategoryPosts(topic).collect {
+                    _posts.value = it
+                }
             else
                 _posts.value = postsRepository.getSingleLabelPosts(topic)
         }

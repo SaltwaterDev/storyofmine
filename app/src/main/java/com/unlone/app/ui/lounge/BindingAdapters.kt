@@ -192,7 +192,7 @@ object BindingAdapters {
 
     @BindingAdapter("labels")
     @JvmStatic
-    fun TextView.setLabels(labels: ArrayList<String>?) {
+    fun TextView.setLabels(labels: List<String>?) {
         movementMethod = LinkMovementMethod.getInstance()
         // display label
         val spb = SpannableStringBuilder()

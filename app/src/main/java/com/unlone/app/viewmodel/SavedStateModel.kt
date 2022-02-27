@@ -51,11 +51,10 @@ class SavedStateModel : ViewModel() {
             post.author_uid = uid
             post.title = postData.title
             post.journal = postData.journal
-            post.labels.addAll(postData.labels)
+            post.labels = postData.labels
             post.comment = postData.comment
             post.save = postData.save
             post.createdTimestamp = System.currentTimeMillis().toString()
-
         }
 
         return post
@@ -139,7 +138,7 @@ class SavedStateModel : ViewModel() {
             .whereEqualTo("visibility", true)
             .get()
             .addOnSuccessListener { result ->
-                val rawCategoryArrayList = java.util.ArrayList<Pair<String, String>>()
+                val rawCategoryArrayList = ArrayList<Pair<String, String>>()
                 for (document in result) {
                     val category = Pair(document.id, document.data[appLanguage])
                     category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
