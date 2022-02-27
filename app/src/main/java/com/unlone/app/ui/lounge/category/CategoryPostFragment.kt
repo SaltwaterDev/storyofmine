@@ -19,11 +19,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentCategoryPostBinding
 import com.unlone.app.ui.lounge.LoungePostsBaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.properties.Delegates
 
+@AndroidEntryPoint
 class CategoryPostFragment :
     LoungePostsBaseFragment<FragmentCategoryPostBinding, CategoriesViewModel>(R.layout.fragment_category_post) {
     private val args: CategoryPostFragmentArgs by navArgs()

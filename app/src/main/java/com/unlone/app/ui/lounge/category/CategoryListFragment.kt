@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.unlone.app.databinding.FragmentCategoryListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CategoryListFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentCategoryListBinding? = null
