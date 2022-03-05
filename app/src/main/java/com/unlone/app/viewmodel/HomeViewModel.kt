@@ -7,7 +7,7 @@ import com.unlone.app.data.CategoriesRepository
 import com.unlone.app.data.CommentsRepository
 import com.unlone.app.data.PostsRepository
 import com.unlone.app.model.Comment
-import com.unlone.app.model.ParentPostItemUiState
+import com.unlone.app.model.HomeUiModel
 import com.unlone.app.model.PostItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -49,9 +49,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val parentPostItemUiStateItems: StateFlow<List<ParentPostItemUiState?>> =
+    val ctgPostItemUiStateItems: StateFlow<List<HomeUiModel.CtgPostItemUiState?>> =
         categories.flatMapLatest {
-            val a = mutableListOf<ParentPostItemUiState?>()
+            val a = mutableListOf<HomeUiModel.CtgPostItemUiState?>()
             Log.d("TAG", "parentPostItemUiStateItems: category: $it")
 
             val parentPostItemUiStates = it.map { ctg ->
@@ -88,15 +88,22 @@ class HomeViewModel @Inject constructor(
         }.asLiveData()
 
 
+    val homeListItemUiStateFlow = ctgPostItemUiStateItems
+
+
+
+
+
+
     private suspend fun loadPostsFromSpecificCategory(
         category: String,
         numberPost: Int = numPostsPerCategory
-    ): Flow<ParentPostItemUiState?> = flow {
+    ): Flow<HomeUiModel.CtgPostItemUiState?> = flow {
         val categoryKey = categoriesRepository.retrieveDefaultTopic(category)
         if (categoryKey != null) {
             Log.d("TAG", "loadPostsFromSpecificCategory: $categoryKey")
             postRepository.getSingleCategoryPosts(categoryKey, numberPost).collect { postList ->
-                val parentUiState = ParentPostItemUiState(
+                val parentUiState = HomeUiModel.CtgPostItemUiState(
                     category,
                     postList.map {
                         PostItemUiState(

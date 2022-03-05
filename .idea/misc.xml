@@ -56,7 +56,7 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/activity_post_detail.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/activity_registration.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/blank_fragment.xml" value="0.193859649122807" />
-        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/category_row_posts_list_item.xml" value="0.30432900432900434" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/category_row_posts_list_item.xml" value="0.21082251082251083" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/contact_us_fragment.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/following_button.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/fragment_category.xml" value="0.30833333333333335" />
@@ -106,6 +106,7 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_post.xml" value="0.21924144310823312" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_profile_card.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_sub_comment.xml" value="0.23333333333333334" />
+        <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/list_item_tips.xml" value="0.4" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/profile_card.xml" value="0.18201754385964913" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/recyclerview_comment.xml" value="0.18903508771929825" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/layout/recyclerview_post.xml" value="0.16622807017543859" />

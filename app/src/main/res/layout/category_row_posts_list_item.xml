@@ -4,29 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
             name="parentPostItemUiState"
-            type="com.unlone.app.model.ParentPostItemUiState" />
+            type="com.unlone.app.model.HomeUiModel.CtgPostItemUiState" />
 
     </data>
 
     <RelativeLayout
         android:id="@+id/postsView"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:visibility="@{parentPostItemUiState.postsUiStateItemList.isEmpty()? View.GONE: View.VISIBLE}">
 
         <TextView
             android:id="@+id/categoryTitleTv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="22dp"
+            android:layout_marginStart="22dp"
             android:text="@{parentPostItemUiState.category}"
             android:textColor="@color/colorText"
             android:textSize="20sp"
+            android:visibility="@{parentPostItemUiState.postsUiStateItemList.isEmpty()? View.GONE: View.VISIBLE}" />
+
+        <TextView
+            android:id="@+id/loadMoreTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/categoryTitleTv"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="22dp"
+            android:layout_toEndOf="@id/categoryTitleTv"
+            android:text="Show More"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/colorMoreText"
+            android:textSize="11sp"
             android:visibility="@{parentPostItemUiState.postsUiStateItemList.isEmpty()? View.GONE: View.VISIBLE}" />
 
         <androidx.recyclerview.widget.RecyclerView

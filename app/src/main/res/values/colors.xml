@@ -64,6 +64,7 @@
     <color name="switchTrackChecked">#E0E0E0</color>
     <color name="switchThumbUnchecked">#757575</color>
     <color name="switchTrackUnchecked">#BDBDBD</color>
+    <color name="colorMoreText">#99000000</color>
 
 
 

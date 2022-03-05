@@ -2,7 +2,6 @@ package com.unlone.app.ui.lounge
 
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,10 +33,11 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     private lateinit var _binding: FragmentHomeBinding
     private val binding get() = _binding
-    private val parentPostsAdapter: ParentPostsAdapter by lazy {
-        ParentPostsAdapter(
-            this
-        ) { pid -> onClick(pid) }
+    private val homeParentAdapter: HomeParentAdapter by lazy {
+        HomeParentAdapter(
+            this,
+            onClick = { pid -> onClick(pid) },
+            onMorePostsClick = { topic -> adapterMorePostsOnClick(topic) })
     }
     private val categoriesAdapter: CategoriesAdapter by lazy {
         CategoriesAdapter { titleId ->
@@ -58,16 +58,16 @@ class HomeFragment : Fragment(), ItemClickListener {
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (findNavController().currentDestination?.id == R.id.navigation_home)
-                context?.let {
-                    MaterialAlertDialogBuilder(it, R.style.ThemeOverlay_App_MaterialAlertDialog)
-                        .setTitle(it.getString(R.string.reminding))
-                        .setMessage(it.getString(R.string.leaving_app))
-                        .setPositiveButton(it.getString(R.string.proceed))
-                        { _, _ ->
-                            activity?.finish()
-                        }
-                        .show()
-                }
+                    context?.let {
+                        MaterialAlertDialogBuilder(it, R.style.ThemeOverlay_App_MaterialAlertDialog)
+                            .setTitle(it.getString(R.string.reminding))
+                            .setMessage(it.getString(R.string.leaving_app))
+                            .setPositiveButton(it.getString(R.string.proceed))
+                            { _, _ ->
+                                activity?.finish()
+                            }
+                            .show()
+                    }
             }
         })
         // The callback can be enabled or disabled here or in the lambda
@@ -82,7 +82,7 @@ class HomeFragment : Fragment(), ItemClickListener {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.categoriesListRv.adapter = categoriesAdapter
-        binding.postPerCategoriesRv.adapter = parentPostsAdapter
+        binding.postPerCategoriesRv.adapter = homeParentAdapter
         binding.progressCircular.visibility = View.VISIBLE
         initFab()
 
@@ -96,11 +96,13 @@ class HomeFragment : Fragment(), ItemClickListener {
             // repeatOnLifecycle launches the block in a new coroutine every time the
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.parentPostItemUiStateItems.collect { uiState ->
+                viewModel.ctgPostItemUiStateItems.collect { uiState ->
                     // New value received
                     Log.d("TAG", "uiState: $uiState")
-                    parentPostsAdapter.submitList(uiState.filter { it?.postsUiStateItemList?.isNotEmpty()
-                        ?: it == true  })
+                    homeParentAdapter.submitList(uiState.filter {
+                        it?.postsUiStateItemList?.isNotEmpty()
+                                ?: it == true
+                    })
                     binding.progressCircular.visibility = View.GONE
                 }
             }
@@ -108,7 +110,6 @@ class HomeFragment : Fragment(), ItemClickListener {
 
         return view
     }
-
 
 
     private fun initFab() {
@@ -132,17 +133,22 @@ class HomeFragment : Fragment(), ItemClickListener {
         )
     }
 
+    private fun adapterMorePostsOnClick(topic: String) {
+        openSpecificTopic(topic)
+    }
+
 
     // navigate to specific topic
     private fun openSpecificTopic(topic: String) {
         Log.d("TAG", "selected topic: $topic")
-        val selectedTopic = if (topic.first() != '#') viewModel.retrieveDefaultCategory(topic).toString() else topic
-        if (selectedTopic != "null"){
+        val selectedTopic =
+            if (topic.first() != '#') viewModel.retrieveDefaultCategory(topic).toString() else topic
+        if (selectedTopic != "null") {
             // open the post with specific category
-            val action = HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(selectedTopic)
+            val action =
+                HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(selectedTopic)
             findNavController().navigate(action)
-        }
-        else{
+        } else {
             Log.d("TAG", "couldn't find the category")
         }
     }
