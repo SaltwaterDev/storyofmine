@@ -16,9 +16,7 @@ import com.unlone.app.data.database.asPost
 import com.unlone.app.model.Post
 import com.unlone.app.model.Report
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -27,7 +25,6 @@ import javax.inject.Singleton
 
 @Singleton
 class PostsRepository @Inject constructor(
-    private val categoriesRepository: CategoriesRepository,
     private val postDao: PostDao,
 ) {
 
@@ -64,64 +61,15 @@ class PostsRepository @Inject constructor(
         return postList.sortedByDescending { it.createdTimestamp }
     }
 
-    suspend fun getCategoriesAndSelfPosts(numberPost: Int = mPosts): List<Post> {
-
-        // retrieve the following categories
-        val followingCategories = withContext(Dispatchers.IO) {
-            async { categoriesRepository.loadFollowingTopics() }
-        }
-        // load the post with the following categories AND self-written posts
-        Log.d(ContentValues.TAG, "followingCategories: $followingCategories")
-
-        val postList: MutableList<Post> = ArrayList()
-        // add the following categories
-        val followingDocs = withContext(Dispatchers.IO) {
-            followingCategories.await().let {
-                mFirestore.collection("posts")
-                    .whereIn("category", it)
-                    .limit(numberPost.toLong())
-                    .get()
-                    .await()
-            }
-        }
-
-        if (followingDocs != null) {
-            if (followingDocs.size() > 0) {
-                lastVisible = followingDocs.documents[followingDocs.size() - 1]
-            }
-            for (document in followingDocs) {
-                Log.d(ContentValues.TAG, document.id + " => " + document.data)
-                val post = document.toObject<Post>()
-                post.pid = document.id
-                if (!postList.contains(post)) {
-                    postList.add(post)
-                }
-            }
-        }
-
-        // add the self-written posts
-        val selfDocs = mFirestore.collection("posts")
-            .whereEqualTo("author_uid", mAuth.uid)
-            .get()
-            .await()
-        for (document in selfDocs) {
-            Log.d(ContentValues.TAG, document.id + " => " + document.data)
-            val post = document.toObject<Post>()
-            post.pid = document.id
-            if (!postList.contains(post)) {
-                postList.add(post)
-            }
-        }
-
-        // sort the postList again
-        return postList.sortedByDescending { it.createdTimestamp }
-    }
 
     fun getSingleCategoryPosts(
         categoryKey: String,
         numberPost: Int = mPosts
-    ) = postDao.getPostsByCtg(categoryKey)
-        .map { it.sortedByDescending { it1 -> it1.createdTimestamp }.map { it1 -> it1.asPost() } }
+    ): Flow<List<Post>> = postDao.getPostsByCtg(categoryKey)
+        .map {
+            Log.d("TAG", "dao: $categoryKey")
+            it.sortedByDescending { it1 -> it1.createdTimestamp }.map { it1 -> it1.asPost() }
+        }
 
 
     suspend fun storeSingleCategoryPosts(

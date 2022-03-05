@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class PostDetailFragment: Fragment() {
+class PostDetailFragment : Fragment() {
     private val args: PostDetailFragmentArgs by navArgs()
     private val pid by lazy { args.pid }
     private var _binding: FragmentPostDetailBinding? = null
@@ -63,8 +63,7 @@ class PostDetailFragment: Fragment() {
         _binding = FragmentPostDetailBinding.inflate(inflater, container, false)
         val view = binding.root
 
-
-        viewModelFactory = ViewModelFactory(pid, assistedFactory)
+        viewModelFactory = ViewModelFactory(pid = pid, dpAssistedFactory = assistedFactory)
         binding.viewModel = detailedPostViewModel
         binding.lifecycleOwner = this
 

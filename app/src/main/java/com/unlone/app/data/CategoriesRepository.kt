@@ -5,11 +5,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -72,7 +72,6 @@ class CategoriesRepository @Inject constructor() {
     }
 
     suspend fun getTopicTitle(categoryId: String): String? {
-
         val titleCollection = withContext(Dispatchers.IO) {
             mFirestore.collection("categories")
                 .document("pre_defined_categories")
@@ -83,10 +82,10 @@ class CategoriesRepository @Inject constructor() {
         }
 
         val result = titleCollection.documents.filter { it.id == categoryId }
-        return if (result.isNullOrEmpty())
-            null
-        else
+        return if (!result.isNullOrEmpty())
             result[0].data?.get(appLanguage).toString()
+        else
+            null
     }
 
     fun retrieveDefaultTopic(selectedTopic: String): String? {
@@ -117,28 +116,21 @@ class CategoriesRepository @Inject constructor() {
         }
     }
 
-    suspend fun loadFollowingTopics(): List<String> {
-        // retrieve the following categories first
-        val topicKeys = withContext(Dispatchers.IO) {
-            mFirestore.collection("users")
-                .document(mAuth.uid!!)
-                .get()
-                .await()
-                .data
-                ?.get("followingCategories") as List<String>
-        }
 
-        val topics = if (topicKeys.isNullOrEmpty()) emptyList() else topicKeys.map {
-            Log.d("TAG", "following topic key: ${(it)}")
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun loadFollowingTopics(): List<String?> {
+        val topicKeys = mFirestore.collection("users")
+            .document(mAuth.uid!!).get().await().get("followingCategories") as List<String>
+
+        val flowList: List<String?> = topicKeys.map {
             val isLabel = it.first() == '#'
-            if (!isLabel) {
-                Log.d("TAG", "following categories: ${getTopicTitle(it)}")
-                getTopicTitle(it) ?: "null"
-            } else {
+            if (isLabel)
                 it
-            }
+            else
+                getTopicTitle(it)
         }
-
-        return topics.filter { it != "null" }
+        Log.d("TAG", "loadFollowingTopics: $flowList")
+        return flowList
     }
 }
+

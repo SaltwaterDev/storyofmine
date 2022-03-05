@@ -144,6 +144,8 @@ class HomeFragment : Fragment(), ItemClickListener {
         val selectedTopic =
             if (topic.first() != '#') viewModel.retrieveDefaultCategory(topic).toString() else topic
         if (selectedTopic != "null") {
+            Log.d("TAG", "selected topic: $selectedTopic")
+
             // open the post with specific category
             val action =
                 HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(selectedTopic)

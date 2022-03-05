@@ -26,7 +26,7 @@
     <color name="colorFollowButton">@color/colorWhite</color>
     <color name="colorFollowButtonText">@color/colorText</color>
     <color name="colorFollowingButtonText">#FFFFFF</color>
-    <color name="colorFollowingButton">#494949</color>
+    <color name="colorFollowingButton">@color/transparent</color>
     <color name="colorDefaultNoteColor">#333333</color>
     <color name="colorNoteSubtitleText">#FAFAFA</color>
     <color name="colorMiscellaneousBackground">#1F1F1F</color>

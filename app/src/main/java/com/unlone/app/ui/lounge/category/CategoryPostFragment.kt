@@ -6,10 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,23 +19,30 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unlone.app.R
 import com.unlone.app.databinding.FragmentCategoryPostBinding
 import com.unlone.app.ui.lounge.LoungePostsBaseFragment
+import com.unlone.app.utils.CategoryPostViewModelAssistedFactory
+import com.unlone.app.utils.ViewModelFactory
+import com.unlone.app.viewmodel.CategoryPostViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.properties.Delegates
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoryPostFragment :
-    LoungePostsBaseFragment<FragmentCategoryPostBinding, CategoriesViewModel>(R.layout.fragment_category_post) {
+    LoungePostsBaseFragment<FragmentCategoryPostBinding, CategoryPostViewModel>(R.layout.fragment_category_post) {
     private val args: CategoryPostFragmentArgs by navArgs()
 
     // this is category key
-    private val category by lazy {
-        args.category
+    private val topic by lazy { args.topic }
+
+    // declare viewModel
+    @Inject
+    lateinit var assistedFactory: CategoryPostViewModelAssistedFactory
+    private lateinit var viewModelFactory: ViewModelFactory
+    private val ctgPostViewModel: CategoryPostViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[CategoryPostViewModel::class.java]
     }
 
-    private var isFollowing by Delegates.notNull<Boolean>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,11 +50,11 @@ class CategoryPostFragment :
     ): View {
 
         super.onCreateView(inflater, container, savedInstanceState)
-        // set category title
-        setCategoryTitle()
-        val followingButton = binding.followBtn
-        isFollowing(followingButton)
-        initFollowingButton()
+        viewModelFactory = ViewModelFactory(topic = topic, cpAssistedFactory = assistedFactory)
+        ctgPostViewModel.let { vm -> binding.followBtn.setOnClickListener { vm.followCategory() } }
+        binding.viewModel = ctgPostViewModel
+        binding.lifecycleOwner = this
+
 
         // load posts
         val recyclerView: RecyclerView = binding.recycleviewPosts
@@ -55,73 +62,16 @@ class CategoryPostFragment :
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = postListAdapter
-        viewModel?.loadPosts(category)
 
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-
-
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        // load posts
-        viewModel?.postListUiItems?.observe(
-            viewLifecycleOwner
-        ) { postList ->
-            postListAdapter.submitList(postList)
-        }
-    }
 
-    private fun initFollowingButton() {
-        binding.followBtn.setOnClickListener {
-            if (isFollowing) {
-                // if follow is true, unfollow it
-                viewModel!!.followCategory(category, false)
-                binding.followBtn.text = getString(R.string.follow)
-                binding.followBtn.setTextColor(resources.getColor(R.color.colorFollowButtonText))
-                binding.followBtn.setBackgroundColor(resources.getColor(R.color.colorFollowButton))
-                isFollowing = false
-
-            } else {
-                // if follow is false, follow it
-                viewModel!!.followCategory(category, true)
-                binding.followBtn.text = getString(R.string.following)
-                binding.followBtn.setTextColor(resources.getColor(R.color.colorFollowingButtonText))
-                binding.followBtn.setBackgroundColor(resources.getColor(R.color.colorFollowingButton))
-                isFollowing = true
-            }
-        }
-    }
-
-    private fun isFollowing(followingBtn: Button) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            isFollowing = viewModel?.isFollowing(category) == true
-            withContext(Dispatchers.Main) {
-                if (isFollowing) {
-                    followingBtn.text = getString(R.string.following)
-                    followingBtn.setTextColor(resources.getColor(R.color.colorFollowingButtonText))
-                    followingBtn.setBackgroundColor(resources.getColor(R.color.colorFollowingButton))
-                } else {
-                    followingBtn.text = getString(R.string.follow)
-                    followingBtn.setTextColor(resources.getColor(R.color.colorFollowButtonText))
-                    followingBtn.setBackgroundColor(resources.getColor(R.color.colorFollowButton))
-                }
-            }
-        }
-    }
-
-    private fun setCategoryTitle() {
-        viewModel?.getTopicTitle(category)
-        viewModel?.topicTitle?.observe(viewLifecycleOwner) { title ->
-            binding.topicTv.text = title
-        }
-    }
-
-    override fun getViewModelClass(): Class<CategoriesViewModel> =
-        CategoriesViewModel::class.java
+    override fun getViewModelClass(): Class<CategoryPostViewModel> =
+        CategoryPostViewModel::class.java
 
     override fun initFab() {
         val fab: FloatingActionButton = binding.fab
@@ -139,13 +89,22 @@ class CategoryPostFragment :
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = postListAdapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ctgPostViewModel.postListUiItems.collect { uiState ->
+                    Log.d("TAG", "uiState: $uiState")
+                    postListAdapter.submitList(uiState)
+                }
+            }
+        }
     }
 
     override fun initSwipeRefreshLayout() {
         val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
-            viewModel!!.loadPosts(category)
+            ctgPostViewModel.loadPosts(topic)
             swipeRefreshLayout.isRefreshing = false
         }
     }

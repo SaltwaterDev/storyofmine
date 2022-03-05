@@ -7,8 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.unlone.app.ui.lounge.category.CategoriesViewModel" />
-
+            type="com.unlone.app.viewmodel.CategoryListViewModel" />
     </data>
 
     <LinearLayout
@@ -47,8 +46,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="36dp"
-                    android:paddingHorizontal="14dp"
                     android:fontFamily="@font/notosans_tc_medium"
+                    android:paddingHorizontal="14dp"
                     android:text="@string/following"
                     android:textColor="@color/colorText"
                     android:textSize="20sp" />
@@ -66,8 +65,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:paddingHorizontal="14dp"
                     android:fontFamily="@font/notosans_tc_medium"
+                    android:paddingHorizontal="14dp"
                     android:text="@string/all"
                     android:textColor="@color/colorText"
                     android:textSize="20sp" />

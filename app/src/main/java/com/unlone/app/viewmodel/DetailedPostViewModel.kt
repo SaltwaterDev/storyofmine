@@ -15,6 +15,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -82,7 +83,9 @@ class DetailedPostViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             post.value = loadPost()
-            _category.value = getCategoryTitle()
+            post.value?.category?.let { categoryId ->
+                _category.value = categoriesRepository.getTopicTitle(categoryId)
+            }
             isSaved()
         }
     }
@@ -219,12 +222,6 @@ class DetailedPostViewModel @AssistedInject constructor(
         parentCommenter = null
     }
 
-    // display topic
-    private suspend fun getCategoryTitle(): String? {
-        return post.value?.category?.let { categoryId ->
-            categoriesRepository.getTopicTitle(categoryId)
-        }
-    }
 
     private fun retrieveDefaultCategory(selectedCategory: String): String? {
         return categoriesRepository.retrieveDefaultTopic(selectedCategory)

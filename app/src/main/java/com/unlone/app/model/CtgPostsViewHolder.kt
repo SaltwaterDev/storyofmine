@@ -21,8 +21,7 @@ class CtgPostsViewHolder private constructor(
     private val lifecycleOwner: LifecycleOwner,
     private val onClick: (String) -> Unit,
     private val onMorePostsClick: (String) -> Unit
-) :
-    RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: HomeUiModel.CtgPostItemUiState) {
         binding.parentPostItemUiState = item

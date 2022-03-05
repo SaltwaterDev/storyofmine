@@ -12,30 +12,36 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.unlone.app.MobileNavigationDirections
+import com.unlone.app.viewmodel.CategoryPostViewModel
 
-abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@LayoutRes private val layoutResId : Int)
-    : Fragment(), ItemClickListener {
+abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@LayoutRes private val layoutResId: Int) :
+    Fragment(), ItemClickListener {
 
-    private var _binding : T? = null
-    var viewModel : VM? = null
+    private var _binding: T? = null
+    var viewModel: VM? = null
     val postListAdapter: PostListAdapter by lazy { PostListAdapter(this) }
     open var mPosts = 100
     private var isLoading = false
 
-    val binding : T get() = _binding!!
+    val binding: T get() = _binding!!
 
     protected abstract fun getViewModelClass(): Class<VM>
 
     // Make it open, so it can be overridden in child fragments
-    open fun T.initialize(){
+    open fun T.initialize() {
         initFab()
         initRv()
         initSwipeRefreshLayout()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = DataBindingUtil.inflate(inflater, layoutResId, container, false)
-        viewModel = ViewModelProvider(this)[getViewModelClass()]
+        if (getViewModelClass() != CategoryPostViewModel::class.java)
+            viewModel = ViewModelProvider(this)[getViewModelClass()]
         binding.initialize()
         return binding.root
     }
@@ -58,7 +64,7 @@ abstract class LoungePostsBaseFragment<T : ViewDataBinding, VM : ViewModel>(@Lay
 
 }
 
-interface ItemClickListener{
+interface ItemClickListener {
     fun onClick(pid: String)
 }
 

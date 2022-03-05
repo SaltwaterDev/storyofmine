@@ -122,6 +122,11 @@
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/menu/topic_top_app_bar.xml" value="0.30833333333333335" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3177489177489177" />
         <entry key="..\:/Users/Wesley Hung/Documents/unlone/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.21403508771929824" />
+        <entry key="app/src/main/res/layout/category_row_posts_list_item.xml" value="0.22291666666666668" />
+        <entry key="app/src/main/res/layout/fragment_category_list.xml" value="0.39166666666666666" />
+        <entry key="app/src/main/res/layout/fragment_category_post.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2675925925925926" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.28802083333333334" />
       </map>
     </option>
   </component>

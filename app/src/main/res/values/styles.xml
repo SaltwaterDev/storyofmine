@@ -12,7 +12,9 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item>
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog.customised</item>
+        <item name="materialAlertDialogTheme">
+            @style/ThemeOverlay.App.MaterialAlertDialog.customised
+        </item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -103,7 +105,6 @@
     </style>
 
 
-
     <style name="Widget.App.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.FloatingActionButton</item>
     </style>
@@ -168,6 +169,21 @@
 
     <style name="ThemeOverlay.App.Button.TextButton" parent="">
         <item name="colorPrimary">@color/colorText</item>
+    </style>
+
+    <style name="Widget.App.Button.FollowOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button.TextButton</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="strokeColor">@color/colorText</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.App.FollowButton" parent="Widget.MaterialComponents.Button">
+        <item name="materialThemeOverlay">@style/Widget.App.Button</item>
+        <item name="android:textColor">@color/colorFollowingButtonText</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="backgroundColor">@color/colorFollowButton</item>
     </style>
 
 </resources>

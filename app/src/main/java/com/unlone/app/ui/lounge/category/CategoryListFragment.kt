@@ -6,19 +6,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.unlone.app.databinding.FragmentCategoryListBinding
+import com.unlone.app.viewmodel.CategoryListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryListFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentCategoryListBinding? = null
-    val model: CategoriesViewModel by lazy { ViewModelProvider(this)[CategoriesViewModel::class.java] }
+    val model: CategoryListViewModel by lazy { ViewModelProvider(this)[CategoryListViewModel::class.java] }
     private val folAdapter = FollowingCateListAdapter { openSpecificTopic(it) }
     private val allAdapter = AllCateListAdapter { openSpecificTopic(it) }
 

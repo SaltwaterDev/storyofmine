@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="user"
-            type="com.unlone.app.model.Post" />
+            name="viewModel"
+            type="com.unlone.app.viewmodel.CategoryPostViewModel" />
     </data>
 
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.lounge.category.CategoryPostFragment">
@@ -36,22 +37,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:text="@{viewModel.getTopicTitle()}"
                         android:textColor="@color/colorWhiteText" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/followBtn"
+                        style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginVertical="8dp"
                         android:layout_marginEnd="16dp"
-                        android:backgroundTint="@color/colorFollowButton"
-                        android:text="@string/follow"
+                        android:elevation="0dp"
+                        android:text="@{viewModel.isFollowing? @string/following : @string/follow}"
                         android:textAllCaps="false"
-                        android:textColor="@color/colorFollowButtonText"
+                        android:textColor="@{viewModel.isFollowing? @color/colorFollowingButtonText : @color/colorFollowButtonText}"
                         android:textSize="12sp"
-                        app:cornerRadius="8dp" />
-
+                        android:backgroundTint="@{viewModel.isFollowing? @color/transparent: @color/colorFollowButton}"
+                        app:cornerRadius="8dp"
+                        app:strokeColor="@{viewModel.isFollowing? @color/colorFollowingButtonText: @color/transparent}"
+                        app:strokeWidth="2dp" />
                 </RelativeLayout>
 
 

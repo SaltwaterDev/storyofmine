@@ -35,7 +35,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _followingCategories.value = categoriesRepository.loadFollowingTopics()
+
+            _followingCategories.value = categoriesRepository.loadFollowingTopics().filterNotNull()
+            
             withContext(Dispatchers.Default) {
                 _categories.value = categoriesRepository.loadCategories()
                 val categoryKey =
@@ -51,14 +53,15 @@ class HomeViewModel @Inject constructor(
 
     val ctgPostItemUiStateItems: StateFlow<List<HomeUiModel.CtgPostItemUiState?>> =
         categories.flatMapLatest {
-            val a = mutableListOf<HomeUiModel.CtgPostItemUiState?>()
             Log.d("TAG", "parentPostItemUiStateItems: category: $it")
-
             val parentPostItemUiStates = it.map { ctg ->
                 Log.d("TAG", "parentPostItemUiStateItems: category: ${ctg}")
                 loadPostsFromSpecificCategory(ctg)
             }
-            combine(parentPostItemUiStates) { it2 -> it2.toList() }
+            combine(parentPostItemUiStates) { it2 ->
+                Log.d("TAG", "parent ui: $it2")
+                it2.toList()
+            }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -89,10 +92,6 @@ class HomeViewModel @Inject constructor(
 
 
     val homeListItemUiStateFlow = ctgPostItemUiStateItems
-
-
-
-
 
 
     private suspend fun loadPostsFromSpecificCategory(

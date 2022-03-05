@@ -16,8 +16,7 @@ import com.unlone.app.ui.lounge.HomeParentAdapter
 class HomeTipsViewHolder private constructor(
     val binding: ListItemTipsBinding,
     private val lifecycleOwner: LifecycleOwner,
-) :
-    RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: HomeUiModel.Tips) {
         binding.tips = item
