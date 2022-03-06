@@ -9,6 +9,7 @@ import com.unlone.app.data.PostsRepository
 import com.unlone.app.model.Comment
 import com.unlone.app.model.HomeUiModel
 import com.unlone.app.model.PostItemUiState
+import com.unlone.app.useCase.CollectHomeItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -19,8 +20,8 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class HomeViewModel @Inject constructor(
     private val postRepository: PostsRepository,
-    private val commentRepository: CommentsRepository,
-    private val categoriesRepository: CategoriesRepository
+    private val categoriesRepository: CategoriesRepository,
+    private val collectHomeItemUseCase: CollectHomeItemUseCase,
 ) : ViewModel() {
 
     private val _followingCategories: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
@@ -30,14 +31,13 @@ class HomeViewModel @Inject constructor(
     val categories: StateFlow<List<String>> = _categories
 
     private val numPostsPerCategory = 5
-    private val mComments = 1L
 
 
     init {
         viewModelScope.launch {
 
             _followingCategories.value = categoriesRepository.loadFollowingTopics().filterNotNull()
-            
+
             withContext(Dispatchers.Default) {
                 _categories.value = categoriesRepository.loadCategories()
                 val categoryKey =
@@ -51,23 +51,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val ctgPostItemUiStateItems: StateFlow<List<HomeUiModel.CtgPostItemUiState?>> =
-        categories.flatMapLatest {
-            Log.d("TAG", "parentPostItemUiStateItems: category: $it")
-            val parentPostItemUiStates = it.map { ctg ->
-                Log.d("TAG", "parentPostItemUiStateItems: category: ${ctg}")
-                loadPostsFromSpecificCategory(ctg)
-            }
-            combine(parentPostItemUiStates) { it2 ->
-                Log.d("TAG", "parent ui: $it2")
-                it2.toList()
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = emptyList()
-        )
-
+    val homeItemUiStateItems: StateFlow<List<HomeUiModel?>> = categories.flatMapLatest {
+        collectHomeItemUseCase(it)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = emptyList()
+    )
 
     val displayingTopicsUiState =
         followingCategories.map {
@@ -90,42 +80,6 @@ class HomeViewModel @Inject constructor(
             } else emptyList()
         }.asLiveData()
 
-
-    val homeListItemUiStateFlow = ctgPostItemUiStateItems
-
-
-    private suspend fun loadPostsFromSpecificCategory(
-        category: String,
-        numberPost: Int = numPostsPerCategory
-    ): Flow<HomeUiModel.CtgPostItemUiState?> = flow {
-        val categoryKey = categoriesRepository.retrieveDefaultTopic(category)
-        if (categoryKey != null) {
-            Log.d("TAG", "loadPostsFromSpecificCategory: $categoryKey")
-            postRepository.getSingleCategoryPosts(categoryKey, numberPost).collect { postList ->
-                val parentUiState = HomeUiModel.CtgPostItemUiState(
-                    category,
-                    postList.map {
-                        PostItemUiState(
-                            it.title,
-                            it.imagePath,
-                            it.journal.substring(0, 120.coerceAtMost(it.journal.length)),
-                            it.pid,
-                            getBestComment(it.pid)
-                        )
-                    }
-                )
-                emit(parentUiState)
-            }
-        }
-    }
-
-    private suspend fun getBestComment(pid: String): Comment? {
-        val (commentList, _) = commentRepository.loadComments(pid, false, mComments)
-        return if (commentList.isEmpty())
-            null
-        else
-            commentList[0]
-    }
 
 
     fun searchPost(text: String) {

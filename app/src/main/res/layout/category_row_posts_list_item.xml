@@ -17,7 +17,6 @@
         android:id="@+id/postsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:visibility="@{parentPostItemUiState.postsUiStateItemList.isEmpty()? View.GONE: View.VISIBLE}">
 
         <TextView

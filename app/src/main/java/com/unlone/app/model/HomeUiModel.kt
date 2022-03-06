@@ -11,7 +11,7 @@ sealed class HomeUiModel {
         val title: String,
         val content: String,
         val action: String,
-        val actionOnClick: () -> Unit,
+        val actionType: String,
     ): HomeUiModel()
 
 }

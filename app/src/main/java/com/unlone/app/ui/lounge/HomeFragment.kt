@@ -96,13 +96,10 @@ class HomeFragment : Fragment(), ItemClickListener {
             // repeatOnLifecycle launches the block in a new coroutine every time the
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.ctgPostItemUiStateItems.collect { uiState ->
+                viewModel.homeItemUiStateItems.collect { uiState ->
                     // New value received
                     Log.d("TAG", "uiState: $uiState")
-                    homeParentAdapter.submitList(uiState.filter {
-                        it?.postsUiStateItemList?.isNotEmpty()
-                                ?: it == true
-                    })
+                    homeParentAdapter.submitList(uiState)
                     binding.progressCircular.visibility = View.GONE
                 }
             }

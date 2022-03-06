@@ -1,9 +1,6 @@
 package com.unlone.app.data.database
 
-import android.content.Context
 import androidx.room.*
-import com.unlone.app.model.Post
-import com.unlone.app.utils.Converters
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,6 +10,9 @@ interface PostDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(posts: List<DatabasePost>)
+
+    @Query("DELETE FROM DatabasePost")
+    fun nukeTable()
 }
 
 

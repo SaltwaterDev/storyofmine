@@ -3,15 +3,9 @@ package com.unlone.app.model
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
-import com.unlone.app.R
-import com.unlone.app.databinding.CategoryRowPostsListItemBinding
 import com.unlone.app.databinding.ListItemTipsBinding
-import com.unlone.app.ui.lounge.ChildPostsAdapter
-import com.unlone.app.ui.lounge.HomeParentAdapter
 
 class HomeTipsViewHolder private constructor(
     val binding: ListItemTipsBinding,
@@ -22,7 +16,7 @@ class HomeTipsViewHolder private constructor(
         binding.tips = item
         binding.lifecycleOwner = lifecycleOwner
         binding.actionTv.setOnClickListener {
-            item.actionOnClick()
+            item.actionType
         }
         binding.executePendingBindings()
     }

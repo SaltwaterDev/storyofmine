@@ -8,15 +8,22 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.unlone.app.R
+import com.unlone.app.data.database.PostDao
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var postFao: PostDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,5 +44,11 @@ class MainActivity : AppCompatActivity() {
                 else -> navBottomBar.visibility = View.GONE
             }
         }
+
+        // make sure empty the database
+        lifecycleScope.launch(Dispatchers.Default) {
+            postFao.nukeTable()
+        }
+
     }
 }

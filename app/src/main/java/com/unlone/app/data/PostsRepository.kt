@@ -63,8 +63,7 @@ class PostsRepository @Inject constructor(
 
 
     fun getSingleCategoryPosts(
-        categoryKey: String,
-        numberPost: Int = mPosts
+        categoryKey: String
     ): Flow<List<Post>> = postDao.getPostsByCtg(categoryKey)
         .map {
             Log.d("TAG", "dao: $categoryKey")
