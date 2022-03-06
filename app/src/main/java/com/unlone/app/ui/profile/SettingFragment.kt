@@ -62,7 +62,6 @@ class SettingFragment : Fragment() {
                     .show()
             }
         }
-
         binding.themeTv.setOnClickListener {
             val singleItems =
                 arrayOf(
@@ -90,9 +89,7 @@ class SettingFragment : Fragment() {
                     .show()
             }
         }
-        binding.logoutTv.setOnClickListener {
-            logout()
-        }
+        binding.logoutTv.setOnClickListener { logout() }
 
         return view
     }

@@ -23,7 +23,7 @@ class CategoryPostViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
     val topicTitle: StateFlow<String?> =
-        getTopicTitle(topicId).stateIn(viewModelScope, SharingStarted.Lazily, null)
+        flow { emit(getTopicTitle(topicId)) }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val _isFollowing: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isFollowing: StateFlow<Boolean> = _isFollowing
@@ -70,12 +70,12 @@ class CategoryPostViewModel @AssistedInject constructor(
     }
 
 
-    private fun getTopicTitle(topicId: String) = flow {
+    private suspend fun getTopicTitle(topicId: String): String? {
         Log.d("TAG", "setCategoryTitle: $topicId")
-        if (topicId.first() != '#') {
+        return if (topicId.first() != '#') {
             categoriesRepository.getTopicTitle(topicId)
         } else {
-            emit(topicId)
+            topicId
         }
     }
 

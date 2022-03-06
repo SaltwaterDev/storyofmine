@@ -37,7 +37,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@{viewModel.getTopicTitle()}"
+                        android:text="@{viewModel.topicTitle}"
                         android:textColor="@color/colorWhiteText" />
 
                     <com.google.android.material.button.MaterialButton

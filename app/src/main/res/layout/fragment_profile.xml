@@ -20,7 +20,7 @@
             android:id="@+id/nameRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
+            android:layout_marginHorizontal="36dp"
             android:layout_marginTop="32.35dp"
             android:orientation="horizontal">
 
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/nameRow"
-            android:layout_marginHorizontal="20dp"
+            android:layout_marginHorizontal="36dp"
             android:layout_marginTop="13.35dp"
             android:fontFamily="@font/sf_compact_text_regular"
             android:text="@{viewModel.bio}"
@@ -68,7 +68,6 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="40dp"
-            android:elevation="1dp"
             android:nestedScrollingEnabled="false"
             app:cardElevation="1dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

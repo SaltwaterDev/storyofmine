@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // make sure empty the database
+        // make sure empty the database before start
         lifecycleScope.launch(Dispatchers.Default) {
             postFao.nukeTable()
         }
