@@ -53,12 +53,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // This callback will only be called when Fragment is at least Started.
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            // Handle the back button event
-            activity?.finish()
-        }
-
 
         return binding.root
     }

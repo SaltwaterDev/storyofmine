@@ -98,8 +98,8 @@
     <string name="you_may_also_need_to_check_n_the_junk_mail">如果找不到，請查看垃圾郵件</string>
     <string name="topic_label">類別:</string>
     <string name="topic">類別</string>
-    <string name="hello">Hello!</string>
-    <string name="for_now_what_is_your_overall_goal_downloading_this_app">此時此刻, 咩原因驅使你想用呢個app?</string>
+    <string name="hello">Hello</string>
+    <string name="story_greeting">每個人都裝載不同的故事而來…</string>
     <string name="pick_interests_greeting">你平時有啲咩興趣呀?</string>
     <string name="greetingText">喺呢度, 你可能會因為你對彼此的經歷身同感受,與不同的人產生某種的連結。 \n\n接下來.我們預備了三條問題, 和四頁的小故事。 \n\n好快搞掂㗎!</string>
     <string name="guiding_principle">指導準則</string>
@@ -125,7 +125,7 @@
     <string name="email_verification_redirect">你將被導向至登入介面</string>
     <string name="leaving_app">你確定要離開嗎?</string>
     <string name="guiding_introduce">這裏就是個互相扶持的地方\n因此,你總會找到某種連結</string>
-    <string name="guiding_question">我哋都好希望見到你去支持他人!\n\n不過你可能會問, 咁我具體應該點做呢?</string>
+    <string name="guiding_question">可能你會問,\n\n其他人冇興趣睇我啲野,咁點算呢?</string>
     <string name="guiding_spoil_alert">小劇透~</string>
     <string name="guid_quick_ans">快問快答,\n將心比己,以你希望被對待的方式對待對方。</string>
     <string name="guiding_encourage">當然啦,講就易… 正因如此,我哋先想同你一齊實現呢件事!</string>
@@ -139,5 +139,7 @@
     <string name="dark_theme">深色模式</string>
     <string name="system_default_theme">系統預設</string>
     <string name="setDarkTheme">設定深色模式</string>
+    <string name="show_more">觀看更多</string>
+    <string name="home">Home</string>
 
 </resources>

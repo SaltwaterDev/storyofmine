@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -20,11 +21,12 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 @InternalCoroutinesApi
-class LoginViewModel @Inject constructor(): ViewModel() {
+class LoginViewModel @Inject constructor() : ViewModel() {
     val mAuth = Firebase.auth
     val mFireStore = Firebase.firestore
     private var _userExistedInFireStore: MutableLiveData<Boolean?> = MutableLiveData()
@@ -43,18 +45,18 @@ class LoginViewModel @Inject constructor(): ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = mFireStore.collection("users").document(uid).get().await()
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     _userExistedInFireStore.value = result.data != null
                 }
             } catch (e: FirebaseFirestoreException) {
-                Log.d("TAG", "FirebaseFirestoreException: $e")
+                Timber.d("FirebaseFirestoreException: $e")
             }
         }
     }
 
     fun performLogin(_username: TextInputEditText, _password: TextInputEditText) {
-        val username = _username.text.toString()
-        val password = _password.text.toString()
+        val username = _username.text.toString().trim()
+        val password = _password.text.toString().trim()
         _btnEnable.value = false
         _showProgressBar.value = true
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
@@ -65,14 +67,14 @@ class LoginViewModel @Inject constructor(): ViewModel() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful)
                         isUserExisted(mAuth.currentUser!!.uid)
-                    else {
-                        setMessage(R.string.auth_fail)
-                        _showProgressBar.value = false
-                        _btnEnable.value = true
-                    }
+                }.addOnFailureListener { e ->
+                    Timber.w(e)
+                    Firebase.crashlytics.recordException(e)
+                    setMessage(R.string.auth_fail)
+                    _showProgressBar.value = false
+                    _btnEnable.value = true
                 }
         }
-
     }
 
     // Post in background thread

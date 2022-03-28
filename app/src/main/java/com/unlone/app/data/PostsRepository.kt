@@ -1,7 +1,5 @@
 package com.unlone.app.data
 
-import android.content.ContentValues
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -15,25 +13,43 @@ import com.unlone.app.data.database.asDatabasePost
 import com.unlone.app.data.database.asPost
 import com.unlone.app.model.Post
 import com.unlone.app.model.Report
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.util.*
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PostsRepository @Inject constructor(
     private val postDao: PostDao,
+    private val externalScope: CoroutineScope,
+    private val categoriesRepository: CategoriesRepository,
 ) {
 
     private var lastVisible: DocumentSnapshot? = null
-    private val mPosts: Int = 100
+    private val mPosts: Int = 5
+    private val mPostsPerCategory: Int = 100
     private val mAuth: FirebaseAuth = Firebase.auth
     private val mFirestore: FirebaseFirestore = Firebase.firestore
 
-    suspend fun loadAllPosts(numberPost: Int = mPosts): List<Post> {
+    init {
+        externalScope.launch {
+            categoriesRepository.rawCategories.collect {
+                it.keys.forEach { ctgKey ->
+                    storeSingleCategoryPosts(ctgKey)
+                }
+            }
+        }
+    }
+
+
+    suspend fun loadAllPosts(numberPost: Int = mPostsPerCategory): List<Post> {
         val allDocs = withContext(Dispatchers.IO) {
             mFirestore.collection("posts")
                 .orderBy("createdTimestamp", Query.Direction.DESCENDING)
@@ -49,7 +65,7 @@ class PostsRepository @Inject constructor(
                 lastVisible = allDocs.documents[allDocs.size() - 1]
             }
             for (document in it) {
-                Log.d(ContentValues.TAG, document.id + " => " + document.data)
+                Timber.d(document.id + " => " + document.data)
                 val post = document.toObject<Post>()
                 post.pid = document.id
                 if (!postList.contains(post)) {
@@ -61,49 +77,46 @@ class PostsRepository @Inject constructor(
         return postList.sortedByDescending { it.createdTimestamp }
     }
 
-
     fun getSingleCategoryPosts(
         categoryKey: String
-    ): Flow<List<Post>> = postDao.getPostsByCtg(categoryKey)
-        .map {
-            Log.d("TAG", "dao: $categoryKey")
-            it.sortedByDescending { it1 -> it1.createdTimestamp }.map { it1 -> it1.asPost() }
-        }
+    ): Flow<List<Post>> =
+        postDao.getPostsByCtg(categoryKey)
+            .map {
+                Timber.d("categoryKey: $categoryKey")
+                Timber.d("db post: $it")
+                it.sortedByDescending { it1 -> it1.createdTimestamp }.map { it1 -> it1.asPost() }
+            }.flowOn(Dispatchers.Default)
 
-
-    suspend fun storeSingleCategoryPosts(
+    private fun storeSingleCategoryPosts(
         categoryKey: String,
-        numberPost: Int = mPosts
     ) {
-        Log.d("TAG", "category key: $categoryKey")
-        val thisCategoryDocs =
-            withContext(Dispatchers.IO) {
-                mFirestore.collection("posts")
-                    .whereEqualTo("category", categoryKey)
-                    .limit(numberPost.toLong())
-                    .orderBy("createdTimestamp", Query.Direction.DESCENDING)
-                    .get()
-                    .await()
-            }
+        externalScope.launch(Dispatchers.IO) {
+            val thisCategoryDocs = mFirestore.collection("posts")
+                .whereEqualTo("category", categoryKey)
+                .limit(mPosts.toLong())
+                .orderBy("createdTimestamp", Query.Direction.DESCENDING)
+                .get()
+                .await()
 
-        val postList: MutableList<Post> = ArrayList()
-        if (thisCategoryDocs != null) {
-            if (thisCategoryDocs.size() > 0) {
-                lastVisible = thisCategoryDocs.documents[thisCategoryDocs.size() - 1]
-            }
-            for (document in thisCategoryDocs) {
-                Log.d(ContentValues.TAG, document.id + " => " + document.data)
-                val post = document.toObject<Post>()
-                post.pid = document.id
-                if (!postList.contains(post)) {
-                    postList.add(post)
+
+            val postList: MutableList<Post> = ArrayList()
+            if (thisCategoryDocs != null) {
+                if (thisCategoryDocs.size() > 0) {
+                    lastVisible = thisCategoryDocs.documents[thisCategoryDocs.size() - 1]
+                }
+                for (document in thisCategoryDocs) {
+                    val post = document.toObject<Post>()
+                    post.pid = document.id
+                    if (!postList.contains(post)) {
+                        postList.add(post)
+                    }
                 }
             }
-        }
-        // return the sorted postList
-        Log.d("TAG", "postList: $postList")
-        postDao.insertAll(postList.map { it.asDatabasePost() })
+            // return the sorted postList
+            Timber.d("fetched posts: $postList")
+            postDao.insertAll(postList.map { it.asDatabasePost() })
 
+        }
     }
 
     suspend fun getSingleLabelPosts(
@@ -111,10 +124,8 @@ class PostsRepository @Inject constructor(
         numberPost: Int = mPosts
     ): List<Post> {
 
-        Log.d("TAG", "labelText: $labelText")
         // since that label string is "#xxxx", need to remove "#" first
         val label = labelText.drop(1)
-        Log.d("TAG", "label: $label")
 
         val thisLabelDocs = label.let {
             withContext(Dispatchers.IO) {
@@ -131,7 +142,6 @@ class PostsRepository @Inject constructor(
                 lastVisible = thisLabelDocs.documents[thisLabelDocs.size() - 1]
             }
             for (document in thisLabelDocs) {
-                Log.d(ContentValues.TAG, document.id + " => " + document.data)
                 val post = document.toObject<Post>()
                 post.pid = document.id
                 if (!postList.contains(post)) {
@@ -140,7 +150,6 @@ class PostsRepository @Inject constructor(
             }
         }
         // return the sorted postList
-        Log.d("TAG", "postList: $postList")
         return postList.sortedByDescending { it.createdTimestamp }
     }
 
@@ -157,8 +166,8 @@ class PostsRepository @Inject constructor(
         mFirestore.collection("posts")
             .document(pid)
             .delete()
-            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully deleted!") }
-            .addOnFailureListener { e -> Log.w("TAG", "Error deleting document", e) }
+            .addOnSuccessListener { Timber.d("DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Timber.w("Error deleting document", e) }
     }
 
     fun savePost(pid: String): Boolean {
@@ -199,6 +208,4 @@ class PostsRepository @Inject constructor(
             .await()
         return (result != null && result.exists())
     }
-
-
 }

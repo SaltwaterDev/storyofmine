@@ -18,59 +18,20 @@
         android:textColor="@color/colorText"
         android:textSize="26sp" />
 
-    <TextView
-        android:id="@+id/instructionTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/titleTv"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:text="@string/guiding_spoil_alert"
-        android:textColor="@color/colorText"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/empathy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/instructionTv"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/sf_pro_text_bold"
-        android:text="@string/empathy"
-        android:textColor="@color/colorText"
-        android:textSize="24sp" />
-
-
-    <TextView
-        android:id="@+id/arouse_empathy_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/empathy"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="81dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:text="@string/guid_quick_ans"
-        android:textColor="@color/colorText"
-        android:textSize="16sp" />
-
 
     <TextView
         android:id="@+id/encourageTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/arouse_empathy_text"
+        android:layout_above="@id/page"
         android:layout_marginStart="16dp"
         android:layout_marginTop="149dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="80dp"
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="@string/guiding_encourage"
         android:textColor="@color/colorText"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
 
     <TextView

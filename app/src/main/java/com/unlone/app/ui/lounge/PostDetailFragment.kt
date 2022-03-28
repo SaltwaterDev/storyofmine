@@ -19,6 +19,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,6 +29,8 @@ import com.unlone.app.utils.DetailedPostViewModelAssistedFactory
 import com.unlone.app.utils.ViewModelFactory
 import com.unlone.app.viewmodel.DetailedPostViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -77,10 +80,12 @@ class PostDetailFragment : Fragment() {
 
         // navigate to category list
         binding.layoutPost.topicTv.setOnClickListener {
-            detailedPostViewModel.ctgNavAction.observe(viewLifecycleOwner) { it1 ->
-                Log.d("TAG", "onCreateView: $it1")
-                if (it1 != null) {
-                    findNavController().navigate(it1)
+            viewLifecycleOwner.lifecycleScope.launch {
+                detailedPostViewModel.ctgNavAction.collect { it1 ->
+                    Timber.d("onCreateView: $it1")
+                    if (it1 != null) {
+                        findNavController().navigate(it1)
+                    }
                 }
             }
         }
@@ -93,7 +98,7 @@ class PostDetailFragment : Fragment() {
             viewLifecycleOwner
         ) {
             it?.let {
-                Log.d("TAG", "comments in post detail activity: $it")
+                Timber.d("comments in post detail activity: $it")
                 commentsAdapter.submitList(it)
             }
         }
@@ -101,7 +106,7 @@ class PostDetailFragment : Fragment() {
         // listen to the subComment call
         detailedPostViewModel.commentEditTextFocused.observe(viewLifecycleOwner) {
             detailedPostViewModel.parentCommenter?.let { it1 ->
-                Log.d("tag", "commentEditTextFocused = $it")
+                Timber.d("commentEditTextFocused = $it")
                 focusEdittextToSubComment(it1)
             }
         }
@@ -157,13 +162,13 @@ class PostDetailFragment : Fragment() {
                         .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
                         .setPositiveButton(getString(R.string.report)) { dialog, which ->
                             // Respond to positive button press
-                            Log.d("TAG", singleItems[checkedItem])
+                            Timber.d(singleItems[checkedItem])
                             detailedPostViewModel.reportPost(checkedItem)
                             showConfirmation()
                         }// Single-choice items (initialized with checked item)
                         .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
                             // Respond to item chosen
-                            Log.d("TAG", which.toString())
+                            Timber.d(which.toString())
                             checkedItem = which
                         }
                         .show()
@@ -206,19 +211,22 @@ class PostDetailFragment : Fragment() {
     }
 
     private fun loadPostInfo() {
-        detailedPostViewModel.observablePost.observe(viewLifecycleOwner) { p ->
-            p?.let {
-                // enable or disable the permission of deleting post
-                val deleteMenuItem = binding.topAppBar.menu.findItem(R.id.actionDelete)
-                deleteMenuItem.isVisible = detailedPostViewModel.isSelfPost
+        viewLifecycleOwner.lifecycleScope.launch {
+            detailedPostViewModel.post.collect { p ->
 
-                // enable or disable save button
-                val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
-                if (!p.save) {
-                    saveButton.isEnabled = false
-                    saveButton.icon.mutate().alpha = 135
+                p?.let {
+                    // enable or disable the permission of deleting post
+                    val deleteMenuItem = binding.topAppBar.menu.findItem(R.id.actionDelete)
+                    deleteMenuItem.isVisible = detailedPostViewModel.isSelfPost
+
+                    // enable or disable save button
+                    val saveButton = binding.topAppBar.menu.findItem(R.id.actionSave)
+                    if (!p.save) {
+                        saveButton.isEnabled = false
+                        saveButton.icon.mutate().alpha = 135
+                    }
+                    // others will be implemented by data binding
                 }
-                // others will be implemented BY data binding
             }
         }
     }

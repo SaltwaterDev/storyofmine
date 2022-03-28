@@ -37,7 +37,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="22dp"
             android:layout_toEndOf="@id/categoryTitleTv"
-            android:text="Show More"
+            android:text="@string/show_more"
             android:textAlignment="viewEnd"
             android:textColor="@color/colorMoreText"
             android:textSize="11sp"

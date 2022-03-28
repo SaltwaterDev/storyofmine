@@ -12,24 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="120dp"
         android:fontFamily="@font/sf_pro_text_medium"
         android:text="@string/guiding_introduce"
         android:textColor="@color/colorText"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/instructionTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/titleTv"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="204dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:text="@string/instruction"
-        android:textColor="@color/colorText"
-        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/page"

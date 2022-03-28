@@ -13,11 +13,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import com.unlone.app.R
-import com.unlone.app.databinding.FragmentGreetingBinding
+import com.unlone.app.databinding.FragmentOnBoarding2Binding
 import com.unlone.app.viewmodel.UserSetupViewModel
 
-class GreetingFragment : Fragment() {
-    private var _binding: FragmentGreetingBinding? = null
+class OnBoarding2Fragment : Fragment() {
+    private var _binding: FragmentOnBoarding2Binding? = null
     private val binding get() = _binding!!
     val mAuth = Firebase.auth
     private val userSetupViewModel: UserSetupViewModel by activityViewModels()
@@ -27,15 +27,15 @@ class GreetingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGreetingBinding.inflate(inflater, container, false)
+        _binding = FragmentOnBoarding2Binding.inflate(inflater, container, false)
         val view = binding.root
 
-        if (userSetupViewModel.user.username != null){
+        if (userSetupViewModel.user.username != null) {
             binding.usernameEv.text
         }
 
 
-        binding.startBtn.setOnClickListener {
+        binding.nextBtn.setOnClickListener {
             if (binding.usernameEv.text.toString().isNotEmpty()) {
                 // pass the user data to next page
                 val username = binding.usernameEv.text.toString()
@@ -45,8 +45,8 @@ class GreetingFragment : Fragment() {
                 val profileUpdates = userProfileChangeRequest {
                     displayName = username
                 }
-                if (findNavController().currentDestination?.id == R.id.greetingFragment)
-                    findNavController().navigate(R.id.action_greetingFragment_to_chooseIdentityFragment)
+                if (findNavController().currentDestination?.id == R.id.onBoarding2Fragment)
+                    findNavController().navigate(R.id.action_onBoarding2Fragment_to_chooseInterestFragment)
             } else {
                 Toast.makeText(
                     context,
@@ -55,13 +55,15 @@ class GreetingFragment : Fragment() {
                 ).show()
             }
         }
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         return view
     }
 
 
     companion object {
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() {
         }

@@ -75,7 +75,7 @@
     <string name="dislikes">Dislikes</string>
     <string name="why_report">Why do you want to report?</string>
     <string name="logout_alert">Are you sure to logout?</string>
-    <string name="pick_categories_greeting">What kind of topics you would like to see?\n\nPlease pick at least 3 topics~</string>
+    <string name="pick_categories_greeting">What kind of topics you would like to see?\n\n(Please pick >= 3 topic)</string>
     <string name="start">Start</string>
     <string name="typing_hint">How can I call you?</string>
     <string name="look_for_connection">Build connection</string>
@@ -98,17 +98,17 @@
     <string name="you_may_also_need_to_check_n_the_junk_mail">You may also need to check\n the junk mail</string>
     <string name="topic_label">Topic:</string>
     <string name="topic">Topic</string>
-    <string name="hello">Hello!</string>
+    <string name="hello">Hello</string>
     <string name="greetingText">Here, you can always find someone connected to you, who share the feelings you have had. \n\nWe have prepared 3 questions and 4 pages of guiding principles. \n\nDon\'t worry, it won\'t take too long!</string>
-    <string name="for_now_what_is_your_overall_goal_downloading_this_app">For now, what is your overall goal using this app?</string>
-    <string name="pick_interests_greeting">What do you usually like to do?\n\nWe can match you with others who have similar interests!</string>
+    <string name="story_greeting">Different people come with their own stories…</string>
+    <string name="pick_interests_greeting">What do you usually do?</string>
     <string name="guiding_principle">Guiding principle</string>
     <string name="instruction">Throughout this journey, we want to help you accomplish your pursuing goal.\n\nSo, here are some tips and reminding for you…</string>
     <string name="principle_1_title">Be mindful</string>
     <string name="principle_1_text">Focus on your feelings and thoughts. It could help express yourself better.</string>
     <string name="principle_2_title">Be kind</string>
-    <string name="principle_2_text">What you express could have impact on other members. So please be careful.</string>
-    <string name="principle_3_text">Don’t share your personal information to others.</string>
+    <string name="principle_2_text">Even a small wording can affect others. Please be careful.</string>
+    <string name="principle_3_text">Don’t share your personal information to others!!!</string>
     <string name="principle_3_title">Be safe</string>
     <string name="empathy">Empathy</string>
     <string name="let_s_go">Let\'s go!</string>
@@ -125,11 +125,11 @@
     <string name="email_verification_redirect">You will be redirected to Login Page</string>
     <string name="leaving_app">Are you surfing to leave?</string>
     <string name="cate_post_layout" translatable="false">%1$s</string>
-    <string name="guiding_introduce">You can always find people you feel connect.\n\nBecause it is a peer support platform.</string>
-    <string name="guiding_question">We love to see you supporting others!\n\nBut please respond others with kindness. \n\nYou might ask, what exactly should I do?</string>
+    <string name="guiding_introduce">It’s not just a place for sharing\n\n\nIt is a peer support platform.</string>
+    <string name="guiding_question">Last but not least,\n\nWhat if people don’t find my story interesting?</string>
     <string name="guiding_spoil_alert">Spoil alert~</string>
     <string name="guid_quick_ans">My quick answers is, treat others the way you would like others treat you back.</string>
-    <string name="guiding_encourage">You might think it is harder than just saying. Don’t worry, we want to help you achieve that!</string>
+    <string name="guiding_encourage">We leave some tutorials and practices throughout your journey.\n\nWhen you achieve higher level, you’ll get to see more</string>
     <string name="language">Language</string>
     <string name="theme">Theme</string>
     <string name="zh">繁體中文</string>
@@ -140,5 +140,7 @@
     <string name="dark_theme">Night Mode</string>
     <string name="system_default_theme">System Default</string>
     <string name="setDarkTheme">Set Dark Theme</string>
+    <string name="show_more">Show More</string>
+    <string name="home">Home</string>
 
 </resources>

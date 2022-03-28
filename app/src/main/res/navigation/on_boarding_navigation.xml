@@ -3,26 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/on_boarding_navigation"
-    app:startDestination="@id/greetingFragment">
+    app:startDestination="@id/onBoarding1Fragment">
 
 
     <fragment
-        android:id="@+id/greetingFragment"
-        android:name="com.unlone.app.ui.access.onBoarding.GreetingFragment"
-        android:label="fragment_greeting"
-        tools:layout="@layout/fragment_greeting">
-        <action
-            android:id="@+id/action_greetingFragment_to_chooseIdentityFragment"
-            app:destination="@id/chooseIdentityFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/chooseIdentityFragment"
-        android:name="com.unlone.app.ui.access.onBoarding.ChooseIdentityFragment"
+        android:id="@+id/onBoarding1Fragment"
+        android:name="com.unlone.app.ui.access.onBoarding.OnBoarding1Fragment"
         android:label="fragment_choose_user_identity"
-        tools:layout="@layout/fragment_choose_identity">
+        tools:layout="@layout/fragment_on_boarding_1">
         <action
-            android:id="@+id/chooseIdentityFragment_to_chooseInterestFragment"
+            android:id="@+id/action_onBoarding1Fragment_to_onBoarding2Fragment"
+            app:destination="@id/onBoarding2Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/onBoarding2Fragment"
+        android:name="com.unlone.app.ui.access.onBoarding.OnBoarding2Fragment"
+        android:label="fragment_greeting"
+        tools:layout="@layout/fragment_on_boarding_2">
+        <action
+            android:id="@+id/action_onBoarding2Fragment_to_chooseInterestFragment"
             app:destination="@id/chooseInterestFragment" />
     </fragment>
     <fragment

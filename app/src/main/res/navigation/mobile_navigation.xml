@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.unlone.app.ui.lounge.HomeFragment"
-        android:label="@string/lounge"
+        android:label="@string/home"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_fragment_to_create_post"

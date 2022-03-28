@@ -47,7 +47,7 @@
                     android:id="@+id/layoutPost"
                     layout="@layout/layout_post"
                     app:category="@{viewModel.category}"
-                    app:post="@{viewModel.observablePost}" />
+                    app:post="@{viewModel.post}" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
-            android:visibility="@{viewModel.observablePost.comment? View.VISIBLE: View.GONE}">
+            android:visibility="@{viewModel.post.comment? View.VISIBLE: View.GONE}">
 
             <FrameLayout
                 android:layout_width="match_parent"

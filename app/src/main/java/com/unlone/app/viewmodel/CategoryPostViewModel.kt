@@ -14,6 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class CategoryPostViewModel @AssistedInject constructor(
@@ -66,12 +67,12 @@ class CategoryPostViewModel @AssistedInject constructor(
     fun followCategory() {
         categoriesRepository.followCategory(topicId, !isFollowing.value)
         _isFollowing.value = !isFollowing.value
-        Log.d("TAG", "followCategory: ${isFollowing.value}")
+        Timber.d("followCategory: ${isFollowing.value}")
     }
 
 
     private suspend fun getTopicTitle(topicId: String): String? {
-        Log.d("TAG", "setCategoryTitle: $topicId")
+        Timber.d("setCategoryTitle: $topicId")
         return if (topicId.first() != '#') {
             categoriesRepository.getTopicTitle(topicId)
         } else {

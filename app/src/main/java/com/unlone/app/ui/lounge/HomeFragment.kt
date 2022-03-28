@@ -23,8 +23,8 @@ import com.unlone.app.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 @InternalCoroutinesApi
@@ -39,6 +39,7 @@ class HomeFragment : Fragment(), ItemClickListener {
             onClick = { pid -> onClick(pid) },
             onMorePostsClick = { topic -> adapterMorePostsOnClick(topic) })
     }
+
     private val categoriesAdapter: CategoriesAdapter by lazy {
         CategoriesAdapter { titleId ->
             adapterTopicOnClick(
@@ -85,20 +86,24 @@ class HomeFragment : Fragment(), ItemClickListener {
         binding.postPerCategoriesRv.adapter = homeParentAdapter
         binding.progressCircular.visibility = View.VISIBLE
         initFab()
-
-        // load topics
-        viewModel.displayingTopicsUiState.observe(viewLifecycleOwner) {
-            categoriesAdapter.submitList(it)
-        }
-
+        // binding.greetingTv.text = context?.resources?.getString("Welcome back ")
 
         viewLifecycleOwner.lifecycleScope.launch {
             // repeatOnLifecycle launches the block in a new coroutine every time the
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // load topics
+                viewModel.displayingTopicsUiState.collect {
+                    categoriesAdapter.submitList(it)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.homeItemUiStateItems.collect { uiState ->
                     // New value received
-                    Log.d("TAG", "uiState: $uiState")
+                    Timber.d("uiState: $uiState")
                     homeParentAdapter.submitList(uiState)
                     binding.progressCircular.visibility = View.GONE
                 }
@@ -137,20 +142,37 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     // navigate to specific topic
     private fun openSpecificTopic(topic: String) {
-        Log.d("TAG", "selected topic: $topic")
-        val selectedTopic =
-            if (topic.first() != '#') viewModel.retrieveDefaultCategory(topic).toString() else topic
-        if (selectedTopic != "null") {
-            Log.d("TAG", "selected topic: $selectedTopic")
+        Timber.d("selected topic: $topic")
+        if (topic.first() != '#'){
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.retrieveDefaultCategory(topic).collect{
+                    val selectedTopic = it
+                    if (selectedTopic != "null") {
+                        Timber.d("selected topic: $selectedTopic")
 
-            // open the post with specific category
-            val action =
-                HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(selectedTopic)
-            findNavController().navigate(action)
-        } else {
-            Log.d("TAG", "couldn't find the category")
+                        // open the post with specific category
+                        val action =
+                            HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(selectedTopic)
+                        findNavController().navigate(action)
+                    } else {
+                        Timber.d("couldn't find the category")
+                    }
+                }
+            }
+        } else{
+            if (topic != "null") {
+                Timber.d("selected topic: $topic")
+
+                // open the post with specific category
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToCategoryPostFragment(topic)
+                findNavController().navigate(action)
+            } else {
+                Timber.d("couldn't find the category")
+            }
         }
     }
+
 
     // navigate to topic list
     private fun navToLoadMoreTopics() {

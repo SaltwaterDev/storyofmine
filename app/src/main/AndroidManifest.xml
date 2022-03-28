@@ -16,8 +16,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:targetApi="q">
+        android:theme="@style/AppTheme">
         <activity
             android:name="com.unlone.app.ui.access.StartupActivity"
             android:exported="true">
@@ -41,7 +40,7 @@
             android:exported="true"
             android:label="Home"
             android:parentActivityName="com.unlone.app.ui.access.StartupActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

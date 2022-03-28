@@ -1,8 +1,7 @@
 package com.unlone.app.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseAuth
+import androidx.navigation.NavDirections
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.unlone.app.R
@@ -13,12 +12,10 @@ import com.unlone.app.model.*
 import com.unlone.app.ui.lounge.PostDetailFragmentDirections
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
+import timber.log.Timber
 
 class DetailedPostViewModel @AssistedInject constructor(
     @Assisted val pid: String,
@@ -30,24 +27,21 @@ class DetailedPostViewModel @AssistedInject constructor(
     val uid = Firebase.auth.uid.toString()
 
     // post field
-    private val post: MutableLiveData<Post?> = MutableLiveData()
-    val observablePost: LiveData<Post?>
-        get() = post
-    private val _category: MutableLiveData<String?> = MutableLiveData()
-    val category: LiveData<String?> = _category
-    val ctgNavAction =
-        category.switchMap {
-            liveData {
-                it?.let { it1 ->
-                    emit(
-                        retrieveDefaultCategory(it1)?.let { it2 ->
-                            PostDetailFragmentDirections.actionPostDetailFragmentToCategoryPostFragment(
-                                it2
-                            )
-                        }
-                    )
+    val post = flow { emit(loadPost()) }.stateIn(viewModelScope, Lazily, null)
+    val category: StateFlow<String?> = post.map {
+        it?.let { it1 -> categoriesRepository.getTopicTitle(it1.category) }
+    }.stateIn(viewModelScope, Lazily, null)
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val ctgNavAction: Flow<NavDirections?> =
+        category.flatMapLatest { category ->
+            if (category != null) {
+                retrieveDefaultCategory(category).map { catId ->
+                    PostDetailFragmentDirections
+                        .actionPostDetailFragmentToCategoryPostFragment(catId)
                 }
-            }
+            } else flowOf(null)
         }
 
     private val _isPostSaved: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -82,10 +76,6 @@ class DetailedPostViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            post.value = loadPost()
-            post.value?.category?.let { categoryId ->
-                _category.value = categoriesRepository.getTopicTitle(categoryId)
-            }
             isSaved()
         }
     }
@@ -111,7 +101,7 @@ class DetailedPostViewModel @AssistedInject constructor(
             reportReason = reportMap[singleItems[checkedItem]],
             reportedBy = uid
         )
-        Log.d("TAG", report.toString())
+        Timber.d(report.toString())
         postsRepository.uploadReport(report)
     }
 
@@ -121,7 +111,7 @@ class DetailedPostViewModel @AssistedInject constructor(
             reportReason = reportMap[singleItems[checkedItem]],
             reportedBy = uid
         )
-        Log.d("TAG", report.toString())
+        Timber.d(report.toString())
         commentsRepository.uploadReport(report)
     }
 
@@ -131,7 +121,7 @@ class DetailedPostViewModel @AssistedInject constructor(
             reportReason = reportMap[singleItems[checkedItem]],
             reportedBy = uid
         )
-        Log.d("TAG", report.toString())
+        Timber.d(report.toString())
         commentsRepository.uploadReport(report)
     }
 
@@ -223,7 +213,7 @@ class DetailedPostViewModel @AssistedInject constructor(
     }
 
 
-    private fun retrieveDefaultCategory(selectedCategory: String): String? {
+    private fun retrieveDefaultCategory(selectedCategory: String): Flow<String> {
         return categoriesRepository.retrieveDefaultTopic(selectedCategory)
     }
 }

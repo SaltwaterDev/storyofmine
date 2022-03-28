@@ -1,46 +1,46 @@
 package com.unlone.app.data
 
-import android.util.Log
+
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.tasks.asDeferred
+import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 @Singleton
-class CategoriesRepository @Inject constructor() {
-    private var rawCategories = mutableListOf<Pair<String, String>>()
-
-    private val mAuth = Firebase.auth
+class CategoriesRepository @Inject constructor(
+    userRepository: UserRepository,
+    private val externalScope: CoroutineScope,
+) {
+    private val appLanguage: StateFlow<String?> =
+        userRepository.getFireStoreLocale().stateIn(externalScope, Lazily, null)
     private val mFirestore = Firebase.firestore
-    private var appLanguage: String = when (Locale.getDefault().language) {
-        "zh" -> "zh_hk"          // if the device language is set to Chinese, use chinese text
-        else -> "default"        // default language (english)
-    }
+    private val mAuth = Firebase.auth
 
-    init {
-        CoroutineScope(Dispatchers.Default).launch {
-            loadCategories()
-        }
-    }
+    val rawCategories: StateFlow<Map<String, String>> = appLanguage.filterNotNull().map {
+        loadDefaultCategories(it)
+    }.stateIn(
+        externalScope,
+        Lazily,
+        mapOf()
+    )
 
-    @Suppress("UNCHECKED_CAST")
-    suspend fun loadCategories(): ArrayList<String> {
-        val deviceLanguage = Locale.getDefault().language
-        Log.d("TAG", "device Language: $deviceLanguage")
-        val appLanguage = when (deviceLanguage) {
-            "zh" -> "zh_hk"          // if the device language is set to Chinese, use chinese text
-            else -> "default"        // default language (english)
-        }
 
+    val categories: StateFlow<List<String>> =
+        rawCategories.map { it.values.toList() }.stateIn(externalScope, Lazily, emptyList())
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun loadDefaultCategories(appLang: String): MutableMap<String, String> {
+        Timber.d("language: $appLang")
         val rawCategoriesSnapshot = withContext(Dispatchers.IO) {
             mFirestore.collection("categories")
                 .document("pre_defined_categories")
@@ -49,22 +49,14 @@ class CategoriesRepository @Inject constructor() {
                 .get()
                 .await()
         }
-
-        val rawCategoryArrayList = ArrayList<Pair<String, String>>()
+        val rawCategoryMap = mutableMapOf<String, String>()
         for (document in rawCategoriesSnapshot) {
-            val category = Pair(document.id, document.data[appLanguage])
-            category.let { rawCategoryArrayList.add(it as Pair<String, String>) }
+            rawCategoryMap[document.id] = document.data[appLang] as String
         }
-
-        val categories = ArrayList<String>()
-        for (rawCategory in rawCategoryArrayList) {
-            categories.add(rawCategory.second)
-        }
-        rawCategories = rawCategoryArrayList
-
-        Log.d("TAG category", categories.toString())
-        return categories
+        Timber.d("rawCategoryMap: $rawCategoryMap")
+        return rawCategoryMap
     }
+
 
     suspend fun isFollowing(category: String): Boolean {
         val result = mFirestore.collection("users").document(mAuth.uid!!).get().await()
@@ -72,6 +64,7 @@ class CategoriesRepository @Inject constructor() {
     }
 
     suspend fun getTopicTitle(categoryId: String): String? {
+        Timber.d("categoryId: $categoryId")
         val titleCollection = withContext(Dispatchers.IO) {
             mFirestore.collection("categories")
                 .document("pre_defined_categories")
@@ -81,24 +74,20 @@ class CategoriesRepository @Inject constructor() {
                 .await()
         }
 
+        Timber.d("language: ${appLanguage.value}")
+
         val result = titleCollection.documents.filter { it.id == categoryId }
         return if (!result.isNullOrEmpty())
-            result[0].data?.get(appLanguage).toString()
+            result[0].data?.get(appLanguage.value).toString()
         else
             null
     }
 
-    fun retrieveDefaultTopic(selectedTopic: String): String? {
-        for (c in rawCategories) {
-            if (selectedTopic in c.toList()) {
-                return c.first
-            }
-        }
-        return null
+    fun retrieveDefaultTopic(selectedTopic: String): Flow<String> {
+        return rawCategories.map { it.filter { item -> item.value == selectedTopic }.keys.first() }
     }
 
     fun followCategory(category: String, follow: Boolean) {
-        Log.d("TAG", "category: $category")
         mAuth.uid?.let {
             if (follow) {
                 // follow the topic
@@ -118,19 +107,20 @@ class CategoriesRepository @Inject constructor() {
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun loadFollowingTopics(): List<String?> {
+    fun loadFollowingTopics(): Flow<List<String>> = appLanguage.map {
         val topicKeys = mFirestore.collection("users")
             .document(mAuth.uid!!).get().await().get("followingCategories") as List<String>
 
-        val flowList: List<String?> = topicKeys.map {
+        Timber.d("topicKeys: $topicKeys")
+        val topicList: List<String> = topicKeys.map {
             val isLabel = it.first() == '#'
             if (isLabel)
                 it
             else
                 getTopicTitle(it)
-        }
-        Log.d("TAG", "loadFollowingTopics: $flowList")
-        return flowList
+        }.filterNotNull()
+        topicList
     }
 }
+
 

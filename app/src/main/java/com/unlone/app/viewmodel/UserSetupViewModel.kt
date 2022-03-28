@@ -86,9 +86,6 @@ class UserSetupViewModel : ViewModel() {
         uploadUserAuthData()
     }
 
-    fun setIdentity(identity: String) {
-        user.identity = identity
-    }
 
     fun setCategories(selectedCategories: ArrayList<String>) {
         selectedCategories.map { retrieveDefaultCategory(it) }

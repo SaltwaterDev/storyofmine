@@ -11,10 +11,15 @@
         android:label="LoadFragment">
         <action
             android:id="@+id/action_loadFragment_to_first_access_navigation"
-            app:destination="@id/first_access_navigation" />
+            app:destination="@id/first_access_navigation"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/loadFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loadFragment_to_on_boarding_navigation"
-            app:destination="@id/on_boarding_navigation" />
+            app:destination="@id/on_boarding_navigation"
+            app:popUpTo="@id/loadFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <include app:graph="@navigation/on_boarding_navigation" />

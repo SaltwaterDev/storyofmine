@@ -49,12 +49,7 @@
                 style="@style/Widget.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/school_email"
-                app:endIconContentDescription="@string/school_email_description"
-                app:endIconDrawable="@drawable/ic_baseline_help_outline_24"
-                app:endIconMode="custom"
-                app:helperTextEnabled="true"
-                app:helperTextTextColor="@color/colorWhiteText">
+                android:hint="@string/school_email">
 
                 <EditText
                     android:id="@+id/emailEv"

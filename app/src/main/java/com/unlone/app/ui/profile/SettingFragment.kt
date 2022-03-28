@@ -18,13 +18,21 @@ import com.unlone.app.R
 import com.unlone.app.databinding.FragmentSettingBinding
 import com.unlone.app.ui.MainActivity
 import com.unlone.app.ui.access.StartupActivity
-import com.yariksoffice.lingver.Lingver
+import com.unlone.app.viewmodel.HomeViewModel
+import com.unlone.app.viewmodel.SettingViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import timber.log.Timber
+import java.util.*
 
-
+@AndroidEntryPoint
 class SettingFragment : Fragment() {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: SettingViewModel by lazy {
+        ViewModelProvider(this)[SettingViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +49,7 @@ class SettingFragment : Fragment() {
         binding.langTv.setOnClickListener {
             val singleItems =
                 arrayOf(resources.getString(R.string.eng), resources.getString(R.string.zh))
-            var checkedItem = when (Lingver.getInstance().getLanguage()) {
+            var checkedItem = when (resources.configuration.locale.language) {
                 LANGUAGE_ZH -> 1
                 else -> 0
             }
@@ -50,13 +58,16 @@ class SettingFragment : Fragment() {
                     .setTitle(resources.getString(R.string.setLang))
                     .setNeutralButton(resources.getString(R.string.cancel)) { _, _ -> }
                     .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
-                        Log.d("TAG", checkedItem.toString())
-                        when (checkedItem) {
-                            0 -> setNewLocale(LANGUAGE_ENGLISH, LANGUAGE_COUNTRY)
-                            1 -> setNewLocale(LANGUAGE_ZH, LANGUAGE_COUNTRY)
+                        val res = when (checkedItem) {
+                            0 -> viewModel.setNewLocale(it1, LANGUAGE_ENGLISH)
+                            1 -> viewModel.setNewLocale(it1, LANGUAGE_ZH)
+                            else -> false
                         }
+                        if (res)
+                            // activity?.recreate()         need to call 2 times???
+                            restart()
                     }
-                    .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
+                    .setSingleChoiceItems(singleItems, checkedItem) { _, which ->
                         checkedItem = which
                     }
                     .show()
@@ -80,7 +91,7 @@ class SettingFragment : Fragment() {
                     .setTitle(resources.getString(R.string.setDarkTheme))
                     .setNeutralButton(resources.getString(R.string.cancel)) { _, _ -> }
                     .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
-                        Log.d("TAG", checkedItem.toString())
+                        Timber.d(checkedItem.toString())
                         setDarkMode(checkedItem)
                     }
                     .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
@@ -95,7 +106,7 @@ class SettingFragment : Fragment() {
     }
 
     private fun setDarkMode(checkedItem: Int) {
-        val nightMode = when(checkedItem){
+        val nightMode = when (checkedItem) {
             0 -> MODE_NIGHT_YES
             1 -> MODE_NIGHT_NO
             2 -> MODE_NIGHT_FOLLOW_SYSTEM
@@ -108,15 +119,7 @@ class SettingFragment : Fragment() {
     }
 
 
-    private fun setNewLocale(language: String, country: String) {
-        context?.let {
-            Lingver.getInstance().setLocale(it, language, country)
-            restart()
-        }
-    }
-
-
-    @OptIn(InternalCoroutinesApi::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @OptIn(InternalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
     private fun restart() {
         val i = Intent(context, MainActivity::class.java)
         startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
@@ -124,7 +127,7 @@ class SettingFragment : Fragment() {
     }
 
 
-    @OptIn(InternalCoroutinesApi::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @OptIn(InternalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
     private fun logout() {
         context?.let {
             MaterialAlertDialogBuilder(it, R.style.ThemeOverlay_App_MaterialAlertDialog)
