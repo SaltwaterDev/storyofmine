@@ -108,6 +108,7 @@ class CategoriesRepository @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun loadFollowingTopics(): Flow<List<String>> = appLanguage.map {
+
         val topicKeys = mFirestore.collection("users")
             .document(mAuth.uid!!).get().await().get("followingCategories") as List<String>
 

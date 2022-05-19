@@ -25,8 +25,9 @@ class HomeViewModel @Inject constructor(
 
     val displayingTopicsUiState =
         followingCategories.filterNotNull().map {
+            Timber.d(it.toString())
             if (it.isNotEmpty()) {
-                val randomFirst3Topics = it.take(3) as List<String>
+                val randomFirst3Topics = it.filterNotNull().take(3)
                 val topicCardList: MutableList<TopicCard> = randomFirst3Topics.map { topicTitle ->
                     TopicCard(
                         topicTitle,

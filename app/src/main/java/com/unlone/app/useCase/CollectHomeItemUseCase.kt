@@ -21,13 +21,11 @@ class CollectHomeItemUseCase @Inject constructor(
 ) {
     private val mComments = 1L
 
+
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<List<HomeUiModel>> {
         return categoriesRepository.rawCategories.filterNot { it.isEmpty() }
             .flatMapLatest { loadPostsByCategories(it) }
-            .map { posts ->
-                posts
-            }
     }
     /*
 {
@@ -54,18 +52,20 @@ class CollectHomeItemUseCase @Inject constructor(
 }
      */
 
-    private fun loadPostsByCategories(rawCategories: Map<String, String>) =
-        combine(
-            rawCategories.map { entry ->
-                loadPostsFromSpecificCategory(entry).filterNotNull()
-            }
-        ) { it.toList() }
 
+    private fun loadPostsByCategories(rawCategories: Map<String, String>): Flow<List<HomeUiModel.CtgPostItemUiState>> {
+        val listOfFlow = rawCategories.map { entry ->
+            loadPostsFromSpecificCategory(entry)
+        }
+        return combine(listOfFlow){
+            it.toList().filterNotNull()
+        }
+    }
 
     private fun loadPostsFromSpecificCategory(category: Map.Entry<String, String>): Flow<HomeUiModel.CtgPostItemUiState?> =
         postRepository.getSingleCategoryPosts(category.key)
             .map { postList ->
-                if (!postList.isNullOrEmpty()) {
+                if (postList.isNotEmpty()) {
                     val posts = HomeUiModel.CtgPostItemUiState(
                         category.value,
                         postList.map {
@@ -78,7 +78,7 @@ class CollectHomeItemUseCase @Inject constructor(
                             )
                         }
                     )
-                    Timber.d(posts.toString())
+//                    Timber.d(posts.toString())
                     posts
                 } else null
             }

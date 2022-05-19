@@ -102,7 +102,6 @@ class HomeFragment : Fragment(), ItemClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.homeItemUiStateItems.collect { uiState ->
-                    // New value received
                     Timber.d("uiState: $uiState")
                     homeParentAdapter.submitList(uiState)
                     binding.progressCircular.visibility = View.GONE

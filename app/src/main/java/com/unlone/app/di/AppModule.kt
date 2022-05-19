@@ -73,6 +73,5 @@ object AppModule {
             produceFile = { appContext.preferencesDataStoreFile("settings") }
         )
     }
-
 }
 
