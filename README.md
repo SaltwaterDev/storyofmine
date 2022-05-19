@@ -34,5 +34,5 @@ Email and password authentication
 
 #### **Cloud function:**
 Comment ranking\
-School email validation\
+School email validation (unused)\
 Comment notification
