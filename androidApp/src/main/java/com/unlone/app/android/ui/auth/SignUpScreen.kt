@@ -1,45 +1,34 @@
 package com.unlone.app.android.ui.auth
 
+import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.BiasAlignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.unlone.app.android.viewmodel.SignInViewModel
-import com.unlone.app.android.R
 import com.unlone.app.android.viewmodel.AuthUiEvent
+import com.unlone.app.android.viewmodel.SignUpViewModel
 import com.unlone.app.auth.AuthResult
-import kotlinx.coroutines.InternalCoroutinesApi
 
-@InternalCoroutinesApi
 @Composable
-fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    navToSignUp: () -> Unit,
-    viewModel: SignInViewModel
-) {
-
+fun SignUpScreen(onRegSuccess: () -> Unit, viewModel: SignUpViewModel) {
     val uiState = viewModel.uiState
-
     val context = LocalContext.current
 
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
             when (result) {
                 is AuthResult.Authorized -> {
-                    onLoginSuccess()
+                    onRegSuccess()
                 }
                 is AuthResult.Unauthorized -> {
                     Toast.makeText(context, "You are not authorized", Toast.LENGTH_LONG).show()
@@ -54,24 +43,15 @@ fun LoginScreen(
 
     Box(Modifier.fillMaxSize()) {
         Column(
-            Modifier.align(BiasAlignment(0f, -0.3f)),
-            horizontalAlignment = CenterHorizontally
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.app_icon),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .fillMaxWidth(0.6f)
-                    .aspectRatio(5 / 3f),
-                contentScale = ContentScale.Inside
-            )
 
             TextField(
                 value = uiState.email,
                 label = { Text(text = "Email", fontSize = 14.sp, color = Color.White) },
-                onValueChange = { viewModel.onEvent(AuthUiEvent.SignInUsernameChanged(it)) },
+                onValueChange = { viewModel.onEvent(AuthUiEvent.SignUpUsernameChanged(it)) },
                 singleLine = true,
             )
 
@@ -81,7 +61,7 @@ fun LoginScreen(
             TextField(
                 value = uiState.password,
                 label = { Text(text = "Password", fontSize = 14.sp, color = Color.White) },
-                onValueChange = { viewModel.onEvent(AuthUiEvent.SignInPasswordChanged(it)) },
+                onValueChange = { viewModel.onEvent(AuthUiEvent.SignUpPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
@@ -91,23 +71,17 @@ fun LoginScreen(
 
             Row {
                 Button(
-                    onClick = navToSignUp,
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                    enabled = uiState.btnEnabled
-                ) {
-                    Text(text = "Sign up")
-                }
-
-                Spacer(modifier = Modifier.width(20.dp))
-
-                Button(
-                    onClick = { viewModel.onEvent(AuthUiEvent.SignIn) },
+                    onClick = { viewModel.onEvent(AuthUiEvent.SignUp) },
                     colors = ButtonDefaults.buttonColors(),
                     enabled = uiState.btnEnabled
                 ) {
-                    Text(text = "Login")
+                    Text(text = "SignUp")
                 }
             }
+
+            if (uiState.loading)
+                CircularProgressIndicator()
+
         }
     }
 

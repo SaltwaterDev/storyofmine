@@ -1,5 +1,6 @@
 package com.unlone.app.ui.lounge
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,17 +12,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.unlone.app.auth.AuthResult
 import com.unlone.app.model.LoungePost
 import com.unlone.app.ui.comonComponent.HorizontalScrollPosts
-import com.unlone.app.viewmodel.LoungeViewModel
+import com.unlone.app.android.viewmodel.StoriesViewModel
 import timber.log.Timber
 
 @Composable
-fun LoungeScreen(
-    viewModel: LoungeViewModel,
+fun StoriesScreen(
+    viewModel: StoriesViewModel,
     navToPostDetail: (String) -> Unit = {},
     navToTopicPosts: () -> Unit = {},
     navToAuthGraph: () -> Unit = {},

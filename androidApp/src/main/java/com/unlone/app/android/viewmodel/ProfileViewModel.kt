@@ -1,12 +1,7 @@
-package com.unlone.app.viewmodel
+package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.unlone.app.android.data.repo.AuthRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import timber.log.Timber
-import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 data class ProfileUiState(
@@ -50,11 +45,13 @@ sealed class ProfileItemList(
 }
 
 
-@HiltViewModel
-class ProfileViewModel @Inject constructor(
-    val authRepository: AuthRepository
+class ProfileViewModel(
+//    val authRepository: AuthRepository
 ) : ViewModel() {
 
+    val state = MutableStateFlow(ProfileUiState())
+
+/*
     val state = authRepository.isUserLoggedIn.map {
 
         Timber.d("" + it)
@@ -78,5 +75,5 @@ class ProfileViewModel @Inject constructor(
 
     fun logout() {
         authRepository.logout()
-    }
+    }*/
 }

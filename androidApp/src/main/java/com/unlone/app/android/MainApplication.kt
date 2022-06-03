@@ -1,17 +1,23 @@
 package com.unlone.app.android
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.unlone.app.android.di.androidModule
+import com.unlone.app.di.appModule
+import org.koin.android.BuildConfig
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import timber.log.Timber
 
-
-@HiltAndroidApp
 class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+
+        startKoin {
+            androidContext(this@MainApplication)
+            androidLogger()
+            modules(appModule() + androidModule)
         }
     }
 }

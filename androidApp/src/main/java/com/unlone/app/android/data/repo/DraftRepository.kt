@@ -1,9 +1,8 @@
 package com.unlone.app.android.data.repo
 
 import com.unlone.app.model.Draft
-import javax.inject.Inject
 
-class DraftRepository @Inject constructor() {
+class DraftRepository {
     fun getAllDraftTitles(): List<String> {
         return listOf(
             Draft.mock(),

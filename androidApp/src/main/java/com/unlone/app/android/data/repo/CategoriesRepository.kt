@@ -1,12 +1,9 @@
 package com.unlone.app.android.data.repo
 
-import com.unlone.app.data.repo.UserPreferenceRepository
+import com.unlone.app.auth.AuthRepository
 import kotlinx.coroutines.CoroutineScope
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CategoriesRepository @Inject constructor(
+class CategoriesRepository(
     private val userPreferenceRepository: UserPreferenceRepository,
     private val authRepository: AuthRepository,
     externalScope: CoroutineScope,

@@ -1,9 +1,7 @@
 package com.unlone.app.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 
 data class PostDetailUiState(
     val pid: String = "",
@@ -18,13 +16,15 @@ data class PostDetailUiState(
     val allowSave: Boolean = false,
 )
 
-@HiltViewModel
-class PostDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+class PostDetailViewModel(
+//    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val pid = savedStateHandle.get<String>("pid")
+    val state = MutableStateFlow(PostDetailUiState())
 
+//    val pid = savedStateHandle.get<String>("pid")
+
+/*
     var state = pid?.let { pid ->
         PostDetailUiState(
             pid = pid,
@@ -37,4 +37,5 @@ class PostDetailViewModel @Inject constructor(
             allowSave = true,
         )
     }
+*/
 }
