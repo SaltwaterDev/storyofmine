@@ -7,11 +7,10 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 
-// 192.168.8.154
-const val baseUrl = "http://10.0.2.2:8080/"
 
 class AuthApi {
-    private val client = HttpClient{
+    private val client = HttpClient {
+        expectSuccess = true
         install(ContentNegotiation) {
             json()
         }
@@ -23,6 +22,7 @@ class AuthApi {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
+        // if error, return the error msg
     }
 
     suspend fun signIn(request: AuthRequest): TokenResponse {
@@ -37,5 +37,10 @@ class AuthApi {
         client.get(baseUrl + "authenticate") {
             header("Authorization", token)
         }
+    }
+
+    companion object {
+        // local IP address for running on an emulator
+        private const val baseUrl = "http://10.0.2.2:8080/"
     }
 }

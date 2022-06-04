@@ -1,6 +1,5 @@
 package com.unlone.app.android.viewmodel
 
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.auth.AuthRepository

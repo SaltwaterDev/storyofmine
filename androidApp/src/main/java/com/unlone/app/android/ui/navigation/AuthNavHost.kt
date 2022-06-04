@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.unlone.app.android.ui.auth.LoginScreen
+import com.unlone.app.android.ui.auth.SignInScreen
 import com.unlone.app.android.ui.auth.SignUpScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
@@ -28,7 +28,7 @@ fun NavGraphBuilder.authGraph(
 
         composable(AuthNav.Login.name) {
             val viewModel by viewModel<SignInViewModel>()
-            LoginScreen(
+            SignInScreen(
                 onLoginSuccess = onLogin,
                 navToSignUp = { navigateToSignUp(navController) },
                 viewModel = viewModel

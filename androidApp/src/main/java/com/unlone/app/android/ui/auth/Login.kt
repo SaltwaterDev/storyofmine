@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.R
-import com.unlone.app.android.viewmodel.AuthUiEvent
+import com.unlone.app.android.model.AuthUiEvent
 import com.unlone.app.auth.AuthResult
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
 @Composable
-fun LoginScreen(
+fun SignInScreen(
     onLoginSuccess: () -> Unit,
     navToSignUp: () -> Unit,
     viewModel: SignInViewModel
@@ -71,7 +71,7 @@ fun LoginScreen(
             TextField(
                 value = uiState.email,
                 label = { Text(text = "Email", fontSize = 14.sp, color = Color.White) },
-                onValueChange = { viewModel.onEvent(AuthUiEvent.SignInUsernameChanged(it)) },
+                onValueChange = { viewModel.onEvent(AuthUiEvent.SignInEmailChanged(it)) },
                 singleLine = true,
             )
 

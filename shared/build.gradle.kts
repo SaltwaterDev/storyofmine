@@ -90,7 +90,7 @@ android {
 
 object Versions {
     const val koin = "3.2.0"
-    const val ktorVersion = "2.0.1"
+    const val ktorVersion = "2.0.2"
 }
 
 object Deps {

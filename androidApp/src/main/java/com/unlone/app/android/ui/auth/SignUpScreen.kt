@@ -1,6 +1,5 @@
 package com.unlone.app.android.ui.auth
 
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,7 +14,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.unlone.app.android.viewmodel.AuthUiEvent
+import com.unlone.app.android.model.AuthUiEvent
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import com.unlone.app.auth.AuthResult
 
@@ -31,13 +30,16 @@ fun SignUpScreen(onRegSuccess: () -> Unit, viewModel: SignUpViewModel) {
                     onRegSuccess()
                 }
                 is AuthResult.Unauthorized -> {
-                    Toast.makeText(context, "You are not authorized", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
                 }
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(context, "An unknown error occurred", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "unknown error: " + result.data.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
-
         }
     }
 
@@ -51,7 +53,7 @@ fun SignUpScreen(onRegSuccess: () -> Unit, viewModel: SignUpViewModel) {
             TextField(
                 value = uiState.email,
                 label = { Text(text = "Email", fontSize = 14.sp, color = Color.White) },
-                onValueChange = { viewModel.onEvent(AuthUiEvent.SignUpUsernameChanged(it)) },
+                onValueChange = { viewModel.onEvent(AuthUiEvent.SignUpEmailChanged(it)) },
                 singleLine = true,
             )
 
@@ -66,6 +68,11 @@ fun SignUpScreen(onRegSuccess: () -> Unit, viewModel: SignUpViewModel) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
             )
+
+            Spacer(Modifier.height(10.dp))
+
+            Text("Your password must contain at least one upper case letter one lower case letter and one number")
+
 
             Spacer(Modifier.height(60.dp))
 
