@@ -8,13 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.unlone.app.android.viewmodel.ProfileViewModel
-import com.unlone.app.ui.lounge.StoriesScreen
+import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.ui.lounge.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
 import com.unlone.app.android.ui.profile.ProfileScreen
@@ -28,24 +29,17 @@ import org.koin.androidx.compose.viewModel
 
 enum class UnloneBottomNav(val icon: ImageVector) {
 
-    Write(
-        icon = Icons.Filled.Create
-    ),
-
-    Lounge(
-        icon = Icons.Filled.Add,
-    ),
-    Profile(
-        icon = Icons.Filled.Face,
-    );
+    Write(icon = Icons.Filled.Create),
+    Stories(icon = Icons.Filled.Add),
+    Profile(icon = Icons.Filled.Face);
 
     companion object {
         fun fromRoute(route: String?): UnloneBottomNav =
             when (route?.substringBefore("/")) {
                 Write.name -> Write
-                Lounge.name -> Lounge
+                Stories.name -> Stories
                 Profile.name -> Profile
-                null -> Lounge
+                null -> Stories
                 else -> throw IllegalArgumentException("Route $route is not recognized.")
             }
     }
@@ -69,7 +63,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             WritingScreen(viewModel)
         }
 
-        composable(UnloneBottomNav.Lounge.name) {
+        composable(UnloneBottomNav.Stories.name) {
             val viewModel by viewModel<StoriesViewModel>()
             StoriesScreen(
                 viewModel = viewModel,
@@ -95,9 +89,13 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             TopicDetail()
         }
 
-        authGraph(navController,
-            onLogin = { navController.popBackStack() },
-            onReg = { navController.popBackStack() }
+        authGraph(
+            navController,
+            onSigninOrSignupFinished = {
+                navController.navigate(UnloneBottomNav.Stories.name) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                }
+            },
         )
 
         // todo: Add on-boarding Screens

@@ -17,11 +17,16 @@ data class SignUpUiState(
     val username: String = "",
     val email: String = "",
     val password: String = "",
+    val confirmedPassword: String = "",
     val pwError: Boolean = false,
     val errorMsg: String? = null,
     val loading: Boolean = false,
 ) {
-    val btnEnabled: Boolean = !loading && email.isNotBlank() && password.isNotBlank()
+    val emailBtnEnabled: Boolean = !loading && email.isNotBlank()
+    val signUpBtnEnabled: Boolean = !loading &&
+            email.isNotBlank() &&
+            password.isNotBlank() &&
+            password == confirmedPassword
 }
 
 class SignUpViewModel(
@@ -31,7 +36,6 @@ class SignUpViewModel(
 
     var uiState by mutableStateOf(SignUpUiState())
         private set
-
     private val resultChannel = Channel<AuthResult<Unit>>()
     val authResult = resultChannel.receiveAsFlow()
 
@@ -42,6 +46,12 @@ class SignUpViewModel(
             }
             is AuthUiEvent.SignUpPasswordChanged -> {
                 uiState = uiState.copy(password = event.value)
+            }
+            is AuthUiEvent.ConfirmedPasswordChanged -> {
+                uiState = uiState.copy(confirmedPassword = event.value)
+            }
+            is AuthUiEvent.SignUpEmailVerify -> {
+                signUpEmailVerify()
             }
             is AuthUiEvent.SignUp -> {
                 if (validatePasswordUseCase(uiState.password))
@@ -54,13 +64,23 @@ class SignUpViewModel(
         }
     }
 
+    private fun signUpEmailVerify() {
+        uiState = uiState.copy(loading = true)
+        viewModelScope.launch {
+            val result = authRepository.signUpEmail(
+                email = uiState.email
+            )
+            resultChannel.send(result)
+            uiState = uiState.copy(loading = false)
+        }
+    }
+
     private fun signUp() {
         uiState = uiState.copy(loading = true)
         viewModelScope.launch {
             val result = authRepository.signUp(
                 email = uiState.email,
                 password = uiState.password,
-                username = uiState.username,
             )
             resultChannel.send(result)
             uiState = uiState.copy(loading = false)

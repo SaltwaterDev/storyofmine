@@ -12,7 +12,6 @@ class AuthRepositoryImpl(
 
     override suspend fun signUp(
         email: String,
-        username: String,
         password: String
     ): AuthResult<Unit> {
         return try {
@@ -22,9 +21,34 @@ class AuthRepositoryImpl(
                     password = password,
                 )
             )
+            signIn(email, password)
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            kermit.e { e.toString() }
+            AuthResult.UnknownError()
+            // todo
+        }
+    }
 
+    override suspend fun signUpEmail(email: String): AuthResult<Unit> {
+        return try {
+            api.signUpEmail(
+                request = AuthEmailRequest(
+                    email = email,
+                )
+            )
             AuthResult.Authorized()
-            // signIn(email, password)
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo

@@ -26,7 +26,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 @Composable
 fun SignInScreen(
-    onLoginSuccess: () -> Unit,
+    onSignInSuccess: () -> Unit,
     navToSignUp: () -> Unit,
     viewModel: SignInViewModel
 ) {
@@ -39,7 +39,7 @@ fun SignInScreen(
         viewModel.authResult.collect { result ->
             when (result) {
                 is AuthResult.Authorized -> {
-                    onLoginSuccess()
+                    onSignInSuccess()
                 }
                 is AuthResult.Unauthorized -> {
                     Toast.makeText(context, "You are not authorized", Toast.LENGTH_LONG).show()
