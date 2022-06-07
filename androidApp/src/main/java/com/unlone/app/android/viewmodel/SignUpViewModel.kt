@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 data class SignUpUiState(
-    val username: String = "",
     val email: String = "",
     val password: String = "",
     val confirmedPassword: String = "",

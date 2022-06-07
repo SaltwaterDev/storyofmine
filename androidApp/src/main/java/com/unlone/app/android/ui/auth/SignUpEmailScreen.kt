@@ -39,7 +39,7 @@ fun SignUpEmailScreen(
                 is AuthResult.UnknownError -> {
                     Toast.makeText(
                         context,
-                        "unknown error: " + result.data.toString(),
+                        "unknown error: " + result.errorMsg,
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -53,7 +53,6 @@ fun SignUpEmailScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             TextField(
                 value = uiState.email,
                 label = { Text(text = "Email", fontSize = 14.sp) },

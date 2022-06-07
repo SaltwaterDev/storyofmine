@@ -11,5 +11,5 @@ data class AuthRequest(
 
 @Serializable
 data class AuthEmailRequest(
-    val email: String,
+    val email: String
 )

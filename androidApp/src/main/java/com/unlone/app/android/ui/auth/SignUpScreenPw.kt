@@ -28,7 +28,6 @@ fun SignUpPwScreen(
     val uiState = viewModel.uiState
     val context = LocalContext.current
 
-
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
             when (result) {
@@ -41,7 +40,7 @@ fun SignUpPwScreen(
                 is AuthResult.UnknownError -> {
                     Toast.makeText(
                         context,
-                        "unknown error: " + result.data.toString(),
+                        "unknown error: ${result.errorMsg}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -57,7 +56,7 @@ fun SignUpPwScreen(
         ) {
             TextField(
                 value = uiState.password,
-                label = { Text(text = "Password", fontSize = 14.sp, color = Color.White) },
+                label = { Text(text = "Password", fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(AuthUiEvent.SignUpPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -70,7 +69,7 @@ fun SignUpPwScreen(
 
             TextField(
                 value = uiState.confirmedPassword,
-                label = { Text(text = "Confirm Password", fontSize = 14.sp, color = Color.White) },
+                label = { Text(text = "Confirm Password", fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(AuthUiEvent.ConfirmedPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -101,9 +100,8 @@ fun SignUpPwScreen(
             text = { Text(uiState.errorMsg) },
             confirmButton = {
                 Button(
-                    onClick = {
-                        viewModel.dismissMsg()
-                    }) {
+                    onClick = { viewModel.dismissMsg() }
+                ) {
                     Text("This is the Confirm Button")
                 }
             },
