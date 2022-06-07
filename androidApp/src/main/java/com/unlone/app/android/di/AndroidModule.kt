@@ -20,6 +20,6 @@ val androidModule = module {
     viewModel { SignUpViewModel(get(), get()) }
     viewModel { StoriesViewModel(get()) }
     viewModel { PostDetailViewModel() }
-    viewModel { ProfileViewModel() }
+    viewModel { ProfileViewModel(get()) }
     viewModel { WritingViewModel(get()) }
 }

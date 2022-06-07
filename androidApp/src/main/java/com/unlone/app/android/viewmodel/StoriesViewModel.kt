@@ -37,6 +37,7 @@ class StoriesViewModel(
                 when (result) {
                     is AuthResult.Authorized -> {
                         _state.value = _state.value.copy(isUserLoggedIn = true)
+                        Timber.d("User authorized")
                     }
                     is AuthResult.Unauthorized -> {
                         _state.value = _state.value.copy(isUserLoggedIn = false)

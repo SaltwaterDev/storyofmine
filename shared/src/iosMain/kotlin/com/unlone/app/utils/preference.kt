@@ -25,3 +25,7 @@ actual fun KMMContext.putBool(key: String, value: Boolean) {
 actual fun KMMContext.getBool(key: String, default: Boolean): Boolean {
     return NSUserDefaults.standardUserDefaults.boolForKey(key)
 }
+
+actual fun KMMContext.remove(key: String) {
+    NSUserDefaults.standardUserDefaults.remove(key)
+}

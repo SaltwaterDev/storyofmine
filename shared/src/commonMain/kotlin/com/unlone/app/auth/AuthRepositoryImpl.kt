@@ -117,4 +117,18 @@ class AuthRepositoryImpl(
             // todo
         }
     }
+
+    override suspend fun isUserLoggedIn(): Boolean {
+        return prefs.getString("jwt") != null
+    }
+
+    override fun signOut(): Boolean {
+        return try {
+            prefs.remove("jwt")
+            true
+        } catch (e: Exception) {
+            kermit.e { e.toString() }
+            false
+        }
+    }
 }

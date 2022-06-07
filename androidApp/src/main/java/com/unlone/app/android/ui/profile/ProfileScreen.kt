@@ -25,9 +25,7 @@ fun ProfileScreen(
     fun goToSavedStories() {}
     fun goToSetting() {}
     fun goToHelp() {}
-    fun logout() {
-        /*viewModel.logout()*/
-    }
+    fun logout() = viewModel.signOut()
 
     fun ProfileItemList.takeAction() {
         when (this) {
