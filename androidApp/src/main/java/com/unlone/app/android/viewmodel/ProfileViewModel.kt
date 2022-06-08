@@ -34,27 +34,22 @@ sealed class ProfileItemList(
         override val name: String = "Draft",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class MyStories(
         override val name: String = "MyStories",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Saved(
         override val name: String = "Saved",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Setting(
         override val name: String = "Setting",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Help(
         override val name: String = "Help",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Logout(
         override val name: String = "Logout",
         override val requireLoggedIn: Boolean = true
@@ -93,7 +88,7 @@ class ProfileViewModel(
     }
 
     fun signOut() {
-        if (authRepository.signOut())
-            authenticate()
+        authRepository.signOut()
+        authenticate()
     }
 }

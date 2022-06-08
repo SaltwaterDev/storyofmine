@@ -1,14 +1,15 @@
 package com.unlone.app.auth
 
-import com.unlone.app.kermit
 import com.unlone.app.utils.KMMPreference
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
+import kotlinx.coroutines.flow.*
 
 class AuthRepositoryImpl(
     private val api: AuthApi,
     private val prefs: KMMPreference,
 ) : AuthRepository {
+
 
     override suspend fun signUp(
         email: String,
@@ -35,7 +36,6 @@ class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
-            kermit.e { e.toString() }
             AuthResult.UnknownError()
             // todo
         }
@@ -62,7 +62,6 @@ class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
-            kermit.e { e.toString() }
             AuthResult.UnknownError()
             // todo
         }
@@ -76,7 +75,6 @@ class AuthRepositoryImpl(
                     password = password,
                 )
             )
-            kermit.d { response.token }
             prefs.put("jwt", response.token)
             AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
@@ -92,7 +90,6 @@ class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
-            kermit.e { e.toString() }
             AuthResult.UnknownError()
         }
     }
@@ -100,7 +97,7 @@ class AuthRepositoryImpl(
     override suspend fun authenticate(): AuthResult<Unit> {
         return try {
             val token = prefs.getString("jwt")
-                ?: return AuthResult.Unauthorized(null)  // todo： return error Msg (e.g. token expired/ invalid)
+                ?: return AuthResult.Unauthorized(null)
             api.authenticate("Bearer $token")
             AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
@@ -118,17 +115,8 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun isUserLoggedIn(): Boolean {
-        return prefs.getString("jwt") != null
-    }
 
-    override fun signOut(): Boolean {
-        return try {
-            prefs.remove("jwt")
-            true
-        } catch (e: Exception) {
-            kermit.e { e.toString() }
-            false
-        }
+    override fun signOut() {
+        prefs.remove("jwt")
     }
 }

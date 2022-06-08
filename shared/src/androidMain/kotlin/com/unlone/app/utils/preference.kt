@@ -1,5 +1,10 @@
 package com.unlone.app.utils
 
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
+
+
 const val SP_NAME = "unlone_app"
 
 actual fun KMMContext.putInt(key: String, value: Int) {
@@ -30,6 +35,16 @@ actual fun KMMContext.remove(key: String) {
     getSpEditor().remove(key).apply()
 }
 
-private fun KMMContext.getSp() = getSharedPreferences(SP_NAME, 0)
+private fun KMMContext.getSp(): SharedPreferences {
+    val masterKeyAlias: String = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+    return EncryptedSharedPreferences.create(
+        "secret_shared_prefs",
+        masterKeyAlias,
+        this,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+}
 
 private fun KMMContext.getSpEditor() = getSp().edit()

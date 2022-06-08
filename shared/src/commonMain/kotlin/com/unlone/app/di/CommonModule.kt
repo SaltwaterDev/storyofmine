@@ -6,6 +6,8 @@ import com.unlone.app.auth.AuthRepository
 import com.unlone.app.auth.AuthRepositoryImpl
 import com.unlone.app.auth.ValidPasswordUseCase
 import com.unlone.app.utils.KMMPreference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

@@ -40,7 +40,8 @@ kotlin {
                     api(test)
                 }
                 // logger
-                api("co.touchlab:kermit:0.1.8")
+                implementation(kotlin("stdlib-common"))
+                implementation("co.touchlab:kermit:1.0.2")
 
             }
         }
@@ -52,9 +53,15 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                // security
+                implementation("androidx.security:security-crypto:1.0.0")
             }
         }
-        val androidTest by getting
+        val androidTest by getting {
+            dependencies {
+                implementation("androidx.security:security-app-authenticator:1.0.0-alpha02")
+            }
+        }
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting

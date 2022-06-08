@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.sp
 import com.unlone.app.android.model.AuthUiEvent
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import com.unlone.app.auth.AuthResult
-import com.unlone.app.kermit
 
 @Composable
 fun SignUpEmailScreen(
@@ -29,11 +28,9 @@ fun SignUpEmailScreen(
         viewModel.authResult.collect { result ->
             when (result) {
                 is AuthResult.Authorized -> {
-                    kermit.d { "ok la" }
                     onEmailConfirmed()
                 }
                 is AuthResult.Unauthorized -> {
-                    kermit.d { "not ok" }
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
                 }
                 is AuthResult.UnknownError -> {

@@ -31,34 +31,32 @@ fun StoriesScreen(
 
     val state by viewModel.state.collectAsState()
 
-    Timber.d(state.isUserLoggedIn.toString())
+    if (!state.loading) {
+        if (!state.isUserLoggedIn)
+            Box(Modifier.fillMaxSize()) {
+                LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
+            }
+        else {
+            Scaffold() { innerPadding ->
+                LazyColumn(
+                    Modifier.padding(innerPadding)
+                ) {
+                    item {
+                        Text(
+                            text = "Hello",
+                            modifier = Modifier.padding(15.dp, 40.dp),
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
 
-    if (!state.isUserLoggedIn)
-        Box(Modifier.fillMaxSize()) {
-            LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
-        }
-    else {
-        Scaffold() { innerPadding ->
-            LazyColumn(
-                Modifier.padding(innerPadding)
-            ) {
-                item {
-                    Text(
-                        text = "Hello",
-                        modifier = Modifier.padding(15.dp, 40.dp),
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                state.postsByTopics?.let { posts ->
-                    items(posts) {
-                        PostsByTopic(it.topic, it.posts, navToTopicPosts) { pid ->
-                            navToPostDetail(
-                                pid
-                            )
+                    state.postsByTopics?.let { posts ->
+                        items(posts) {
+                            PostsByTopic(it.topic, it.posts, navToTopicPosts) { pid ->
+                                navToPostDetail(pid)
+                            }
+                            Spacer(modifier = Modifier.height(30.dp))
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
                     }
                 }
             }
