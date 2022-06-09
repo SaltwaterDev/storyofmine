@@ -5,7 +5,16 @@ struct ContentView: View {
 	let greet = Greeting().greeting()
 
 	var body: some View {
-		Text(greet)
+        TabView{
+            WritingScreen().tabItem{Image(systemName: "pencil")
+                Text("Write")}
+            StoriesScreen().tabItem{Image(systemName: "plus")
+                Text("Lounge")}
+            ProfileScreen().tabItem{Image(systemName: "person.fill")
+                Text("Profile")}
+            
+        }
+		
 	}
 }
 
