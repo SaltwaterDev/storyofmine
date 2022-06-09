@@ -19,7 +19,7 @@ import com.unlone.app.auth.AuthResult
 fun SignUpEmailScreen(
     onEmailConfirmed: () -> Unit,
     viewModel: SignUpViewModel,
-    navToSignIn: () -> Unit
+    navToSignInPassword: () -> Unit
 ) {
     val uiState = viewModel.uiState
     val context = LocalContext.current
@@ -70,7 +70,7 @@ fun SignUpEmailScreen(
             Row {
                 Text(text = "Already have an account?")
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Sign In here", modifier = Modifier.clickable { navToSignIn() })
+                Text(text = "Sign In here", modifier = Modifier.clickable { navToSignInPassword() })
             }
 
             if (uiState.loading)

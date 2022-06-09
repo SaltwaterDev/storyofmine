@@ -5,9 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.unlone.app.android.ui.auth.SignInScreen
 import com.unlone.app.android.ui.auth.SignUpEmailScreen
 import com.unlone.app.android.ui.auth.SignUpPwScreen
+import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
+import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -36,7 +37,7 @@ fun NavGraphBuilder.authGraph(
             SignUpEmailScreen(
                 viewModel = viewModel,
                 onEmailConfirmed = { navigateToSignUpPassword(navController) },
-            ) { navigateToSignIn(navController) }
+            ) { navigateToSignInEmail(navController) }
         }
 
         composable(AuthNav.SignUp.name + "/password") {
@@ -49,11 +50,21 @@ fun NavGraphBuilder.authGraph(
             )
         }
 
-        composable(AuthNav.SignIn.name) {
-            val viewModel by viewModel<SignInViewModel>()
-            SignInScreen(
-                onSignInSuccess = onSigninOrSignupFinished,
+        composable(AuthNav.SignIn.name + "/email") {
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
+            SignInEmailScreen(
+                navToSignInPw = { navigateToSignInPw(navController) },
                 navToSignUp = { navigateToSignUp(navController) },
+                viewModel = viewModel
+            )
+        }
+        composable(AuthNav.SignIn.name + "/password") {
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
+            SignInPasswordScreen(
+                onSignInSuccess = onSigninOrSignupFinished,
+                back = { navController.popBackStack() },
                 viewModel = viewModel
             )
         }
@@ -72,6 +83,10 @@ fun navigateToSignUpPassword(navController: NavHostController) {
     navController.navigate(AuthNav.SignUp.name + "/password")
 }
 
-fun navigateToSignIn(navController: NavHostController) {
-    navController.navigate(AuthNav.SignIn.name)
+fun navigateToSignInEmail(navController: NavHostController) {
+    navController.navigate(AuthNav.SignIn.name+ "/email")
+}
+
+fun navigateToSignInPw(navController: NavHostController) {
+    navController.navigate(AuthNav.SignIn.name+ "/password")
 }

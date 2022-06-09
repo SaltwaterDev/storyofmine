@@ -32,20 +32,21 @@ class AuthApi {
     }
 
 
-
-
+    suspend fun signInEmail(request: AuthEmailRequest) {
+        client.post(baseUrl + "signin/email") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+    }
 
 
     suspend fun signIn(request: AuthRequest): TokenResponse {
-        val response = client.post(baseUrl + "signin") {
+        val response = client.post(baseUrl + "signin/emailAndPassword") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
         return response.body()
     }
-
-
-
 
 
     suspend fun authenticate(token: String) {

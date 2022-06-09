@@ -17,9 +17,12 @@ data class SignInUiState(
     val password: String = "",
     val errorMsg: String? = null,
     val loading: Boolean = false,
-    val btnEnabled: Boolean = true,
     val userExists: Boolean = false
-)
+) {
+    val emailBtnEnabled: Boolean = email.isNotBlank() && !loading
+    val pwBtnEnabled: Boolean = password.isNotBlank() && !loading
+
+}
 
 class SignInViewModel(
     private val authRepository: AuthRepository
@@ -40,7 +43,10 @@ class SignInViewModel(
             is AuthUiEvent.SignInPasswordChanged -> {
                 uiState = uiState.copy(password = event.value)
             }
-            is AuthUiEvent.SignIn -> {
+            is AuthUiEvent.SignInEmail -> {
+                emailValidate()
+            }
+            is AuthUiEvent.SignInPw -> {
                 signIn()
             }
             else -> {}
@@ -51,6 +57,17 @@ class SignInViewModel(
         uiState = uiState.copy(
             errorMsg = null
         )
+    }
+
+    private fun emailValidate() {
+        uiState = uiState.copy(loading = true)
+        viewModelScope.launch {
+            val result = authRepository.signInEmail(
+                email = uiState.email
+            )
+            resultChannel.send(result)
+            uiState = uiState.copy(loading = false)
+        }
     }
 
     private fun signIn() {
