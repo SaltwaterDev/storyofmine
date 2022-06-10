@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge
+package com.unlone.app.android.ui.stories
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,21 +7,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.model.LoungePost
 import com.unlone.app.ui.comonComponent.HorizontalScrollPosts
-import com.unlone.app.viewmodel.LoungeViewModel
 import timber.log.Timber
 
 @Composable
-fun LoungeScreen(
-    viewModel: LoungeViewModel,
+fun StoriesScreen(
+    viewModel: StoriesViewModel,
     navToPostDetail: (String) -> Unit = {},
     navToTopicPosts: () -> Unit = {},
     navToAuthGraph: () -> Unit = {},
@@ -29,34 +31,32 @@ fun LoungeScreen(
 
     val state by viewModel.state.collectAsState()
 
-    Timber.d(state.isUserLoggedIn.toString())
+    if (!state.loading) {
+        if (!state.isUserLoggedIn)
+            Box(Modifier.fillMaxSize()) {
+                LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
+            }
+        else {
+            Scaffold() { innerPadding ->
+                LazyColumn(
+                    Modifier.padding(innerPadding)
+                ) {
+                    item {
+                        Text(
+                            text = "Hello",
+                            modifier = Modifier.padding(15.dp, 40.dp),
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
 
-    if (!state.isUserLoggedIn)
-        Box(Modifier.fillMaxSize()) {
-            LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
-        }
-    else {
-        Scaffold() { innerPadding ->
-            LazyColumn(
-                Modifier.padding(innerPadding)
-            ) {
-                item {
-                    Text(
-                        text = "Hello",
-                        modifier = Modifier.padding(15.dp, 40.dp),
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                state.postsByTopics?.let { posts ->
-                    items(posts) {
-                        PostsByTopic(it.topic, it.posts, navToTopicPosts) { pid ->
-                            navToPostDetail(
-                                pid
-                            )
+                    state.postsByTopics?.let { posts ->
+                        items(posts) {
+                            PostsByTopic(it.topic, it.posts, navToTopicPosts) { pid ->
+                                navToPostDetail(pid)
+                            }
+                            Spacer(modifier = Modifier.height(30.dp))
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
                     }
                 }
             }
@@ -110,9 +110,9 @@ fun PostsByTopic(
 @Composable
 fun LoginInPrompt(modifier: Modifier, navToAuth: () -> Unit) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Login to see other stories")
+        Text(text = "Sign up to see other stories")
         Button(onClick = navToAuth) {
-            Text(text = "Login")
+            Text(text = "SignUp")
         }
     }
 }

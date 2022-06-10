@@ -1,18 +1,30 @@
-package com.unlone.app.viewmodel
+package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.android.data.repo.AuthRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.unlone.app.android.model.AuthUiEvent
+import com.unlone.app.auth.AuthRepository
+import com.unlone.app.auth.AuthResult
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 
 data class ProfileUiState(
     val isUserLoggedIn: Boolean = false,
-    val profileItemList: List<ProfileItemList> = emptyList()
-)
+    val errorMsg: String? = null,
+    val loading: Boolean = true
+) {
+    val profileItemList: List<ProfileItemList> =
+        listOf(
+            ProfileItemList.Draft(),
+            ProfileItemList.MyStories(),
+            ProfileItemList.Saved(),
+            ProfileItemList.Setting(),
+            ProfileItemList.Help(),
+            ProfileItemList.Logout(),
+        )
+}
 
 sealed class ProfileItemList(
     open val name: String,
@@ -22,27 +34,22 @@ sealed class ProfileItemList(
         override val name: String = "Draft",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class MyStories(
         override val name: String = "MyStories",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Saved(
         override val name: String = "Saved",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Setting(
         override val name: String = "Setting",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Help(
         override val name: String = "Help",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
-
     data class Logout(
         override val name: String = "Logout",
         override val requireLoggedIn: Boolean = true
@@ -50,33 +57,38 @@ sealed class ProfileItemList(
 }
 
 
-@HiltViewModel
-class ProfileViewModel @Inject constructor(
-    val authRepository: AuthRepository
+class ProfileViewModel(
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    val state = authRepository.isUserLoggedIn.map {
+    private val _state = MutableStateFlow(ProfileUiState())
+    val state = _state.asStateFlow()
 
-        Timber.d("" + it)
+    init {
+        authenticate()
+    }
 
-        ProfileUiState(
-            isUserLoggedIn = it,
-            profileItemList = listOf(
-                ProfileItemList.Draft(),
-                ProfileItemList.MyStories(),
-                ProfileItemList.Saved(),
-                ProfileItemList.Setting(),
-                ProfileItemList.Help(),
-                ProfileItemList.Logout(),
-            )
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.Lazily,
-        ProfileUiState()
-    )
+    private fun authenticate() {
+        _state.value = _state.value.copy(loading = true)
+        viewModelScope.launch {
+            when (authRepository.authenticate()) {
+                is AuthResult.Authorized -> {
+                    _state.value = _state.value.copy(isUserLoggedIn = true)
+                }
+                is AuthResult.Unauthorized -> {
+                    _state.value = _state.value.copy(isUserLoggedIn = false)
+                }
+                is AuthResult.UnknownError -> {
+                    _state.value = _state.value.copy(isUserLoggedIn = false)
+                    _state.value = _state.value.copy(errorMsg = "An unknown error occurred")
+                }
+            }
+            _state.value = _state.value.copy(loading = false)
+        }
+    }
 
-    fun logout() {
-        authRepository.logout()
+    fun signOut() {
+        authRepository.signOut()
+        authenticate()
     }
 }

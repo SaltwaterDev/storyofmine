@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,7 @@ fun PostDetail(
     viewModel: PostDetailViewModel
 ) {
 
-    val state = viewModel.state
+    val state = viewModel.state.collectAsState().value
 
     Scaffold(
         topBar = {

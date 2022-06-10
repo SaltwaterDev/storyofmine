@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.unlone.app.android.data.repo.DraftRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
 data class WritingUiState(
     val title: String = "Untitled",
@@ -14,8 +12,8 @@ data class WritingUiState(
     val draftList: List<String> = emptyList()
 )
 
-@HiltViewModel
-class WritingViewModel @Inject constructor(
+
+class WritingViewModel(
     draftRepository: DraftRepository
 ) : ViewModel() {
 
