@@ -14,15 +14,17 @@ class KMMPreference(private val context: KMMContext) {
         context.putBool(key, value)
     }
 
-    fun getInt(key: String, default: Int): Int
-            =  context.getInt(key, default)
+    fun getInt(key: String, default: Int): Int = context.getInt(key, default)
 
 
-    fun getString(key: String) : String?
-            =  context.getString(key)
+    fun getString(key: String): String? = context.getString(key)
 
 
     fun getBool(key: String, default: Boolean): Boolean =
         context.getBool(key, default)
+
+    fun remove(key: String) {
+        context.remove(key)
+    }
 
 }
