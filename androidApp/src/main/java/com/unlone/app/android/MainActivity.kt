@@ -14,7 +14,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.unlone.app.android.ui.navigation.MainNavHost
 import com.unlone.app.android.ui.navigation.UnloneBottomNav
-import com.unlone.app.kermit
 import com.unlone.app.ui.theme.UnloneTheme
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -62,8 +61,6 @@ fun UnloneApp() {
                                     // Avoid multiple copies of the same destination when
                                     // reselecting the same item
                                     launchSingleTop = true
-                                    // Restore state when reselecting a previously selected item
-                                    restoreState = true
                                 }
                             }
                         )

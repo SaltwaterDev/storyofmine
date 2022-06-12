@@ -7,11 +7,10 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 
-// 192.168.8.154
-const val baseUrl = "http://10.0.2.2:8080/"
 
 class AuthApi {
-    private val client = HttpClient{
+    private val client = HttpClient {
+        expectSuccess = true
         install(ContentNegotiation) {
             json()
         }
@@ -19,23 +18,47 @@ class AuthApi {
 
 
     suspend fun signUp(request: AuthRequest) {
-        client.post(baseUrl + "signup") {
+        client.post(baseUrl + "signup/emailAndPassword") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
     }
 
+    suspend fun signUpEmail(request: AuthEmailRequest) {
+        client.post(baseUrl + "signup/email") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+    }
+
+
+    suspend fun signInEmail(request: AuthEmailRequest) {
+        client.post(baseUrl + "signin/email") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+    }
+
+
     suspend fun signIn(request: AuthRequest): TokenResponse {
-        val response = client.post(baseUrl + "signin") {
+        val response = client.post(baseUrl + "signin/emailAndPassword") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
         return response.body()
     }
 
+
     suspend fun authenticate(token: String) {
         client.get(baseUrl + "authenticate") {
             header("Authorization", token)
         }
+    }
+
+    companion object {
+        // local IP address for running on an emulator
+//        private const val baseUrl = "http://10.0.2.2:8080/"
+        private const val baseUrl = "http://192.168.8.154:8080/"
+//        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }
