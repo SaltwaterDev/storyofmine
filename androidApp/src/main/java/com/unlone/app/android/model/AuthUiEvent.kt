@@ -1,14 +1,16 @@
 package com.unlone.app.android.model
 
-sealed class AuthUiEvent {
-    data class SignUpEmailChanged(val value: String) : AuthUiEvent()
-    data class SignUpPasswordChanged(val value: String) : AuthUiEvent()
-    data class ConfirmedPasswordChanged(val value: String) : AuthUiEvent()
-    object SignUpEmailVerify : AuthUiEvent()
-    object SignUp : AuthUiEvent()
+sealed class SignUpUiEvent {
+    data class SignUpEmailChanged(val value: String) : SignUpUiEvent()
+    data class SignUpPasswordChanged(val value: String) : SignUpUiEvent()
+    data class ConfirmedPasswordChanged(val value: String) : SignUpUiEvent()
+    object SignUpEmailVerify : SignUpUiEvent()
+    object SignUp : SignUpUiEvent()
+}
 
-    data class SignInEmailChanged(val value: String) : AuthUiEvent()
-    data class SignInPasswordChanged(val value: String) : AuthUiEvent()
-    object SignInEmail : AuthUiEvent()
-    object SignInPw : AuthUiEvent()
+sealed class SignInUiEvent {
+    data class SignInEmailChanged(val value: String) : SignInUiEvent()
+    data class SignInPasswordChanged(val value: String) : SignInUiEvent()
+    object SignInEmail : SignInUiEvent()
+    object SignInPw : SignInUiEvent()
 }

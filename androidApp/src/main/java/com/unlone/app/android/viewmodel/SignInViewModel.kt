@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.android.model.AuthUiEvent
+import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.auth.AuthRepository
 import com.unlone.app.auth.AuthResult
 import kotlinx.coroutines.channels.Channel
@@ -35,21 +35,20 @@ class SignInViewModel(
 
     val authResult = resultChannel.receiveAsFlow()
 
-    fun onEvent(event: AuthUiEvent) {
+    fun onEvent(event: SignInUiEvent) {
         when (event) {
-            is AuthUiEvent.SignInEmailChanged -> {
+            is SignInUiEvent.SignInEmailChanged -> {
                 uiState = uiState.copy(email = event.value)
             }
-            is AuthUiEvent.SignInPasswordChanged -> {
+            is SignInUiEvent.SignInPasswordChanged -> {
                 uiState = uiState.copy(password = event.value)
             }
-            is AuthUiEvent.SignInEmail -> {
+            is SignInUiEvent.SignInEmail -> {
                 emailValidate()
             }
-            is AuthUiEvent.SignInPw -> {
+            is SignInUiEvent.SignInPw -> {
                 signIn()
             }
-            else -> {}
         }
     }
 

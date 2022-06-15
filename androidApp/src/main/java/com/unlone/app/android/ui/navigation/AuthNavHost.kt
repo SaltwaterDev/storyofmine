@@ -5,10 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.unlone.app.android.ui.auth.SignUpEmailScreen
-import com.unlone.app.android.ui.auth.SignUpPwScreen
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
 import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
+import com.unlone.app.android.ui.auth.signup.SignUpScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -34,23 +33,15 @@ fun NavGraphBuilder.authGraph(
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
-            SignUpEmailScreen(
+            SignUpScreen(
                 viewModel = viewModel,
-                onEmailConfirmed = { navigateToSignUpPassword(navController) },
-            ) { navigateToSignInEmail(navController) }
-        }
-
-        composable(AuthNav.SignUp.name + "/password") {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
-
-            SignUpPwScreen(
-                viewModel = viewModel,
-                onSignupSuccess = onSigninOrSignupFinished,
+                navToSendEmailOtp = {  },
+                onSignUpSuccess = onSigninOrSignupFinished,
+                navToSignIn = { navigateToSignInEmail(navController) }
             )
         }
 
-        composable(AuthNav.SignIn.name + "/email") {
+        composable(AuthNav.SignIn.name+ "/email") {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
@@ -79,14 +70,10 @@ fun navigateToSignUp(navController: NavHostController) {
     navController.navigate(AuthNav.SignUp.name)
 }
 
-fun navigateToSignUpPassword(navController: NavHostController) {
-    navController.navigate(AuthNav.SignUp.name + "/password")
-}
-
 fun navigateToSignInEmail(navController: NavHostController) {
-    navController.navigate(AuthNav.SignIn.name+ "/email")
+    navController.navigate(AuthNav.SignIn.name + "/email")
 }
 
 fun navigateToSignInPw(navController: NavHostController) {
-    navController.navigate(AuthNav.SignIn.name+ "/password")
+    navController.navigate(AuthNav.SignIn.name + "/password")
 }
