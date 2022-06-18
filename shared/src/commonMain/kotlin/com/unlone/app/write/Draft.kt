@@ -1,4 +1,6 @@
-package com.unlone.app.model
+package com.unlone.app.write
+
+import io.realm.kotlin.types.RealmObject
 
 data class Draft(
     val did: String = "",
@@ -17,3 +19,8 @@ data class Draft(
         )
     }
 }
+
+data class DraftRealmObject(
+    val title: String,
+    val content: String,
+): RealmObject

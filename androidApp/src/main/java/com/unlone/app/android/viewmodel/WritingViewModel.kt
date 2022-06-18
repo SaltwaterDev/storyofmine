@@ -1,10 +1,12 @@
-package com.unlone.app.viewmodel
+package com.unlone.app.android.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.unlone.app.android.data.repo.DraftRepository
+import androidx.lifecycle.viewModelScope
+import com.unlone.app.write.DraftRepository
+import kotlinx.coroutines.launch
 
 data class WritingUiState(
     val title: String = "Untitled",
@@ -14,7 +16,7 @@ data class WritingUiState(
 
 
 class WritingViewModel(
-    draftRepository: DraftRepository
+    val draftRepository: DraftRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(
@@ -34,5 +36,11 @@ class WritingViewModel(
 
     fun clearTitleAndContent() {
         state = state.copy(title = "", content = "")
+    }
+
+    fun saveDraft(){
+        viewModelScope.launch {
+            draftRepository.saveDraft(state.title, state.content)
+        }
     }
 }

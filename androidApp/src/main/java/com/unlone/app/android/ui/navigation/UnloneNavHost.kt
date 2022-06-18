@@ -19,10 +19,10 @@ import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.ui.lounge.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
 import com.unlone.app.android.ui.profile.ProfileScreen
-import com.unlone.app.ui.write.WritingScreen
+import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.viewmodel.PostDetailViewModel
-import com.unlone.app.viewmodel.WritingViewModel
+import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.compose.viewModel
 

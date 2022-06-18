@@ -43,10 +43,14 @@ dependencies {
     val composeVersion = "1.1.1"
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:1.2.0-beta02")
+    implementation("androidx.compose.material:material:1.2.0-beta03")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.navigation:navigation-compose:2.4.2")
+
+    // accompanist
+    val accompanistVersion = "0.23.1"
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
     // testing
     testImplementation("junit:junit:4.13.2")

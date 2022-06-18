@@ -16,7 +16,6 @@ data class ProfileUiState(
 ) {
     val profileItemList: List<ProfileItemList> =
         listOf(
-            ProfileItemList.Draft(),
             ProfileItemList.MyStories(),
             ProfileItemList.Saved(),
             ProfileItemList.Setting(),
@@ -29,10 +28,6 @@ sealed class ProfileItemList(
     open val name: String,
     open val requireLoggedIn: Boolean,
 ) {
-    data class Draft(
-        override val name: String = "Draft",
-        override val requireLoggedIn: Boolean = false
-    ) : ProfileItemList(name, requireLoggedIn)
     data class MyStories(
         override val name: String = "MyStories",
         override val requireLoggedIn: Boolean = false
