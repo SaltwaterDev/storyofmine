@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.R
-import com.unlone.app.android.model.AuthUiEvent
+import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.auth.AuthResult
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -70,7 +70,7 @@ fun SignInPasswordScreen(
             TextField(
                 value = uiState.password,
                 label = { Text(text = "Password", fontSize = 14.sp, color = Color.White) },
-                onValueChange = { viewModel.onEvent(AuthUiEvent.SignInPasswordChanged(it)) },
+                onValueChange = { viewModel.onEvent(SignInUiEvent.SignInPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
@@ -89,7 +89,7 @@ fun SignInPasswordScreen(
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Button(
-                    onClick = { viewModel.onEvent(AuthUiEvent.SignInPw) },
+                    onClick = { viewModel.onEvent(SignInUiEvent.SignInPw) },
                     colors = ButtonDefaults.buttonColors(),
                     enabled = uiState.pwBtnEnabled
                 ) {

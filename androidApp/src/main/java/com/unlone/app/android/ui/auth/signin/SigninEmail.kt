@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unlone.app.android.R
-import com.unlone.app.android.model.AuthUiEvent
+import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.auth.AuthResult
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -69,7 +69,7 @@ fun SignInEmailScreen(
             TextField(
                 value = uiState.email,
                 label = { Text(text = "Email", fontSize = 14.sp, color = Color.White) },
-                onValueChange = { viewModel.onEvent(AuthUiEvent.SignInEmailChanged(it)) },
+                onValueChange = { viewModel.onEvent(SignInUiEvent.SignInEmailChanged(it)) },
                 singleLine = true,
             )
 
@@ -86,7 +86,7 @@ fun SignInEmailScreen(
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Button(
-                    onClick = { viewModel.onEvent(AuthUiEvent.SignInEmail) },
+                    onClick = { viewModel.onEvent(SignInUiEvent.SignInEmail) },
                     colors = ButtonDefaults.buttonColors(),
                     enabled = uiState.emailBtnEnabled
                 ) {
