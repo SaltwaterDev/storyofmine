@@ -45,7 +45,8 @@ kotlin {
                 // mongodb realm
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
                 implementation("io.realm.kotlin:library-base:1.0.0")
-
+                // datetime
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
             }
         }
         val commonTest by getting {

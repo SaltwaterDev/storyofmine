@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.unlone.app.android.MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,4 +20,4 @@
             </intent-filter>
         </activity>
     </application>
-</manifest> 
+</manifest>

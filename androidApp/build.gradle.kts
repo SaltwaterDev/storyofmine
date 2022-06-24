@@ -40,7 +40,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // compose
-    val composeVersion = "1.1.1"
+    val composeVersion = "1.2.0-rc01"
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:1.2.0-beta03")
@@ -49,7 +49,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.2")
 
     // accompanist
-    val accompanistVersion = "0.23.1"
+    val accompanistVersion = "0.24.11-rc"
     implementation ("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
     // testing
@@ -70,7 +70,6 @@ dependencies {
 
     // log
     implementation("com.jakewharton.timber:timber:5.0.1")
-//    implementation ("io.github.aakira:napier:2.6.1")
 
     // room
     val roomVersion = "2.4.2"
