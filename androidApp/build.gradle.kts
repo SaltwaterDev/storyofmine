@@ -43,7 +43,7 @@ dependencies {
     val composeVersion = "1.2.0-rc01"
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:1.2.0-beta03")
+    implementation("androidx.compose.material:material:1.2.0-rc02")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.navigation:navigation-compose:2.4.2")
@@ -62,21 +62,14 @@ dependencies {
 
     // ktx
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc01")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc02")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc02")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1")
 
     // log
     implementation("com.jakewharton.timber:timber:5.0.1")
-
-    // room
-    val roomVersion = "2.4.2"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    testImplementation("androidx.room:room-testing:$roomVersion")
 
     // koin
     with(Deps.Koin) {
@@ -90,7 +83,7 @@ dependencies {
 
 
 object Versions {
-    const val koin = "3.2.0-beta-1"
+    const val koin = "3.2.0"
 }
 
 object Deps {
