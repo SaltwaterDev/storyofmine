@@ -17,7 +17,7 @@ val commonModule = module {
     single { KMMPreference(get()) }
 
     // data source
-    single<AuthApi> { AuthApiService() }
+    single<AuthApi> { AuthApiService(get()) }
 
     // use cases
     single { ValidPasswordUseCase() }
