@@ -41,7 +41,7 @@ class AuthRepositoryImpl(
 
     override suspend fun signInEmail(email: String): AuthResult<Unit> {
         return try {
-            api.signInEmail(
+            api.validateEmail(
                 request = AuthEmailRequest(
                     email = email,
                 )
@@ -67,7 +67,7 @@ class AuthRepositoryImpl(
 
     override suspend fun signUpEmail(email: String): AuthResult<Unit> {
         return try {
-            api.signUpEmail(
+            api.checkEmailExisted(
                 request = AuthEmailRequest(
                     email = email,
                 )
@@ -87,7 +87,6 @@ class AuthRepositoryImpl(
             // todo
         } catch (e: Exception) {
             AuthResult.UnknownError()
-            // todo
         }
     }
 
@@ -137,13 +136,12 @@ class AuthRepositoryImpl(
             // todo
         } catch (e: Exception) {
             AuthResult.UnknownError()
-            // todo
         }
     }
 
 
     override fun signOut() {
-        prefs.remove("jwt")
+        prefs.remove(JWT_SP_KEY)
     }
 
     companion object {
