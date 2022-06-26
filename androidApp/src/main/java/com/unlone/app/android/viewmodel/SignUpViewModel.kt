@@ -6,9 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.android.model.SignUpUiEvent
-import com.unlone.app.auth.AuthRepository
-import com.unlone.app.auth.AuthResult
-import com.unlone.app.auth.ValidPasswordUseCase
+import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.auth.AuthResult
+import com.unlone.app.domain.useCases.ValidPasswordUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch

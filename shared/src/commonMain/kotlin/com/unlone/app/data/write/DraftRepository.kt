@@ -1,5 +1,6 @@
-package com.unlone.app.write
+package com.unlone.app.data.write
 
+import com.unlone.app.domain.entities.ParentDraft
 import kotlinx.coroutines.flow.Flow
 
 

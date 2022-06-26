@@ -1,4 +1,4 @@
-package com.unlone.app.auth
+package com.unlone.app.data.auth
 
 import io.ktor.client.*
 import io.ktor.client.call.*

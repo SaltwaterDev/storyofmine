@@ -1,8 +1,8 @@
 package com.unlone.app
 
-import com.unlone.app.auth.AuthApi
-import com.unlone.app.auth.AuthRepositoryImpl
-import com.unlone.app.auth.AuthResult
+import com.unlone.app.data.auth.AuthApi
+import com.unlone.app.data.auth.AuthRepositoryImpl
+import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.utils.KMMPreference
 import io.mockk.coEvery
 import io.mockk.every

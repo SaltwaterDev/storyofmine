@@ -1,4 +1,4 @@
-package com.unlone.app.write
+package com.unlone.app.data.write
 
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -8,7 +8,6 @@ import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.types.ObjectId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
 
 class DraftRepositoryImpl : DraftRepository {
 

@@ -1,5 +1,7 @@
-package com.unlone.app.write
+package com.unlone.app.domain.useCases.write
 
+import com.unlone.app.data.ChildDraft
+import com.unlone.app.data.write.DraftRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

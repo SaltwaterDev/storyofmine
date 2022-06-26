@@ -2,12 +2,10 @@ package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.write.*
-import kotlinx.coroutines.Dispatchers
+import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.koin.core.KoinApplication.Companion.init
 
 data class WritingUiState(
     val currentDraftId: String? = null,

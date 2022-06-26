@@ -1,6 +1,6 @@
 package com.unlone.app
 
-import com.unlone.app.auth.AuthApiService
+import com.unlone.app.data.auth.AuthApiService
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import io.ktor.utils.io.*

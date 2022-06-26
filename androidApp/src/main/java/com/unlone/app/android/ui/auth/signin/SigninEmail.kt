@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.unlone.app.android.R
 import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.android.viewmodel.SignInViewModel
-import com.unlone.app.auth.AuthResult
+import com.unlone.app.data.auth.AuthResult
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi

@@ -2,8 +2,8 @@ package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.auth.AuthRepository
-import com.unlone.app.auth.AuthResult
+import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.auth.AuthResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
