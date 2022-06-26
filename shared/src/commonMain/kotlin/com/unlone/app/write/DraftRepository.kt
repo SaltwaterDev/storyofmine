@@ -4,7 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface DraftRepository {
-    fun getAllDraftTitles(): Flow<List<String>>
-    fun getCurrentDraft(): Flow<ParentDraftRealmObject?>
-    suspend fun saveDraft(title: String, content: String)
+    fun getAllDrafts(): Flow<List<ParentDraft>>
+    fun queryDraft(id: String): Flow<ParentDraft>
+    fun getLastEditedDraft(): Flow<ParentDraft?>
+    fun saveDraft(id: String?, title: String, content: String)
 }

@@ -40,7 +40,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // compose
-    val composeVersion = "1.2.0-rc01"
+    val composeVersion = "1.2.0-rc02"
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:1.2.0-rc02")
@@ -65,9 +65,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc02")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc02")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.3")
 
     // log
     implementation("com.jakewharton.timber:timber:5.0.1")
@@ -84,7 +84,7 @@ dependencies {
 
 
 object Versions {
-    const val koin = "3.2.0"
+    const val koin = "3.2.0-beta-1"
 }
 
 object Deps {

@@ -1,10 +1,12 @@
 package com.unlone.app.android.ui.write
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -12,6 +14,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.unlone.app.android.viewmodel.WritingUiState
 import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -27,8 +30,6 @@ fun WritingScreen(
 
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
-
-    Timber.d(WindowInsets.ime.getBottom(LocalDensity.current).toString())
 
     // todo: create a custom scaffold that control whether to close the bottom nav bar
     val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
@@ -75,13 +76,11 @@ fun WritingScreen(
                     }
                 }
             },
-            sheetContent = {
-                PreviewBottomSheet()
-            },
+            sheetContent = { PreviewBottomSheet() },
             sheetPeekHeight = 0.dp,
             drawerContent = {
                 OptionsDrawer(
-                    viewModelState.draftList,
+                    viewModelState.draftList.values.toList(),
                     clearAll = {
                         viewModel.clearTitleAndContent()
                         scope.launch { scaffoldState.drawerState.close() }
@@ -119,7 +118,7 @@ fun WritingScreen(
                 )
             }
         }
-/*
+
         if (isKeyboardVisible)
             Row(
                 Modifier
@@ -131,7 +130,7 @@ fun WritingScreen(
             ) {
 
             }
-*/
+
 
     }
 

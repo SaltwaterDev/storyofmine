@@ -1,6 +1,5 @@
 package com.unlone.app
 
-import io.ktor.client.*
 import io.ktor.client.engine.*
 
 

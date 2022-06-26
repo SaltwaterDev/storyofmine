@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
@@ -29,8 +30,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.compose.viewModel
 
 
-
-@OptIn(InternalCoroutinesApi::class, ExperimentalComposeUiApi::class,
+@OptIn(
+    InternalCoroutinesApi::class, ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -44,9 +45,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
     ) {
 
         composable(UnloneBottomNav.Write.name) {
-
             val viewModel by viewModel<WritingViewModel>()
-
             WritingScreen(viewModel)
         }
 
