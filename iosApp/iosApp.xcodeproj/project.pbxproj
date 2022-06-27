@@ -15,7 +15,11 @@
 		F507A0FF284CA75B00CA7936 /* WritingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507A0FE284CA75B00CA7936 /* WritingScreen.swift */; };
 		F507A102284CA7F400CA7936 /* StoriesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507A100284CA7F400CA7936 /* StoriesScreen.swift */; };
 		F507A103284CA7F400CA7936 /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507A101284CA7F400CA7936 /* ProfileScreen.swift */; };
-		F507A109284CA99100CA7936 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507A108284CA99100CA7936 /* LoginScreen.swift */; };
+		F507A109284CA99100CA7936 /* LoginEmailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507A108284CA99100CA7936 /* LoginEmailScreen.swift */; };
+		F50AD2152856203200CD4CBC /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50AD2142856203200CD4CBC /* SignInViewModel.swift */; };
+		F572174D28689CCF002F1669 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F572174C28689CCF002F1669 /* LoginScreen.swift */; };
+		F5DD60A3285F860400EED713 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DD60A2285F860400EED713 /* Navigation.swift */; };
+		F5F6B03C2856628700756A0D /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F6B03B2856628600756A0D /* SignUpViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +35,11 @@
 		F507A0FE284CA75B00CA7936 /* WritingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingScreen.swift; sourceTree = "<group>"; };
 		F507A100284CA7F400CA7936 /* StoriesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesScreen.swift; sourceTree = "<group>"; };
 		F507A101284CA7F400CA7936 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
-		F507A108284CA99100CA7936 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		F507A108284CA99100CA7936 /* LoginEmailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEmailScreen.swift; sourceTree = "<group>"; };
+		F50AD2142856203200CD4CBC /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		F572174C28689CCF002F1669 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		F5DD60A2285F860400EED713 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
+		F5F6B03B2856628600756A0D /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +91,8 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				F5DD60A1285F85F300EED713 /* utils */,
+				F50AD2132856200900CD4CBC /* ViewModel */,
 				F507A104284CA87F00CA7936 /* ui */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF82242A565900829871 /* ContentView.swift */,
@@ -132,9 +142,27 @@
 		F507A107284CA97300CA7936 /* auth */ = {
 			isa = PBXGroup;
 			children = (
-				F507A108284CA99100CA7936 /* LoginScreen.swift */,
+				F572174C28689CCF002F1669 /* LoginScreen.swift */,
+				F507A108284CA99100CA7936 /* LoginEmailScreen.swift */,
 			);
 			path = auth;
+			sourceTree = "<group>";
+		};
+		F50AD2132856200900CD4CBC /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				F50AD2142856203200CD4CBC /* SignInViewModel.swift */,
+				F5F6B03B2856628600756A0D /* SignUpViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		F5DD60A1285F85F300EED713 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				F5DD60A2285F860400EED713 /* Navigation.swift */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -234,11 +262,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				F50AD2152856203200CD4CBC /* SignInViewModel.swift in Sources */,
+				F5F6B03C2856628700756A0D /* SignUpViewModel.swift in Sources */,
 				F507A0FF284CA75B00CA7936 /* WritingScreen.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				F507A102284CA7F400CA7936 /* StoriesScreen.swift in Sources */,
+				F5DD60A3285F860400EED713 /* Navigation.swift in Sources */,
 				F507A103284CA7F400CA7936 /* ProfileScreen.swift in Sources */,
-				F507A109284CA99100CA7936 /* LoginScreen.swift in Sources */,
+				F507A109284CA99100CA7936 /* LoginEmailScreen.swift in Sources */,
+				F572174D28689CCF002F1669 /* LoginScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
