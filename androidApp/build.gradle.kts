@@ -40,13 +40,17 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // compose
-    val composeVersion = "1.1.1"
+    val composeVersion = "1.2.0-rc02"
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:1.2.0-beta02")
+    implementation("androidx.compose.material:material:1.2.0-rc02")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.navigation:navigation-compose:2.4.2")
+
+    // accompanist
+    val accompanistVersion = "0.24.11-rc"
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
     // testing
     testImplementation("junit:junit:4.13.2")
@@ -56,24 +60,17 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 
+
     // ktx
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc01")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc01")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc02")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc02")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.3")
 
     // log
     implementation("com.jakewharton.timber:timber:5.0.1")
-//    implementation ("io.github.aakira:napier:2.6.1")
-
-    // room
-    val roomVersion = "2.4.2"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    testImplementation("androidx.room:room-testing:$roomVersion")
 
     // koin
     with(Deps.Koin) {

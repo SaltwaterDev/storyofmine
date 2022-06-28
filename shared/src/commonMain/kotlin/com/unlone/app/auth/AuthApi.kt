@@ -2,14 +2,23 @@ package com.unlone.app.auth
 
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.engine.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 
 
-class AuthApi {
-    private val client = HttpClient {
+interface AuthApi {
+    suspend fun signUp(request: AuthRequest)
+    suspend fun checkEmailExisted(request: AuthEmailRequest)
+    suspend fun signIn(request: AuthRequest): TokenResponse
+    suspend fun validateEmail(request: AuthEmailRequest)
+    suspend fun authenticate(token: String)
+}
+
+class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
+    private val client = HttpClient(httpClientEngine) {
         expectSuccess = true
         install(ContentNegotiation) {
             json()
@@ -17,14 +26,14 @@ class AuthApi {
     }
 
 
-    suspend fun signUp(request: AuthRequest) {
+    override suspend fun signUp(request: AuthRequest) {
         client.post(baseUrl + "signup/emailAndPassword") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
     }
 
-    suspend fun signUpEmail(request: AuthEmailRequest) {
+    override suspend fun checkEmailExisted(request: AuthEmailRequest) {
         client.post(baseUrl + "signup/email") {
             contentType(ContentType.Application.Json)
             setBody(request)
@@ -32,7 +41,7 @@ class AuthApi {
     }
 
 
-    suspend fun signInEmail(request: AuthEmailRequest) {
+    override suspend fun validateEmail(request: AuthEmailRequest) {
         client.post(baseUrl + "signin/email") {
             contentType(ContentType.Application.Json)
             setBody(request)
@@ -40,7 +49,7 @@ class AuthApi {
     }
 
 
-    suspend fun signIn(request: AuthRequest): TokenResponse {
+    override suspend fun signIn(request: AuthRequest): TokenResponse {
         val response = client.post(baseUrl + "signin/emailAndPassword") {
             contentType(ContentType.Application.Json)
             setBody(request)
@@ -49,7 +58,7 @@ class AuthApi {
     }
 
 
-    suspend fun authenticate(token: String) {
+    override suspend fun authenticate(token: String) {
         client.get(baseUrl + "authenticate") {
             header("Authorization", token)
         }

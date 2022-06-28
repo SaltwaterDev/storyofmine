@@ -5,7 +5,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     kotlin("plugin.serialization") version "1.6.21"
-
+    id("io.realm.kotlin")
 }
 
 version = "1.0"
@@ -34,7 +34,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
+                // koin
                 with(Deps.Koin) {
                     api(core)
                     api(test)
@@ -42,12 +42,19 @@ kotlin {
                 // logger
                 implementation(kotlin("stdlib-common"))
                 implementation("co.touchlab:kermit:1.0.2")
-
+                // mongodb realm
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
+                implementation("io.realm.kotlin:library-base:1.0.0")
+                // datetime
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation("io.mockk:mockk:1.12.4")
+                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3")
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }
         val androidMain by getting {

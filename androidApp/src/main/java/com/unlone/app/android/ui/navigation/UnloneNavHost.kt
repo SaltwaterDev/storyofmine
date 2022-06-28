@@ -1,5 +1,7 @@
 package com.unlone.app.android.ui.navigation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
@@ -14,38 +16,24 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.unlone.app.android.ui.UnloneBottomNav
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.ui.lounge.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
 import com.unlone.app.android.ui.profile.ProfileScreen
-import com.unlone.app.ui.write.WritingScreen
+import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.viewmodel.PostDetailViewModel
-import com.unlone.app.viewmodel.WritingViewModel
+import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.compose.viewModel
 
 
-enum class UnloneBottomNav(val icon: ImageVector) {
-
-    Write(icon = Icons.Filled.Create),
-    Stories(icon = Icons.Filled.Add),
-    Profile(icon = Icons.Filled.Face);
-
-    companion object {
-        fun fromRoute(route: String?): UnloneBottomNav =
-            when (route?.substringBefore("/")) {
-                Write.name -> Write
-                Stories.name -> Stories
-                Profile.name -> Profile
-                null -> Stories
-                else -> throw IllegalArgumentException("Route $route is not recognized.")
-            }
-    }
-}
-
-@OptIn(InternalCoroutinesApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    InternalCoroutinesApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
 
@@ -57,9 +45,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
     ) {
 
         composable(UnloneBottomNav.Write.name) {
-
             val viewModel by viewModel<WritingViewModel>()
-
             WritingScreen(viewModel)
         }
 

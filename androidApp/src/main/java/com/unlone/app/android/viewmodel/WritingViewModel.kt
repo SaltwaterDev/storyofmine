@@ -1,38 +1,86 @@
-package com.unlone.app.viewmodel
+package com.unlone.app.android.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.unlone.app.android.data.repo.DraftRepository
+import androidx.lifecycle.viewModelScope
+import com.unlone.app.write.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import org.koin.core.KoinApplication.Companion.init
 
 data class WritingUiState(
-    val title: String = "Untitled",
+    val currentDraftId: String? = null,
+    val title: String = "",
     val content: String = "",
-    val draftList: List<String> = emptyList()
+    val draftList: Map<String, String> = mapOf()
 )
 
 
 class WritingViewModel(
-    draftRepository: DraftRepository
+    getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
+    getLastEditedDraftUseCase: GetLastEditedDraftUseCase,
+    private val saveDraftUseCase: SaveDraftUseCase,
 ) : ViewModel() {
 
-    var state by mutableStateOf(
-        WritingUiState(
-            draftList = draftRepository.getAllDraftTitles()
+    private val stateChangedChannel = Channel<WritingUiState>()
+    private val stateChangedResult = stateChangedChannel.receiveAsFlow()
+
+    //    private val _state = MutableStateFlow(WritingUiState())
+    val state: StateFlow<WritingUiState> = combine(
+        stateChangedResult,
+        getAllDraftsTitleUseCase()
+    ) { changed, allDraftTitles ->
+        changed.copy(
+            draftList = allDraftTitles
         )
-    )
-        private set
+    }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
+
+    val draftList: StateFlow<Map<String, String>> =
+        getAllDraftsTitleUseCase().stateIn(viewModelScope, SharingStarted.Lazily, mapOf())
+
+    init {
+        viewModelScope.launch {
+            getLastEditedDraftUseCase().filterNotNull().collect {
+                stateChangedChannel.send(
+                    WritingUiState(
+                        currentDraftId = it.first,
+                        title = it.second.title,
+                        content = it.second.content,
+                    )
+                )
+            }
+        }
+    }
+
 
     fun setTitle(title: String) {
-        state = state.copy(title = title)
+        viewModelScope.launch {
+            stateChangedChannel.send(state.value.copy(title = title))
+        }
     }
 
     fun setContent(content: String) {
-        state = state.copy(content = content)
+        viewModelScope.launch {
+            stateChangedChannel.send(state.value.copy(content = content))
+        }
     }
 
     fun clearTitleAndContent() {
-        state = state.copy(title = "", content = "")
+        viewModelScope.launch {
+            stateChangedChannel.send(state.value.copy(title = "", content = ""))
+        }
+    }
+
+    fun saveDraft() {
+        viewModelScope.launch {
+            if (state.value.title.isNotBlank() && state.value.content.isNotBlank()) {
+                saveDraftUseCase(
+                    state.value.currentDraftId,
+                    state.value.title,
+                    state.value.content
+                )
+            }
+        }
     }
 }

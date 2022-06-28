@@ -20,7 +20,7 @@ fun ProfileScreen(
 
     val state = viewModel.state.collectAsState().value
 
-    fun goToDraft() {}
+//    fun goToDraft() {}
     fun goToMyStories() {}
     fun goToSavedStories() {}
     fun goToSetting() {}
@@ -29,7 +29,6 @@ fun ProfileScreen(
 
     fun ProfileItemList.takeAction() {
         when (this) {
-            is ProfileItemList.Draft -> goToDraft()
             is ProfileItemList.MyStories -> goToMyStories()
             is ProfileItemList.Saved -> goToSavedStories()
             is ProfileItemList.Setting -> goToSetting()
