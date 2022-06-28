@@ -1,5 +1,6 @@
-package com.unlone.app.auth
+package com.unlone.app.data.auth
 
+import co.touchlab.kermit.Logger
 import com.unlone.app.utils.KMMPreference
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -34,8 +35,8 @@ class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
+            Logger.e(e.toString())
             AuthResult.UnknownError()
-            // todo
         }
     }
 
@@ -60,8 +61,8 @@ class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
+            Logger.e(e.toString())
             AuthResult.UnknownError()
-            // todo
         }
     }
 
@@ -86,6 +87,7 @@ class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
+            Logger.e(e.toString())
             AuthResult.UnknownError()
         }
     }
@@ -113,6 +115,7 @@ class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
+            Logger.e(e.toString())
             AuthResult.UnknownError()
         }
     }

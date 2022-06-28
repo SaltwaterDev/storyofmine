@@ -12,12 +12,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unlone.app.android.model.SignUpUiEvent
 import com.unlone.app.android.viewmodel.SignUpViewModel
-import com.unlone.app.auth.AuthResult
+import com.unlone.app.data.auth.AuthResult
 
 @Composable
 fun SignUpScreen(

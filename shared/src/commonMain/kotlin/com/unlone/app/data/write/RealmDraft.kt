@@ -1,26 +1,13 @@
-package com.unlone.app.write
+package com.unlone.app.data.write
 
+import com.unlone.app.domain.entities.ChildDraft
+import com.unlone.app.domain.entities.ParentDraft
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.ObjectId
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
-
-
-// entities
-data class ParentDraft(
-    val id: String,
-    val childDrafts: List<ChildDraft>,
-    val topics: List<String> = emptyList(),
-)
-
-data class ChildDraft(
-    val version: String,
-    val title: String,
-    val content: String,
-    val timeStamp: Long
-)
 
 
 // classes for realm
@@ -43,6 +30,7 @@ fun ParentDraftRealmObject.toParentDraft() =
             .map { it1 -> it1.toChildDraft() },
         topics = this.topics,
     )
+
 
 
 class ChildDraftRealmObject : RealmObject {

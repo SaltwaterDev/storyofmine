@@ -2,13 +2,11 @@ package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.auth.AuthRepository
-import com.unlone.app.auth.AuthResult
+import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.model.PostsByTopic
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class LoungeUiState(
     val loading: Boolean = true,

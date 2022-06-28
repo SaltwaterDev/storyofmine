@@ -1,13 +1,15 @@
 package com.unlone.app.di
 
 import com.unlone.app.Greeting
-import com.unlone.app.auth.*
+import com.unlone.app.data.auth.*
+import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.auth.AuthRepositoryImpl
+import com.unlone.app.data.write.DraftRepository
+import com.unlone.app.data.write.DraftRepositoryImpl
+import com.unlone.app.domain.useCases.ValidPasswordUseCase
 import com.unlone.app.httpClientEngine
 import com.unlone.app.utils.KMMPreference
-import com.unlone.app.write.*
-import io.ktor.client.engine.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.unlone.app.domain.useCases.write.*
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

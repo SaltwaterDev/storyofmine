@@ -1,4 +1,5 @@
-package com.unlone.app.auth
+package com.unlone.app.data.auth
+
 
 interface AuthRepository {
     suspend fun signUpEmail(email: String): AuthResult<Unit>
