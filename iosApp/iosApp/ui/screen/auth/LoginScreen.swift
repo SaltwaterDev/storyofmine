@@ -18,7 +18,8 @@ struct LoginScreen: View {
             TextField("Username", text: $username).padding()
             TextField("Password", text: $password).padding()
             Button("Sign In", action: {
-                AuthRepositor            })
+//                AuthRepositor
+            })
         }
         
     }

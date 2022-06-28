@@ -41,7 +41,7 @@ kotlin {
                 }
                 // logger
                 implementation(kotlin("stdlib-common"))
-                implementation("co.touchlab:kermit:1.0.2")
+                implementation("co.touchlab:kermit:1.1.3")
                 // mongodb realm
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
                 implementation("io.realm.kotlin:library-base:1.0.0")

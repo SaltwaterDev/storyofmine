@@ -11,7 +11,7 @@ import shared
 
 class SignUpViewModel: ObservableObject {
     
-    private let authRepo = AuthRepository()
+    private let authRepo = AuthRepositoryHelper().authRepo()
     
     init(){
     }
