@@ -24,7 +24,6 @@ class WritingViewModel(
     private val stateChangedChannel = Channel<WritingUiState>()
     private val stateChangedResult = stateChangedChannel.receiveAsFlow()
 
-    //    private val _state = MutableStateFlow(WritingUiState())
     val state: StateFlow<WritingUiState> = combine(
         stateChangedResult,
         getAllDraftsTitleUseCase()
@@ -33,9 +32,6 @@ class WritingViewModel(
             draftList = allDraftTitles
         )
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
-
-    val draftList: StateFlow<Map<String, String>> =
-        getAllDraftsTitleUseCase().stateIn(viewModelScope, SharingStarted.Lazily, mapOf())
 
     init {
         viewModelScope.launch {
@@ -79,6 +75,12 @@ class WritingViewModel(
                     state.value.content
                 )
             }
+        }
+    }
+
+    fun createNewDraft() {
+        viewModelScope.launch {
+            stateChangedChannel.send(WritingUiState())
         }
     }
 }

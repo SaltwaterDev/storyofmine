@@ -1,84 +1,87 @@
-package com.unlone.app.android.ui
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.unlone.app.android
 
 import android.content.res.Resources
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.CoroutineScope
-import timber.log.Timber
 
-enum class UnloneBottomNav(val icon: ImageVector) {
-
-    Write(icon = Icons.Filled.Create),
-    Stories(icon = Icons.Filled.Add),
-    Profile(icon = Icons.Filled.Face);
-
-    companion object {
-        fun fromRoute(route: String?): UnloneBottomNav =
-            when (route?.substringBefore("/")) {
-                Write.name -> Write
-                Stories.name -> Stories
-                Profile.name -> Profile
-                null -> Stories
-                else -> throw IllegalArgumentException("Route $route is not recognized.")
-            }
-    }
+/**
+ * Destinations used in the [JetsnackApp].
+ */
+enum class UnloneBottomDestinations(val icon: ImageVector, val route: String) {
+    Write(icon = Icons.Filled.Create, route = "write"),
+    Stories(icon = Icons.Filled.Add, route = "stories"),
+    Profile(icon = Icons.Filled.Face, route = "profiles");
 }
-
 
 /**
  * Remembers and creates an instance of [UnloneAppState]
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun rememberUnloneAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberNavController(),
-    resources: Resources = resources(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) =
-    remember(scaffoldState, navController, resources, coroutineScope) {
-        UnloneAppState(scaffoldState, navController, resources, coroutineScope)
+    remember(scaffoldState, navController) {
+        UnloneAppState(scaffoldState, navController)
     }
 
 /**
- * Responsible for holding state related to [UnloneApp] and containing UI-related logic.
+ * Responsible for holding state related to [JetsnackApp] and containing UI-related logic.
  */
+@ExperimentalLayoutApi
 @Stable
 class UnloneAppState(
     val scaffoldState: ScaffoldState,
     val navController: NavHostController,
-    private val resources: Resources,
-    coroutineScope: CoroutineScope
 ) {
 
     // ----------------------------------------------------------
     // BottomBar state source of truth
     // ----------------------------------------------------------
 
+    val bottomBarTabs = UnloneBottomDestinations.values()
+
     // Reading this attribute will cause recompositions when the bottom bar needs shown, or not.
     // Not all routes need to show the bottom bar.
     val shouldShowBottomBar: Boolean
-        @Composable get() =
-                !isKeyboardVisible()
-//            navController
-//            .currentBackStackEntryAsState().value?.destination?.route in bottomBarRoutes ||
+        @Composable get() = !WindowInsets.isImeVisible
 
     // ----------------------------------------------------------
     // Navigation state source of truth
@@ -102,6 +105,14 @@ class UnloneAppState(
                     saveState = true
                 }
             }
+        }
+    }
+
+    // todo
+    fun navigateToStoriesDetail(pid: Long, from: NavBackStackEntry) {
+        // In order to discard duplicated navigation events, we check the Lifecycle
+        if (from.lifecycleIsResumed()) {
+            navController.navigate("${UnloneBottomDestinations.Stories}/$pid")
         }
     }
 }
@@ -135,11 +146,4 @@ private tailrec fun findStartDestination(graph: NavDestination): NavDestination 
 private fun resources(): Resources {
     LocalConfiguration.current
     return LocalContext.current.resources
-}
-
-@Composable
-private fun isKeyboardVisible():Boolean {
-    Timber.d(WindowInsets.ime.getBottom(LocalDensity.current).toString())
-    LocalDensity.current
-    return WindowInsets.ime.getBottom(LocalDensity.current) > 0
 }

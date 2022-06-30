@@ -1,6 +1,5 @@
 package com.unlone.app.android.ui.write
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,55 +9,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.unlone.app.android.viewmodel.WritingUiState
 import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@ExperimentalLayoutApi
+@ExperimentalMaterialApi
 @Composable
 fun WritingScreen(
-    viewModel: WritingViewModel
+    viewModel: WritingViewModel,
+    navToEditHistory: (String) -> Unit,
 ) {
-    val viewModelState = viewModel.state.collectAsState().value
+    val uiState = viewModel.state.collectAsState().value
     val context = LocalContext.current
 
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
-
-    // todo: create a custom scaffold that control whether to close the bottom nav bar
-    val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    val isKeyboardVisible = WindowInsets.isImeVisible
     val systemUiController: SystemUiController = rememberSystemUiController()
 
     DisposableEffect(key1 = context) {
         onDispose {
-            // when leaving the page, save the current draft
             viewModel.saveDraft()
             systemUiController.isSystemBarsVisible = true
         }
     }
 
-    // todo: when keyboard is opened, hide the system bar + bottom bar
-    if (isKeyboardVisible) {
-        LaunchedEffect(isKeyboardVisible) {
-            systemUiController.isSystemBarsVisible = false
-        }
+    LaunchedEffect(isKeyboardVisible) {
+        systemUiController.isSystemBarsVisible = !isKeyboardVisible
     }
-
 
     Box {
         BottomSheetScaffold(
-            modifier = Modifier
-                .statusBarsPadding()
-                .navigationBarsPadding(),
+            modifier = Modifier.systemBarsPadding(),
             scaffoldState = scaffoldState,
             topBar = {
-                TopAppBar() {
+                TopAppBar {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
@@ -80,20 +69,26 @@ fun WritingScreen(
             sheetPeekHeight = 0.dp,
             drawerContent = {
                 OptionsDrawer(
-                    viewModelState.draftList.values.toList(),
+                    uiState.draftList.values.toList(),
                     clearAll = {
                         viewModel.clearTitleAndContent()
                         scope.launch { scaffoldState.drawerState.close() }
-                    })
+                    },
+                    newDraft = { viewModel.createNewDraft() },
+                    editHistory = { uiState.currentDraftId?.let { navToEditHistory(it) } },
+                )
             },
         ) { innerPadding ->
 
             Column(
-                Modifier.padding(innerPadding)
+                Modifier
+                    .padding(innerPadding)
+                    .navigationBarsPadding()
+                    .statusBarsPadding()
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = viewModelState.title,
+                    value = uiState.title,
                     onValueChange = { viewModel.setTitle(it) },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -106,7 +101,7 @@ fun WritingScreen(
 
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = viewModelState.content,
+                    value = uiState.content,
                     onValueChange = { viewModel.setContent(it) },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -130,8 +125,6 @@ fun WritingScreen(
             ) {
 
             }
-
-
     }
 
 }
@@ -149,7 +142,12 @@ fun PreviewBottomSheet() {
 
 
 @Composable
-fun OptionsDrawer(listOfDraft: List<String>, clearAll: () -> Unit) {
+fun OptionsDrawer(
+    listOfDraft: List<String>,
+    clearAll: () -> Unit,
+    editHistory: () -> Unit,
+    newDraft: () -> Unit,
+) {
     Column {
         Text(text = "Clear", modifier = Modifier
             .fillMaxWidth()
@@ -158,7 +156,12 @@ fun OptionsDrawer(listOfDraft: List<String>, clearAll: () -> Unit) {
         Divider(Modifier.fillMaxWidth())
         Text(text = "Edit History", modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable { editHistory() }
+            .padding(15.dp))
+        Divider(Modifier.fillMaxWidth())
+        Text(text = "New Draft", modifier = Modifier
+            .fillMaxWidth()
+            .clickable { newDraft() }
             .padding(15.dp))
         Divider(Modifier.fillMaxWidth())
 

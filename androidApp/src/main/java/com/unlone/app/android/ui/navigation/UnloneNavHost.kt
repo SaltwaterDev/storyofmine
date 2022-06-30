@@ -1,55 +1,51 @@
 package com.unlone.app.android.ui.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.unlone.app.android.ui.UnloneBottomNav
-import com.unlone.app.android.viewmodel.ProfileViewModel
+import com.unlone.app.android.UnloneBottomDestinations
+import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
+import com.unlone.app.android.ui.write.WritingScreen
+import com.unlone.app.android.viewmodel.ProfileViewModel
+import com.unlone.app.android.viewmodel.StoriesViewModel
+import com.unlone.app.android.viewmodel.WritingViewModel
 import com.unlone.app.ui.lounge.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
-import com.unlone.app.android.ui.profile.ProfileScreen
-import com.unlone.app.android.ui.write.WritingScreen
-import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.viewmodel.PostDetailViewModel
-import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.compose.viewModel
 
 
+@ExperimentalMaterialApi
+@ExperimentalLayoutApi
 @OptIn(
     InternalCoroutinesApi::class, ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable
 fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
-
-
     NavHost(
         navController = navController,
-        startDestination = UnloneBottomNav.Write.name,
+        startDestination = UnloneBottomDestinations.Write.route,
         modifier = modifier
     ) {
 
-        composable(UnloneBottomNav.Write.name) {
+        composable(UnloneBottomDestinations.Write.route) {
             val viewModel by viewModel<WritingViewModel>()
-            WritingScreen(viewModel)
+            WritingScreen(viewModel, navToEditHistory = { /*todo*/ })
         }
 
-        composable(UnloneBottomNav.Stories.name) {
+        composable(UnloneBottomDestinations.Stories.route) {
             val viewModel by viewModel<StoriesViewModel>()
             StoriesScreen(
                 viewModel = viewModel,
@@ -58,12 +54,12 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                 navToAuthGraph = { navigateToAuth(navController) }
             )
         }
-        composable(UnloneBottomNav.Profile.name) {
+        composable(UnloneBottomDestinations.Profile.route) {
             val viewModel by viewModel<ProfileViewModel>()
             ProfileScreen(viewModel)
         }
         composable(
-            "post/{pid}",
+            "${UnloneBottomDestinations.Profile.route}/{pid}",
             arguments = listOf(navArgument("pid") { type = NavType.StringType })
         ) {
             val viewModel by viewModel<PostDetailViewModel>()
@@ -78,7 +74,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
         authGraph(
             navController,
             onSigninOrSignupFinished = {
-                navController.navigate(UnloneBottomNav.Stories.name) {
+                navController.navigate(UnloneBottomDestinations.Stories.route) {
                     popUpTo(navController.graph.findStartDestination().id)
                 }
             },
