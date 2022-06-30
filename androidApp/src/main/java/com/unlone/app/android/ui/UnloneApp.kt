@@ -1,4 +1,4 @@
-package com.unlone.app.android
+package com.unlone.app.android.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.ExperimentalLayoutApi

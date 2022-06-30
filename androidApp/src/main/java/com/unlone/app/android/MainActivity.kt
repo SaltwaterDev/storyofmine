@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.core.view.WindowCompat
+import com.unlone.app.android.ui.UnloneApp
 import kotlinx.coroutines.InternalCoroutinesApi
 
 

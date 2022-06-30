@@ -12,7 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.unlone.app.android.UnloneBottomDestinations
+import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.write.WritingScreen
