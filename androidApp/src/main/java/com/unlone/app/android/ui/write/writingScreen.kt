@@ -65,7 +65,11 @@ fun WritingScreen(
                     }
                 }
             },
-            sheetContent = { PreviewBottomSheet() },
+            sheetContent = { PreviewBottomSheet(
+                title = uiState.title,
+                content = uiState.content,
+                onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() }}
+            ) },
             sheetPeekHeight = 0.dp,
             drawerContent = {
                 OptionsDrawer(
@@ -130,13 +134,18 @@ fun WritingScreen(
 }
 
 @Composable
-fun PreviewBottomSheet() {
+fun PreviewBottomSheet(
+    title: String,
+    content: String,
+    onClose: () -> Unit
+) {
     Column(
         Modifier
             .fillMaxWidth()
-            .height(50.dp)
+            .wrapContentHeight()
     ) {
-        Text(text = "hello world")
+        Text(text = title)
+        Text(text = content)
     }
 }
 
