@@ -4,18 +4,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.unlone.app.android.R
 import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.launch
 
 
+@ExperimentalAnimatedInsets
 @ExperimentalLayoutApi
 @ExperimentalMaterialApi
 @Composable
@@ -32,15 +39,13 @@ fun WritingScreen(
     val systemUiController: SystemUiController = rememberSystemUiController()
 
     DisposableEffect(key1 = context) {
+        systemUiController.isSystemBarsVisible = false
         onDispose {
             viewModel.saveDraft()
             systemUiController.isSystemBarsVisible = true
         }
     }
 
-    LaunchedEffect(isKeyboardVisible) {
-        systemUiController.isSystemBarsVisible = !isKeyboardVisible
-    }
 
     Box {
         BottomSheetScaffold(
@@ -65,30 +70,43 @@ fun WritingScreen(
                     }
                 }
             },
-            sheetContent = { PreviewBottomSheet(
-                title = uiState.title,
-                content = uiState.content,
-                onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() }}
-            ) },
+            sheetContent = {
+                PreviewBottomSheet(
+                    title = uiState.title,
+                    content = uiState.content,
+                    onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } }
+                )
+            },
             sheetPeekHeight = 0.dp,
             drawerContent = {
                 OptionsDrawer(
-                    uiState.draftList.values.toList(),
+                    uiState.draftList,
                     clearAll = {
                         viewModel.clearTitleAndContent()
                         scope.launch { scaffoldState.drawerState.close() }
                     },
-                    newDraft = { viewModel.createNewDraft() },
-                    editHistory = { uiState.currentDraftId?.let { navToEditHistory(it) } },
+                    newDraft = {
+                        viewModel.createNewDraft()
+                        scope.launch { scaffoldState.drawerState.close() }
+                    },
+                    editHistory = {
+                        uiState.currentDraftId?.let { navToEditHistory(it) }
+                        scope.launch { scaffoldState.drawerState.close() }
+                    },
+                    switchDraft = {
+                        viewModel.switchDraft(it)
+                        scope.launch { scaffoldState.drawerState.close() }
+                    }
                 )
             },
         ) { innerPadding ->
-
             Column(
                 Modifier
                     .padding(innerPadding)
-                    .navigationBarsPadding()
                     .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .imePadding()
+                    .imeNestedScroll()
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -104,7 +122,9 @@ fun WritingScreen(
                 )
 
                 TextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = if (isKeyboardVisible) imeToolBarHeight.dp else 0.dp),
                     value = uiState.content,
                     onValueChange = { viewModel.setContent(it) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -123,7 +143,7 @@ fun WritingScreen(
                 Modifier
                     .align(Alignment.BottomStart)
                     .imePadding()
-                    .height(50.dp)
+                    .height(imeToolBarHeight.dp)
                     .fillMaxWidth()
                     .background(Color.Green)
             ) {
@@ -142,8 +162,16 @@ fun PreviewBottomSheet(
     Column(
         Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
+            .fillMaxHeight(0.4f)
     ) {
+        IconButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) {
+            Icon(
+                painter = painterResource(id = R.drawable.icon_close),
+                contentDescription = "close",
+                tint = Color.Unspecified,
+                modifier = Modifier.size(30.dp)
+            )
+        }
         Text(text = title)
         Text(text = content)
     }
@@ -152,12 +180,14 @@ fun PreviewBottomSheet(
 
 @Composable
 fun OptionsDrawer(
-    listOfDraft: List<String>,
+    listOfDraft: Map<String, String>,
     clearAll: () -> Unit,
     editHistory: () -> Unit,
     newDraft: () -> Unit,
+    switchDraft: (String) -> Unit,
 ) {
     Column {
+        Text(text = "Options")
         Text(text = "Clear", modifier = Modifier
             .fillMaxWidth()
             .clickable { clearAll() }
@@ -177,12 +207,17 @@ fun OptionsDrawer(
         Spacer(modifier = Modifier.height(50.dp))
 
 
-        listOfDraft.forEach {
-            Text(text = it, modifier = Modifier
+        listOfDraft.entries.forEach {
+            Text(text = it.value, modifier = Modifier
                 .fillMaxWidth()
-                .clickable { }
+                .clickable {
+                    switchDraft(it.key)
+                }
                 .padding(15.dp))
             Divider(Modifier.fillMaxWidth())
         }
     }
 }
+
+
+const val imeToolBarHeight = 50

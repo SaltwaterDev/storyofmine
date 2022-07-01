@@ -47,7 +47,7 @@ fun rememberUnloneAppState(
     }
 
 /**
- * Responsible for holding state related to [JetsnackApp] and containing UI-related logic.
+ * Responsible for holding state related to [UnloneApp] and containing UI-related logic.
  */
 @ExperimentalLayoutApi
 @Stable
@@ -121,13 +121,5 @@ private tailrec fun findStartDestination(graph: NavDestination): NavDestination 
     return if (graph is NavGraph) findStartDestination(graph.startDestination!!) else graph
 }
 
-/**
- * A composable function that returns the [Resources]. It will be recomposed when `Configuration`
- * gets updated.
- */
-@Composable
-@ReadOnlyComposable
-private fun resources(): Resources {
-    LocalConfiguration.current
-    return LocalContext.current.resources
-}
+
+

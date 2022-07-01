@@ -30,6 +30,7 @@ val commonModule = module {
     single { GetLatestDraftUseCase(get()) }
     single { GetLastEditedDraftUseCase(get()) }
     single { SaveDraftUseCase(get()) }
+    single { QueryDraftUseCase(get()) }
 
     // repositories
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }

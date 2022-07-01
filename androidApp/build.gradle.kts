@@ -49,8 +49,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.2")
 
     // accompanist
-    val accompanistVersion = "0.24.11-rc"
+    val accompanistVersion = "0.24.13-rc"
     implementation ("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation ("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    implementation ("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
 
     // testing
     testImplementation("junit:junit:4.13.2")

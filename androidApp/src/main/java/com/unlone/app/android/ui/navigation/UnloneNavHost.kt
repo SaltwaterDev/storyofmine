@@ -12,6 +12,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.google.accompanist.insets.ExperimentalAnimatedInsets
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
@@ -30,7 +32,7 @@ import org.koin.androidx.compose.viewModel
 @ExperimentalLayoutApi
 @OptIn(
     InternalCoroutinesApi::class, ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class, ExperimentalAnimatedInsets::class
 )
 @Composable
 fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier) {

@@ -1,6 +1,6 @@
 package com.unlone.app.data.write
 
-import com.unlone.app.domain.entities.ParentDraft
+import com.unlone.app.domain.entities.Draft
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
@@ -24,7 +24,7 @@ class DraftRepositoryImpl : DraftRepository {
     }
 
 
-    override fun getAllDrafts(): Flow<List<ParentDraft>> {
+    override fun getAllDrafts(): Flow<List<Draft>> {
         // fetch objects from a realm as Flowables
         val flow: Flow<ResultsChange<ParentDraftRealmObject>> =
             realm.query<ParentDraftRealmObject>().asFlow()
@@ -33,15 +33,16 @@ class DraftRepositoryImpl : DraftRepository {
         }
     }
 
-    override fun queryDraft(id: String): Flow<ParentDraft> {
-        return realm.query<ParentDraftRealmObject>("id == $id")
+    override fun queryDraft(id: String): Flow<Draft> {
+        val objectId = ObjectId.from(id)
+        return realm.query<ParentDraftRealmObject>("id == $0", objectId)
             .asFlow()
             .map {
                 it.list.first().toParentDraft()
             }
     }
 
-    override fun getLastEditedDraft(): Flow<ParentDraft?> {
+    override fun getLastEditedDraft(): Flow<Draft?> {
         return realm.query<ParentDraftRealmObject>().asFlow().map { parentDraftResult ->
             val parentDraftList = parentDraftResult.list.toList()
             val parentRealmObject = if (parentDraftList.isNotEmpty()) {
@@ -65,7 +66,7 @@ class DraftRepositoryImpl : DraftRepository {
             }
 
             val existingParentDraftRealmObject: ParentDraftRealmObject? =
-                query<ParentDraftRealmObject>("id == $0",  parentDraftRealmObject.id).first()
+                query<ParentDraftRealmObject>("id == $0", parentDraftRealmObject.id).first()
                     .find()
             if (existingParentDraftRealmObject != null) {
                 existingParentDraftRealmObject.childDraftRealmObjects =

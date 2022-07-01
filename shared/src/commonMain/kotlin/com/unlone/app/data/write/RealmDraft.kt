@@ -1,7 +1,7 @@
 package com.unlone.app.data.write
 
-import com.unlone.app.domain.entities.ChildDraft
-import com.unlone.app.domain.entities.ParentDraft
+import com.unlone.app.domain.entities.DraftVersion
+import com.unlone.app.domain.entities.Draft
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.ObjectId
 import io.realm.kotlin.types.RealmInstant
@@ -23,9 +23,9 @@ fun ParentDraftRealmObject.latestDraft(): ChildDraftRealmObject {
 }
 
 fun ParentDraftRealmObject.toParentDraft() =
-    ParentDraft(
+    Draft(
         id = this.id.toString(),
-        childDrafts = this.childDraftRealmObjects
+        draftVersions = this.childDraftRealmObjects
             .toList()
             .map { it1 -> it1.toChildDraft() },
         topics = this.topics,
@@ -41,7 +41,7 @@ class ChildDraftRealmObject : RealmObject {
 }
 
 fun ChildDraftRealmObject.toChildDraft() =
-    ChildDraft(
+    DraftVersion(
         this.id.toString(),
         this.title,
         this.content,

@@ -19,6 +19,7 @@ class WritingViewModel(
     getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
     getLastEditedDraftUseCase: GetLastEditedDraftUseCase,
     private val saveDraftUseCase: SaveDraftUseCase,
+    private val queryDraftUseCase: QueryDraftUseCase,
 ) : ViewModel() {
 
     private val stateChangedChannel = Channel<WritingUiState>()
@@ -81,6 +82,20 @@ class WritingViewModel(
     fun createNewDraft() {
         viewModelScope.launch {
             stateChangedChannel.send(WritingUiState())
+        }
+    }
+
+    fun switchDraft(id: String) {
+        viewModelScope.launch {
+            queryDraftUseCase(id).collect {
+                stateChangedChannel.send(
+                    state.value.copy(
+                        currentDraftId = it.first,
+                        title = it.second.title,
+                        content = it.second.content,
+                    )
+                )
+            }
         }
     }
 }
