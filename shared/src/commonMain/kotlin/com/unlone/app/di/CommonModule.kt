@@ -35,6 +35,5 @@ val commonModule = module {
     // repositories
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<DraftRepository> { DraftRepositoryImpl() }
-//    single<StoryRepository> { StoryRepositoryImpl(get()) } todo
-    single<StoryRepository> { StoryRepositoryMockImpl() }
+    single<StoryRepository> { StoryRepositoryImpl(get()) }
 }
