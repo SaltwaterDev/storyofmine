@@ -142,6 +142,52 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun requestOtpEmail(): AuthResult<Unit> {
+        return try {
+            api.requestOtp()
+            AuthResult.Authorized()
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            AuthResult.UnknownError()
+        }
+    }
+
+    override suspend fun verifyOtp(email: String, otp: Int): AuthResult<Unit> {
+        return try {
+            api.verifyOtp(
+                AuthOtpRequest(email, otp)
+            )
+            AuthResult.Authorized()
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            AuthResult.UnknownError()
+        }
+    }
+
 
     override fun signOut() {
         prefs.remove(JWT_SP_KEY)

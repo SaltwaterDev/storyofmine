@@ -28,7 +28,6 @@ fun ParentDraftRealmObject.toParentDraft() =
         draftVersions = this.childDraftRealmObjects
             .toList()
             .map { it1 -> it1.toChildDraft() },
-        topics = this.topics,
     )
 
 

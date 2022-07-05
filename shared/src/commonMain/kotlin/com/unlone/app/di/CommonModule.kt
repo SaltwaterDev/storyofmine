@@ -4,8 +4,7 @@ import com.unlone.app.Greeting
 import com.unlone.app.data.auth.*
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthRepositoryImpl
-import com.unlone.app.data.write.DraftRepository
-import com.unlone.app.data.write.DraftRepositoryImpl
+import com.unlone.app.data.write.*
 import com.unlone.app.domain.useCases.ValidPasswordUseCase
 import com.unlone.app.httpClientEngine
 import com.unlone.app.utils.KMMPreference
@@ -22,6 +21,7 @@ val commonModule = module {
     // data source
     single { httpClientEngine }
     single<AuthApi> { AuthApiService(get()) }
+    single<StoryApi> { StoryApiService(get()) }
 
     // use cases
     single { ValidPasswordUseCase() }
@@ -35,4 +35,6 @@ val commonModule = module {
     // repositories
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<DraftRepository> { DraftRepositoryImpl() }
+//    single<StoryRepository> { StoryRepositoryImpl(get()) } todo
+    single<StoryRepository> { StoryRepositoryMockImpl() }
 }

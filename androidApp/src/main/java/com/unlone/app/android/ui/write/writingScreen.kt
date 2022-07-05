@@ -64,7 +64,9 @@ fun WritingScreen(
                             Text(text = "Preview")
                         }
 
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = {
+                            viewModel.postStory()
+                        }) {
                             Text(text = "Post")
                         }
                     }

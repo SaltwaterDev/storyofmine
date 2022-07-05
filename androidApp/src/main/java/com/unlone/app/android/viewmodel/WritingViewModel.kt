@@ -1,7 +1,10 @@
 package com.unlone.app.android.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.common.logging.Logger
+import com.unlone.app.data.write.StoryRepository
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -11,7 +14,11 @@ data class WritingUiState(
     val currentDraftId: String? = null,
     val title: String = "",
     val content: String = "",
-    val draftList: Map<String, String> = mapOf()
+    val draftList: Map<String, String> = mapOf(),
+    val topic: String = "",
+    val isPublished: Boolean = false,
+    val commentAllowed: Boolean = false,
+    val saveAllowed: Boolean = false,
 )
 
 
@@ -20,6 +27,7 @@ class WritingViewModel(
     getLastEditedDraftUseCase: GetLastEditedDraftUseCase,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
+    private val storyRepository: StoryRepository,
 ) : ViewModel() {
 
     private val stateChangedChannel = Channel<WritingUiState>()
@@ -96,6 +104,20 @@ class WritingViewModel(
                     )
                 )
             }
+        }
+    }
+
+    fun postStory() {
+        viewModelScope.launch {
+            val result = storyRepository.postStory(
+                state.value.title,
+                state.value.content,
+                state.value.topic,
+                state.value.isPublished,
+                state.value.commentAllowed,
+                state.value.saveAllowed,
+            )
+            Log.d("TAG", "postStory: $result")
         }
     }
 }
