@@ -10,7 +10,7 @@ import io.realm.kotlin.types.ObjectId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class DraftRepositoryImpl : DraftRepository {
+internal class DraftRepositoryImpl : DraftRepository {
 
     private val config =
         RealmConfiguration.Builder(

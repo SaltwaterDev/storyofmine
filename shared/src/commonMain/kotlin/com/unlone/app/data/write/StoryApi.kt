@@ -13,7 +13,7 @@ interface StoryApi {
     suspend fun postStory(request: StoryRequest)
 }
 
-class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
+internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     private val client = HttpClient(httpClientEngine) {
         expectSuccess = true
         install(ContentNegotiation) {

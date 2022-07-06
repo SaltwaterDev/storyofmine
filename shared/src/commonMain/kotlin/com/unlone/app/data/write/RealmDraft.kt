@@ -11,18 +11,18 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 
 
 // classes for realm
-class ParentDraftRealmObject : RealmObject {
+internal class ParentDraftRealmObject : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId.create()
     var childDraftRealmObjects: RealmList<ChildDraftRealmObject> = realmListOf()
     var topics: List<String> = emptyList()
 }
 
-fun ParentDraftRealmObject.latestDraft(): ChildDraftRealmObject {
+internal fun ParentDraftRealmObject.latestDraft(): ChildDraftRealmObject {
     return childDraftRealmObjects.maxByOrNull { it.timeStamp } ?: childDraftRealmObjects.first()
 }
 
-fun ParentDraftRealmObject.toParentDraft() =
+internal fun ParentDraftRealmObject.toParentDraft() =
     Draft(
         id = this.id.toString(),
         draftVersions = this.childDraftRealmObjects
@@ -32,14 +32,14 @@ fun ParentDraftRealmObject.toParentDraft() =
 
 
 
-class ChildDraftRealmObject : RealmObject {
+internal class ChildDraftRealmObject : RealmObject {
     var id: ObjectId = ObjectId.create()
     var title: String = ""
     var content: String = ""
     var timeStamp: RealmInstant = RealmInstant.from(100, 1000)
 }
 
-fun ChildDraftRealmObject.toChildDraft() =
+internal fun ChildDraftRealmObject.toChildDraft() =
     DraftVersion(
         this.id.toString(),
         this.title,

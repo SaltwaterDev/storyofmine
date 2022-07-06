@@ -5,7 +5,7 @@ import com.unlone.app.utils.KMMPreference
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 
-class AuthRepositoryImpl(
+internal class AuthRepositoryImpl(
     private val api: AuthApi,
     private val prefs: KMMPreference,
 ) : AuthRepository {

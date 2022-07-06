@@ -19,7 +19,7 @@ interface AuthApi {
     suspend fun verifyOtp(request: AuthOtpRequest)
 }
 
-class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
+internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
     private val client = HttpClient(httpClientEngine) {
         expectSuccess = true
         install(ContentNegotiation) {
