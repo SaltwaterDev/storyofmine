@@ -107,6 +107,38 @@ class WritingViewModel(
         }
     }
 
+    fun setPublished(isPublished: Boolean) {
+        viewModelScope.launch {
+            stateChangedChannel.send(
+                state.value.copy(
+                    isPublished = isPublished,
+                    commentAllowed = state.value.commentAllowed && isPublished,
+                    saveAllowed = state.value.saveAllowed && isPublished,
+                )
+            )
+        }
+    }
+
+    fun setCommentAllowed(commentAllowed: Boolean) {
+        viewModelScope.launch {
+            stateChangedChannel.send(
+                state.value.copy(
+                    commentAllowed = commentAllowed
+                )
+            )
+        }
+    }
+
+    fun setSaveAllowed(saveAllowed: Boolean) {
+        viewModelScope.launch {
+            stateChangedChannel.send(
+                state.value.copy(
+                    saveAllowed = saveAllowed
+                )
+            )
+        }
+    }
+
     fun postStory() {
         viewModelScope.launch {
             val result = storyRepository.postStory(

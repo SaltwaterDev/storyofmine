@@ -3,11 +3,10 @@ package com.unlone.app.android.ui.write
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +17,7 @@ import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.R
+import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.launch
 
@@ -37,6 +37,8 @@ fun WritingScreen(
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
     val systemUiController: SystemUiController = rememberSystemUiController()
+    var showPostingDialog by remember { mutableStateOf(false) }
+
 
     DisposableEffect(key1 = context) {
         systemUiController.isSystemBarsVisible = false
@@ -52,25 +54,12 @@ fun WritingScreen(
             modifier = Modifier.systemBarsPadding(),
             scaffoldState = scaffoldState,
             topBar = {
-                TopAppBar {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Button(onClick = { scope.launch { scaffoldState.drawerState.open() } }) {
-                            Text(text = "Options")
-                        }
-                        Button(onClick = { scope.launch { if (scaffoldState.bottomSheetState.isCollapsed) scaffoldState.bottomSheetState.expand() else scaffoldState.bottomSheetState.collapse() } }) {
-                            Text(text = "Preview")
-                        }
-
-                        Button(onClick = {
-                            viewModel.postStory()
-                        }) {
-                            Text(text = "Post")
-                        }
-                    }
-                }
+                WriteScreenTopBar(
+                    { scope.launch { scaffoldState.drawerState.open() } },
+                    { scope.launch { if (scaffoldState.bottomSheetState.isCollapsed) scaffoldState.bottomSheetState.expand() else scaffoldState.bottomSheetState.collapse() } },
+//                    { viewModel.postStory() },
+                    { showPostingDialog = true },
+                )
             },
             sheetContent = {
                 PreviewBottomSheet(
@@ -138,6 +127,24 @@ fun WritingScreen(
                     )
                 )
             }
+            if (showPostingDialog)
+                PostingDialog(
+                    { showPostingDialog = false },
+                    uiState.isPublished,
+                    uiState.commentAllowed,
+                    uiState.saveAllowed,
+                    viewModel::setPublished,
+                    viewModel::setCommentAllowed,
+                    viewModel::setSaveAllowed,
+                    {
+                        scope.launch { scaffoldState.bottomSheetState.expand() }
+                        showPostingDialog = false
+                    },
+                    {
+                        viewModel.postStory()
+                        showPostingDialog = false
+                    },
+                )
         }
 
         if (isKeyboardVisible)
@@ -152,7 +159,6 @@ fun WritingScreen(
 
             }
     }
-
 }
 
 @Composable
@@ -189,35 +195,44 @@ fun OptionsDrawer(
     switchDraft: (String) -> Unit,
 ) {
     Column {
-        Text(text = "Options")
-        Text(text = "Clear", modifier = Modifier
-            .fillMaxWidth()
-            .clickable { clearAll() }
-            .padding(15.dp))
-        Divider(Modifier.fillMaxWidth())
-        Text(text = "Edit History", modifier = Modifier
-            .fillMaxWidth()
-            .clickable { editHistory() }
-            .padding(15.dp))
-        Divider(Modifier.fillMaxWidth())
-        Text(text = "New Draft", modifier = Modifier
-            .fillMaxWidth()
-            .clickable { newDraft() }
-            .padding(15.dp))
-        Divider(Modifier.fillMaxWidth())
+        Column(
+            Modifier.verticalScroll(rememberScrollState())
+        ) {
+            Text(text = "Options", modifier = Modifier.padding(16.dp))
+            BlockWithIcon(R.drawable.ic_clear, "Clear") { clearAll() }
+            Divider(Modifier.fillMaxWidth())
+            BlockWithIcon(R.drawable.ic_history, "Edit History") { editHistory() }
+            Divider(Modifier.fillMaxWidth())
+            BlockWithIcon(R.drawable.ic_add, "New Draft") { newDraft() }
+            Divider(Modifier.fillMaxWidth())
 
-        Spacer(modifier = Modifier.height(50.dp))
-
-
-        listOfDraft.entries.forEach {
-            Text(text = it.value, modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
+            Spacer(modifier = Modifier.height(60.dp))
+            listOfDraft.entries.forEach {
+                BlockWithIcon(iconId = R.drawable.ic_write, title = it.value) {
                     switchDraft(it.key)
                 }
-                .padding(15.dp))
-            Divider(Modifier.fillMaxWidth())
+                Divider(Modifier.fillMaxWidth())
+            }
         }
+
+    }
+}
+
+@Composable
+private fun BlockWithIcon(iconId: Int?, title: String, onClick: () -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+    ) {
+        iconId?.let {
+            Icon(
+                painterResource(id = it),
+                contentDescription = null,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+        Text(text = title, modifier = Modifier.padding(16.dp))
     }
 }
 
