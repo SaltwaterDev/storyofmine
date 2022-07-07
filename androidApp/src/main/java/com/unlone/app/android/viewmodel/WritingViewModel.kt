@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.logging.Logger
 import com.unlone.app.data.write.StoryRepository
+import com.unlone.app.data.write.StoryResult
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -19,6 +20,8 @@ data class WritingUiState(
     val isPublished: Boolean = false,
     val commentAllowed: Boolean = false,
     val saveAllowed: Boolean = false,
+    val error: String? = null,
+    val postSuccess: Boolean = false,
 )
 
 
@@ -27,7 +30,8 @@ class WritingViewModel(
     getLastEditedDraftUseCase: GetLastEditedDraftUseCase,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
-    private val storyRepository: StoryRepository,
+    private val createNewDraftUseCase: CreateNewDraftUseCase,
+    private val postStoryUseCase: PostStoryUseCase
 ) : ViewModel() {
 
     private val stateChangedChannel = Channel<WritingUiState>()
@@ -89,7 +93,14 @@ class WritingViewModel(
 
     fun createNewDraft() {
         viewModelScope.launch {
-            stateChangedChannel.send(WritingUiState())
+            val newDraftValue = createNewDraftUseCase()
+            stateChangedChannel.send(
+                WritingUiState(
+                    currentDraftId = newDraftValue["id"],
+                    title = newDraftValue["title"] ?: "",
+                    content = newDraftValue["content"] ?: "",
+                )
+            )
         }
     }
 
@@ -141,7 +152,7 @@ class WritingViewModel(
 
     fun postStory() {
         viewModelScope.launch {
-            val result = storyRepository.postStory(
+            val result = postStoryUseCase(
                 state.value.title,
                 state.value.content,
                 state.value.topic,
@@ -149,7 +160,28 @@ class WritingViewModel(
                 state.value.commentAllowed,
                 state.value.saveAllowed,
             )
+            stateChangedChannel.send(
+                when (result) {
+                    is StoryResult.Success -> {
+                        createNewDraft()
+                        state.value.copy(postSuccess = true)
+                    }
+                    is StoryResult.Failed ->
+                        state.value.copy(error = result.errorMsg)
+                }
+            )
             Log.d("TAG", "postStory: $result")
+        }
+    }
+
+    fun dismiss() {
+        viewModelScope.launch {
+            stateChangedChannel.send(
+                state.value.copy(
+                    error = null,
+                    postSuccess = false
+                )
+            )
         }
     }
 }

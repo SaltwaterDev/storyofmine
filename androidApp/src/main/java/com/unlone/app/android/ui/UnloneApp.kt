@@ -10,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.ui.navigation.MainNavHost
 import com.unlone.app.ui.theme.UnloneTheme
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -20,6 +22,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 @Composable
 fun UnloneApp() {
+    val systemUiController: SystemUiController = rememberSystemUiController()
+    systemUiController.isSystemBarsVisible = false
     UnloneTheme {
         val appState = rememberUnloneAppState()
         val navController = appState.navController

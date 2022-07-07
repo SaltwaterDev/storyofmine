@@ -10,4 +10,8 @@ interface AuthRepository {
     suspend fun requestOtpEmail(): AuthResult<Unit>
     suspend fun verifyOtp(email:String, otp: Int): AuthResult<Unit>
     fun signOut()
+    fun getJwt(): String?
 }
+
+
+class UserNotLoginException(message: String) : Exception(message)

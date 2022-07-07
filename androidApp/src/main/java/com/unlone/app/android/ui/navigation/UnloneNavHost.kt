@@ -44,7 +44,15 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
 
         composable(UnloneBottomDestinations.Write.route) {
             val viewModel by viewModel<WritingViewModel>()
-            WritingScreen(viewModel, navToEditHistory = { /*todo*/ })
+            WritingScreen(
+                viewModel,
+                navToEditHistory = {
+                    navToEditHistory()
+                },
+                navToSignIn = {
+                    navToStories()
+                }
+            )
         }
 
         composable(UnloneBottomDestinations.Stories.route) {
@@ -84,6 +92,14 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
 
         // todo: Add on-boarding Screens
     }
+}
+
+fun navToEditHistory() {
+    /*TODO("Not yet implemented")*/
+}
+
+fun navToStories() {
+    /*TODO("Not yet implemented")*/
 }
 
 

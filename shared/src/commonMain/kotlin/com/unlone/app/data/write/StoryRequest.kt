@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StoryRequest(
+    val jwt: String,
     val title: String,
     val content: String,
     val topic: String,

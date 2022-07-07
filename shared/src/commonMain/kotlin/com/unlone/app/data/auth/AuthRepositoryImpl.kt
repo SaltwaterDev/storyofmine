@@ -193,6 +193,10 @@ internal class AuthRepositoryImpl(
         prefs.remove(JWT_SP_KEY)
     }
 
+    override fun getJwt(): String? {
+        return prefs.getString(JWT_SP_KEY)
+    }
+
     companion object {
         private const val JWT_SP_KEY = "jwt"
     }

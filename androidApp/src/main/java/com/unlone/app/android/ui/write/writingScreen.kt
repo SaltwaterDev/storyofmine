@@ -18,6 +18,7 @@ import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
+import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 fun WritingScreen(
     viewModel: WritingViewModel,
     navToEditHistory: (String) -> Unit,
+    navToSignIn: () -> Unit,
 ) {
     val uiState = viewModel.state.collectAsState().value
     val context = LocalContext.current
@@ -36,15 +38,12 @@ fun WritingScreen(
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
-    val systemUiController: SystemUiController = rememberSystemUiController()
     var showPostingDialog by remember { mutableStateOf(false) }
 
 
     DisposableEffect(key1 = context) {
-        systemUiController.isSystemBarsVisible = false
         onDispose {
             viewModel.saveDraft()
-            systemUiController.isSystemBarsVisible = true
         }
     }
 
@@ -57,7 +56,6 @@ fun WritingScreen(
                 WriteScreenTopBar(
                     { scope.launch { scaffoldState.drawerState.open() } },
                     { scope.launch { if (scaffoldState.bottomSheetState.isCollapsed) scaffoldState.bottomSheetState.expand() else scaffoldState.bottomSheetState.collapse() } },
-//                    { viewModel.postStory() },
                     { showPostingDialog = true },
                 )
             },
@@ -158,6 +156,31 @@ fun WritingScreen(
             ) {
 
             }
+
+        if (uiState.postSuccess)
+            AlertDialog(
+                onDismissRequest = viewModel::dismiss,
+                title = {
+                    Text(text = "Post Succeed")
+                },
+                buttons = {}
+            )
+
+        uiState.error?.let {
+            AlertDialog(
+                onDismissRequest = viewModel::dismiss,
+                title = { Text(text = "Sign in required") },
+                text = { Text(text = it) },
+                confirmButton = {
+                    Button(onClick = {
+                        viewModel.dismiss()
+                        navToSignIn()
+                    }) {
+                        Text(text = "Sign in to publish your story")
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -180,8 +203,9 @@ fun PreviewBottomSheet(
                 modifier = Modifier.size(30.dp)
             )
         }
-        Text(text = title)
-        Text(text = content)
+        Text(text = title, modifier = Modifier.padding(horizontal = 16.dp))
+        Spacer(modifier = Modifier.height(34.dp))
+        Text(text = content, modifier = Modifier.padding(horizontal = 16.dp))
     }
 }
 
@@ -198,7 +222,7 @@ fun OptionsDrawer(
         Column(
             Modifier.verticalScroll(rememberScrollState())
         ) {
-            Text(text = "Options", modifier = Modifier.padding(16.dp))
+            Text(text = "Options", modifier = Modifier.padding(16.dp), style = Typography.h1)
             BlockWithIcon(R.drawable.ic_clear, "Clear") { clearAll() }
             Divider(Modifier.fillMaxWidth())
             BlockWithIcon(R.drawable.ic_history, "Edit History") { editHistory() }

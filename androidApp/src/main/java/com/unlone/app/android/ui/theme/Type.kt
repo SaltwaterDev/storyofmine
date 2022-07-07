@@ -1,4 +1,4 @@
-package com.unlone.app.ui.theme
+package com.unlone.app.android.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
