@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -10,8 +11,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.ui.UnloneBottomDestinations
+import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.write.WritingScreen
@@ -22,6 +25,7 @@ import com.unlone.app.ui.lounge.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
 import com.unlone.app.viewmodel.PostDetailViewModel
 import org.koin.androidx.compose.viewModel
+import timber.log.Timber
 
 
 @ExperimentalMaterialApi
@@ -34,8 +38,11 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
     NavHost(
         navController = navController,
         startDestination = UnloneBottomDestinations.Write.route,
-        modifier = modifier
+        modifier = modifier,
+        route = "main",
     ) {
+
+        Log.d("wesley", "MainNavHost: ${navController.currentDestination}")
 
         composable(UnloneBottomDestinations.Write.route) {
             val viewModel by viewModel<WritingViewModel>()
@@ -75,9 +82,14 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
         authGraph(
             navController,
             onSigninOrSignupFinished = {
-                navController.navigate(UnloneBottomDestinations.Stories.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                }
+                navController.popBackStack(
+                    destinationId = findStartDestination(navController.graph).id,
+                    inclusive = false,
+                    saveState = false
+                )
+//                navController.navigate(UnloneBottomDestinations.Stories.route) {
+//                    popUpTo(navController.graph.findStartDestination().id)
+//                }
             },
         )
 

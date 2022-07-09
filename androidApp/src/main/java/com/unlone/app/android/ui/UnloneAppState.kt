@@ -82,11 +82,11 @@ class UnloneAppState(
         if (route != currentRoute) {
             navController.navigate(route) {
                 launchSingleTop = true
-                restoreState = true
+                restoreState = false
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.
                 popUpTo(findStartDestination(navController.graph).id) {
-                    saveState = true
+                    saveState = false
                 }
             }
         }
@@ -117,7 +117,7 @@ private val NavGraph.startDestination: NavDestination?
  *
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:navigation/navigation-ui/src/main/java/androidx/navigation/ui/NavigationUI.kt
  */
-private tailrec fun findStartDestination(graph: NavDestination): NavDestination {
+/*private*/ tailrec fun findStartDestination(graph: NavDestination): NavDestination {
     return if (graph is NavGraph) findStartDestination(graph.startDestination!!) else graph
 }
 
