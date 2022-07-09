@@ -13,10 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.R
+import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.WritingViewModel
@@ -34,7 +36,6 @@ fun WritingScreen(
 ) {
     val uiState = viewModel.state.collectAsState().value
     val context = LocalContext.current
-
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
@@ -127,6 +128,10 @@ fun WritingScreen(
             }
             if (showPostingDialog)
                 PostingDialog(
+                    // todo: to be replaced
+                    listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
+                    uiState.topic,
+                    viewModel::setTopic,
                     { showPostingDialog = false },
                     uiState.isPublished,
                     uiState.commentAllowed,
@@ -154,17 +159,25 @@ fun WritingScreen(
                     .fillMaxWidth()
                     .background(Color.Green)
             ) {
+                // todo
+            }
 
+        if (uiState.loading)
+            Surface(Modifier.align(Alignment.Center)) {
+                Row {
+                    Text(text = "Posting")
+                    CircularProgressIndicator()
+                }
             }
 
         if (uiState.postSuccess)
-            AlertDialog(
+            Dialog(
                 onDismissRequest = viewModel::dismiss,
-                title = {
+            ) {
+                Surface {
                     Text(text = "Post Succeed")
-                },
-                buttons = {}
-            )
+                }
+            }
 
         uiState.error?.let {
             AlertDialog(
@@ -172,91 +185,17 @@ fun WritingScreen(
                 title = { Text(text = "Sign in required") },
                 text = { Text(text = it) },
                 confirmButton = {
-                    Button(onClick = {
-                        viewModel.dismiss()
-                        navToSignIn()
-                    }) {
+                    Button(
+                        onClick = {
+                            viewModel.dismiss()
+                            navToSignIn()
+                        }
+                    ) {
                         Text(text = "Sign in to publish your story")
                     }
                 }
             )
         }
-    }
-}
-
-@Composable
-fun PreviewBottomSheet(
-    title: String,
-    content: String,
-    onClose: () -> Unit
-) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.4f)
-    ) {
-        IconButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_close),
-                contentDescription = "close",
-                tint = Color.Unspecified,
-                modifier = Modifier.size(30.dp)
-            )
-        }
-        Text(text = title, modifier = Modifier.padding(horizontal = 16.dp))
-        Spacer(modifier = Modifier.height(34.dp))
-        Text(text = content, modifier = Modifier.padding(horizontal = 16.dp))
-    }
-}
-
-
-@Composable
-fun OptionsDrawer(
-    listOfDraft: Map<String, String>,
-    clearAll: () -> Unit,
-    editHistory: () -> Unit,
-    newDraft: () -> Unit,
-    switchDraft: (String) -> Unit,
-) {
-    Column {
-        Column(
-            Modifier.verticalScroll(rememberScrollState())
-        ) {
-            Text(text = "Options", modifier = Modifier.padding(16.dp), style = Typography.h1)
-            BlockWithIcon(R.drawable.ic_clear, "Clear") { clearAll() }
-            Divider(Modifier.fillMaxWidth())
-            BlockWithIcon(R.drawable.ic_history, "Edit History") { editHistory() }
-            Divider(Modifier.fillMaxWidth())
-            BlockWithIcon(R.drawable.ic_add, "New Draft") { newDraft() }
-            Divider(Modifier.fillMaxWidth())
-
-            Spacer(modifier = Modifier.height(60.dp))
-            listOfDraft.entries.forEach {
-                BlockWithIcon(iconId = R.drawable.ic_write, title = it.value) {
-                    switchDraft(it.key)
-                }
-                Divider(Modifier.fillMaxWidth())
-            }
-        }
-
-    }
-}
-
-@Composable
-private fun BlockWithIcon(iconId: Int?, title: String, onClick: () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-    ) {
-        iconId?.let {
-            Icon(
-                painterResource(id = it),
-                contentDescription = null,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-        Text(text = title, modifier = Modifier.padding(16.dp))
     }
 }
 

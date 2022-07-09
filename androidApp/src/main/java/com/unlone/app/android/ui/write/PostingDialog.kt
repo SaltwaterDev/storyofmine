@@ -15,6 +15,9 @@ import androidx.compose.ui.window.Dialog
 
 @Composable
 fun PostingDialog(
+    topics: List<String>,
+    selectedTopic: String,
+    onTopicSelected: (String) -> Unit,
     onCancel: () -> Unit,
     publishState: Boolean,
     commentState: Boolean,
@@ -32,7 +35,7 @@ fun PostingDialog(
                 .background(Color.White)
                 .padding(10.dp)
         ) {
-            TopicRow()
+            TopicRow(topics, selectedTopic, onTopicSelected)
             PublishToggleRow(publishState, switchPublish)
             CommentSwitchRow(commentState, publishState, switchComment)
             SavableToggleRow(savableState, publishState, switchSavable)
@@ -43,10 +46,12 @@ fun PostingDialog(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun TopicRow() {
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+private fun TopicRow(
+    topics: List<String>,
+    selectedTopic: String,
+    onTopicSelected: (String) -> Unit,
+) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf("") }
     ExposedDropdownMenuBox(
         modifier = Modifier.fillMaxWidth(),
         expanded = expanded,
@@ -55,8 +60,11 @@ private fun TopicRow() {
         }
     ) {
         TextField(
-            value = selectedOptionText,
-            onValueChange = { selectedOptionText = it },
+            value = selectedTopic,
+            onValueChange = {
+                onTopicSelected(it)
+                expanded = true
+            },
             label = { Text("Topic") },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
@@ -67,7 +75,7 @@ private fun TopicRow() {
         )
         // filter options based on text field value
         val filteringOptions =
-            options.filter { it.contains(selectedOptionText, ignoreCase = true) }
+            topics.filter { it.contains(selectedTopic, ignoreCase = true) }
         if (filteringOptions.isNotEmpty()) {
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -78,7 +86,7 @@ private fun TopicRow() {
                 filteringOptions.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = selectionOption
+                            onTopicSelected(selectionOption)
                             expanded = false
                         }
                     ) {
@@ -157,15 +165,19 @@ private fun ButtonsRow(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(onClick = onPreview, modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f)) {
+        Button(
+            onClick = onPreview, modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
             Text(text = "Preview")
         }
         Spacer(modifier = Modifier.width(20.dp))
-        Button(onClick = onPost, modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f)) {
+        Button(
+            onClick = onPost, modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
             Text(text = "Post")
         }
     }
@@ -174,5 +186,5 @@ private fun ButtonsRow(
 @Preview
 @Composable
 fun PostingDialogPreview() {
-    PostingDialog({}, false, false, false, {}, {}, {}, {}, {})
+    PostingDialog(listOf(), "Topic 2", {}, {}, false, false, false, {}, {}, {}, {}, {})
 }

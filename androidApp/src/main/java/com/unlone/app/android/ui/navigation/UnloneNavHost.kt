@@ -1,10 +1,8 @@
 package com.unlone.app.android.ui.navigation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -13,7 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
@@ -24,15 +21,13 @@ import com.unlone.app.android.viewmodel.WritingViewModel
 import com.unlone.app.ui.lounge.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
 import com.unlone.app.viewmodel.PostDetailViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.compose.viewModel
 
 
 @ExperimentalMaterialApi
 @ExperimentalLayoutApi
 @OptIn(
-    InternalCoroutinesApi::class, ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class, ExperimentalAnimatedInsets::class
+    ExperimentalAnimatedInsets::class
 )
 @Composable
 fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -46,12 +41,8 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             val viewModel by viewModel<WritingViewModel>()
             WritingScreen(
                 viewModel,
-                navToEditHistory = {
-                    navToEditHistory()
-                },
-                navToSignIn = {
-                    navToStories()
-                }
+                navToEditHistory = { navToEditHistory() },
+                navToSignIn = { navigateToAuth(navController) },
             )
         }
 

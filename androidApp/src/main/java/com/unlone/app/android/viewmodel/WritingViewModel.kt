@@ -22,6 +22,7 @@ data class WritingUiState(
     val saveAllowed: Boolean = false,
     val error: String? = null,
     val postSuccess: Boolean = false,
+    val loading: Boolean = false,
 )
 
 
@@ -152,6 +153,9 @@ class WritingViewModel(
 
     fun postStory() {
         viewModelScope.launch {
+            stateChangedChannel.send(
+                state.value.copy(loading = true)
+            )
             val result = postStoryUseCase(
                 state.value.title,
                 state.value.content,
@@ -164,13 +168,29 @@ class WritingViewModel(
                 when (result) {
                     is StoryResult.Success -> {
                         createNewDraft()
-                        state.value.copy(postSuccess = true)
+                        state.value.copy(
+                            postSuccess = true,
+                            loading = false,
+                        )
                     }
                     is StoryResult.Failed ->
-                        state.value.copy(error = result.errorMsg)
+                        state.value.copy(
+                            error = result.errorMsg,
+                            loading = false,
+                        )
                 }
             )
             Log.d("TAG", "postStory: $result")
+        }
+    }
+
+    fun setTopic(topic: String) {
+        viewModelScope.launch {
+            stateChangedChannel.send(
+                state.value.copy(
+                    topic = topic
+                )
+            )
         }
     }
 
