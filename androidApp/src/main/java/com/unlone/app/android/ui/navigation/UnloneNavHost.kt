@@ -5,13 +5,11 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.findStartDestination
@@ -21,11 +19,10 @@ import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
-import com.unlone.app.ui.lounge.PostDetail
+import com.unlone.app.android.ui.stories.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
 import com.unlone.app.viewmodel.PostDetailViewModel
 import org.koin.androidx.compose.viewModel
-import timber.log.Timber
 
 
 @ExperimentalMaterialApi
@@ -34,7 +31,11 @@ import timber.log.Timber
     ExperimentalAnimatedInsets::class
 )
 @Composable
-fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+fun MainNavHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    navigateUp: () -> Unit
+) {
     NavHost(
         navController = navController,
         startDestination = UnloneBottomDestinations.Write.route,
@@ -71,9 +72,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             arguments = listOf(navArgument("pid") { type = NavType.StringType })
         ) {
             val viewModel by viewModel<PostDetailViewModel>()
-            PostDetail(
-                { navController.popBackStack() }, {}, viewModel
-            )
+            PostDetail(navigateUp, {}, viewModel)
         }
         composable("topic") {
             TopicDetail()

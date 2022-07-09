@@ -1,6 +1,5 @@
-package com.unlone.app.ui.lounge
+package com.unlone.app.android.ui.stories
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -33,21 +32,19 @@ fun PostDetail(
                         Icon(
                             Icons.Filled.ArrowBack,
                             contentDescription = "back",
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
+                            modifier = Modifier.align(Alignment.CenterStart)
                         )
-
                     }
 
                     TextButton(
                         onClick = { navToTopicDetail("") },
                         modifier = Modifier.align(Alignment.Center)
                     ) {
-                        Text(text = state?.topics?.first() ?: "")
+                        Text(text = state.topics.first() ?: "")
                     }
 
                     Row(Modifier.align(Alignment.CenterEnd)) {
-                        if (state?.isSelfWritten == true) {
+                        if (state.isSelfWritten) {
                             IconButton(onClick = { /*TODO*/ }) {
                                 Icon(
                                     imageVector = Icons.Filled.Warning,
@@ -74,13 +71,13 @@ fun PostDetail(
         }
     ) { innerPadding ->
         Column(Modifier.padding(innerPadding)) {
-            Text(text = state?.title ?: "")
-            Text(text = state?.timestamp.toString())
-            Text(text = state?.content ?: "")
+            Text(text = state.title)
+            Text(text = state.timestamp.toString())
+            Text(text = state.content)
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            state?.comments?.forEach {
+            state.comments.forEach { _ ->
                 CommentBlock()
             }
         }

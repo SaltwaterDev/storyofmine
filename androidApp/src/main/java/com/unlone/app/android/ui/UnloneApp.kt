@@ -36,7 +36,7 @@ fun UnloneApp() {
                     UnloneBottomBar(appState)
             }
         ) { contentPadding ->
-            MainNavHost(navController, Modifier.padding(contentPadding))
+            MainNavHost(navController, Modifier.padding(contentPadding), appState::upPress)
         }
     }
 }
