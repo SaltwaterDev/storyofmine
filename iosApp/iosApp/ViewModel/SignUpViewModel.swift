@@ -12,19 +12,55 @@ import shared
 class SignUpViewModel: ObservableObject {
     
     private let authRepo = AuthRepositoryHelper().authRepo()
+    @Published var emailAvailable: Bool = false
+    @Published var signUpSuccess: Bool = false
     
     init(){
     }
     
     func signUpEmailVerify(email: String){
         authRepo.signUpEmail(email: email, completionHandler: {result, error in
-
+            print(result)
+            switch (result){
+                case is AuthResultAuthorized<KotlinUnit>:
+                    print("Email available \(email)")
+                    self.emailAvailable = true
+                    break
+                case is AuthResultUnauthorized<KotlinUnit>:
+                print("Email not available")
+                    self.emailAvailable = false
+                    break
+                case is AuthResultUnknownError<KotlinUnit>:
+                print("Unknown error")
+                    self.emailAvailable = false
+                    break
+                default:
+                    self.emailAvailable = false
+                    break
+            }
         })
     }
     
-    func signIn(email: String, password: String){
+    func signUp(email: String, password: String){
         authRepo.signUp(email: email, password: password, completionHandler: {result, error in
-            
+            print(result)
+            switch (result){
+                case is AuthResultAuthorized<KotlinUnit>:
+                    print("SignUp Success")
+                    self.signUpSuccess = true
+                    break
+                case is AuthResultUnauthorized<KotlinUnit>:
+                print("Email not available")
+                    self.signUpSuccess = false
+                    break
+                case is AuthResultUnknownError<KotlinUnit>:
+                print("Unknown error")
+                    self.signUpSuccess = false
+                    break
+                default:
+                    self.signUpSuccess = false
+                    break
+            }
         })
     }
 }
