@@ -8,13 +8,10 @@ struct ContentView: View {
         TabView{
             WritingScreen().tabItem{Image(systemName: "pencil")
                 Text("Write")}
-            LoginEmailScreen().tabItem{Image(systemName: "plus")
-                                Text("Lounge")}
-//            StoriesScreen().tabItem{Image(systemName: "plus")
-//                Text("Lounge")}
+            StoriesScreen().tabItem{Image(systemName: "plus")
+                Text("Lounge")}
             ProfileScreen().tabItem{Image(systemName: "person.fill")
                 Text("Profile")}
-            
         }
 		
 	}

@@ -9,12 +9,14 @@
 import Foundation
 import shared
 
-class SignInViewModel: ObservableObject {
+public class SignInViewModel: ObservableObject {
 
 //    private var task: Task<Void, Never>?
 //    private let authRepo = AuthRepository()
-    let authRepo: AuthRepository = AuthRepositoryHelper().authRepo()
-    var isEmailValid: Bool = false
+    private let authRepo: AuthRepository = AuthRepositoryHelper().authRepo()
+    @Published var email: String = ""
+    @Published var userExists: Bool = false
+    @Published var signInSuccess: Bool = false
     
     init(){
 //        Task {await emailValidate()}
@@ -23,27 +25,48 @@ class SignInViewModel: ObservableObject {
     func emailValidate(email: String){
         print("Validate email")
         authRepo.signInEmail(email: email) {result,error  in
+            print(result)
             switch (result){
                 case is AuthResultAuthorized<KotlinUnit>:
-                    self.isEmailValid = true
+                    print("Validated email \(email)")
+                    self.email = email
+                    self.userExists = true
+                    print("Validated email: \(self.userExists)")
                     break
                 case is AuthResultUnauthorized<KotlinUnit>:
-                    self.isEmailValid = false
+                print("Invalid email")
+                    self.userExists = false
                     break
                 case is AuthResultUnknownError<KotlinUnit>:
-                    self.isEmailValid = false
+                print("Unknown error")
+                    self.userExists = false
                     break
                 default:
-                    self.isEmailValid = false
+                    self.userExists = false
                     break
             }
         }
     }
     
     
-    func signIn(email: String, password: String){
-        authRepo.signIn(email: email, password: password, completionHandler: { (result, error) in
-
+    func signIn(password: String){
+        authRepo.signIn(email: self.email, password: password, completionHandler: {result, error in
+            print(result)
+            switch (result){
+                case is AuthResultAuthorized<KotlinUnit>:
+                    print("Login Success")
+                    self.signInSuccess = true
+                case is AuthResultUnauthorized<KotlinUnit>:
+                    print("Incorrect Password")
+                    self.signInSuccess = false
+                case is AuthResultUnknownError<KotlinUnit>:
+                    print("Unknown error")
+                    self.signInSuccess = false
+                    break
+                default:
+                    self.signInSuccess = false
+                    break
+            }
         })
     }
 }

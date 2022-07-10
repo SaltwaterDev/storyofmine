@@ -15,13 +15,20 @@ struct LoginEmailScreen: View {
     @State private var email = ""
     
     var body: some View {
-        VStack{
-            TextField("Email", text: $email).padding().autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
-            Button("Sign In", action: {
-                signInViewModel.emailValidate(email: email)
-            })
+        NavigationView {
+            VStack{
+                TextField("Email", text: $email).padding().autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
+                NavigationLink(destination: SignUpScreen(), label: {
+                    Text("Sign Up")
+                })
+                Button("Sign In", action: {
+                    signInViewModel.emailValidate(email: email)
+                })
+                NavigationLink(destination: LoginScreen(signInViewModel: self.signInViewModel), isActive: $signInViewModel.userExists, label: {
+                    EmptyView()
+                })
+            }
         }
-        
     }
 }
 
