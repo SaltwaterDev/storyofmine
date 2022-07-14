@@ -69,7 +69,7 @@ fun SignInPasswordScreen(
 
             TextField(
                 value = uiState.password,
-                label = { Text(text = "Password", fontSize = 14.sp, color = Color.White) },
+                label = { Text(text = "Password", fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

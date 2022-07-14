@@ -8,12 +8,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.ui.navigation.MainNavHost
-import com.unlone.app.ui.theme.UnloneTheme
+import com.unlone.app.android.ui.theme.UnloneTheme
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
@@ -52,7 +53,7 @@ fun UnloneBottomBar(
         val currentDestination = navBackStackEntry?.destination
         appState.bottomBarTabs.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(screen.icon, contentDescription = null) },
+                icon = { Icon(painterResource(id = screen.icon), contentDescription = null) },
                 label = { Text(screen.name) },
                 selected = currentDestination?.hierarchy?.any { (it.route) == screen.name } == true,
                 onClick = { appState.navigateToBottomBarRoute(screen.route) }

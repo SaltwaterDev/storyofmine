@@ -1,6 +1,7 @@
 package com.unlone.app.model
 
 import androidx.annotation.Keep
+import com.unlone.app.domain.entities.Comment
 
 @Keep
 sealed class Report {

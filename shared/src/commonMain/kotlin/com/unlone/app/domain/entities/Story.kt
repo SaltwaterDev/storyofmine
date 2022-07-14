@@ -8,5 +8,6 @@ data class Story(
     val isPublished: Boolean,
     val commentAllowed: Boolean,
     val saveAllowed: Boolean,
-//    val comment: Comment?
+    val comment: Comment?
 )
+

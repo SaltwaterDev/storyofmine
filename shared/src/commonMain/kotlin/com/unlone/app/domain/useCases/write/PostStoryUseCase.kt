@@ -2,8 +2,8 @@ package com.unlone.app.domain.useCases.write
 
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
-import com.unlone.app.data.write.StoryRepository
-import com.unlone.app.data.write.StoryResult
+import com.unlone.app.data.story.StoryRepository
+import com.unlone.app.data.story.StoryResult
 
 class PostStoryUseCase(
     private val storyRepository: StoryRepository,

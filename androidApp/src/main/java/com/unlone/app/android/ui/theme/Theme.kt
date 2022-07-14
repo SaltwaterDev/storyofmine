@@ -1,4 +1,4 @@
-package com.unlone.app.ui.theme
+package com.unlone.app.android.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -10,7 +10,10 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.ui.theme.Purple40
+import com.unlone.app.ui.theme.Purple80
+import com.unlone.app.ui.theme.PurpleGrey40
+import com.unlone.app.ui.theme.PurpleGrey80
 
 private val DarkColorScheme = darkColors(
     primary = Purple80,

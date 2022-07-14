@@ -1,7 +1,14 @@
-package com.unlone.app.data.write
+package com.unlone.app.data.story
 
+import com.unlone.app.domain.entities.StoryItem
 
 interface StoryRepository {
+    suspend fun fetchStoriesByPosts(
+        postPerFetching: Int,
+        pagingItems: Int,
+        lastItemId: String?
+    ): List<StoryItem.StoriesByTopic>
+
     suspend fun postStory(
         jwt: String,
         title: String,

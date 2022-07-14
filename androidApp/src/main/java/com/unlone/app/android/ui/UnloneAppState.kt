@@ -17,20 +17,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.unlone.app.android.R
 
 /**
  * Destinations used in the [UnloneApp].
  */
-enum class UnloneBottomDestinations(val icon: ImageVector, val route: String) {
-    Write(icon = Icons.Filled.Create, route = "write"),
-    Stories(icon = Icons.Filled.Add, route = "stories"),
-    Profile(icon = Icons.Filled.Face, route = "profiles");
+enum class UnloneBottomDestinations(val icon: Int, val route: String) {
+    Write(icon = R.drawable.ic_write, route = "write"),
+    Stories(icon = R.drawable.ic_book, route = "stories"),
+    Profile(icon = R.drawable.ic_profile, route = "profiles");
 }
 
 /**

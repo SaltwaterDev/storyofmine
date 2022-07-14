@@ -17,9 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unlone.app.android.viewmodel.StoriesViewModel
-import com.unlone.app.model.LoungePost
-import com.unlone.app.ui.comonComponent.HorizontalScrollPosts
-import timber.log.Timber
+import com.unlone.app.data.story.SimpleStory
+import com.unlone.app.android.ui.comonComponent.HorizontalScrollPosts
 
 @Composable
 fun StoriesScreen(
@@ -52,7 +51,7 @@ fun StoriesScreen(
 
                     state.postsByTopics?.let { posts ->
                         items(posts) {
-                            PostsByTopic(it.topic, it.posts, navToTopicPosts) { pid ->
+                            PostsByTopic(it.topic, it.stories, navToTopicPosts) { pid ->
                                 navToPostDetail(pid)
                             }
                             Spacer(modifier = Modifier.height(30.dp))
@@ -67,7 +66,7 @@ fun StoriesScreen(
 @Composable
 fun PostsByTopic(
     title: String,
-    posts: List<LoungePost>,
+    stories: List<SimpleStory>,
     viewMorePost: () -> Unit,
     navToPostDetail: (String) -> Unit
 ) {
@@ -100,7 +99,7 @@ fun PostsByTopic(
 
             HorizontalScrollPosts(
                 modifier = Modifier.width(this@BoxWithConstraints.maxWidth.times(0.95f)),
-                posts
+                stories
             ) { navToPostDetail(it) }
         }
     }

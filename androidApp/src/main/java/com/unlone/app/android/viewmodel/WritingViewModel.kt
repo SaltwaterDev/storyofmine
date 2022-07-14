@@ -3,9 +3,7 @@ package com.unlone.app.android.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.common.logging.Logger
-import com.unlone.app.data.write.StoryRepository
-import com.unlone.app.data.write.StoryResult
+import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
