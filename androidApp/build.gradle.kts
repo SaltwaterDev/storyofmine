@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -10,7 +11,7 @@ android {
         applicationId = "com.unlone.app.android"
         minSdk = 24
         targetSdk = 32
-        versionCode = 1
+        versionCode = 20
         versionName = "1.0"
     }
     buildFeatures {
@@ -29,7 +30,7 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.1"
+        kotlinCompilerExtensionVersion = "1.2.0"
     }
 }
 
@@ -40,17 +41,19 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // compose
-    val composeVersion = "1.2.0-rc02"
+    val composeVersion = "1.2.0-rc03"
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:1.2.0-rc02")
+    implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.4.0")
-    implementation("androidx.navigation:navigation-compose:2.4.2")
+    implementation("androidx.activity:activity-compose:1.5.0")
+    implementation("androidx.navigation:navigation-compose:2.5.0")
 
     // accompanist
-    val accompanistVersion = "0.24.11-rc"
+    val accompanistVersion = "0.24.13-rc"
     implementation ("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation ("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    implementation ("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
 
     // testing
     testImplementation("junit:junit:4.13.2")
@@ -63,11 +66,11 @@ dependencies {
 
     // ktx
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc02")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc02")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
 
     // log
     implementation("com.jakewharton.timber:timber:5.0.1")

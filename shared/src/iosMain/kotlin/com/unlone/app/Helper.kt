@@ -2,15 +2,10 @@ package com.unlone.app
 
 
 import com.unlone.app.data.auth.AuthRepository
-import com.unlone.app.data.auth.AuthRepositoryImpl
 import com.unlone.app.di.appModule
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
-import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
-import platform.Foundation.NSUserDefaults
 
 class GreetingHelper : KoinComponent {
     private val greeting: Greeting by inject()

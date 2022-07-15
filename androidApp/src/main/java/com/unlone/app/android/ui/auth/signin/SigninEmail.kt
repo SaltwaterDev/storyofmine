@@ -68,7 +68,7 @@ fun SignInEmailScreen(
 
             TextField(
                 value = uiState.email,
-                label = { Text(text = "Email", fontSize = 14.sp, color = Color.White) },
+                label = { Text(text = "Email", fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInEmailChanged(it)) },
                 singleLine = true,
             )

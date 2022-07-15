@@ -35,13 +35,13 @@ fun NavGraphBuilder.authGraph(
 
             SignUpScreen(
                 viewModel = viewModel,
-                navToSendEmailOtp = {  },
+                navToSendEmailOtp = { /*todo*/ },
                 onSignUpSuccess = onSigninOrSignupFinished,
                 navToSignIn = { navigateToSignInEmail(navController) }
             )
         }
 
-        composable(AuthNav.SignIn.name+ "/email") {
+        composable(AuthNav.SignIn.name + "/email") {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
@@ -62,7 +62,9 @@ fun NavGraphBuilder.authGraph(
     }
 }
 
-fun navigateToAuth(navController: NavHostController) {
+fun navigateToAuth(
+    navController: NavHostController,
+) {
     navController.navigate("auth")
 }
 

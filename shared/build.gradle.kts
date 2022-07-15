@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("plugin.serialization") version "1.7.0"
     id("io.realm.kotlin")
 }
 
@@ -43,7 +43,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation("co.touchlab:kermit:1.1.3")
                 // mongodb realm
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation("io.realm.kotlin:library-base:1.0.0")
                 // datetime
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
@@ -52,8 +52,8 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("io.mockk:mockk:1.12.4")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3")
+//                implementation("io.mockk:mockk:1.12.4") fixme
+                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
                 implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }

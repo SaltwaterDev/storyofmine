@@ -5,7 +5,7 @@ import com.unlone.app.utils.KMMPreference
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 
-class AuthRepositoryImpl(
+internal class AuthRepositoryImpl(
     private val api: AuthApi,
     private val prefs: KMMPreference,
 ) : AuthRepository {
@@ -142,9 +142,59 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun requestOtpEmail(): AuthResult<Unit> {
+        return try {
+            api.requestOtp()
+            AuthResult.Authorized()
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            AuthResult.UnknownError()
+        }
+    }
+
+    override suspend fun verifyOtp(email: String, otp: Int): AuthResult<Unit> {
+        return try {
+            api.verifyOtp(
+                AuthOtpRequest(email, otp)
+            )
+            AuthResult.Authorized()
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            AuthResult.UnknownError()
+        }
+    }
+
 
     override fun signOut() {
         prefs.remove(JWT_SP_KEY)
+    }
+
+    override fun getJwt(): String? {
+        return prefs.getString(JWT_SP_KEY)
     }
 
     companion object {
