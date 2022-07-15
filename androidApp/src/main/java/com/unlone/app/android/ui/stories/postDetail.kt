@@ -13,7 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.unlone.app.viewmodel.PostDetailViewModel
+import com.unlone.app.android.viewmodel.PostDetailViewModel
 
 @Composable
 fun PostDetail(
@@ -40,7 +40,7 @@ fun PostDetail(
                         onClick = { navToTopicDetail("") },
                         modifier = Modifier.align(Alignment.Center)
                     ) {
-                        Text(text = state.topics.first() ?: "")
+                        Text(text = state.topics.firstOrNull() ?: "")
                     }
 
                     Row(Modifier.align(Alignment.CenterEnd)) {

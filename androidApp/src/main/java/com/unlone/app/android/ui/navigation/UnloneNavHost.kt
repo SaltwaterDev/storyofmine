@@ -21,7 +21,7 @@ import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
 import com.unlone.app.android.ui.stories.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
-import com.unlone.app.viewmodel.PostDetailViewModel
+import com.unlone.app.android.viewmodel.PostDetailViewModel
 import org.koin.androidx.compose.viewModel
 
 
@@ -68,11 +68,15 @@ fun MainNavHost(
             ProfileScreen(viewModel)
         }
         composable(
-            "${UnloneBottomDestinations.Profile.route}/{pid}",
+            "${UnloneBottomDestinations.Stories.route}/{pid}",
             arguments = listOf(navArgument("pid") { type = NavType.StringType })
         ) {
             val viewModel by viewModel<PostDetailViewModel>()
-            PostDetail(navigateUp, {}, viewModel)
+            PostDetail(
+                navigateUp,
+                { navigateToTopicDetail(navController) },
+                viewModel
+            )
         }
         composable("topic") {
             TopicDetail()
@@ -106,7 +110,7 @@ fun navToStories() {
 
 
 fun navigateToPostDetail(navController: NavHostController, pid: String) {
-    navController.navigate("post/$pid")
+    navController.navigate("${UnloneBottomDestinations.Stories.route}/$pid")
 }
 
 fun navigateToTopicDetail(navController: NavHostController) {
