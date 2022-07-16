@@ -104,6 +104,7 @@ class WritingViewModel(
                     currentDraftId = newDraftValue["id"],
                     title = newDraftValue["title"] ?: "",
                     content = newDraftValue["content"] ?: "",
+                    selectedTopic = newDraftValue["selectedTopic"] ?: "",
                 )
             )
         }

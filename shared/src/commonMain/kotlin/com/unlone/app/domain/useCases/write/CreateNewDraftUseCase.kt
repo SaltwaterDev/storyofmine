@@ -6,6 +6,7 @@ class CreateNewDraftUseCase {
             "id" to null,
             "title" to "",
             "content" to "",
+            "selectedTopic" to "",
         )
     }
 }
