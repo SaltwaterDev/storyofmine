@@ -11,6 +11,7 @@ interface AuthRepository {
     suspend fun verifyOtp(email:String, otp: Int): AuthResult<Unit>
     fun signOut()
     fun getJwt(): String?
+    suspend fun setUserName(email: String, username: String): AuthResult<Unit>
 }
 
 

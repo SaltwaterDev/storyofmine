@@ -1,4 +1,4 @@
-package com.unlone.app.domain.useCases
+package com.unlone.app.domain.useCases.auth
 
 class ValidPasswordUseCase {
     operator fun invoke(password: String): Boolean {

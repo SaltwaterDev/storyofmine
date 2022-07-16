@@ -3,7 +3,7 @@ package com.unlone.app.android.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.data.auth.IsUserSignedInUseCase
+import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.useCases.write.*

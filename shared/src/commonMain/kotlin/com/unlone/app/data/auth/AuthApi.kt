@@ -17,6 +17,7 @@ interface AuthApi {
     suspend fun authenticate(token: String)
     suspend fun requestOtp()
     suspend fun verifyOtp(request: AuthOtpRequest)
+    suspend fun setUserName(email: String, username: String)
 }
 
 internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
@@ -74,6 +75,13 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
         client.post(baseUrl + "otp/verify") {
             contentType(ContentType.Application.Json)
             setBody(request)
+        }
+    }
+
+    override suspend fun setUserName(email: String, username: String) {
+        client.post(baseUrl + "setUsername") {
+            contentType(ContentType.Application.Json)
+            setBody(AuthUsernameRequest(email, username))
         }
     }
 
