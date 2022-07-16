@@ -54,11 +54,10 @@ fun SignUpScreen(
             Modifier
                 .fillMaxSize()
                 .padding(horizontal = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(text = "Create an account")
+            Text(text = "Create account", fontSize = 36.sp)
             Spacer(modifier = Modifier.height(35.dp))
 
             TextField(
@@ -95,6 +94,7 @@ fun SignUpScreen(
             Text(
                 "Your password must contain at least one upper case letter one lower case letter and one number",
                 modifier = Modifier.padding(horizontal = 16.dp),
+                fontSize = 12.sp
             )
             Spacer(Modifier.height(14.dp))
 
@@ -113,28 +113,32 @@ fun SignUpScreen(
                 Text(
                     "Password and Confirmed password are not the same",
                     modifier = Modifier.padding(horizontal = 16.dp),
+                    fontSize = 12.sp
                 )
 
             Spacer(Modifier.height(15.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
                     onClick = navToSignIn,
                     colors = ButtonDefaults.outlinedButtonColors(),
-                    enabled = true
+                    enabled = true,
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Sign In")
+                    Text(text = "Sign in")
                 }
+
+                Spacer(modifier = Modifier.width(20.dp))
 
                 Button(
                     onClick = { viewModel.onEvent(SignUpUiEvent.SignUp) },
                     colors = ButtonDefaults.buttonColors(),
-                    enabled = uiState.btnEnabled
+                    enabled = uiState.btnEnabled,
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Next")
+                    Text(text = "Sign up")
                 }
             }
 

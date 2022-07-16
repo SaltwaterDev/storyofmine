@@ -1,10 +1,13 @@
 package com.unlone.app.android.ui.navigation
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.navigation
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
 import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
 import com.unlone.app.android.ui.auth.signup.SignUpScreen
@@ -20,6 +23,7 @@ enum class AuthNav {
 }
 
 
+@ExperimentalAnimationApi
 @OptIn(InternalCoroutinesApi::class)
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
@@ -27,7 +31,6 @@ fun NavGraphBuilder.authGraph(
 ) {
 
     navigation(AuthNav.SignUp.name, route = "auth") {
-
 
         composable(AuthNav.SignUp.name) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
@@ -41,7 +44,9 @@ fun NavGraphBuilder.authGraph(
             )
         }
 
-        composable(AuthNav.SignIn.name + "/email") {
+        composable(
+            AuthNav.SignIn.name + "/email",
+        ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
@@ -50,7 +55,11 @@ fun NavGraphBuilder.authGraph(
                 viewModel = viewModel
             )
         }
-        composable(AuthNav.SignIn.name + "/password") {
+        composable(AuthNav.SignIn.name + "/password",
+            enterTransition = {
+                slideIntoContainer(AnimatedContentScope.SlideDirection.Start, animationSpec = tween(200))
+            },
+        ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInPasswordScreen(

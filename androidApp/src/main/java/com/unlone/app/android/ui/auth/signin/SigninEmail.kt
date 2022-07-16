@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,46 +54,27 @@ fun SignInEmailScreen(
 
     Box(Modifier.fillMaxSize()) {
         Column(
-            Modifier.align(BiasAlignment(0f, -0.3f)),
-            horizontalAlignment = CenterHorizontally
+            modifier = Modifier.fillMaxSize().padding(horizontal = 30.dp)
         ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.app_icon),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .fillMaxWidth(0.6f)
-                    .aspectRatio(5 / 3f),
-                contentScale = ContentScale.Inside
-            )
-
+            Spacer(modifier = Modifier.height(60.dp))
+            Text(text = "Sign in", fontSize = 36.sp)
+            Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 value = uiState.email,
                 label = { Text(text = "Email", fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInEmailChanged(it)) },
                 singleLine = true,
+                modifier = Modifier.fillMaxWidth()
             )
-
-            Spacer(Modifier.height(60.dp))
-
-            Row {
-                Button(
-                    onClick = navToSignUp,
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                ) {
-                    Text(text = "Sign up")
-                }
-
-                Spacer(modifier = Modifier.width(20.dp))
-
-                Button(
-                    onClick = { viewModel.onEvent(SignInUiEvent.SignInEmail) },
-                    colors = ButtonDefaults.buttonColors(),
-                    enabled = uiState.emailBtnEnabled
-                ) {
-                    Text(text = "Continue")
-                }
+            Spacer(Modifier.height(30.dp))
+            Button(
+                onClick = { viewModel.onEvent(SignInUiEvent.SignInEmail) },
+                colors = ButtonDefaults.buttonColors(),
+                enabled = uiState.emailBtnEnabled,
+                modifier = Modifier.align(End)
+            ) {
+                Text(text = "Next")
             }
         }
     }

@@ -1,30 +1,25 @@
 package com.unlone.app.android.ui.write
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.google.accompanist.systemuicontroller.SystemUiController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
-import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.WritingViewModel
 import kotlinx.coroutines.launch
 
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimatedInsets
 @ExperimentalLayoutApi
 @ExperimentalMaterialApi
@@ -40,6 +35,8 @@ fun WritingScreen(
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
     var showPostingDialog by remember { mutableStateOf(false) }
+    var requireSignInDialog by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     DisposableEffect(key1 = context) {
@@ -56,8 +53,20 @@ fun WritingScreen(
             topBar = {
                 WriteScreenTopBar(
                     { scope.launch { scaffoldState.drawerState.open() } },
-                    { scope.launch { if (scaffoldState.bottomSheetState.isCollapsed) scaffoldState.bottomSheetState.expand() else scaffoldState.bottomSheetState.collapse() } },
-                    { showPostingDialog = true },
+                    {
+                        scope.launch {
+                            if (scaffoldState.bottomSheetState.isCollapsed) {
+                                scaffoldState.bottomSheetState.expand()
+                                keyboardController?.hide()
+                            } else scaffoldState.bottomSheetState.collapse()
+                        }
+                    },
+                    {
+                        if (viewModel.getIsUserSignedIn())
+                            showPostingDialog = true
+                        else
+                            requireSignInDialog = true
+                    }
                 )
             },
             sheetContent = {
@@ -128,9 +137,8 @@ fun WritingScreen(
             }
             if (showPostingDialog)
                 PostingDialog(
-                    // todo: to be replaced
-                    listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
-                    uiState.topic,
+                    uiState.topicList,
+                    uiState.selectedTopic,
                     viewModel::setTopic,
                     { showPostingDialog = false },
                     uiState.isPublished,
@@ -175,25 +183,45 @@ fun WritingScreen(
                 onDismissRequest = viewModel::dismiss,
             ) {
                 Surface {
-                    Text(text = "Post Succeed")
+                    Text(text = "Post Succeed", modifier = Modifier.padding(15.dp))
                 }
             }
 
         uiState.error?.let {
             AlertDialog(
                 onDismissRequest = viewModel::dismiss,
-                title = { Text(text = "Sign in required") },
+                title = { Text(text = "Error") },
                 text = { Text(text = it) },
                 confirmButton = {
                     Button(
+                        onClick = viewModel::dismiss
+                    ) {
+                        Text(text = "Confirm¬")
+                    }
+                }
+            )
+        }
+
+        if (requireSignInDialog) {
+            AlertDialog(
+                onDismissRequest = { requireSignInDialog = false },
+                title = { Text(text = "Sign in required") },
+                text = { Text(text = "Sign in to publish your story") },
+                confirmButton = {
+                    Button(
                         onClick = {
-                            viewModel.dismiss()
+                            requireSignInDialog = false
                             navToSignIn()
                         }
                     ) {
-                        Text(text = "Sign in to publish your story")
+                        Text(text = "Sign in")
                     }
-                }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { requireSignInDialog = false }
+                    ) { Text(text = "Cancel") }
+                },
             )
         }
     }

@@ -13,6 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.data.story.SimpleStory
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -49,12 +52,17 @@ fun Post(title: String, content: String, modifier: Modifier = Modifier, onClick:
 @Composable
 fun HorizontalScrollPosts(
     modifier: Modifier,
+    loading: Boolean,
     posts: List<SimpleStory>,
-    onPostClick: (String) -> Unit
+    onPostClick: (String) -> Unit,
 ) {
     Box(modifier = Modifier.horizontalScroll(rememberScrollState())) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy((-15).dp)
+            horizontalArrangement = Arrangement.spacedBy((-15).dp),
+            modifier = Modifier.placeholder(
+                visible = loading,
+                highlight = PlaceholderHighlight.fade()
+            )
         ) {
 
             posts.forEach {

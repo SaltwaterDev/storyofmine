@@ -1,34 +1,37 @@
 package com.unlone.app.android.ui.navigation
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.profile.ProfileScreen
+import com.unlone.app.android.ui.stories.PostDetail
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.write.WritingScreen
+import com.unlone.app.android.viewmodel.PostDetailViewModel
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
-import com.unlone.app.android.ui.stories.PostDetail
 import com.unlone.app.ui.lounge.TopicDetail
-import com.unlone.app.android.viewmodel.PostDetailViewModel
 import org.koin.androidx.compose.viewModel
 
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalLayoutApi
 @OptIn(
-    ExperimentalAnimatedInsets::class
+    ExperimentalAnimatedInsets::class, ExperimentalComposeUiApi::class
 )
 @Composable
 fun MainNavHost(
@@ -36,7 +39,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit
 ) {
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = UnloneBottomDestinations.Write.route,
         modifier = modifier,
@@ -54,7 +57,13 @@ fun MainNavHost(
             )
         }
 
-        composable(UnloneBottomDestinations.Stories.route) {
+        composable(
+            UnloneBottomDestinations.Stories.route,
+            popEnterTransition = null,
+            enterTransition = null,
+            exitTransition = null,
+            popExitTransition = null,
+        ) {
             val viewModel by viewModel<StoriesViewModel>()
             StoriesScreen(
                 viewModel = viewModel,
@@ -63,7 +72,11 @@ fun MainNavHost(
                 navToAuthGraph = { navigateToAuth(navController) }
             )
         }
-        composable(UnloneBottomDestinations.Profile.route) {
+        composable(
+            UnloneBottomDestinations.Profile.route,
+            popEnterTransition = null,
+            enterTransition = null,
+        ) {
             val viewModel by viewModel<ProfileViewModel>()
             ProfileScreen(viewModel)
         }

@@ -55,9 +55,7 @@ private fun TopicRow(
     ExposedDropdownMenuBox(
         modifier = Modifier.fillMaxWidth(),
         expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
+        onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
             value = selectedTopic,
@@ -71,7 +69,9 @@ private fun TopicRow(
                     expanded = expanded
                 )
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            modifier = Modifier.fillMaxWidth()
+//            readOnly = expanded
         )
         // filter options based on text field value
         val filteringOptions =

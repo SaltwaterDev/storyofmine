@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui
 
 import android.content.res.Resources
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.isImeVisible
@@ -24,6 +25,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.unlone.app.android.R
 
 /**
@@ -38,11 +40,12 @@ enum class UnloneBottomDestinations(val icon: Int, val route: String) {
 /**
  * Remembers and creates an instance of [UnloneAppState]
  */
+@ExperimentalAnimationApi
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun rememberUnloneAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberAnimatedNavController(),
 ) =
     remember(scaffoldState, navController) {
         UnloneAppState(scaffoldState, navController)

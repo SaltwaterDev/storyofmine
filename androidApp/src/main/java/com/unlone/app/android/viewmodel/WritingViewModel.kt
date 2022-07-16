@@ -3,7 +3,9 @@ package com.unlone.app.android.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlone.app.data.auth.IsUserSignedInUseCase
 import com.unlone.app.data.story.StoryResult
+import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -14,7 +16,8 @@ data class WritingUiState(
     val title: String = "",
     val content: String = "",
     val draftList: Map<String, String> = mapOf(),
-    val topic: String = "",
+    val topicList: List<String> = listOf(),
+    val selectedTopic: String = "",
     val isPublished: Boolean = false,
     val commentAllowed: Boolean = false,
     val saveAllowed: Boolean = false,
@@ -30,7 +33,9 @@ class WritingViewModel(
     private val saveDraftUseCase: SaveDraftUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
     private val createNewDraftUseCase: CreateNewDraftUseCase,
-    private val postStoryUseCase: PostStoryUseCase
+    private val postStoryUseCase: PostStoryUseCase,
+    private val topicRepository: TopicRepository,
+    private val isUserSignedInUseCase: IsUserSignedInUseCase,
 ) : ViewModel() {
 
     private val stateChangedChannel = Channel<WritingUiState>()
@@ -38,7 +43,7 @@ class WritingViewModel(
 
     val state: StateFlow<WritingUiState> = combine(
         stateChangedResult,
-        getAllDraftsTitleUseCase()
+        getAllDraftsTitleUseCase(),
     ) { changed, allDraftTitles ->
         changed.copy(
             draftList = allDraftTitles
@@ -53,6 +58,7 @@ class WritingViewModel(
                         currentDraftId = it.first,
                         title = it.second.title,
                         content = it.second.content,
+                        topicList = topicRepository.getAllTopic().map { topic -> topic.name },
                     )
                 )
             }
@@ -94,7 +100,7 @@ class WritingViewModel(
         viewModelScope.launch {
             val newDraftValue = createNewDraftUseCase()
             stateChangedChannel.send(
-                WritingUiState(
+                state.value.copy(
                     currentDraftId = newDraftValue["id"],
                     title = newDraftValue["title"] ?: "",
                     content = newDraftValue["content"] ?: "",
@@ -157,7 +163,7 @@ class WritingViewModel(
             val result = postStoryUseCase(
                 state.value.title,
                 state.value.content,
-                state.value.topic,
+                state.value.selectedTopic,
                 state.value.isPublished,
                 state.value.commentAllowed,
                 state.value.saveAllowed,
@@ -186,7 +192,7 @@ class WritingViewModel(
         viewModelScope.launch {
             stateChangedChannel.send(
                 state.value.copy(
-                    topic = topic
+                    selectedTopic = topic
                 )
             )
         }
@@ -202,4 +208,6 @@ class WritingViewModel(
             )
         }
     }
+
+    fun getIsUserSignedIn() = isUserSignedInUseCase()
 }

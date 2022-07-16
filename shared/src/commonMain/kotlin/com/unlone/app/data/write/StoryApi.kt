@@ -1,8 +1,9 @@
 package com.unlone.app.data.write
 
-import co.touchlab.kermit.Logger
+import com.unlone.app.data.story.AllTopicResponse
 import com.unlone.app.data.story.StoriesPerTopicsResponse
 import com.unlone.app.data.story.StoryRequest
+import com.unlone.app.data.story.Topic
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -11,8 +12,6 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 
 interface StoryApi {
@@ -22,6 +21,8 @@ interface StoryApi {
         pagingItems: Int,
         lastItemId: String?
     ): StoriesPerTopicsResponse
+
+    suspend fun getAllTopics(): AllTopicResponse
 }
 
 internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
@@ -56,6 +57,12 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
+    override suspend fun getAllTopics(): AllTopicResponse {
+        val response = client.get(baseUrl + "story/allTopics")
+        return response.body()
+    }
+
+
     companion object {
         //        local IP address for running on an emulator
         private const val baseUrl = "http://10.0.2.2:8080/"
@@ -63,10 +70,3 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
 //        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }
-
-@Serializable
-data class AllStoriesRequest(
-    val postsPerTopic: Int,
-    val pagingItems: Int,
-    val lastItemId: String? = null,
-)
