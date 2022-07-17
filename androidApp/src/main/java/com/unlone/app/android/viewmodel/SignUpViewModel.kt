@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.unlone.app.android.model.SignUpUiEvent
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
-import com.unlone.app.domain.useCases.ValidPasswordUseCase
+import com.unlone.app.domain.useCases.auth.ValidPasswordUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -17,17 +17,20 @@ import timber.log.Timber
 data class SignUpUiState(
     val email: String = "",
     val password: String = "",
+    val username: String = "",
     val confirmedPassword: String = "",
     val emailError: Boolean = false,
     val errorMsg: String? = null,
     val pwError: Boolean = false,
     val loading: Boolean = false,
+    val succeed: Boolean = false,
 ) {
     val btnEnabled: Boolean = !loading &&
             email.isNotBlank() &&
             password.isNotBlank() &&
             password == confirmedPassword
-    val confirmedPwError: Boolean = confirmedPassword.isNotBlank() && (password != confirmedPassword)
+    val confirmedPwError: Boolean =
+        confirmedPassword.isNotBlank() && (password != confirmedPassword)
 }
 
 class SignUpViewModel(
@@ -59,6 +62,12 @@ class SignUpViewModel(
                 if (!uiState.pwError)
                     signUp()
             }
+            is SignUpUiEvent.UsernameChanged -> {
+                uiState = uiState.copy(username = event.value)
+            }
+            SignUpUiEvent.SetUsername -> {
+                setUsername()
+            }
         }
     }
 
@@ -82,7 +91,7 @@ class SignUpViewModel(
                     uiState = uiState.copy(emailError = true)
                 }
                 is AuthResult.UnknownError -> {
-//                    uiState = uiState.copy(errorMsg = "unknown error: " + result.errorMsg)
+                    uiState = uiState.copy(errorMsg = "unknown error: " + result.errorMsg)
                 }
             }
             uiState = uiState.copy(loading = false)
@@ -96,6 +105,16 @@ class SignUpViewModel(
                 email = uiState.email,
                 password = uiState.password,
             )
+            resultChannel.send(result)
+            uiState = uiState.copy(loading = false)
+        }
+    }
+
+    private fun setUsername() {
+        uiState = uiState.copy(loading = true)
+        viewModelScope.launch {
+            val result =
+                authRepository.setUserName(email = uiState.email, username = uiState.username)
             resultChannel.send(result)
             uiState = uiState.copy(loading = false)
         }

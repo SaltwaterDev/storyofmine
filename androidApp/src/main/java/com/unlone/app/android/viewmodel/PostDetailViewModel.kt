@@ -1,5 +1,8 @@
-package com.unlone.app.viewmodel
+package com.unlone.app.android.viewmodel
 
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -17,12 +20,15 @@ data class PostDetailUiState(
 )
 
 class PostDetailViewModel(
-//    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val state = MutableStateFlow(PostDetailUiState())
 
-//    val pid = savedStateHandle.get<String>("pid")
+    private val pid = savedStateHandle.get<String>("pid")
+    init {
+        Log.d(TAG, "postDetailViewModel: $pid")
+    }
 
 /*
     var state = pid?.let { pid ->

@@ -1,12 +1,16 @@
 package com.unlone.app.android.ui.navigation
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.navigation
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
 import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
+import com.unlone.app.android.ui.auth.signup.SetUsernameScreen
 import com.unlone.app.android.ui.auth.signup.SignUpScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
@@ -20,6 +24,7 @@ enum class AuthNav {
 }
 
 
+@ExperimentalAnimationApi
 @OptIn(InternalCoroutinesApi::class)
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
@@ -28,20 +33,30 @@ fun NavGraphBuilder.authGraph(
 
     navigation(AuthNav.SignUp.name, route = "auth") {
 
-
         composable(AuthNav.SignUp.name) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SignUpScreen(
                 viewModel = viewModel,
-                navToSendEmailOtp = {  },
-                onSignUpSuccess = onSigninOrSignupFinished,
+                navToSetUsername = { navigateToSetUsername(navController) },
+//                navToSendEmailOtp = { /*todo*/ },
                 navToSignIn = { navigateToSignInEmail(navController) }
             )
         }
+        composable(AuthNav.SignUp.name + "/setUsername") {
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
-        composable(AuthNav.SignIn.name+ "/email") {
+            SetUsernameScreen(
+                viewModel = viewModel,
+                onSignUpSuccess = onSigninOrSignupFinished,
+            )
+        }
+
+        composable(
+            AuthNav.SignIn.name + "/email",
+        ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
@@ -50,7 +65,15 @@ fun NavGraphBuilder.authGraph(
                 viewModel = viewModel
             )
         }
-        composable(AuthNav.SignIn.name + "/password") {
+        composable(
+            AuthNav.SignIn.name + "/password",
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Start,
+                    animationSpec = tween(200)
+                )
+            },
+        ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInPasswordScreen(
@@ -62,7 +85,9 @@ fun NavGraphBuilder.authGraph(
     }
 }
 
-fun navigateToAuth(navController: NavHostController) {
+fun navigateToAuth(
+    navController: NavHostController,
+) {
     navController.navigate("auth")
 }
 
@@ -76,4 +101,8 @@ fun navigateToSignInEmail(navController: NavHostController) {
 
 fun navigateToSignInPw(navController: NavHostController) {
     navController.navigate(AuthNav.SignIn.name + "/password")
+}
+
+fun navigateToSetUsername(navController: NavHostController) {
+    navController.navigate(AuthNav.SignUp.name + "/setUsername")
 }

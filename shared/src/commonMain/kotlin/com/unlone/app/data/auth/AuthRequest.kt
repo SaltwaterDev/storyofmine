@@ -13,3 +13,15 @@ data class AuthRequest(
 data class AuthEmailRequest(
     val email: String
 )
+
+@Serializable
+data class AuthUsernameRequest(
+    val email: String,
+    val username: String
+)
+
+@Serializable
+data class AuthOtpRequest(
+    val email: String,
+    val otp: Int,
+)

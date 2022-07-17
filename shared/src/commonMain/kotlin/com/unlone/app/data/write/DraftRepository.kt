@@ -1,12 +1,12 @@
 package com.unlone.app.data.write
 
-import com.unlone.app.domain.entities.ParentDraft
+import com.unlone.app.domain.entities.Draft
 import kotlinx.coroutines.flow.Flow
 
 
 interface DraftRepository {
-    fun getAllDrafts(): Flow<List<ParentDraft>>
-    fun queryDraft(id: String): Flow<ParentDraft>
-    fun getLastEditedDraft(): Flow<ParentDraft?>
+    fun getAllDrafts(): Flow<List<Draft>>
+    fun queryDraft(id: String): Flow<Draft>
+    fun getLastEditedDraft(): Flow<Draft?>
     fun saveDraft(id: String?, title: String, content: String)
 }

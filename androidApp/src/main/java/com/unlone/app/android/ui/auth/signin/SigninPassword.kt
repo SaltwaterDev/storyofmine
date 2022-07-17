@@ -2,11 +2,14 @@ package com.unlone.app.android.ui.auth.signin
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,50 +54,32 @@ fun SignInPasswordScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize().background(Color.White)) {
         Column(
-            Modifier.align(BiasAlignment(0f, -0.3f)),
-            horizontalAlignment = CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
         ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.app_icon),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .fillMaxWidth(0.6f)
-                    .aspectRatio(5 / 3f),
-                contentScale = ContentScale.Inside
-            )
-
+            Spacer(modifier = Modifier.height(60.dp))
+            Text(text = "Sign in", fontSize = 36.sp)
+            Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 value = uiState.password,
-                label = { Text(text = "Password", fontSize = 14.sp, color = Color.White) },
+                label = { Text(text = "Password", fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
+                modifier = Modifier.fillMaxWidth()
             )
-
-            Spacer(Modifier.height(60.dp))
-
-            Row {
-                Button(
-                    onClick = back,
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                ) {
-                    Text(text = "back")
-                }
-
-                Spacer(modifier = Modifier.width(20.dp))
-
-                Button(
-                    onClick = { viewModel.onEvent(SignInUiEvent.SignInPw) },
-                    colors = ButtonDefaults.buttonColors(),
-                    enabled = uiState.pwBtnEnabled
-                ) {
-                    Text(text = "Sign In")
-                }
+            Spacer(Modifier.height(30.dp))
+            Button(
+                onClick = { viewModel.onEvent(SignInUiEvent.SignInPw) },
+                colors = ButtonDefaults.buttonColors(),
+                enabled = uiState.pwBtnEnabled,
+                modifier = Modifier.align(End)
+            ) {
+                Text(text = "Sign In")
             }
         }
     }
