@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 data class ProfileUiState(
     val isUserLoggedIn: Boolean = false,
     val errorMsg: String? = null,
-    val loading: Boolean = true
+    val loading: Boolean = true,
+    val username: String = ""
 ) {
     val profileItemList: List<ProfileItemList> =
         listOf(
@@ -32,18 +33,22 @@ sealed class ProfileItemList(
         override val name: String = "MyStories",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
+
     data class Saved(
         override val name: String = "Saved",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
+
     data class Setting(
         override val name: String = "Setting",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
+
     data class Help(
         override val name: String = "Help",
         override val requireLoggedIn: Boolean = false
     ) : ProfileItemList(name, requireLoggedIn)
+
     data class Logout(
         override val name: String = "Logout",
         override val requireLoggedIn: Boolean = true
@@ -55,7 +60,7 @@ class ProfileViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(ProfileUiState())
+    private var _state = MutableStateFlow(ProfileUiState())
     val state = _state.asStateFlow()
 
     init {
@@ -67,6 +72,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             when (authRepository.authenticate()) {
                 is AuthResult.Authorized -> {
+                    getUserName()
                     _state.value = _state.value.copy(isUserLoggedIn = true)
                 }
                 is AuthResult.Unauthorized -> {
@@ -78,6 +84,19 @@ class ProfileViewModel(
                 }
             }
             _state.value = _state.value.copy(loading = false)
+        }
+    }
+
+    private fun getUserName() {
+        viewModelScope.launch {
+            when (val getUsernameResponse = authRepository.getUsername()) {
+                // getUsername
+                is AuthResult.Authorized -> getUsernameResponse.data?.let {
+                    _state.value = _state.value.copy(username = it)
+                }
+                else -> _state.value =
+                    _state.value.copy(errorMsg = getUsernameResponse.errorMsg)
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -41,11 +42,14 @@ fun StoriesScreen(
         else {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 LazyColumn(
-                    Modifier.fillMaxSize().padding(innerPadding)
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
                 ) {
+
                     item {
                         Text(
-                            text = "Hello",
+                            text = "Hello ${state.username ?: ""}",
                             modifier = Modifier
                                 .padding(15.dp, 40.dp)
                                 .placeholder(
@@ -71,6 +75,18 @@ fun StoriesScreen(
                         }
                     }
                 }
+            }
+
+            state.errorMsg?.let {
+                AlertDialog(
+                    onDismissRequest = viewModel::dismissError,
+                    title = { Text(text = it) },
+                    confirmButton = {
+                        Button(onClick = viewModel::dismissError) {
+                            Text(text = "Confirm")
+                        }
+                    }
+                )
             }
         }
     }

@@ -9,6 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.viewmodel.ProfileItemList
 import com.unlone.app.android.viewmodel.ProfileViewModel
 
@@ -20,7 +23,7 @@ fun ProfileScreen(
 
     val state = viewModel.state.collectAsState().value
 
-//    fun goToDraft() {}
+    //    fun goToDraft() {}
     fun goToMyStories() {}
     fun goToSavedStories() {}
     fun goToSetting() {}
@@ -37,24 +40,32 @@ fun ProfileScreen(
         }
     }
 
-    if (!state.loading)
-        Column {
-            Text(text = "_username", fontSize = 31.sp, modifier = Modifier.padding(28.dp, 30.dp))
 
-            Spacer(modifier = Modifier.height(30.dp))
+    Column {
+        Text(
+            text = state.username,
+            fontSize = 31.sp,
+            modifier = Modifier
+                .padding(20.dp, 30.dp)
+                .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
+        )
 
-            state.profileItemList.forEach { item ->
+        Spacer(modifier = Modifier.height(30.dp))
+
+        state.profileItemList.forEach { item ->
+            Divider(Modifier.fillMaxWidth())
+            if (!item.requireLoggedIn || state.isUserLoggedIn) {
+                Text(
+                    text = item.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { item.takeAction() }
+                        .padding(15.dp)
+                        .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
+                )
+
                 Divider(Modifier.fillMaxWidth())
-                if (!item.requireLoggedIn || state.isUserLoggedIn) {
-                    Text(
-                        text = item.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { item.takeAction() }
-                            .padding(15.dp))
-
-                    Divider(Modifier.fillMaxWidth())
-                }
             }
         }
+    }
 }

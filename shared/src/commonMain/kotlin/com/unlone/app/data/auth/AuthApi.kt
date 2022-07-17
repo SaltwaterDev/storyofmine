@@ -18,6 +18,7 @@ interface AuthApi {
     suspend fun requestOtp()
     suspend fun verifyOtp(request: AuthOtpRequest)
     suspend fun setUserName(email: String, username: String)
+    suspend fun getUserName(token: String): String
 }
 
 internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
@@ -83,6 +84,13 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
             contentType(ContentType.Application.Json)
             setBody(AuthUsernameRequest(email, username))
         }
+    }
+
+    override suspend fun getUserName(token: String): String {
+        val response = client.get(baseUrl + "getUsername") {
+            header("Authorization", "Bearer $token")
+        }
+        return response.body()
     }
 
     companion object {
