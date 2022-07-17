@@ -27,5 +27,7 @@ actual fun KMMContext.getBool(key: String, default: Boolean): Boolean {
 }
 
 actual fun KMMContext.remove(key: String) {
-    NSUserDefaults.standardUserDefaults.remove(key)
+    //  For Swift 3
+    //  NSUserDefaults.standardUserDefaults.remove(key)
+    NSUserDefaults.standardUserDefaults.removeObjectForKey(key)
 }
