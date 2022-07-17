@@ -11,8 +11,6 @@ import shared
 
 public class SignInViewModel: ObservableObject {
 
-//    private var task: Task<Void, Never>?
-//    private let authRepo = AuthRepository()
     private let authRepo: AuthRepository = AuthRepositoryHelper().authRepo()
     @Published var email: String = ""
     @Published var userExists: Bool = false

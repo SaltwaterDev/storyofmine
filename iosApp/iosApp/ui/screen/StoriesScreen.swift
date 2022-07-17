@@ -10,10 +10,21 @@ import SwiftUI
 import shared
 
 struct StoriesScreen: View {
+    @EnvironmentObject var authSetting: AuthViewModel
     let greet = Greeting().greeting()
+    @State private var showLogin = false
     
     var body: some View {
-        Text(greet)
+        VStack{
+        if (authSetting.isUserLoggedIn){
+            Text(greet)
+        }else{
+            Button("Sign In", action: {
+                showLogin = true
+            }).sheet(isPresented: $showLogin, content: {
+                LoginEmailScreen(isPresented: $showLogin)
+            })
+        }}
     }
 }
 

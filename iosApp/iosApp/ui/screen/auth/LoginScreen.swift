@@ -20,9 +20,6 @@ struct LoginScreen: View {
                 Button("Sign In", action: {
                     signInViewModel.signIn(password: password)
                 })
-                NavigationLink(destination: ContentView(), isActive: $signInViewModel.signInSuccess, label: {
-                    EmptyView()
-                })
             }
     }
 }

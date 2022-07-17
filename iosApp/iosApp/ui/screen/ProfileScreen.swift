@@ -10,10 +10,18 @@ import SwiftUI
 import shared
 
 struct ProfileScreen: View {
+    @EnvironmentObject var authSetting: AuthViewModel
     let greet = Greeting().greeting()
-    
+
     var body: some View {
-        Text(greet)
+        VStack{
+            Text(greet)
+            if (authSetting.isUserLoggedIn){
+                Button("Sign Out", action: {
+                    authSetting.signOut()
+                })
+            }
+        }
     }
 }
 
