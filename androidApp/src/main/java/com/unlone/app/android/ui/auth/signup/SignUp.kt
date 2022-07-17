@@ -2,7 +2,9 @@ package com.unlone.app.android.ui.auth.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,9 +22,9 @@ import com.unlone.app.data.auth.AuthResult
 
 @Composable
 fun SignUpScreen(
-    navToSendEmailOtp: () -> Unit,
+    navToSetUsername: () -> Unit,
+//    navToSendEmailOtp: () -> Unit,
     navToSignIn: () -> Unit,
-    onSignUpSuccess: () -> Unit,
     viewModel: SignUpViewModel,
 ) {
     val context = LocalContext.current
@@ -33,7 +35,7 @@ fun SignUpScreen(
             when (result) {
                 is AuthResult.Authorized -> {
 //                    navToSendEmailOtp()       todo
-                    onSignUpSuccess()
+                    navToSetUsername()
                 }
                 is AuthResult.Unauthorized -> {
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
@@ -53,6 +55,7 @@ fun SignUpScreen(
         Column(
             Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 30.dp),
             verticalArrangement = Arrangement.Center
         ) {
@@ -139,11 +142,11 @@ fun SignUpScreen(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(text = "Sign up")
+                    if (uiState.loading)
+                        CircularProgressIndicator()
                 }
             }
 
-            if (uiState.loading)
-                CircularProgressIndicator()
         }
     }
 

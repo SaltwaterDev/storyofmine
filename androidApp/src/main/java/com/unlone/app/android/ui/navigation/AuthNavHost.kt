@@ -10,6 +10,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
 import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
+import com.unlone.app.android.ui.auth.signup.SetUsernameScreen
 import com.unlone.app.android.ui.auth.signup.SignUpScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
@@ -38,9 +39,18 @@ fun NavGraphBuilder.authGraph(
 
             SignUpScreen(
                 viewModel = viewModel,
-                navToSendEmailOtp = { /*todo*/ },
-                onSignUpSuccess = onSigninOrSignupFinished,
+                navToSetUsername = { navigateToSetUsername(navController) },
+//                navToSendEmailOtp = { /*todo*/ },
                 navToSignIn = { navigateToSignInEmail(navController) }
+            )
+        }
+        composable(AuthNav.SignUp.name + "/setUsername") {
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
+
+            SetUsernameScreen(
+                viewModel = viewModel,
+                onSignUpSuccess = onSigninOrSignupFinished,
             )
         }
 
@@ -55,9 +65,13 @@ fun NavGraphBuilder.authGraph(
                 viewModel = viewModel
             )
         }
-        composable(AuthNav.SignIn.name + "/password",
+        composable(
+            AuthNav.SignIn.name + "/password",
             enterTransition = {
-                slideIntoContainer(AnimatedContentScope.SlideDirection.Start, animationSpec = tween(200))
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Start,
+                    animationSpec = tween(200)
+                )
             },
         ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
@@ -87,4 +101,8 @@ fun navigateToSignInEmail(navController: NavHostController) {
 
 fun navigateToSignInPw(navController: NavHostController) {
     navController.navigate(AuthNav.SignIn.name + "/password")
+}
+
+fun navigateToSetUsername(navController: NavHostController) {
+    navController.navigate(AuthNav.SignUp.name + "/setUsername")
 }
