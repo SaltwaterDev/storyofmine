@@ -62,10 +62,12 @@ fun WritingScreen(
                         }
                     },
                     {
-                        if (viewModel.getIsUserSignedIn())
-                            showPostingDialog = true
-                        else
-                            requireSignInDialog = true
+                        scope.launch {
+                            if (viewModel.getIsUserSignedIn())
+                                showPostingDialog = true
+                            else
+                                requireSignInDialog = true
+                        }
                     }
                 )
             },
@@ -182,7 +184,7 @@ fun WritingScreen(
             Dialog(
                 onDismissRequest = viewModel::dismiss,
             ) {
-                Surface {
+                Card {
                     Text(text = "Post Succeed", modifier = Modifier.padding(15.dp))
                 }
             }

@@ -24,6 +24,7 @@ data class WritingUiState(
     val error: String? = null,
     val postSuccess: Boolean = false,
     val loading: Boolean = false,
+    val isUserSignedIn: Boolean = false,
 )
 
 
@@ -210,5 +211,6 @@ class WritingViewModel(
         }
     }
 
-    fun getIsUserSignedIn() = isUserSignedInUseCase()
+    suspend fun getIsUserSignedIn() = isUserSignedInUseCase()
+
 }
