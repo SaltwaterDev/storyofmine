@@ -17,6 +17,8 @@ interface AuthApi {
     suspend fun authenticate(token: String)
     suspend fun requestOtp()
     suspend fun verifyOtp(request: AuthOtpRequest)
+    suspend fun setUserName(email: String, username: String)
+    suspend fun getUserName(token: String): String
 }
 
 internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
@@ -77,10 +79,24 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
         }
     }
 
+    override suspend fun setUserName(email: String, username: String) {
+        client.post(baseUrl + "setUsername") {
+            contentType(ContentType.Application.Json)
+            setBody(AuthUsernameRequest(email, username))
+        }
+    }
+
+    override suspend fun getUserName(token: String): String {
+        val response = client.get(baseUrl + "getUsername") {
+            header("Authorization", "Bearer $token")
+        }
+        return response.body()
+    }
+
     companion object {
         // local IP address for running on an emulator
-        private const val baseUrl = "http://10.0.2.2:8080/"
+//        private const val baseUrl = "http://10.0.2.2:8080/"
 //        private const val baseUrl = "http://192.168.8.154:8080/"
-//        private const val baseUrl = "https://unlone.an.r.appspot.com/"
+        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }

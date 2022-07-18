@@ -197,6 +197,53 @@ internal class AuthRepositoryImpl(
         return prefs.getString(JWT_SP_KEY)
     }
 
+    override suspend fun setUserName(email: String, username: String): AuthResult<Unit> {
+        return try {
+            api.setUserName(email, username)
+            AuthResult.Authorized()
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            AuthResult.UnknownError()
+        }
+    }
+
+    override suspend fun getUsername(): AuthResult<String> {
+        return try {
+            prefs.getString(JWT_SP_KEY)?.let {
+                val username = api.getUserName(it)
+                Logger.d(username)
+                AuthResult.Authorized(username)
+            } ?: throw Exception("jwt doesn't exist")
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            AuthResult.UnknownError()
+        }
+    }
+
     companion object {
         private const val JWT_SP_KEY = "jwt"
     }

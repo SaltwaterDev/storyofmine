@@ -2,7 +2,9 @@ package com.unlone.app.android.ui.auth.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,9 +22,9 @@ import com.unlone.app.data.auth.AuthResult
 
 @Composable
 fun SignUpScreen(
-    navToSendEmailOtp: () -> Unit,
+    navToSetUsername: () -> Unit,
+//    navToSendEmailOtp: () -> Unit,
     navToSignIn: () -> Unit,
-    onSignUpSuccess: () -> Unit,
     viewModel: SignUpViewModel,
 ) {
     val context = LocalContext.current
@@ -33,7 +35,7 @@ fun SignUpScreen(
             when (result) {
                 is AuthResult.Authorized -> {
 //                    navToSendEmailOtp()       todo
-                    onSignUpSuccess()
+                    navToSetUsername()
                 }
                 is AuthResult.Unauthorized -> {
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
@@ -53,12 +55,12 @@ fun SignUpScreen(
         Column(
             Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(text = "Create an account")
+            Text(text = "Create account", fontSize = 36.sp)
             Spacer(modifier = Modifier.height(35.dp))
 
             TextField(
@@ -95,6 +97,7 @@ fun SignUpScreen(
             Text(
                 "Your password must contain at least one upper case letter one lower case letter and one number",
                 modifier = Modifier.padding(horizontal = 16.dp),
+                fontSize = 12.sp
             )
             Spacer(Modifier.height(14.dp))
 
@@ -113,33 +116,37 @@ fun SignUpScreen(
                 Text(
                     "Password and Confirmed password are not the same",
                     modifier = Modifier.padding(horizontal = 16.dp),
+                    fontSize = 12.sp
                 )
 
             Spacer(Modifier.height(15.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
                     onClick = navToSignIn,
                     colors = ButtonDefaults.outlinedButtonColors(),
-                    enabled = true
+                    enabled = true,
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Sign In")
+                    Text(text = "Sign in")
                 }
+
+                Spacer(modifier = Modifier.width(20.dp))
 
                 Button(
                     onClick = { viewModel.onEvent(SignUpUiEvent.SignUp) },
                     colors = ButtonDefaults.buttonColors(),
-                    enabled = uiState.btnEnabled
+                    enabled = uiState.btnEnabled,
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Next")
+                    Text(text = "Sign up")
+                    if (uiState.loading)
+                        CircularProgressIndicator()
                 }
             }
 
-            if (uiState.loading)
-                CircularProgressIndicator()
         }
     }
 

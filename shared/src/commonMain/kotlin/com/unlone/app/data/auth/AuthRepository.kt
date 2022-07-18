@@ -8,9 +8,11 @@ interface AuthRepository {
     suspend fun signIn(email: String, password: String): AuthResult<Unit>
     suspend fun authenticate(): AuthResult<Unit>
     suspend fun requestOtpEmail(): AuthResult<Unit>
-    suspend fun verifyOtp(email:String, otp: Int): AuthResult<Unit>
+    suspend fun verifyOtp(email: String, otp: Int): AuthResult<Unit>
     fun signOut()
     fun getJwt(): String?
+    suspend fun setUserName(email: String, username: String): AuthResult<Unit>
+    suspend fun getUsername(): AuthResult<String>
 }
 
 

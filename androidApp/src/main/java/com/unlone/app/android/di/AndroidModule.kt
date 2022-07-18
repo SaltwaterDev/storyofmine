@@ -13,5 +13,5 @@ val androidModule = module {
     viewModel { StoriesViewModel(get(), get()) }
     viewModel { PostDetailViewModel(get()) }
     viewModel { ProfileViewModel(get()) }
-    viewModel { WritingViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { WritingViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }

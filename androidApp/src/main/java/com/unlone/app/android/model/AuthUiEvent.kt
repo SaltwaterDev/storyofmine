@@ -4,8 +4,10 @@ sealed class SignUpUiEvent {
     data class SignUpEmailChanged(val value: String) : SignUpUiEvent()
     data class SignUpPasswordChanged(val value: String) : SignUpUiEvent()
     data class ConfirmedPasswordChanged(val value: String) : SignUpUiEvent()
+    data class UsernameChanged(val value: String) : SignUpUiEvent()
     object SignUpEmailVerify : SignUpUiEvent()
     object SignUp : SignUpUiEvent()
+    object SetUsername : SignUpUiEvent()
 }
 
 sealed class SignInUiEvent {
