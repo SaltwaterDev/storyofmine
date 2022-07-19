@@ -1,16 +1,13 @@
 package com.unlone.app.android.viewmodel
 
-import android.content.ContentValues.TAG
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-data class PostDetailUiState(
+data class StoryDetailUiState(
     val pid: String = "",
-    val title: String = "",
-    val content: String = "",
-    val uid: String = "",
+    val title: String = "Title",
+    val content: String = "Content",
+    val authorId: String = "",
     val topics: List<String> = emptyList(),
     val timestamp: Long = 0L,
     val comments: List<String> = emptyList(),
@@ -19,16 +16,16 @@ data class PostDetailUiState(
     val allowSave: Boolean = false,
 )
 
-class PostDetailViewModel(
-    savedStateHandle: SavedStateHandle
+class StoryDetailViewModel(
 ) : ViewModel() {
 
-    val state = MutableStateFlow(PostDetailUiState())
-
-    private val pid = savedStateHandle.get<String>("pid")
-    init {
-        Log.d(TAG, "postDetailViewModel: $pid")
+    fun getStoryDetail(postId: String) {
+        /*TODO("Not yet implemented")*/
     }
+
+    //    private val pid: String? = savedStateHandle["pid"]
+    var state = MutableStateFlow(StoryDetailUiState())
+        private set
 
 /*
     var state = pid?.let { pid ->
