@@ -2,15 +2,20 @@ package com.unlone.app.android.ui.write
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
@@ -38,12 +43,17 @@ fun WritingScreen(
     var showPostingDialog by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
 
 
     DisposableEffect(key1 = context) {
         onDispose {
             viewModel.saveDraft()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 
 
@@ -112,7 +122,9 @@ fun WritingScreen(
                     .imeNestedScroll()
             ) {
                 TextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
                     value = uiState.title,
                     onValueChange = { viewModel.setTitle(it) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -121,7 +133,8 @@ fun WritingScreen(
                         unfocusedIndicatorColor = Color.Transparent,
                         errorIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                 )
 
                 TextField(
