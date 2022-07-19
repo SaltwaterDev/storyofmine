@@ -34,7 +34,6 @@ fun UnloneApp() {
             color = Color.Transparent,
             darkIcons = useDarkIcons
         )
-        systemUiController.isSystemBarsVisible = false
     }
 
     UnloneTheme {
