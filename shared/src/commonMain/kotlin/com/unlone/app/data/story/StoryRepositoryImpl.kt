@@ -1,12 +1,16 @@
 package com.unlone.app.data.story
 
 import co.touchlab.kermit.Logger
+import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.write.StoryApi
 import com.unlone.app.domain.entities.Story
 import com.unlone.app.domain.entities.StoryItem
 
 
-internal class StoryRepositoryImpl(private val storyApi: StoryApi) : StoryRepository {
+internal class StoryRepositoryImpl(
+    private val authRepository: AuthRepository,
+    private val storyApi: StoryApi
+) : StoryRepository {
     override suspend fun fetchStoriesByPosts(
         postPerFetching: Int,
         pagingItems: Int,
@@ -48,19 +52,13 @@ internal class StoryRepositoryImpl(private val storyApi: StoryApi) : StoryReposi
         }
     }
 
-    override suspend fun fetchStoryDetail(id: String): Story {
-        // todo: to be implemented
-        return Story(
-            "12345",
-            "Title",
-            "DLLMCH",
-            "NMSL",
-            "67890",
-            true,
-            true,
-            true,
-            null,
-            0L
-        )
+    override suspend fun fetchStoryDetail(id: String): StoryResult<Story> {
+        return authRepository.getJwt()?.let { jwt ->
+            val response = storyApi.fetchStoryDetail(
+                id,
+                "Bearer $jwt"
+            )
+            StoryResult.Success(response.toStory())
+        } ?: StoryResult.Failed("jwt not exists")
     }
 }

@@ -6,12 +6,7 @@ sealed class StoryItem {
     data class StoriesByTopic(
         val topic: String = "Topic",
         val stories: List<SimpleStory> = listOf(
-            SimpleStory(
-                "_id",
-                "_title",
-                "_content",
-                "_topic",
-            )
+            SimpleStory.mock()
         )
     )
     data class TopicTable(

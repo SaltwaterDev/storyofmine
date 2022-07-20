@@ -16,6 +16,7 @@ import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import com.unlone.app.httpClientEngine
 import com.unlone.app.utils.KMMPreference
 import com.unlone.app.domain.useCases.write.*
+import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -47,6 +48,6 @@ val commonModule = module {
     // repositories
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<DraftRepository> { DraftRepositoryImpl() }
-    single<StoryRepository> { StoryRepositoryImpl(get()) }
+    singleOf(::StoryRepositoryImpl) { bind<StoryRepository>() }
     single<TopicRepository> { TopicRepositoryImpl(get()) }
 }

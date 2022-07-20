@@ -22,5 +22,5 @@ interface StoryRepository {
 
     suspend fun fetchStoryDetail(
         id: String
-    ): Story
+    ): StoryResult<Story>
 }
