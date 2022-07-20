@@ -11,6 +11,7 @@ import com.unlone.app.data.story.TopicRepositoryImpl
 import com.unlone.app.data.write.*
 import com.unlone.app.domain.useCases.auth.ValidPasswordUseCase
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
+import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import com.unlone.app.httpClientEngine
 import com.unlone.app.utils.KMMPreference
@@ -41,6 +42,7 @@ val commonModule = module {
     single { SaveDraftUseCase(get()) }
     single { ValidPasswordUseCase() }
     single { IsUserSignedInUseCase(get()) }
+    singleOf(::FetchStoryDetailUseCase)
 
     // repositories
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }

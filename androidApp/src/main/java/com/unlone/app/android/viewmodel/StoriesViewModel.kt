@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 data class LoungeUiState(
     val loading: Boolean = true,
-    val isUserLoggedIn: Boolean = false,
+    val isUserLoggedIn: Boolean = true,
     val postsByTopics: List<StoryItem.StoriesByTopic>? = listOf(StoryItem.StoriesByTopic()),
     val errorMsg: String? = null,
     val lastItemId: String? = null,

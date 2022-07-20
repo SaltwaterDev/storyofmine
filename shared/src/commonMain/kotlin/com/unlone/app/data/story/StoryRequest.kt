@@ -19,4 +19,13 @@ data class SimpleStory(
     val title: String,
     val content: String,
     val topic: String,
-)
+) {
+    companion object {
+        fun mock() = SimpleStory(
+            "_id",
+            "_title",
+            "_content",
+            "_topic",
+        )
+    }
+}

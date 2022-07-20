@@ -24,7 +24,7 @@ fun StoryDetail(
     viewModel: StoryDetailViewModel
 ) {
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         if (postId != null) {
             viewModel.getStoryDetail(postId)
         }
@@ -34,8 +34,12 @@ fun StoryDetail(
 
     Scaffold(
         topBar = {
-            TopAppBar() {
-                Box(Modifier.fillMaxWidth()) {
+            TopAppBar {
+                Box(
+                    Modifier
+                        .statusBarsPadding()
+                        .fillMaxWidth()
+                ) {
                     IconButton(onClick = back) {
                         Icon(
                             Icons.Filled.ArrowBack,
@@ -48,7 +52,7 @@ fun StoryDetail(
                         onClick = { navToTopicDetail("") },
                         modifier = Modifier.align(Alignment.Center)
                     ) {
-                        Text(text = state.topics.firstOrNull() ?: "")
+                        Text(text = state.topic)
                     }
 
                     Row(Modifier.align(Alignment.CenterEnd)) {

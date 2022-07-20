@@ -2,6 +2,7 @@ package com.unlone.app.data.story
 
 import co.touchlab.kermit.Logger
 import com.unlone.app.data.write.StoryApi
+import com.unlone.app.domain.entities.Story
 import com.unlone.app.domain.entities.StoryItem
 
 
@@ -45,5 +46,21 @@ internal class StoryRepositoryImpl(private val storyApi: StoryApi) : StoryReposi
             Logger.e { e.toString() }
             StoryResult.Failed(errorMsg = e.message)
         }
+    }
+
+    override suspend fun fetchStoryDetail(id: String): Story {
+        // todo: to be implemented
+        return Story(
+            "12345",
+            "Title",
+            "DLLMCH",
+            "NMSL",
+            "67890",
+            true,
+            true,
+            true,
+            null,
+            0L
+        )
     }
 }

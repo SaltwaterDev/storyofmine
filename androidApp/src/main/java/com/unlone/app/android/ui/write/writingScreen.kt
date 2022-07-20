@@ -43,8 +43,6 @@ fun WritingScreen(
     var showPostingDialog by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusRequester = remember { FocusRequester() }
-
 
     DisposableEffect(key1 = context) {
         onDispose {
@@ -52,9 +50,6 @@ fun WritingScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
 
 
     Box {
@@ -122,9 +117,7 @@ fun WritingScreen(
                     .imeNestedScroll()
             ) {
                 TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                    modifier = Modifier.fillMaxWidth(),
                     value = uiState.title,
                     onValueChange = { viewModel.setTitle(it) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -134,7 +127,8 @@ fun WritingScreen(
                         errorIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
                     ),
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                    placeholder = { Text(text = "Untitled") }
                 )
 
                 TextField(
