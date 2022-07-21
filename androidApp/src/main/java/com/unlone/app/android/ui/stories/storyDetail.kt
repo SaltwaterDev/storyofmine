@@ -33,12 +33,13 @@ fun StoryDetail(
 
 
     Scaffold(
+        modifier = Modifier.displayCutoutPadding(),
         topBar = {
-            TopAppBar {
+            TopAppBar(
+                Modifier.statusBarsPadding()
+            ) {
                 Box(
-                    Modifier
-                        .statusBarsPadding()
-                        .fillMaxWidth()
+                    Modifier.fillMaxWidth()
                 ) {
                     IconButton(onClick = back) {
                         Icon(

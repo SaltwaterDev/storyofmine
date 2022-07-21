@@ -1,10 +1,7 @@
 package com.unlone.app.android.ui.comonComponent
 
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,6 +9,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowInsetsCompat
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.R
@@ -34,11 +32,18 @@ fun WriteScreenTopBar(
     val scope = rememberCoroutineScope()
 
     val systemUiController: SystemUiController = rememberSystemUiController()
+    val topBarModifier = if (swipeableState.currentValue == 1)
+        modifier.fillMaxWidth()
+    else
+        modifier
+            .displayCutoutPadding()
+            .fillMaxWidth()
 
     if (swipeableState.currentValue == 0 || swipeableState.currentValue == 1)
         LaunchedEffect(swipeableState.currentValue) {
-            if (swipeableState.currentValue == 1)
+            if (swipeableState.currentValue == 1) {
                 systemUiController.isSystemBarsVisible = false
+            }
             if (swipeableState.currentValue == 0)
                 systemUiController.isSystemBarsVisible = true
         }
@@ -52,8 +57,7 @@ fun WriteScreenTopBar(
 
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = topBarModifier
             .swipeable(
                 state = swipeableState,
                 anchors = anchors,

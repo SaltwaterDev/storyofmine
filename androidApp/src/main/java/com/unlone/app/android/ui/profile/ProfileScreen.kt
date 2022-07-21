@@ -27,7 +27,6 @@ fun ProfileScreen(
     fun goToSavedStories() {}
     fun goToSetting() {}
     fun goToHelp() {}
-    fun logout() = viewModel.signOut()
 
     fun ProfileItemList.takeAction() {
         when (this) {
@@ -77,7 +76,10 @@ fun ProfileScreen(
             onDismissRequest = { showSignOutAlert = false },
             text = { Text(text = "Are you sure to sign out?") },
             dismissButton = {
-                TextButton(onClick = { viewModel.signOut() }) {
+                TextButton(onClick = {
+                    showSignOutAlert = false
+                    viewModel.signOut()
+                }) {
                     Text(text = "Sign out")
                 }
             },
