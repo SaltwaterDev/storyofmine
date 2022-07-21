@@ -2,10 +2,8 @@ package com.unlone.app.android.ui.profile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +20,7 @@ fun ProfileScreen(
 ) {
 
     val state = viewModel.state.collectAsState().value
+    var showSignOutAlert by remember { mutableStateOf(false) }
 
     //    fun goToDraft() {}
     fun goToMyStories() {}
@@ -36,7 +35,9 @@ fun ProfileScreen(
             is ProfileItemList.Saved -> goToSavedStories()
             is ProfileItemList.Setting -> goToSetting()
             is ProfileItemList.Help -> goToHelp()
-            is ProfileItemList.Logout -> logout()
+            is ProfileItemList.Logout -> {
+                showSignOutAlert = true
+            }
         }
     }
 
@@ -59,7 +60,9 @@ fun ProfileScreen(
                     text = item.name,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { item.takeAction() }
+                        .clickable {
+                            item.takeAction()
+                        }
                         .padding(15.dp)
                         .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
                 )
@@ -68,4 +71,20 @@ fun ProfileScreen(
             }
         }
     }
+
+    if (showSignOutAlert)
+        AlertDialog(
+            onDismissRequest = { showSignOutAlert = false },
+            text = { Text(text = "Are you sure to sign out?") },
+            dismissButton = {
+                TextButton(onClick = { viewModel.signOut() }) {
+                    Text(text = "Sign out")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showSignOutAlert = false }) {
+                    Text(text = "Cancel")
+                }
+            },
+        )
 }
