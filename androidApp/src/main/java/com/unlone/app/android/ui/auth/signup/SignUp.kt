@@ -22,8 +22,7 @@ import com.unlone.app.data.auth.AuthResult
 
 @Composable
 fun SignUpScreen(
-    navToSetUsername: () -> Unit,
-//    navToSendEmailOtp: () -> Unit,
+    navToSendEmailOtp: () -> Unit,
     navToSignIn: () -> Unit,
     viewModel: SignUpViewModel,
 ) {
@@ -34,8 +33,7 @@ fun SignUpScreen(
         viewModel.authResult.collect { result ->
             when (result) {
                 is AuthResult.Authorized -> {
-//                    navToSendEmailOtp()       todo
-                    navToSetUsername()
+                    navToSendEmailOtp()
                 }
                 is AuthResult.Unauthorized -> {
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()

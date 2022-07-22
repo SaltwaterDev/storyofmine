@@ -15,10 +15,11 @@ interface AuthApi {
     suspend fun signIn(request: AuthRequest): TokenResponse
     suspend fun validateEmail(request: AuthEmailRequest)
     suspend fun authenticate(token: String)
-    suspend fun requestOtp()
+    suspend fun requestOtp(email: String)
     suspend fun verifyOtp(request: AuthOtpRequest)
     suspend fun setUserName(email: String, username: String)
     suspend fun getUserName(token: String): String
+    suspend fun removeUserRecord(email: String)
 }
 
 internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
@@ -68,8 +69,11 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
         }
     }
 
-    override suspend fun requestOtp() {
-        client.get(baseUrl + "otp/request")
+    override suspend fun requestOtp(email: String) {
+        client.post(baseUrl + "otp/request"){
+            contentType(ContentType.Application.Json)
+            setBody(AuthEmailRequest(email))
+        }
     }
 
     override suspend fun verifyOtp(request: AuthOtpRequest) {
@@ -93,10 +97,17 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
         return response.body()
     }
 
+    override suspend fun removeUserRecord(email: String) {
+        client.post("$baseUrl/signUp/clearUserRecord") {
+            contentType(ContentType.Application.Json)
+            setBody(AuthEmailRequest(email))
+        }
+    }
+
     companion object {
         // local IP address for running on an emulator
-//        private const val baseUrl = "http://10.0.2.2:8080/"
+        private const val baseUrl = "http://10.0.2.2:8080/"
 //        private const val baseUrl = "http://192.168.8.154:8080/"
-        private const val baseUrl = "https://unlone.an.r.appspot.com/"
+//        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }

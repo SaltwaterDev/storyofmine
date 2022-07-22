@@ -21,28 +21,12 @@ fun SetUsernameScreen(
     onSignUpSuccess: () -> Unit,
     viewModel: SignUpViewModel,
 ) {
-    val context = LocalContext.current
     val uiState = viewModel.uiState
 
-    LaunchedEffect(viewModel, context) {
-        viewModel.authResult.collect { result ->
-            when (result) {
-                is AuthResult.Authorized -> {
-                    onSignUpSuccess()
-                }
-                is AuthResult.Unauthorized -> {
-                    Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
-                }
-                is AuthResult.UnknownError -> {
-                    Toast.makeText(
-                        context,
-                        "unknown error: " + result.errorMsg,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
+    if (uiState.success)
+        LaunchedEffect(uiState.success) {
+            onSignUpSuccess()
         }
-    }
 
     Box(
         Modifier.fillMaxSize()
@@ -75,7 +59,6 @@ fun SetUsernameScreen(
                 if (uiState.loading)
                     CircularProgressIndicator()
             }
-
         }
     }
 
