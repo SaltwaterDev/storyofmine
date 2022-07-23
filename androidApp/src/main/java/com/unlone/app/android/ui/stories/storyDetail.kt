@@ -95,6 +95,21 @@ fun StoryDetail(
             }
         }
     }
+
+    state.errorMsg?.let {
+        AlertDialog(
+            onDismissRequest = viewModel::dismissError,
+            title = { Text(text = it) },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.dismissError()
+                    back()
+                }) {
+                    Text(text = "Confirm")
+                }
+            }
+        )
+    }
 }
 
 @Composable

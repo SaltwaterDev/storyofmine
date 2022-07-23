@@ -52,4 +52,8 @@ class StoryDetailViewModel(
     //    private val pid: String? = savedStateHandle["pid"]
     var state = MutableStateFlow(StoryDetailUiState())
         private set
+
+    fun dismissError() {
+        state.value = state.value.copy(errorMsg = null)
+    }
 }
