@@ -1,6 +1,5 @@
 package com.unlone.app.android.ui.auth.signup
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*

@@ -69,7 +69,7 @@ class StoriesViewModel(
                     isUserLoggedIn = false,
                 )
                 is AuthResult.UnknownError -> _state.value.copy(
-                    errorMsg = authResult.errorMsg
+                    errorMsg = "Unknown error: " + authResult.errorMsg
                 )
             }
         }

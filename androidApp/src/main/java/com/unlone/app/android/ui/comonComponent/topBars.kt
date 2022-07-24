@@ -25,7 +25,7 @@ fun WriteScreenTopBar(
     post: () -> Unit,
 ) {
 
-    val squareSize = 48.dp
+    val squareSize = 60.dp
     val swipeableState = rememberSwipeableState(0)
     val sizePx = with(LocalDensity.current) { squareSize.toPx() }
     val anchors = mapOf(0f to 0, sizePx to 1) // Maps anchor points (in px) to states
@@ -33,11 +33,10 @@ fun WriteScreenTopBar(
 
     val systemUiController: SystemUiController = rememberSystemUiController()
     val topBarModifier = if (swipeableState.currentValue == 1)
-        modifier.fillMaxWidth()
-    else
         modifier
-            .displayCutoutPadding()
-            .fillMaxWidth()
+    else
+        modifier.displayCutoutPadding()
+
 
     if (swipeableState.currentValue == 0 || swipeableState.currentValue == 1)
         LaunchedEffect(swipeableState.currentValue) {
@@ -56,7 +55,7 @@ fun WriteScreenTopBar(
     }
 
 
-    Row(
+    TopAppBar(
         modifier = topBarModifier
             .swipeable(
                 state = swipeableState,
@@ -66,16 +65,20 @@ fun WriteScreenTopBar(
                 orientation = Orientation.Vertical
             )
             .offset { IntOffset(0, -swipeableState.offset.value.roundToInt()) },
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = openOptions) {
-            Icon(painterResource(id = R.drawable.ic_menu), contentDescription = "options")
-        }
-        TextButton(onClick = openPreview) {
-            Text(text = "Preview")
-        }
-        IconButton(onClick = post) {
-            Icon(painterResource(id = R.drawable.ic_send), contentDescription = "post")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconButton(onClick = openOptions) {
+                Icon(painterResource(id = R.drawable.ic_menu), contentDescription = "options")
+            }
+            OutlinedButton(onClick = openPreview) {
+                Text(text = "Preview")
+            }
+            IconButton(onClick = post) {
+                Icon(painterResource(id = R.drawable.ic_send), contentDescription = "post")
+            }
         }
     }
 }
