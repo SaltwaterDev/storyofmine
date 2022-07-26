@@ -2,9 +2,13 @@ package com.unlone.app.android.ui.profile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -12,6 +16,10 @@ import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.viewmodel.ProfileItemList
 import com.unlone.app.android.viewmodel.ProfileViewModel
+import com.unlone.app.utils.KMMContext
+import com.unlone.app.utils.Locale
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 
 @Composable
@@ -21,6 +29,7 @@ fun ProfileScreen(
 
     val state = viewModel.state.collectAsState().value
     var showSignOutAlert by remember { mutableStateOf(false) }
+
 
     //    fun goToDraft() {}
     fun goToMyStories() {}
@@ -49,6 +58,11 @@ fun ProfileScreen(
                 .padding(20.dp, 30.dp)
                 .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
         )
+
+
+        val text = stringResource(resource = SharedRes.strings.my_string)
+        Text(text = text)
+
 
         Spacer(modifier = Modifier.height(30.dp))
 
