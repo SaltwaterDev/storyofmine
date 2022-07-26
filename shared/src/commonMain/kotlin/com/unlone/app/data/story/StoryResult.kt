@@ -22,9 +22,10 @@ data class StoryResponse(
     val topic: String,
     val author: String,
     val isPublished: Boolean,
+    val isSelfWritten: Boolean,
     val commentAllowed: Boolean,
     val saveAllowed: Boolean,
-    val createdDate: Long,
+    val createdDate: String,
 ) {
     fun toStory(): Story {
         return Story(
@@ -34,6 +35,7 @@ data class StoryResponse(
             this.topic,
             this.author,
             this.isPublished,
+            this.isSelfWritten,
             this.commentAllowed,
             this.saveAllowed,
             null,

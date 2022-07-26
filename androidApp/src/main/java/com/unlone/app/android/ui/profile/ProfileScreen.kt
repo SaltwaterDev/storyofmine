@@ -8,7 +8,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -16,10 +15,6 @@ import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.viewmodel.ProfileItemList
 import com.unlone.app.android.viewmodel.ProfileViewModel
-import com.unlone.app.utils.KMMContext
-import com.unlone.app.utils.Locale
-import dev.icerock.moko.resources.compose.stringResource
-import org.example.library.SharedRes
 
 
 @Composable
@@ -59,9 +54,8 @@ fun ProfileScreen(
                 .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
         )
 
-
-        val text = stringResource(resource = SharedRes.strings.my_string)
-        Text(text = text)
+//        val text = stringResource(resource = SharedRes.strings.my_string)
+//        Text(text = text)
 
 
         Spacer(modifier = Modifier.height(30.dp))

@@ -6,6 +6,7 @@ import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 data class StoryDetailUiState(
     val pid: String = "",
@@ -13,7 +14,7 @@ data class StoryDetailUiState(
     val content: String = "Content",
     val authorId: String = "",
     val topic: String = "Topic",
-    val timestamp: Long = 0L,
+    val createdDate: String = "",
     val comments: List<String> = emptyList(),
     val isSelfWritten: Boolean = false,
     val allowComment: Boolean = false,
@@ -22,7 +23,7 @@ data class StoryDetailUiState(
 )
 
 class StoryDetailViewModel(
-    private val fetchStoryDetailUseCase: FetchStoryDetailUseCase
+    private val fetchStoryDetailUseCase: FetchStoryDetailUseCase,
 ) : ViewModel() {
 
     fun getStoryDetail(postId: String) {
@@ -36,9 +37,10 @@ class StoryDetailViewModel(
                             content = story.content,
                             authorId = story.author,
                             topic = story.topic,
-                            timestamp = story.timestamp,
+                            createdDate = story.createdDate,
                             allowComment = story.commentAllowed,
                             allowSave = story.saveAllowed,
+                            isSelfWritten = story.isSelfWritten,
                         )
                     }
                 }

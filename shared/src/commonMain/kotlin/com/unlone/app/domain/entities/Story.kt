@@ -7,9 +7,10 @@ data class Story(
     val topic: String,
     val author: String,
     val isPublished: Boolean,
+    val isSelfWritten: Boolean,
     val commentAllowed: Boolean,
     val saveAllowed: Boolean,
     val comment: Comment?,
-    val timestamp: Long,
+    val createdDate: String,
 )
 
