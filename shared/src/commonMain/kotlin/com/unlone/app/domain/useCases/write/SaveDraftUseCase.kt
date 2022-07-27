@@ -9,5 +9,3 @@ class SaveDraftUseCase(private val draftRepository: DraftRepository) {
         }
     }
 }
-
-

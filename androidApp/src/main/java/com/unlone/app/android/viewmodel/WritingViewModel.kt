@@ -7,6 +7,8 @@ import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.useCases.write.*
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -30,7 +32,7 @@ data class WritingUiState(
 
 class WritingViewModel(
     getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
-    getLastEditedDraftUseCase: GetLastEditedDraftUseCase,
+    getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
     private val createNewDraftUseCase: CreateNewDraftUseCase,
@@ -53,16 +55,17 @@ class WritingViewModel(
 
     init {
         viewModelScope.launch {
-             val lastEdited = getLastEditedDraftUseCase().filterNotNull().first()
-                stateChangedChannel.send(
-                    WritingUiState(
-                        currentDraftId = lastEdited.first,
-                        title = lastEdited.second.title,
-                        content = lastEdited.second.content,
-                        topicList = topicRepository.getAllTopic().map { topic -> topic.name },
-                    )
-                )
-
+             getLastOpenedDraftUseCase().filterNotNull().collect{ lastOpened ->
+                 stateChangedChannel.send(
+                     WritingUiState(
+                         currentDraftId = lastOpened.first,
+                         title = lastOpened.second.title,
+                         content = lastOpened.second.content,
+                         topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                     )
+                 )
+                 this.cancel()
+             }
         }
     }
 

@@ -16,6 +16,7 @@ internal class ParentDraftRealmObject : RealmObject {
     var id: ObjectId = ObjectId.create()
     var childDraftRealmObjects: RealmList<ChildDraftRealmObject> = realmListOf()
     var topics: List<String> = emptyList()
+    var lastOpened: RealmInstant = RealmInstant.from(100, 1000)
 }
 
 internal fun ParentDraftRealmObject.latestDraft(): ChildDraftRealmObject {
@@ -28,8 +29,8 @@ internal fun ParentDraftRealmObject.toParentDraft() =
         draftVersions = this.childDraftRealmObjects
             .toList()
             .map { it1 -> it1.toChildDraft() },
+        lastOpened = kotlinx.datetime.Instant.fromEpochMilliseconds(this.lastOpened.epochSeconds)
     )
-
 
 
 internal class ChildDraftRealmObject : RealmObject {

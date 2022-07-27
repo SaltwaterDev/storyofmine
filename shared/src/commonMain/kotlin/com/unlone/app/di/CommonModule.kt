@@ -37,7 +37,7 @@ val commonModule = module {
     single { GetAllDraftsTitleUseCase(get()) }
     single { GetDraftAllVersionsUseCase(get()) }
     single { GetLatestDraftUseCase(get()) }
-    single { GetLastEditedDraftUseCase(get()) }
+    single { GetLastOpenedDraftUseCase(get()) }
     single { PostStoryUseCase(get(), get()) }
     single { QueryDraftUseCase(get()) }
     single { SaveDraftUseCase(get()) }

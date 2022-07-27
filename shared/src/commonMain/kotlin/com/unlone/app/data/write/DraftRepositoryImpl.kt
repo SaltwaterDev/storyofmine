@@ -42,11 +42,11 @@ internal class DraftRepositoryImpl : DraftRepository {
             }
     }
 
-    override fun getLastEditedDraft(): Flow<Draft?> {
+    override fun getLastOpenedDraft(): Flow<Draft?> {
         return realm.query<ParentDraftRealmObject>().asFlow().map { parentDraftResult ->
             val parentDraftList = parentDraftResult.list.toList()
             val parentRealmObject = if (parentDraftList.isNotEmpty()) {
-                parentDraftList.maxByOrNull { it.latestDraft().timeStamp }
+                parentDraftList.maxByOrNull { it.lastOpened }
                     ?: throw Exception("Failed to get the latest draft")
             } else null
             parentRealmObject?.toParentDraft()
