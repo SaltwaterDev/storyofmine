@@ -53,16 +53,16 @@ class WritingViewModel(
 
     init {
         viewModelScope.launch {
-            getLastEditedDraftUseCase().filterNotNull().collect {
+             val lastEdited = getLastEditedDraftUseCase().filterNotNull().first()
                 stateChangedChannel.send(
                     WritingUiState(
-                        currentDraftId = it.first,
-                        title = it.second.title,
-                        content = it.second.content,
+                        currentDraftId = lastEdited.first,
+                        title = lastEdited.second.title,
+                        content = lastEdited.second.content,
                         topicList = topicRepository.getAllTopic().map { topic -> topic.name },
                     )
                 )
-            }
+
         }
     }
 
@@ -85,25 +85,24 @@ class WritingViewModel(
         }
     }
 
-    fun saveDraft() {
-        viewModelScope.launch {
-                saveDraftUseCase(
-                    state.value.currentDraftId,
-                    state.value.title,
-                    state.value.content
-                )
-        }
+    fun saveDraft() = viewModelScope.launch{
+        saveDraftUseCase(
+            state.value.currentDraftId,
+            state.value.title,
+            state.value.content
+        )
     }
 
     fun createNewDraft() {
         viewModelScope.launch {
-            val newDraftValue = createNewDraftUseCase()
+            saveDraft().join()
+            val newDraftMap = createNewDraftUseCase()
             stateChangedChannel.send(
                 state.value.copy(
-                    currentDraftId = newDraftValue["id"],
-                    title = newDraftValue["title"] ?: "",
-                    content = newDraftValue["content"] ?: "",
-                    selectedTopic = newDraftValue["selectedTopic"] ?: "",
+                    currentDraftId = newDraftMap["id"],
+                    title = newDraftMap["title"] ?: "",
+                    content = newDraftMap["content"] ?: "",
+                    selectedTopic = newDraftMap["selectedTopic"] ?: "",
                 )
             )
         }
@@ -111,6 +110,7 @@ class WritingViewModel(
 
     fun switchDraft(id: String) {
         viewModelScope.launch {
+            saveDraft().join()
             queryDraftUseCase(id).collect {
                 stateChangedChannel.send(
                     state.value.copy(

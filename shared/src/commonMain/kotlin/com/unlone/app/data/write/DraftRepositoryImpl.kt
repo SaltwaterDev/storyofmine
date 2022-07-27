@@ -53,8 +53,8 @@ internal class DraftRepositoryImpl : DraftRepository {
         }
     }
 
-    override fun saveDraft(id: String?, title: String, content: String) {
-        realm.writeBlocking {
+    override suspend fun saveDraft(id: String?, title: String, content: String) {
+        realm.write {
             val parentDraftRealmObject = ParentDraftRealmObject().apply {
                 id?.let { this.id = ObjectId.from(id) }
                 this.childDraftRealmObjects = realmListOf(
