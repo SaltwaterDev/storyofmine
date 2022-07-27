@@ -22,9 +22,16 @@ import com.unlone.app.data.story.SimpleStory
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Post(title: String, content: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun Post(
+    title: String,
+    content: String,
+    loading: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Card(
         onClick = onClick,
+        enabled = !loading,
         shape = RoundedCornerShape(8.dp),
         modifier = modifier,
         elevation = 0.dp,
@@ -55,36 +62,10 @@ fun Post(title: String, content: String, modifier: Modifier = Modifier, onClick:
 }
 
 
-@Composable
-fun HorizontalScrollPosts(
-    modifier: Modifier,
-    loading: Boolean,
-    posts: List<SimpleStory>,
-    onPostClick: (String) -> Unit,
-) {
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        items(posts) {
-            Post(
-                it.title,
-                it.content,
-                modifier
-                    .fillParentMaxWidth()
-                    .placeholder(
-                        visible = loading,
-                        highlight = PlaceholderHighlight.fade()
-                    )
-            ) { onPostClick(it.id) }
-        }
-    }
-}
 
 
 @Preview
 @Composable
 fun PostPreview() {
-    Post("_title", "_content") {}
+    Post("_title", "_content", false) {}
 }

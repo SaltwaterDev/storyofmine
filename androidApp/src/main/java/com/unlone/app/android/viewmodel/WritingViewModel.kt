@@ -87,13 +87,11 @@ class WritingViewModel(
 
     fun saveDraft() {
         viewModelScope.launch {
-            if (state.value.title.isNotBlank() && state.value.content.isNotBlank()) {
                 saveDraftUseCase(
                     state.value.currentDraftId,
                     state.value.title,
                     state.value.content
                 )
-            }
         }
     }
 

@@ -144,6 +144,7 @@ fun PostsByTopic(
                 Post(
                     it.title,
                     it.content,
+                    loading,
                     Modifier
                         .fillParentMaxWidth()
                         .placeholder(
