@@ -55,17 +55,19 @@ class WritingViewModel(
 
     init {
         viewModelScope.launch {
-             getLastOpenedDraftUseCase().filterNotNull().collect{ lastOpened ->
-                 stateChangedChannel.send(
-                     WritingUiState(
-                         currentDraftId = lastOpened.first,
-                         title = lastOpened.second.title,
-                         content = lastOpened.second.content,
-                         topicList = topicRepository.getAllTopic().map { topic -> topic.name },
-                     )
-                 )
-                 this.cancel()
-             }
+            getLastOpenedDraftUseCase()
+                .filterNotNull()
+                .first()
+                .let { lastOpened ->
+                stateChangedChannel.send(
+                    WritingUiState(
+                        currentDraftId = lastOpened.first,
+                        title = lastOpened.second.title,
+                        content = lastOpened.second.content,
+                        topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                    )
+                )
+            }
         }
     }
 
@@ -88,7 +90,7 @@ class WritingViewModel(
         }
     }
 
-    fun saveDraft() = viewModelScope.launch{
+    fun saveDraft() = viewModelScope.launch {
         saveDraftUseCase(
             state.value.currentDraftId,
             state.value.title,

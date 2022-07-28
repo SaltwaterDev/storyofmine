@@ -1,5 +1,6 @@
 package com.unlone.app.data.write
 
+import co.touchlab.kermit.Logger
 import com.unlone.app.domain.entities.Draft
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -7,8 +8,11 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.types.ObjectId
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 internal class DraftRepositoryImpl : DraftRepository {
 
@@ -49,6 +53,7 @@ internal class DraftRepositoryImpl : DraftRepository {
                 parentDraftList.maxByOrNull { it.lastOpened }
                     ?: throw Exception("Failed to get the latest draft")
             } else null
+            Logger.d(parentRealmObject?.toParentDraft().toString())
             parentRealmObject?.toParentDraft()
         }
     }
@@ -69,12 +74,23 @@ internal class DraftRepositoryImpl : DraftRepository {
                 query<ParentDraftRealmObject>("id == $0", parentDraftRealmObject.id).first()
                     .find()
             if (existingParentDraftRealmObject != null) {
+                // new Draft
                 existingParentDraftRealmObject.childDraftRealmObjects =
                     parentDraftRealmObject.childDraftRealmObjects
                 existingParentDraftRealmObject.topics = parentDraftRealmObject.topics
             } else {
                 copyToRealm(parentDraftRealmObject)
             }
+        }
+    }
+
+    override suspend fun updateLastOpenedTime(id: String) {
+        realm.write {
+            val parentDraftRealmObject: ParentDraftRealmObject? =
+                this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).first().find()
+            // modify the frog's age in the write transaction to persist the new age to the realm
+            parentDraftRealmObject?.lastOpened =
+                RealmInstant.from(Clock.System.now().epochSeconds, 1000)
         }
     }
 }

@@ -8,6 +8,8 @@ import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 
 // classes for realm
@@ -16,7 +18,7 @@ internal class ParentDraftRealmObject : RealmObject {
     var id: ObjectId = ObjectId.create()
     var childDraftRealmObjects: RealmList<ChildDraftRealmObject> = realmListOf()
     var topics: List<String> = emptyList()
-    var lastOpened: RealmInstant = RealmInstant.from(100, 1000)
+    var lastOpened: RealmInstant = RealmInstant.from(Clock.System.now().epochSeconds, 1000)
 }
 
 internal fun ParentDraftRealmObject.latestDraft(): ChildDraftRealmObject {
@@ -29,7 +31,7 @@ internal fun ParentDraftRealmObject.toParentDraft() =
         draftVersions = this.childDraftRealmObjects
             .toList()
             .map { it1 -> it1.toChildDraft() },
-        lastOpened = kotlinx.datetime.Instant.fromEpochMilliseconds(this.lastOpened.epochSeconds)
+        lastOpened = Instant.fromEpochMilliseconds(this.lastOpened.epochSeconds)
     )
 
 
@@ -37,7 +39,7 @@ internal class ChildDraftRealmObject : RealmObject {
     var id: ObjectId = ObjectId.create()
     var title: String = ""
     var content: String = ""
-    var timeStamp: RealmInstant = RealmInstant.from(100, 1000)
+    var timeStamp: RealmInstant = RealmInstant.from(Clock.System.now().epochSeconds, 1000)
 }
 
 internal fun ChildDraftRealmObject.toChildDraft() =
