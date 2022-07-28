@@ -15,7 +15,7 @@ data class StoryDetailUiState(
     val authorId: String = "",
     val topic: String = "Topic",
     val createdDate: String = "",
-    val comments: List<String> = emptyList(),
+    val comments: List<String> = listOf("comment", "comment", "comment", "comment", "comment", "comment"),
     val isSelfWritten: Boolean = false,
     val allowComment: Boolean = false,
     val allowSave: Boolean = false,
@@ -51,7 +51,6 @@ class StoryDetailViewModel(
         }
     }
 
-    //    private val pid: String? = savedStateHandle["pid"]
     var state = MutableStateFlow(StoryDetailUiState())
         private set
 

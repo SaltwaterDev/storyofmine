@@ -82,7 +82,7 @@ fun ProfileScreen(
     if (showSignOutAlert)
         AlertDialog(
             onDismissRequest = { showSignOutAlert = false },
-            text = { Text(text = "Are you sure to sign out?") },
+            title = { Text(text = "Are you sure to sign out?") },
             dismissButton = {
                 TextButton(onClick = {
                     showSignOutAlert = false
