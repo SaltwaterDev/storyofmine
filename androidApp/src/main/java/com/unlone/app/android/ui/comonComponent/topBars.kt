@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,6 +75,7 @@ fun WriteScreenTopBar(
                 orientation = Orientation.Vertical
             )
             .offset { IntOffset(0, -swipeableState.offset.value.roundToInt()) },
+        backgroundColor = Color.White
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -82,7 +84,7 @@ fun WriteScreenTopBar(
             IconButton(onClick = openOptions) {
                 Icon(painterResource(id = R.drawable.ic_menu), contentDescription = "options")
             }
-            OutlinedButton(onClick = openPreview) {
+            TextButton(onClick = openPreview) {
                 Text(text = "Preview")
             }
             IconButton(onClick = post) {
