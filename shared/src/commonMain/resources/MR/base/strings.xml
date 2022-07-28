@@ -1,4 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="my_string">My default localization string</string>
+
+    <string name="sign_in__title">Sign in</string>
+    <string name="sign_in__btn_sign_in">Sign in</string>
+    <string name="sign_in__btn_sign_in_instead">Sign in instead</string>
+
+    <string name="sign_up__title">Create account</string>
+    <string name="sign_up__email_already_used">This email has been used</string>
+    <string name="sign_up__pw_tips">Your password must contain at least one upper case letter one lower case letter and one number</string>
+    <string name="sign_up__pw_and_confirm_pw_not_same">Password and Confirmed password are not the same</string>
+
+    <string name="otp__send_email">Verify code will be sent to this email:</string>
+    <string name="otp__btn_Send">Send</string>
+    <string name="otp__enter_otp">Enter the code</string>
+
+    <string name="set_username__title">You are verified! Please enter your username</string>
+
+    <string name="writing__option_drawer_title">Options</string>
+    <string name="writing__clear">Clear</string>
+    <string name="writing__edit_history">Edit History</string>
+    <string name="writing__new_draft">New Draft</string>
+    <string name="writing__preview">Preview</string>
+    <string name="writing__untitled">Untitled</string>
+    <string name="writing__topic">Topic</string>
+    <string name="writing__post_to_public">Post to public</string>
+    <string name="writing__open_comment">Open comment</string>
+    <string name="writing__savable">Savable</string>
+    <string name="writing__btn_post">Post</string>
+    <string name="writing__sign_in_required_title">Sign in required</string>
+    <string name="writing__sign_in_required_text">Sign in to post your story</string>
+
+    <string name="stories_auth_required_title">Sign up to see other stories</string>
+    <string name="stories_header_greeting">Hello</string>
+
+    <string name="profile__sign_out">Sign out</string>
+    <string name="profile__sign_out_alert_title">Are you sure to log out?</string>
+    <string name="profile__btn_sign_out">Log out</string>
+
+
+    <string name="common__email">Email</string>
+    <string name="common__password">Password</string>
+    <string name="common__username">Username</string>
+    <string name="common__back">Back</string>
+    <string name="common__btn_next">Next</string>
+    <string name="common__btn_confirm">Confirm</string>
+    <string name="common__btn_finish">Finish</string>
+    <string name="common__btn_cancel">Cancel</string>
+    <string name="common__btn_sign_in">Sign in</string>
+    <string name="common__btn_sign_up">Sign up</string>
+
 </resources>

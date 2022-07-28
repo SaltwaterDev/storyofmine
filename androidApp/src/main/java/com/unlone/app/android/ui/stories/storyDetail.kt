@@ -64,11 +64,12 @@ fun StoryDetail(
             Modifier
                 .padding(innerPadding)
                 .fillMaxWidth()
-                .padding(horizontal = 30.dp)
         ) {
             item {
                 Column(
                     modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp)
                 ) {
                     Spacer(modifier = Modifier.height(60.dp))
                     Text(text = state.title, style = Typography.h1)
@@ -87,12 +88,6 @@ fun StoryDetail(
                 Spacer(modifier = Modifier.height(50.dp))
             }
             items(state.comments) {
-                // This is an example of a list of dismissible items, similar to what you would see in an
-                // email app. Swiping left reveals a 'delete' icon and swiping right reveals a 'done' icon.
-                // The background will start as grey, but once the dismiss threshold is reached, the colour
-                // will animate to red if you're swiping left or green if you're swiping right. When you let
-                // go, the item will animate out of the way if you're swiping left (like deleting an email) or
-                // back to its default position if you're swiping right (like marking an email as read/unread).
                 CommentItem(it)
             }
         }
