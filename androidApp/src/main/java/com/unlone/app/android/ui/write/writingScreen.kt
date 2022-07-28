@@ -129,7 +129,7 @@ fun WritingScreen(
 
                 TextField(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) imeToolBarHeight.dp else 0.dp),
                     value = uiState.content,
                     onValueChange = { viewModel.setContent(it) },
@@ -203,7 +203,7 @@ fun WritingScreen(
                     Button(
                         onClick = viewModel::dismiss
                     ) {
-                        Text(text = "Confirm¬")
+                        Text(text = "Confirm")
                     }
                 }
             )
