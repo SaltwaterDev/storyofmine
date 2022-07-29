@@ -1,4 +1,4 @@
-package com.unlone.app.ui.lounge
+package com.unlone.app.android.ui.stories
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

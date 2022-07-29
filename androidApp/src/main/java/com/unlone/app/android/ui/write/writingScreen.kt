@@ -18,7 +18,9 @@ import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.viewmodel.WritingViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import org.example.library.SharedRes
 
 
 @ExperimentalComposeUiApi
@@ -50,7 +52,9 @@ fun WritingScreen(
 
     Box {
         BottomSheetScaffold(
-            modifier = Modifier.displayCutoutPadding().statusBarsPadding(),
+            modifier = Modifier
+                .displayCutoutPadding()
+                .statusBarsPadding(),
             scaffoldState = scaffoldState,
             topBar = {
                 WriteScreenTopBar(
@@ -212,8 +216,8 @@ fun WritingScreen(
         if (requireSignInDialog) {
             AlertDialog(
                 onDismissRequest = { requireSignInDialog = false },
-                title = { Text(text = "Sign in required") },
-                text = { Text(text = "Sign in to publish your story") },
+                title = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_title))},
+                text = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_text)) },
                 confirmButton = {
                     Button(
                         onClick = {
@@ -221,13 +225,14 @@ fun WritingScreen(
                             navToSignIn()
                         }
                     ) {
-                        Text(text = "Sign in")
+                        Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
+
                     }
                 },
                 dismissButton = {
                     Button(
                         onClick = { requireSignInDialog = false }
-                    ) { Text(text = "Cancel") }
+                    ) { Text(text = stringResource(resource = SharedRes.strings.common__btn_cancel)) }
                 },
             )
         }

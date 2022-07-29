@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.unlone.app.android.model.SignUpUiEvent
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import com.unlone.app.data.auth.AuthResult
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 @Composable
 fun SignUpScreen(
@@ -58,7 +60,10 @@ fun SignUpScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(text = "Create account", fontSize = 36.sp)
+            Text(
+                text = stringResource(resource = SharedRes.strings.sign_up__title),
+                fontSize = 36.sp
+            )
             Spacer(modifier = Modifier.height(35.dp))
 
             TextField(
@@ -70,7 +75,12 @@ fun SignUpScreen(
                         }
                     },
                 value = uiState.email,
-                label = { Text(text = "Email", fontSize = 14.sp) },
+                label = {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.common__email),
+                        fontSize = 14.sp
+                    )
+                },
                 onValueChange = { viewModel.onEvent(SignUpUiEvent.SignUpEmailChanged(it)) },
                 singleLine = true,
                 isError = uiState.emailError
@@ -85,7 +95,12 @@ fun SignUpScreen(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.password,
-                label = { Text(text = "Password", fontSize = 14.sp) },
+                label = {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.common__password),
+                        fontSize = 14.sp
+                    )
+                },
                 onValueChange = { viewModel.onEvent(SignUpUiEvent.SignUpPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -93,7 +108,7 @@ fun SignUpScreen(
                 isError = uiState.pwError
             )
             Text(
-                "Your password must contain at least one upper case letter one lower case letter and one number",
+                stringResource(resource = SharedRes.strings.sign_up__pw_tips),
                 modifier = Modifier.padding(horizontal = 16.dp),
                 fontSize = 12.sp
             )
@@ -102,7 +117,12 @@ fun SignUpScreen(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.confirmedPassword,
-                label = { Text(text = "Confirm Password", fontSize = 14.sp) },
+                label = {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.common__email),
+                        fontSize = 14.sp
+                    )
+                },
                 onValueChange = { viewModel.onEvent(SignUpUiEvent.ConfirmedPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -112,7 +132,7 @@ fun SignUpScreen(
 
             if (uiState.confirmedPwError)
                 Text(
-                    "Password and Confirmed password are not the same",
+                    stringResource(resource = SharedRes.strings.sign_up__pw_and_confirm_pw_not_same),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontSize = 12.sp
                 )
@@ -128,7 +148,7 @@ fun SignUpScreen(
                     enabled = true,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Sign in")
+                    Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in_instead))
                 }
 
                 Spacer(modifier = Modifier.width(20.dp))
@@ -139,7 +159,7 @@ fun SignUpScreen(
                     enabled = uiState.btnEnabled,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Sign up")
+                    Text(text = stringResource(resource = SharedRes.strings.common__btn_sign_up))
                     if (uiState.loading)
                         CircularProgressIndicator()
                 }
@@ -154,7 +174,7 @@ fun SignUpScreen(
             title = { Text(text = "Warning") },
             text = { Text(uiState.errorMsg) },
             confirmButton = {
-                Button(onClick = { viewModel.dismissMsg() }) { Text("Confirm") }
+                Button(onClick = { viewModel.dismissMsg() }) { Text(stringResource(resource = SharedRes.strings.common__btn_confirm)) }
             },
         )
     }

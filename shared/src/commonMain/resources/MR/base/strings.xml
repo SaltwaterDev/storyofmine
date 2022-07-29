@@ -41,8 +41,9 @@
 
     <string name="common__email">Email</string>
     <string name="common__password">Password</string>
-    <string name="common__username">Username</string>
     <string name="common__back">Back</string>
+    <string name="common__warning">Warning</string>
+    <string name="common__username">Username</string>
     <string name="common__btn_next">Next</string>
     <string name="common__btn_confirm">Confirm</string>
     <string name="common__btn_finish">Finish</string>

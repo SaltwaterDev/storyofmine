@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.sp
 import com.unlone.app.android.ui.comonComponent.StoryDetailTopBar
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -102,7 +104,7 @@ fun StoryDetail(
                     viewModel.dismissError()
                     back()
                 }) {
-                    Text(text = "Confirm")
+                    Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                 }
             }
         )

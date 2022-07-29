@@ -23,7 +23,7 @@ import com.unlone.app.android.viewmodel.ProfileViewModel
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
-import com.unlone.app.ui.lounge.TopicDetail
+import com.unlone.app.android.ui.stories.TopicDetail
 import org.koin.androidx.compose.viewModel
 
 

@@ -24,7 +24,9 @@ import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.R
 import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.data.auth.AuthResult
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.InternalCoroutinesApi
+import org.example.library.SharedRes
 
 @InternalCoroutinesApi
 @Composable
@@ -61,11 +63,11 @@ fun SignInPasswordScreen(
                 .padding(horizontal = 30.dp)
         ) {
             Spacer(modifier = Modifier.height(60.dp))
-            Text(text = "Sign in", fontSize = 36.sp)
+            Text(text = stringResource(resource = SharedRes.strings.sign_in__title), fontSize = 36.sp)
             Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 value = uiState.password,
-                label = { Text(text = "Password", fontSize = 14.sp) },
+                label = { Text(text = stringResource(resource = SharedRes.strings.common__password), fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -79,7 +81,7 @@ fun SignInPasswordScreen(
                 enabled = uiState.pwBtnEnabled,
                 modifier = Modifier.align(End)
             ) {
-                Text(text = "Sign In")
+                Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
             }
         }
     }
@@ -100,7 +102,7 @@ fun SignInPasswordScreen(
                     onClick = {
                         viewModel.dismissMsg()
                     }) {
-                    Text("This is the Confirm Button")
+                    Text(stringResource(resource = SharedRes.strings.common__btn_confirm))
                 }
             },
         )

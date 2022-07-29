@@ -1,5 +1,6 @@
 package com.unlone.app.android.viewmodel
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
@@ -24,6 +25,7 @@ data class ProfileUiState(
             ProfileItemList.Logout(),
         )
 }
+
 
 sealed class ProfileItemList(
     open val name: String,

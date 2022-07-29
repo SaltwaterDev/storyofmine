@@ -10,4 +10,5 @@ interface DraftRepository {
     fun getLastOpenedDraft(): Flow<Draft?>
     suspend fun saveDraft(id: String?, title: String, content: String)
     suspend fun updateLastOpenedTime(id: String)
+    suspend fun deleteDraft(id: String)
 }

@@ -24,6 +24,8 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.comonComponent.Post
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.data.story.SimpleStory
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 @Composable
 fun StoriesScreen(
@@ -50,7 +52,8 @@ fun StoriesScreen(
 
                 item {
                     Text(
-                        text = "Hello ${state.username ?: ""}",
+                        text = stringResource(resource = SharedRes.strings.stories_header_greeting) +
+                                state.username,
                         modifier = Modifier
                             .padding(16.dp, 40.dp)
                             .placeholder(
@@ -84,7 +87,7 @@ fun StoriesScreen(
                 title = { Text(text = it) },
                 confirmButton = {
                     Button(onClick = viewModel::dismissError) {
-                        Text(text = "Confirm")
+                        Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                     }
                 }
             )
@@ -161,7 +164,7 @@ fun PostsByTopic(
 @Composable
 fun LoginInPrompt(modifier: Modifier, navToAuth: () -> Unit) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Sign up to see other stories")
+        Text(text = stringResource(resource = SharedRes.strings.stories_auth_required_title))
         Button(onClick = navToAuth, modifier = Modifier.padding(26.dp)) {
             Text(text = "SignUp")
         }

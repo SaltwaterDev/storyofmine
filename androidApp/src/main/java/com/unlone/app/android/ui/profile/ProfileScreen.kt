@@ -15,6 +15,8 @@ import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.viewmodel.ProfileItemList
 import com.unlone.app.android.viewmodel.ProfileViewModel
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 
 @Composable
@@ -82,18 +84,18 @@ fun ProfileScreen(
     if (showSignOutAlert)
         AlertDialog(
             onDismissRequest = { showSignOutAlert = false },
-            title = { Text(text = "Are you sure to sign out?") },
+            title = { Text(text = stringResource(resource = SharedRes.strings.profile__sign_out_alert_title)) },
             dismissButton = {
                 TextButton(onClick = {
                     showSignOutAlert = false
                     viewModel.signOut()
                 }) {
-                    Text(text = "Sign out")
+                    Text(text = stringResource(resource = SharedRes.strings.profile__sign_out))
                 }
             },
             confirmButton = {
                 TextButton(onClick = { showSignOutAlert = false }) {
-                    Text(text = "Cancel")
+                    Text(text = stringResource(resource = SharedRes.strings.common__btn_cancel))
                 }
             },
         )

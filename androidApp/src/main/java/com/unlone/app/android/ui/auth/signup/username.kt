@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.sp
 import com.unlone.app.android.model.SignUpUiEvent
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import com.unlone.app.data.auth.AuthResult
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 
 @Composable
@@ -55,7 +57,7 @@ fun SetUsernameScreen(
                 enabled = uiState.username.isNotBlank(),
                 modifier = Modifier.align(End)
             ) {
-                Text(text = "Finish")
+                Text(text = stringResource(resource = SharedRes.strings.common__btn_finish))
                 if (uiState.loading)
                     CircularProgressIndicator()
             }
@@ -65,7 +67,7 @@ fun SetUsernameScreen(
     uiState.errorMsg?.let {
         AlertDialog(
             onDismissRequest = { viewModel.dismissMsg() },
-            title = { Text(text = "Warning") },
+            title = { Text(text = stringResource(resource = SharedRes.strings.common__warning)) },
             text = { Text(uiState.errorMsg) },
             confirmButton = {
                 Button(onClick = { viewModel.dismissMsg() }) { Text("Confirm") }

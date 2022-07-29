@@ -93,4 +93,12 @@ internal class DraftRepositoryImpl : DraftRepository {
                 RealmInstant.from(Clock.System.now().epochSeconds, 1000)
         }
     }
+
+    override suspend fun deleteDraft(id: String) = realm.write {
+            // fetch the frog by primary key value, passed in as argument number 0
+            val parentDraftRealmObject =
+                this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).find().first()
+            // call delete on the results of a query to delete the object permanently
+            delete(parentDraftRealmObject)
+        }
 }

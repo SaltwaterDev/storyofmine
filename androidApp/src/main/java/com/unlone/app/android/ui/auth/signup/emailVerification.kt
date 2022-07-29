@@ -13,6 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.viewmodel.SignUpUiState
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 private enum class ScreenState {
     EmailConfirm,
@@ -28,12 +30,12 @@ fun EmailVerificationScreen(
     onOtpVerified: () -> Unit,
     navToSetUsername: () -> Unit,
 ) {
-    var showCancelSignupAlert by remember { mutableStateOf(false) }
+
     var screenState: ScreenState by remember { mutableStateOf(ScreenState.EmailConfirm) }
 
     BackHandler {
         when (screenState) {
-            ScreenState.EmailConfirm -> showCancelSignupAlert = true
+            ScreenState.EmailConfirm -> onCancelSignUp()
             ScreenState.OtpInput -> screenState = ScreenState.EmailConfirm
         }
     }
@@ -67,25 +69,6 @@ fun EmailVerificationScreen(
         }
     }
 
-    if (showCancelSignupAlert)
-        AlertDialog(
-            onDismissRequest = { showCancelSignupAlert = false },
-            text = { Text(text = "If you go back to last page, you need to sign up again.") },
-            confirmButton = {
-                TextButton(
-                    onClick = { showCancelSignupAlert = false }) {
-                    Text(text = "Leave")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showCancelSignupAlert = false
-                    onCancelSignUp()
-                }) {
-                    Text(text = "Cancel")
-                }
-            },
-        )
 
     if (state.verified) {
         LaunchedEffect(Unit) {
@@ -102,7 +85,7 @@ fun OtpInputBlock(
     onClick: () -> Unit,
 ) {
     Column(modifier) {
-        Text(text = "Enter the code")
+        Text(text = stringResource(resource = SharedRes.strings.otp__enter_otp))
         Spacer(modifier = Modifier.height(15.dp))
         TextField(value = otp, onValueChange = onValueChanged, modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(50.dp))
@@ -110,7 +93,7 @@ fun OtpInputBlock(
             onClick = onClick,
             modifier = Modifier.align(End)
         ) {
-            Text(text = "Confirm")
+            Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
         }
     }
 }
@@ -122,7 +105,7 @@ fun EmailConfirmBlock(
     onClick: () -> Unit,
 ) {
     Column(modifier) {
-        Text(text = "Verify code will be sent to this email")
+        Text(text = stringResource(resource = SharedRes.strings.otp__send_email))
         Spacer(modifier = Modifier.height(15.dp))
         Surface(
             border = BorderStroke(1.dp, Color.Gray),
@@ -142,7 +125,7 @@ fun EmailConfirmBlock(
             onClick = onClick,
             modifier = Modifier.align(End)
         ) {
-            Text(text = "Send")
+            Text(text = stringResource(resource = SharedRes.strings.otp__btn_Send))
         }
 
     }

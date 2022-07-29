@@ -23,7 +23,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.R
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import org.example.library.SharedRes
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -85,7 +87,7 @@ fun WriteScreenTopBar(
                 Icon(painterResource(id = R.drawable.ic_menu), contentDescription = "options")
             }
             TextButton(onClick = openPreview) {
-                Text(text = "Preview")
+                Text(text =  stringResource(resource = SharedRes.strings.writing__preview))
             }
             IconButton(onClick = post) {
                 Icon(painterResource(id = R.drawable.ic_send), contentDescription = "post")
@@ -154,7 +156,7 @@ fun StoryDetailTopBar(
                         )
                     }
                     IconButton(onClick = edit) {
-                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit")
+                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "edit")
                     }
                 }
             }
