@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,7 +78,7 @@ fun WriteScreenTopBar(
                 orientation = Orientation.Vertical
             )
             .offset { IntOffset(0, -swipeableState.offset.value.roundToInt()) },
-        backgroundColor = Color.White
+        backgroundColor = MaterialTheme.colors.background
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -87,7 +88,7 @@ fun WriteScreenTopBar(
                 Icon(painterResource(id = R.drawable.ic_menu), contentDescription = "options")
             }
             TextButton(onClick = openPreview) {
-                Text(text =  stringResource(resource = SharedRes.strings.writing__preview))
+                Text(text = stringResource(resource = SharedRes.strings.writing__preview))
             }
             IconButton(onClick = post) {
                 Icon(painterResource(id = R.drawable.ic_send), contentDescription = "post")
@@ -176,6 +177,44 @@ fun StoryDetailTopBarPreview() {
         edit = { /*TODO*/ },
         topic = "Topic",
         isSelfWritten = false,
+    )
+}
+
+@Composable
+fun TopicDetailTopBar(
+    back: () -> Unit,
+    topicTitle: String,
+    isFollowing: Boolean,
+    toggleFollowing: (Boolean) -> Unit
+) {
+    TopAppBar() {
+
+        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = back) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
+            }
+            Text(text = topicTitle)
+        }
+        // follow button
+        if (isFollowing)
+            OutlinedButton(onClick = { toggleFollowing(false) }) {
+                Text(text = "_Following")
+            }
+        else
+            Button(onClick = { toggleFollowing(true) }) {
+                Text(text = "_Follow")
+            }
+    }
+}
+
+@Preview
+@Composable
+fun TopicDetailTopBarPreview(){
+    TopicDetailTopBar(
+        {},
+        "Apple",
+        true,
+        {}
     )
 }
 

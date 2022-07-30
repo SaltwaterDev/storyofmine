@@ -167,7 +167,7 @@ private fun ButtonsRow(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(
+        OutlinedButton(
             onClick = onPreview, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)

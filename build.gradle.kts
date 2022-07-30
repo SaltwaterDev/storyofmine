@@ -10,7 +10,7 @@ buildscript {
         classpath("com.google.gms:google-services:4.3.13")
         classpath("io.realm.kotlin:gradle-plugin:1.0.0")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.0")
-        classpath ("dev.icerock.moko:resources-generator:0.20.1")
+        classpath("dev.icerock.moko:resources-generator:0.20.1")
     }
 }
 

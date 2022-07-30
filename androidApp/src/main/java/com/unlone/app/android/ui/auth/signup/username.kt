@@ -42,7 +42,7 @@ fun SetUsernameScreen(
         ) {
 
             Text(
-                text = stringResource(resource = SharedRes.strings.set_username__set_username_title),
+                text = stringResource(resource = SharedRes.strings.set_username__title),
                 fontSize = 14.sp
             )
             Spacer(modifier = Modifier.height(15.dp))

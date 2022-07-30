@@ -67,7 +67,7 @@ fun MainNavHost(
             val viewModel by viewModel<StoriesViewModel>()
             StoriesScreen(
                 viewModel = viewModel,
-                navToPostDetail = { navigateToPostDetail(navController, it) },
+                navToPostDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navigateToTopicDetail(navController) },
                 navToAuthGraph = { navigateToAuth(navController) }
             )
@@ -94,7 +94,11 @@ fun MainNavHost(
             )
         }
         composable("topic") {
-            TopicDetail()
+            TopicDetail(
+                "_some topic",
+                navController::navigateUp,
+                {}
+            )
         }
 
         authGraph(
@@ -124,7 +128,7 @@ fun navToStories() {
 }
 
 
-fun navigateToPostDetail(navController: NavHostController, pid: String) {
+fun navigateToStoryDetail(navController: NavHostController, pid: String) {
     navController.navigate("${UnloneBottomDestinations.Stories.route}/$pid")
 }
 

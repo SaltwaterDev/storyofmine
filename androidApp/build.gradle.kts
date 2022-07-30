@@ -47,7 +47,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.5.0")
+    implementation("androidx.activity:activity-compose:1.5.1")
     implementation("androidx.navigation:navigation-compose:$composeLifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$composeLifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$composeLifecycleVersion")
@@ -81,6 +81,10 @@ dependencies {
     // log
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    // compose markdown
+    val richtext_version = "0.13.0"
+    implementation ("com.halilibo.compose-richtext:richtext-commonmark:${richtext_version}")
+
     // koin
     with(Deps.Koin) {
         implementation(core)
@@ -88,6 +92,8 @@ dependencies {
         implementation(navGraph)
         implementation(compose)
     }
+
+
 }
 
 
