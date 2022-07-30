@@ -37,6 +37,8 @@ fun SignInEmailScreen(
 
     val context = LocalContext.current
 
+
+    val unknownErrorText = stringResource(resource = SharedRes.strings.common__unknown_error)
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
             when (result) {
@@ -47,7 +49,7 @@ fun SignInEmailScreen(
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
                 }
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(context, "An unknown error occurred", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, unknownErrorText, Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -56,7 +58,9 @@ fun SignInEmailScreen(
 
     Box(Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 30.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
         ) {
 
             Spacer(modifier = Modifier.height(60.dp))
@@ -87,7 +91,7 @@ fun SignInEmailScreen(
                 viewModel.dismissMsg()
             },
             title = {
-                Text(text = "Warning")
+                Text(text = stringResource(resource = SharedRes.strings.common__warning))
             },
             text = {
                 Text(uiState.errorMsg)

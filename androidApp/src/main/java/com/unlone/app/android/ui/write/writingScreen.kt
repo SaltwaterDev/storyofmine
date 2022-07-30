@@ -128,7 +128,7 @@ fun WritingScreen(
                         disabledIndicatorColor = Color.Transparent,
                     ),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                    placeholder = { Text(text = "Untitled") }
+                    placeholder = { Text(text = stringResource(resource = SharedRes.strings.writing__placeholder)) }
                 )
 
                 TextField(
@@ -184,7 +184,7 @@ fun WritingScreen(
         if (uiState.loading)
             Surface(Modifier.align(Alignment.Center)) {
                 Row {
-                    Text(text = "Posting")
+                    Text(text = stringResource(resource = SharedRes.strings.writing__posting))
                     CircularProgressIndicator()
                 }
             }
@@ -194,20 +194,20 @@ fun WritingScreen(
                 onDismissRequest = viewModel::dismiss,
             ) {
                 Card {
-                    Text(text = "Post Succeed", modifier = Modifier.padding(15.dp))
+                    Text(text = stringResource(resource = SharedRes.strings.writing__post_success), modifier = Modifier.padding(15.dp))
                 }
             }
 
         uiState.error?.let {
             AlertDialog(
                 onDismissRequest = viewModel::dismiss,
-                title = { Text(text = "Error") },
+                title = { Text(text =stringResource(resource = SharedRes.strings.common__error)) },
                 text = { Text(text = it) },
                 confirmButton = {
                     Button(
                         onClick = viewModel::dismiss
                     ) {
-                        Text(text = "Confirm")
+                        Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                     }
                 }
             )

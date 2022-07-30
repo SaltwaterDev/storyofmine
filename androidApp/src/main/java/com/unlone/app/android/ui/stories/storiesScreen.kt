@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,8 +49,10 @@ fun StoriesScreen(
 
                 item {
                     Text(
-                        text = stringResource(resource = SharedRes.strings.stories_header_greeting) +
-                                state.username,
+                        text = stringResource(
+                            resource = SharedRes.strings.stories_header_greeting,
+                            state.username ?: ""
+                        ),
                         modifier = Modifier
                             .padding(16.dp, 40.dp)
                             .placeholder(
@@ -125,17 +124,13 @@ fun PostsByTopic(
                     )
             )
 
-            Text(
-                text = "Show more",
-                fontSize = 10.sp,
-                modifier = Modifier
-                    .clickable { viewMorePost() }
-                    .placeholder(
-                        visible = loading,
-                        highlight = PlaceholderHighlight.fade()
-                    ),
-                color = Color.Black.copy(0.6f)
-            )
+            if (!loading)
+                Text(
+                    text = stringResource(resource = SharedRes.strings.stories_show_more),
+                    modifier = Modifier.clickable { viewMorePost() },
+                    fontSize = 10.sp,
+                    color = Color.Black.copy(0.6f)
+                )
         }
         Spacer(modifier = Modifier.height(7.dp))
         LazyRow(

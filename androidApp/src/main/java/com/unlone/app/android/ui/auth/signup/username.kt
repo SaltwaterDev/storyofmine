@@ -41,13 +41,21 @@ fun SetUsernameScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(text = "You are verified! Please Enter your username", fontSize = 14.sp)
+            Text(
+                text = stringResource(resource = SharedRes.strings.set_username__set_username_title),
+                fontSize = 14.sp
+            )
             Spacer(modifier = Modifier.height(15.dp))
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.username,
-                label = { Text(text = "Username", fontSize = 14.sp) },
+                label = {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.set_username__username),
+                        fontSize = 14.sp
+                    )
+                },
                 onValueChange = { viewModel.onEvent(SignUpUiEvent.UsernameChanged(it)) },
                 singleLine = true,
             )
@@ -70,7 +78,7 @@ fun SetUsernameScreen(
             title = { Text(text = stringResource(resource = SharedRes.strings.common__warning)) },
             text = { Text(uiState.errorMsg) },
             confirmButton = {
-                Button(onClick = { viewModel.dismissMsg() }) { Text("Confirm") }
+                Button(onClick = { viewModel.dismissMsg() }) { Text(stringResource(resource = SharedRes.strings.common__btn_confirm)) }
             },
         )
     }

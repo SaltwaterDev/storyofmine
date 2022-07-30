@@ -39,6 +39,7 @@ fun SignInPasswordScreen(
     val uiState = viewModel.uiState
     val context = LocalContext.current
 
+    val unknownErrorText = stringResource(resource = SharedRes.strings.common__unknown_error)
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
             when (result) {
@@ -49,7 +50,7 @@ fun SignInPasswordScreen(
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
                 }
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(context, "An unknown error occurred", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, unknownErrorText, Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -92,7 +93,7 @@ fun SignInPasswordScreen(
                 viewModel.dismissMsg()
             },
             title = {
-                Text(text = "Warning")
+                Text(text = stringResource(resource = SharedRes.strings.common__warning))
             },
             text = {
                 Text(uiState.errorMsg)
