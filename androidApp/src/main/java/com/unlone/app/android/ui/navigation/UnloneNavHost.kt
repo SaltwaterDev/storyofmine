@@ -16,14 +16,14 @@ import com.google.accompanist.navigation.animation.composable
 import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.profile.ProfileScreen
-import com.unlone.app.android.ui.stories.PostDetail
 import com.unlone.app.android.ui.stories.StoriesScreen
+import com.unlone.app.android.ui.stories.StoryDetail
 import com.unlone.app.android.ui.write.WritingScreen
-import com.unlone.app.android.viewmodel.PostDetailViewModel
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import com.unlone.app.android.viewmodel.StoriesViewModel
+import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
-import com.unlone.app.ui.lounge.TopicDetail
+import com.unlone.app.android.ui.stories.TopicDetail
 import org.koin.androidx.compose.viewModel
 
 
@@ -67,7 +67,7 @@ fun MainNavHost(
             val viewModel by viewModel<StoriesViewModel>()
             StoriesScreen(
                 viewModel = viewModel,
-                navToPostDetail = { navigateToPostDetail(navController, it) },
+                navToPostDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navigateToTopicDetail(navController) },
                 navToAuthGraph = { navigateToAuth(navController) }
             )
@@ -84,15 +84,21 @@ fun MainNavHost(
             "${UnloneBottomDestinations.Stories.route}/{pid}",
             arguments = listOf(navArgument("pid") { type = NavType.StringType })
         ) {
-            val viewModel by viewModel<PostDetailViewModel>()
-            PostDetail(
+            val pid: String? = it.arguments?.getString("pid")
+            val viewModel by viewModel<StoryDetailViewModel>()
+            StoryDetail(
+                pid,
                 navigateUp,
                 { navigateToTopicDetail(navController) },
                 viewModel
             )
         }
         composable("topic") {
-            TopicDetail()
+            TopicDetail(
+                "_some topic",
+                navController::navigateUp,
+                {}
+            )
         }
 
         authGraph(
@@ -122,7 +128,7 @@ fun navToStories() {
 }
 
 
-fun navigateToPostDetail(navController: NavHostController, pid: String) {
+fun navigateToStoryDetail(navController: NavHostController, pid: String) {
     navController.navigate("${UnloneBottomDestinations.Stories.route}/$pid")
 }
 

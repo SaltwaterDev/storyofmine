@@ -21,7 +21,8 @@ internal class AuthRepositoryImpl(
                     password = password,
                 )
             )
-            signIn(email, password)
+//            signIn(email, password)
+            AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
@@ -142,9 +143,9 @@ internal class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun requestOtpEmail(): AuthResult<Unit> {
+    override suspend fun requestOtpEmail(email: String): AuthResult<Unit> {
         return try {
-            api.requestOtp()
+            api.requestOtp(email)
             AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
@@ -226,6 +227,28 @@ internal class AuthRepositoryImpl(
                 Logger.d(username)
                 AuthResult.Authorized(username)
             } ?: throw Exception("jwt doesn't exist")
+        } catch (e: RedirectResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ClientRequestException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ServerResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: ResponseException) {
+            AuthResult.Unauthorized(errorMsg = e.response.body<String>())
+            // todo
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            AuthResult.UnknownError()
+        }
+    }
+
+    override suspend fun removeUserRecordByEmail(email: String): AuthResult<Unit> {
+        return try {
+            api.removeUserRecord(email)
+            AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo

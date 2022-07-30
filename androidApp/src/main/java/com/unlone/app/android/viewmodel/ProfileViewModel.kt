@@ -1,5 +1,6 @@
 package com.unlone.app.android.viewmodel
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
@@ -24,6 +25,7 @@ data class ProfileUiState(
             ProfileItemList.Logout(),
         )
 }
+
 
 sealed class ProfileItemList(
     open val name: String,
@@ -76,10 +78,10 @@ class ProfileViewModel(
                     _state.value = _state.value.copy(isUserLoggedIn = true)
                 }
                 is AuthResult.Unauthorized -> {
-                    _state.value = _state.value.copy(isUserLoggedIn = false)
+                    _state.value = ProfileUiState()
                 }
                 is AuthResult.UnknownError -> {
-                    _state.value = _state.value.copy(isUserLoggedIn = false)
+                    _state.value = ProfileUiState()
                     _state.value = _state.value.copy(errorMsg = "An unknown error occurred")
                 }
             }
@@ -99,6 +101,7 @@ class ProfileViewModel(
             }
         }
     }
+
 
     fun signOut() {
         authRepository.signOut()

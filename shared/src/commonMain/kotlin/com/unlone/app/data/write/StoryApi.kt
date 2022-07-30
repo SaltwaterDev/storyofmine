@@ -1,9 +1,6 @@
 package com.unlone.app.data.write
 
-import com.unlone.app.data.story.AllTopicResponse
-import com.unlone.app.data.story.StoriesPerTopicsResponse
-import com.unlone.app.data.story.StoryRequest
-import com.unlone.app.data.story.Topic
+import com.unlone.app.data.story.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -23,6 +20,7 @@ interface StoryApi {
     ): StoriesPerTopicsResponse
 
     suspend fun getAllTopics(): AllTopicResponse
+    suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse
 }
 
 internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
@@ -62,11 +60,18 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
+    override suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse {
+        val response = client.get(baseUrl + "story/$pid") {
+            header("Authorization", token)
+        }
+        return response.body()
+    }
+
 
     companion object {
-        //        local IP address for running on an emulator
-        private const val baseUrl = "http://10.0.2.2:8080/"
-//        private const val baseUrl = "http://192.168.8.154:8080/"
+//                local IP address for running on an emulator
+//        private const val baseUrl = "http://10.0.2.2:8080/"
+        private const val baseUrl = "http://192.168.8.154:8080/"
 //        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }

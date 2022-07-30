@@ -2,6 +2,7 @@ package com.unlone.app.android.ui.write
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -10,13 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.viewmodel.WritingViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import org.example.library.SharedRes
 
 
 @ExperimentalComposeUiApi
@@ -38,7 +42,6 @@ fun WritingScreen(
     var requireSignInDialog by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-
     DisposableEffect(key1 = context) {
         onDispose {
             viewModel.saveDraft()
@@ -46,12 +49,16 @@ fun WritingScreen(
     }
 
 
+
     Box {
         BottomSheetScaffold(
-            modifier = Modifier.systemBarsPadding(),
+            modifier = Modifier
+                .displayCutoutPadding()
+                .statusBarsPadding(),
             scaffoldState = scaffoldState,
             topBar = {
                 WriteScreenTopBar(
+                    Modifier.statusBarsPadding(),
                     { scope.launch { scaffoldState.drawerState.open() } },
                     {
                         scope.launch {
@@ -119,12 +126,14 @@ fun WritingScreen(
                         unfocusedIndicatorColor = Color.Transparent,
                         errorIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                    placeholder = { Text(text = stringResource(resource = SharedRes.strings.writing__placeholder)) }
                 )
 
                 TextField(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) imeToolBarHeight.dp else 0.dp),
                     value = uiState.content,
                     onValueChange = { viewModel.setContent(it) },
@@ -175,7 +184,7 @@ fun WritingScreen(
         if (uiState.loading)
             Surface(Modifier.align(Alignment.Center)) {
                 Row {
-                    Text(text = "Posting")
+                    Text(text = stringResource(resource = SharedRes.strings.writing__posting))
                     CircularProgressIndicator()
                 }
             }
@@ -185,20 +194,20 @@ fun WritingScreen(
                 onDismissRequest = viewModel::dismiss,
             ) {
                 Card {
-                    Text(text = "Post Succeed", modifier = Modifier.padding(15.dp))
+                    Text(text = stringResource(resource = SharedRes.strings.writing__post_success), modifier = Modifier.padding(15.dp))
                 }
             }
 
         uiState.error?.let {
             AlertDialog(
                 onDismissRequest = viewModel::dismiss,
-                title = { Text(text = "Error") },
+                title = { Text(text =stringResource(resource = SharedRes.strings.common__error)) },
                 text = { Text(text = it) },
                 confirmButton = {
                     Button(
                         onClick = viewModel::dismiss
                     ) {
-                        Text(text = "Confirm¬")
+                        Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                     }
                 }
             )
@@ -207,8 +216,8 @@ fun WritingScreen(
         if (requireSignInDialog) {
             AlertDialog(
                 onDismissRequest = { requireSignInDialog = false },
-                title = { Text(text = "Sign in required") },
-                text = { Text(text = "Sign in to publish your story") },
+                title = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_title))},
+                text = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_text)) },
                 confirmButton = {
                     Button(
                         onClick = {
@@ -216,13 +225,14 @@ fun WritingScreen(
                             navToSignIn()
                         }
                     ) {
-                        Text(text = "Sign in")
+                        Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
+
                     }
                 },
                 dismissButton = {
                     Button(
                         onClick = { requireSignInDialog = false }
-                    ) { Text(text = "Cancel") }
+                    ) { Text(text = stringResource(resource = SharedRes.strings.common__btn_cancel)) }
                 },
             )
         }

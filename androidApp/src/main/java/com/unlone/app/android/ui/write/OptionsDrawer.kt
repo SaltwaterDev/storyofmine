@@ -13,6 +13,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 
 @Composable
@@ -27,12 +29,12 @@ fun OptionsDrawer(
         Column(
             Modifier.verticalScroll(rememberScrollState())
         ) {
-            Text(text = "Options", modifier = Modifier.padding(16.dp), style = Typography.h1)
-            BlockWithIcon(R.drawable.ic_clear, "Clear") { clearAll() }
+            Text(text =  stringResource(resource = SharedRes.strings.writing__option_drawer_title), modifier = Modifier.padding(16.dp), style = Typography.h1)
+            BlockWithIcon(R.drawable.ic_clear,  stringResource(resource = SharedRes.strings.writing__clear)) { clearAll() }
             Divider(Modifier.fillMaxWidth())
-            BlockWithIcon(R.drawable.ic_history, "Edit History") { editHistory() }
+            BlockWithIcon(R.drawable.ic_history,  stringResource(resource = SharedRes.strings.writing__edit_history)) { editHistory() }
             Divider(Modifier.fillMaxWidth())
-            BlockWithIcon(R.drawable.ic_add, "New Draft") { newDraft() }
+            BlockWithIcon(R.drawable.ic_add,  stringResource(resource = SharedRes.strings.writing__new_draft)) { newDraft() }
             Divider(Modifier.fillMaxWidth())
 
             Spacer(modifier = Modifier.height(60.dp))

@@ -1,5 +1,6 @@
 package com.unlone.app.data.story
 
+import com.unlone.app.domain.entities.Story
 import com.unlone.app.domain.entities.StoryItem
 
 interface StoryRepository {
@@ -18,4 +19,8 @@ interface StoryRepository {
         commentAllowed: Boolean,
         saveAllowed: Boolean,
     ): StoryResult<Unit>
+
+    suspend fun fetchStoryDetail(
+        id: String
+    ): StoryResult<Story>
 }

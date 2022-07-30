@@ -7,6 +7,7 @@ import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.useCases.write.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -30,7 +31,7 @@ data class WritingUiState(
 
 class WritingViewModel(
     getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
-    getLastEditedDraftUseCase: GetLastEditedDraftUseCase,
+    getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
     private val createNewDraftUseCase: CreateNewDraftUseCase,
@@ -39,73 +40,72 @@ class WritingViewModel(
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
 ) : ViewModel() {
 
-    private val stateChangedChannel = Channel<WritingUiState>()
-    private val stateChangedResult = stateChangedChannel.receiveAsFlow()
+    private val changedChannel = Channel<WritingUiState>()
+    private val stateChangedResult = changedChannel.receiveAsFlow()
 
-    val state: StateFlow<WritingUiState> = combine(
-        stateChangedResult,
-        getAllDraftsTitleUseCase(),
-    ) { changed, allDraftTitles ->
-        changed.copy(
-            draftList = allDraftTitles
-        )
-    }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
+    val state: StateFlow<WritingUiState>
+        = combine(
+            stateChangedResult,
+            getAllDraftsTitleUseCase(),
+        ) { changed, allDraftTitles ->
+            changed.copy(
+                draftList = allDraftTitles
+            )
+        }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
     init {
         viewModelScope.launch {
-            getLastEditedDraftUseCase().filterNotNull().collect {
-                stateChangedChannel.send(
-                    WritingUiState(
-                        currentDraftId = it.first,
-                        title = it.second.title,
-                        content = it.second.content,
-                        topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+            getLastOpenedDraftUseCase()
+                ?.let { lastOpened ->
+                    changedChannel.send(
+                        WritingUiState(
+                            currentDraftId = lastOpened.first,
+                            title = lastOpened.second.title,
+                            content = lastOpened.second.content,
+                            topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                        )
                     )
-                )
-            }
+                }
         }
     }
 
 
     fun setTitle(title: String) {
         viewModelScope.launch {
-            stateChangedChannel.send(state.value.copy(title = title))
+            changedChannel.send(state.value.copy(title = title))
         }
     }
 
     fun setContent(content: String) {
         viewModelScope.launch {
-            stateChangedChannel.send(state.value.copy(content = content))
+            changedChannel.send(state.value.copy(content = content))
         }
     }
 
     fun clearTitleAndContent() {
         viewModelScope.launch {
-            stateChangedChannel.send(state.value.copy(title = "", content = ""))
+            changedChannel.send(state.value.copy(title = "", content = ""))
         }
     }
 
-    fun saveDraft() {
-        viewModelScope.launch {
-            if (state.value.title.isNotBlank() && state.value.content.isNotBlank()) {
-                saveDraftUseCase(
-                    state.value.currentDraftId,
-                    state.value.title,
-                    state.value.content
-                )
-            }
-        }
+    fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
+        saveDraftUseCase(
+            state.value.currentDraftId,
+            state.value.title,
+            state.value.content
+        )
     }
 
     fun createNewDraft() {
+        saveDraft()
         viewModelScope.launch {
-            val newDraftValue = createNewDraftUseCase()
-            stateChangedChannel.send(
+            val newDraftMap = createNewDraftUseCase()
+            changedChannel.send(
                 state.value.copy(
-                    currentDraftId = newDraftValue["id"],
-                    title = newDraftValue["title"] ?: "",
-                    content = newDraftValue["content"] ?: "",
-                    selectedTopic = newDraftValue["selectedTopic"] ?: "",
+                    currentDraftId = newDraftMap["id"],
+                    title = newDraftMap["title"] ?: "",
+                    content = newDraftMap["content"] ?: "",
+                    selectedTopic = newDraftMap["selectedTopic"] ?: "",
                 )
             )
         }
@@ -113,8 +113,9 @@ class WritingViewModel(
 
     fun switchDraft(id: String) {
         viewModelScope.launch {
+            saveDraft().join()
             queryDraftUseCase(id).collect {
-                stateChangedChannel.send(
+                changedChannel.send(
                     state.value.copy(
                         currentDraftId = it.first,
                         title = it.second.title,
@@ -127,7 +128,7 @@ class WritingViewModel(
 
     fun setPublished(isPublished: Boolean) {
         viewModelScope.launch {
-            stateChangedChannel.send(
+            changedChannel.send(
                 state.value.copy(
                     isPublished = isPublished,
                     commentAllowed = state.value.commentAllowed && isPublished,
@@ -139,7 +140,7 @@ class WritingViewModel(
 
     fun setCommentAllowed(commentAllowed: Boolean) {
         viewModelScope.launch {
-            stateChangedChannel.send(
+            changedChannel.send(
                 state.value.copy(
                     commentAllowed = commentAllowed
                 )
@@ -149,7 +150,7 @@ class WritingViewModel(
 
     fun setSaveAllowed(saveAllowed: Boolean) {
         viewModelScope.launch {
-            stateChangedChannel.send(
+            changedChannel.send(
                 state.value.copy(
                     saveAllowed = saveAllowed
                 )
@@ -159,7 +160,7 @@ class WritingViewModel(
 
     fun postStory() {
         viewModelScope.launch {
-            stateChangedChannel.send(
+            changedChannel.send(
                 state.value.copy(loading = true)
             )
             val result = postStoryUseCase(
@@ -170,7 +171,7 @@ class WritingViewModel(
                 state.value.commentAllowed,
                 state.value.saveAllowed,
             )
-            stateChangedChannel.send(
+            changedChannel.send(
                 when (result) {
                     is StoryResult.Success -> {
                         createNewDraft()
@@ -192,7 +193,7 @@ class WritingViewModel(
 
     fun setTopic(topic: String) {
         viewModelScope.launch {
-            stateChangedChannel.send(
+            changedChannel.send(
                 state.value.copy(
                     selectedTopic = topic
                 )
@@ -202,7 +203,7 @@ class WritingViewModel(
 
     fun dismiss() {
         viewModelScope.launch {
-            stateChangedChannel.send(
+            changedChannel.send(
                 state.value.copy(
                     error = null,
                     postSuccess = false

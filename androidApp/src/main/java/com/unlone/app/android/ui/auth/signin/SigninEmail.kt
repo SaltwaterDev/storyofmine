@@ -21,7 +21,9 @@ import com.unlone.app.android.R
 import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.data.auth.AuthResult
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.InternalCoroutinesApi
+import org.example.library.SharedRes
 
 @InternalCoroutinesApi
 @Composable
@@ -35,6 +37,8 @@ fun SignInEmailScreen(
 
     val context = LocalContext.current
 
+
+    val unknownErrorText = stringResource(resource = SharedRes.strings.common__unknown_error)
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
             when (result) {
@@ -45,7 +49,7 @@ fun SignInEmailScreen(
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
                 }
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(context, "An unknown error occurred", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, unknownErrorText, Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -54,15 +58,17 @@ fun SignInEmailScreen(
 
     Box(Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 30.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
         ) {
 
             Spacer(modifier = Modifier.height(60.dp))
-            Text(text = "Sign in", fontSize = 36.sp)
+            Text(text =  stringResource(resource = SharedRes.strings.sign_in__title), fontSize = 36.sp)
             Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 value = uiState.email,
-                label = { Text(text = "Email", fontSize = 14.sp) },
+                label = { Text(text =  stringResource(resource = SharedRes.strings.common__email), fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInEmailChanged(it)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -74,7 +80,7 @@ fun SignInEmailScreen(
                 enabled = uiState.emailBtnEnabled,
                 modifier = Modifier.align(End)
             ) {
-                Text(text = "Next")
+                Text(text = stringResource(resource = SharedRes.strings.common__btn_next))
             }
         }
     }
@@ -85,7 +91,7 @@ fun SignInEmailScreen(
                 viewModel.dismissMsg()
             },
             title = {
-                Text(text = "Warning")
+                Text(text = stringResource(resource = SharedRes.strings.common__warning))
             },
             text = {
                 Text(uiState.errorMsg)
@@ -95,7 +101,7 @@ fun SignInEmailScreen(
                     onClick = {
                         viewModel.dismissMsg()
                     }) {
-                    Text("This is the Confirm Button")
+                    Text(stringResource(resource = SharedRes.strings.common__btn_confirm))
                 }
             },
         )

@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 @Composable
 fun PostingDialog(
@@ -63,7 +65,7 @@ private fun TopicRow(
                 onTopicSelected(it)
                 expanded = true
             },
-            label = { Text("Topic") },
+            label = { Text( stringResource(resource = SharedRes.strings.writing__topic)) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded
@@ -108,7 +110,7 @@ private fun PublishToggleRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = "Post to Public")
+        Text(text = stringResource(resource = SharedRes.strings.writing__post_to_public))
         Switch(
             checked = checkedState,
             onCheckedChange = switchPublish
@@ -127,7 +129,7 @@ private fun CommentSwitchRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Open comment")
+        Text(text = stringResource(resource = SharedRes.strings.writing__open_comment))
         Switch(
             checked = checkedState,
             onCheckedChange = switchComment,
@@ -147,7 +149,7 @@ private fun SavableToggleRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Savable")
+        Text(text = stringResource(resource = SharedRes.strings.writing__savable))
         Switch(
             checked = checkedState,
             onCheckedChange = switchSave,
@@ -165,12 +167,12 @@ private fun ButtonsRow(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(
+        OutlinedButton(
             onClick = onPreview, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            Text(text = "Preview")
+            Text(text = stringResource(resource = SharedRes.strings.writing__preview))
         }
         Spacer(modifier = Modifier.width(20.dp))
         Button(
@@ -178,7 +180,7 @@ private fun ButtonsRow(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            Text(text = "Post")
+            Text(text = stringResource(resource = SharedRes.strings.writing__btn_post))
         }
     }
 }

@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.sp
 import com.unlone.app.android.model.SignUpUiEvent
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import com.unlone.app.data.auth.AuthResult
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 
 @Composable
@@ -21,28 +23,12 @@ fun SetUsernameScreen(
     onSignUpSuccess: () -> Unit,
     viewModel: SignUpViewModel,
 ) {
-    val context = LocalContext.current
     val uiState = viewModel.uiState
 
-    LaunchedEffect(viewModel, context) {
-        viewModel.authResult.collect { result ->
-            when (result) {
-                is AuthResult.Authorized -> {
-                    onSignUpSuccess()
-                }
-                is AuthResult.Unauthorized -> {
-                    Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
-                }
-                is AuthResult.UnknownError -> {
-                    Toast.makeText(
-                        context,
-                        "unknown error: " + result.errorMsg,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
+    if (uiState.success)
+        LaunchedEffect(uiState.success) {
+            onSignUpSuccess()
         }
-    }
 
     Box(
         Modifier.fillMaxSize()
@@ -55,13 +41,21 @@ fun SetUsernameScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(text = "You are verified! Please Enter your username", fontSize = 14.sp)
+            Text(
+                text = stringResource(resource = SharedRes.strings.set_username__title),
+                fontSize = 14.sp
+            )
             Spacer(modifier = Modifier.height(15.dp))
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.username,
-                label = { Text(text = "Username", fontSize = 14.sp) },
+                label = {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.set_username__username),
+                        fontSize = 14.sp
+                    )
+                },
                 onValueChange = { viewModel.onEvent(SignUpUiEvent.UsernameChanged(it)) },
                 singleLine = true,
             )
@@ -71,21 +65,20 @@ fun SetUsernameScreen(
                 enabled = uiState.username.isNotBlank(),
                 modifier = Modifier.align(End)
             ) {
-                Text(text = "Finish")
+                Text(text = stringResource(resource = SharedRes.strings.common__btn_finish))
                 if (uiState.loading)
                     CircularProgressIndicator()
             }
-
         }
     }
 
     uiState.errorMsg?.let {
         AlertDialog(
             onDismissRequest = { viewModel.dismissMsg() },
-            title = { Text(text = "Warning") },
+            title = { Text(text = stringResource(resource = SharedRes.strings.common__warning)) },
             text = { Text(uiState.errorMsg) },
             confirmButton = {
-                Button(onClick = { viewModel.dismissMsg() }) { Text("Confirm") }
+                Button(onClick = { viewModel.dismissMsg() }) { Text(stringResource(resource = SharedRes.strings.common__btn_confirm)) }
             },
         )
     }

@@ -1,10 +1,12 @@
 package com.unlone.app.android.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.unlone.app.android.model.SignUpUiEvent
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
@@ -23,7 +25,9 @@ data class SignUpUiState(
     val errorMsg: String? = null,
     val pwError: Boolean = false,
     val loading: Boolean = false,
-    val succeed: Boolean = false,
+    val verified: Boolean = false,
+    val otp: Int? = null,
+    val success: Boolean = false,
 ) {
     val btnEnabled: Boolean = !loading &&
             email.isNotBlank() &&
@@ -42,6 +46,7 @@ class SignUpViewModel(
         private set
     private val resultChannel = Channel<AuthResult<Unit>>()
     val authResult = resultChannel.receiveAsFlow()
+
 
     fun onEvent(event: SignUpUiEvent) {
         when (event) {
@@ -113,10 +118,33 @@ class SignUpViewModel(
     private fun setUsername() {
         uiState = uiState.copy(loading = true)
         viewModelScope.launch {
-            val result =
-                authRepository.setUserName(email = uiState.email, username = uiState.username)
-            resultChannel.send(result)
+            when (val result =
+                authRepository.setUserName(email = uiState.email, username = uiState.username)) {
+                is AuthResult.Authorized -> {
+                    signIn()
+                }
+                is AuthResult.Unauthorized -> {
+                    uiState = uiState.copy(errorMsg = result.errorMsg)
+                }
+                is AuthResult.UnknownError -> {
+                    uiState = uiState.copy(errorMsg = "unknown error: " + result.errorMsg)
+                }
+            }
             uiState = uiState.copy(loading = false)
+        }
+    }
+
+    private fun signIn() {
+        viewModelScope.launch {
+            uiState = when (val result = authRepository.signIn(uiState.email, uiState.password)) {
+                is AuthResult.Authorized -> uiState.copy(success = true)
+                is AuthResult.Unauthorized -> {
+                    uiState.copy(errorMsg = result.errorMsg)
+                }
+                is AuthResult.UnknownError -> {
+                    uiState.copy(errorMsg = "unknown error: " + result.errorMsg)
+                }
+            }
         }
     }
 
@@ -125,4 +153,50 @@ class SignUpViewModel(
             errorMsg = null
         )
     }
+
+    fun removeSignUpRecord() {
+        viewModelScope.launch {
+            when (val result = authRepository.removeUserRecordByEmail(uiState.email)) {
+                is AuthResult.Authorized -> {
+//                    Timber.d("signup record removed")
+                    Log.d("Tag", "signup record removed")
+                }
+                is AuthResult.Unauthorized -> {
+                    uiState = uiState.copy(errorMsg = result.errorMsg)
+                }
+                is AuthResult.UnknownError -> {
+                    uiState = uiState.copy(errorMsg = "unknown error: " + result.errorMsg)
+                }
+            }
+        }
+    }
+
+    fun verifyOtp() {
+        uiState = uiState.copy(loading = true)
+        viewModelScope.launch {
+            when (val result = uiState.otp?.let { authRepository.verifyOtp(uiState.email, it) }) {
+                is AuthResult.Authorized -> {
+                    uiState = uiState.copy(verified = true)
+                    Timber.d("email validate")
+                }
+                is AuthResult.Unauthorized -> {
+                    uiState = uiState.copy(errorMsg = result.errorMsg)
+                }
+                is AuthResult.UnknownError -> {
+                    uiState = uiState.copy(errorMsg = "unknown error: " + result.errorMsg)
+                }
+                else -> {}
+            }
+            uiState = uiState.copy(loading = false)
+        }
+    }
+
+    fun generateOtp() {
+        viewModelScope.launch {
+            authRepository.requestOtpEmail(uiState.email)
+        }
+    }
+
+    val setOtp: (String) -> Unit =
+        { otp: String -> otp.toIntOrNull()?.let { uiState = uiState.copy(otp = it) } }
 }

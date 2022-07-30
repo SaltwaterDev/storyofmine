@@ -1,5 +1,6 @@
 package com.unlone.app.data.write
 
+import co.touchlab.kermit.Logger
 import com.unlone.app.domain.entities.Draft
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -7,8 +8,11 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.types.ObjectId
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 internal class DraftRepositoryImpl : DraftRepository {
 
@@ -42,19 +46,20 @@ internal class DraftRepositoryImpl : DraftRepository {
             }
     }
 
-    override fun getLastEditedDraft(): Flow<Draft?> {
+    override fun getLastOpenedDraft(): Flow<Draft?> {
         return realm.query<ParentDraftRealmObject>().asFlow().map { parentDraftResult ->
             val parentDraftList = parentDraftResult.list.toList()
             val parentRealmObject = if (parentDraftList.isNotEmpty()) {
-                parentDraftList.maxByOrNull { it.latestDraft().timeStamp }
+                parentDraftList.maxByOrNull { it.lastOpened }
                     ?: throw Exception("Failed to get the latest draft")
             } else null
+            Logger.d(parentRealmObject?.toParentDraft().toString())
             parentRealmObject?.toParentDraft()
         }
     }
 
-    override fun saveDraft(id: String?, title: String, content: String) {
-        realm.writeBlocking {
+    override suspend fun saveDraft(id: String?, title: String, content: String) {
+        realm.write {
             val parentDraftRealmObject = ParentDraftRealmObject().apply {
                 id?.let { this.id = ObjectId.from(id) }
                 this.childDraftRealmObjects = realmListOf(
@@ -69,6 +74,7 @@ internal class DraftRepositoryImpl : DraftRepository {
                 query<ParentDraftRealmObject>("id == $0", parentDraftRealmObject.id).first()
                     .find()
             if (existingParentDraftRealmObject != null) {
+                // new Draft
                 existingParentDraftRealmObject.childDraftRealmObjects =
                     parentDraftRealmObject.childDraftRealmObjects
                 existingParentDraftRealmObject.topics = parentDraftRealmObject.topics
@@ -77,4 +83,22 @@ internal class DraftRepositoryImpl : DraftRepository {
             }
         }
     }
+
+    override suspend fun updateLastOpenedTime(id: String) {
+        realm.write {
+            val parentDraftRealmObject: ParentDraftRealmObject? =
+                this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).first().find()
+            // modify the frog's age in the write transaction to persist the new age to the realm
+            parentDraftRealmObject?.lastOpened =
+                RealmInstant.from(Clock.System.now().epochSeconds, 1000)
+        }
+    }
+
+    override suspend fun deleteDraft(id: String) = realm.write {
+            // fetch the frog by primary key value, passed in as argument number 0
+            val parentDraftRealmObject =
+                this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).find().first()
+            // call delete on the results of a query to delete the object permanently
+            delete(parentDraftRealmObject)
+        }
 }

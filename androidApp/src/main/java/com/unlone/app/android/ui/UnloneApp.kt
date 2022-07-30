@@ -27,15 +27,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 @Composable
 fun UnloneApp() {
-    val systemUiController: SystemUiController = rememberSystemUiController()
-    val useDarkIcons = MaterialTheme.colors.isLight
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = Color.Transparent,
-            darkIcons = useDarkIcons
-        )
-        systemUiController.isSystemBarsVisible = false
-    }
 
     UnloneTheme {
         val appState = rememberUnloneAppState()

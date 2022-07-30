@@ -42,12 +42,15 @@ dependencies {
 
     // compose
     val composeVersion = "1.2.0-rc03"
+    val composeLifecycleVersion = "1.2.0-rc03"
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.5.0")
-    implementation("androidx.navigation:navigation-compose:2.5.0")
+    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.navigation:navigation-compose:$composeLifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$composeLifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$composeLifecycleVersion")
 
     // accompanist
     val accompanistVersion = "0.24.13-rc"
@@ -69,14 +72,18 @@ dependencies {
 
     // ktx
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$composeLifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$composeLifecycleVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
 
     // log
     implementation("com.jakewharton.timber:timber:5.0.1")
+
+    // compose markdown
+    val richtext_version = "0.13.0"
+    implementation ("com.halilibo.compose-richtext:richtext-commonmark:${richtext_version}")
 
     // koin
     with(Deps.Koin) {
@@ -85,6 +92,8 @@ dependencies {
         implementation(navGraph)
         implementation(compose)
     }
+
+
 }
 
 

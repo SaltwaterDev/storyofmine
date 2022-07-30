@@ -10,12 +10,15 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
 import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
+import com.unlone.app.android.ui.auth.signup.EmailVerificationScreen
 import com.unlone.app.android.ui.auth.signup.SetUsernameScreen
 import com.unlone.app.android.ui.auth.signup.SignUpScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.compose.viewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 enum class AuthNav {
@@ -39,8 +42,7 @@ fun NavGraphBuilder.authGraph(
 
             SignUpScreen(
                 viewModel = viewModel,
-                navToSetUsername = { navigateToSetUsername(navController) },
-//                navToSendEmailOtp = { /*todo*/ },
+                navToSendEmailOtp = { navigateToEmailVerification(navController) },
                 navToSignIn = { navigateToSignInEmail(navController) }
             )
         }
@@ -51,6 +53,23 @@ fun NavGraphBuilder.authGraph(
             SetUsernameScreen(
                 viewModel = viewModel,
                 onSignUpSuccess = onSigninOrSignupFinished,
+            )
+        }
+
+        composable(AuthNav.SignUp.name + "/emailVerification") {
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
+
+            EmailVerificationScreen(
+                state = viewModel.uiState,
+                onCancelSignUp = {
+                    viewModel.removeSignUpRecord()
+                    navController.popBackStack()
+                },
+                setOtp = viewModel.setOtp,
+                navToSetUsername = { navigateToSetUsername(navController) },
+                onOtpVerified = { viewModel.verifyOtp() },
+                onOtpGenerate = { viewModel.generateOtp() }
             )
         }
 
@@ -105,4 +124,8 @@ fun navigateToSignInPw(navController: NavHostController) {
 
 fun navigateToSetUsername(navController: NavHostController) {
     navController.navigate(AuthNav.SignUp.name + "/setUsername")
+}
+
+fun navigateToEmailVerification(navController: NavHostController) {
+    navController.navigate(AuthNav.SignUp.name + "/emailVerification")
 }

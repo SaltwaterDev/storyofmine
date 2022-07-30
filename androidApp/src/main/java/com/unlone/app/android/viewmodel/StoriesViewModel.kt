@@ -2,6 +2,7 @@ package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.domain.entities.StoryItem
@@ -12,8 +13,11 @@ import kotlinx.coroutines.launch
 
 data class LoungeUiState(
     val loading: Boolean = true,
-    val isUserLoggedIn: Boolean = false,
-    val postsByTopics: List<StoryItem.StoriesByTopic>? = listOf(StoryItem.StoriesByTopic()),
+    val isUserLoggedIn: Boolean = true,
+    val postsByTopics: List<StoryItem.StoriesByTopic>? = listOf(
+        StoryItem.StoriesByTopic(),
+        StoryItem.StoriesByTopic()
+    ),
     val errorMsg: String? = null,
     val lastItemId: String? = null,
     val username: String? = null,
@@ -53,5 +57,21 @@ class StoriesViewModel(
 
     fun dismissError() {
         _state.value = _state.value.copy(errorMsg = null)
+    }
+
+    fun checkAuth() {
+        viewModelScope.launch {
+            _state.value = when (val authResult = authRepository.authenticate()) {
+                is AuthResult.Authorized -> _state.value.copy(
+                    isUserLoggedIn = true,
+                )
+                is AuthResult.Unauthorized -> _state.value.copy(
+                    isUserLoggedIn = false,
+                )
+                is AuthResult.UnknownError -> _state.value.copy(
+                    errorMsg = "Unknown error: " + authResult.errorMsg
+                )
+            }
+        }
     }
 }
