@@ -1,6 +1,10 @@
 package com.unlone.app.android.ui.write
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -11,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
+import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.viewmodel.WritingViewModel
@@ -169,6 +175,15 @@ fun WritingScreen(
                 )
         }
 
+
+        // launch for open gallery
+        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+            it?.let {
+            val imageMD = "![image]($it)"
+            viewModel.setContent(uiState.content + imageMD)
+            }
+        }
+
         if (isKeyboardVisible)
             Row(
                 Modifier
@@ -176,9 +191,14 @@ fun WritingScreen(
                     .imePadding()
                     .height(imeToolBarHeight.dp)
                     .fillMaxWidth()
-                    .background(Color.Green)
+                    .border(1.dp, Color.Green)
+//                    .background(Color.Green)
             ) {
-                // todo
+                IconButton(onClick = {
+                    launcher.launch("image/*")
+                }) {
+                    Icon(painterResource(id = R.drawable.image), contentDescription = "input image")
+                }
             }
 
         if (uiState.loading)
@@ -194,14 +214,17 @@ fun WritingScreen(
                 onDismissRequest = viewModel::dismiss,
             ) {
                 Card {
-                    Text(text = stringResource(resource = SharedRes.strings.writing__post_success), modifier = Modifier.padding(15.dp))
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.writing__post_success),
+                        modifier = Modifier.padding(15.dp)
+                    )
                 }
             }
 
         uiState.error?.let {
             AlertDialog(
                 onDismissRequest = viewModel::dismiss,
-                title = { Text(text =stringResource(resource = SharedRes.strings.common__error)) },
+                title = { Text(text = stringResource(resource = SharedRes.strings.common__error)) },
                 text = { Text(text = it) },
                 confirmButton = {
                     Button(
@@ -216,7 +239,7 @@ fun WritingScreen(
         if (requireSignInDialog) {
             AlertDialog(
                 onDismissRequest = { requireSignInDialog = false },
-                title = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_title))},
+                title = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_title)) },
                 text = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_text)) },
                 confirmButton = {
                     Button(
