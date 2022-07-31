@@ -21,6 +21,8 @@ struct ProfileScreen: View {
                     authSetting.signOut()
                 })
             }
+        }.onAppear {
+            print("Profile Screen: \(authSetting.isUserLoggedIn)")
         }
     }
 }

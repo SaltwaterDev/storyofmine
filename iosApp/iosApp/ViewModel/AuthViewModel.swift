@@ -23,10 +23,12 @@ class AuthViewModel: ObservableObject {
             switch (result){
                 case is AuthResultAuthorized<KotlinUnit>:
                     print("Authorized")
-                self.isUserLoggedIn = true
+                    self.isUserLoggedIn = true
+                    break
                 case is AuthResultUnauthorized<KotlinUnit>:
                     print("Unauthorized")
                     self.isUserLoggedIn = false
+                    break
                 case is AuthResultUnknownError<KotlinUnit>:
                     print("Unknown error")
                     self.isUserLoggedIn = false
@@ -35,6 +37,7 @@ class AuthViewModel: ObservableObject {
                     self.isUserLoggedIn = false
                     break
             }
+            self.objectWillChange.send()
         })
     }
 
