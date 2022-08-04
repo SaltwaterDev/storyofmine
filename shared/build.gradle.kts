@@ -6,7 +6,6 @@ plugins {
     id("com.android.library")
     kotlin("plugin.serialization") version "1.7.0"
     id("io.realm.kotlin")
-    id ("dev.icerock.mobile.multiplatform-resources")/*  version "0.20.1"*/
 }
 
 version = "1.0"
@@ -48,15 +47,13 @@ kotlin {
                 implementation("io.realm.kotlin:library-base:1.0.0")
                 // datetime
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.3")
-
-
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
 //                implementation("io.mockk:mockk:1.12.4") fixme
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
                 implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }
@@ -83,7 +80,6 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
             }
-
         }
         val iosX64Test by getting
         val iosArm64Test by getting
@@ -93,13 +89,6 @@ kotlin {
             iosX64Test.dependsOn(this)
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
-        }
-    }
-
-    // export correct artifact to use all classes of moko-resources directly from Swift
-    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
-        binaries.withType(org.jetbrains.kotlin.gradle.plugin.mpp.Framework::class.java).all {
-            export("dev.icerock.moko:resources:0.20.1")
         }
     }
 }
@@ -126,21 +115,3 @@ object Deps {
     }
 
 }
-
-
-// locale
-dependencies {
-    "commonMainApi"("dev.icerock.moko:resources:0.20.1")
-    "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")
-    "commonTestImplementation"("dev.icerock.moko:resources-test:0.20.1")
-}
-
-
-multiplatformResources {
-    multiplatformResourcesPackage = "org.example.library" // requiredcommonClientMain
-    multiplatformResourcesClassName = "SharedRes" // optional, default MR
-//    multiplatformResourcesVisibility = dev.icerock.gradle.MRVisibility.Internal // optional, default Public
-    iosBaseLocalizationRegion = "en" // optional, default "en"
-//    multiplatformResourcesSourceSet = "commonClientMain"  // optional, default "commonMain"
-}
-

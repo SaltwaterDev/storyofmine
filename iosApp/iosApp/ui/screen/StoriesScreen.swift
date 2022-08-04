@@ -16,15 +16,20 @@ struct StoriesScreen: View {
     
     var body: some View {
         VStack{
-        if (authSetting.isUserLoggedIn){
-            Text(greet)
-        }else{
-            Button("Sign In", action: {
-                showLogin = true
-            }).sheet(isPresented: $showLogin, content: {
-                LoginEmailScreen(isPresented: $showLogin)
-            })
-        }}
+            if (authSetting.isUserLoggedIn){
+                Text(greet)
+            }else{
+                Button("Sign In", action: {
+                    showLogin = true
+                }).sheet(isPresented: $showLogin, onDismiss: {
+                    authSetting.authenticate()
+                }, content: {
+                    LoginEmailScreen(isPresented: $showLogin)
+                })
+            }
+        }.onAppear {
+            print("Stories Screen: \(authSetting.isUserLoggedIn)")
+        }
     }
 }
 

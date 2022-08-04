@@ -12,6 +12,7 @@ import shared
 struct LoginEmailScreen: View {
     @Binding var isPresented: Bool
     @ObservedObject var signInViewModel = SignInViewModel()
+    @ObservedObject var signupViewModel = SignUpViewModel()
     @EnvironmentObject var authSetting: AuthViewModel
     
     @State private var showSignUp = false
@@ -21,11 +22,9 @@ struct LoginEmailScreen: View {
             NavigationView{
             VStack{
                 TextField("Email", text: $email).padding().autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
-                Button("Sign Up", action: {
-                    showSignUp = true
-                }).sheet(isPresented: $showSignUp, content: {
-                    SignUpScreen(isPresented: $showSignUp)
-                })
+                NavigationLink(destination: SignUpScreen(signupViewModel: self.signupViewModel)){
+                    Text("Sign Up")
+                }
                 Button("Sign In", action: {
                     signInViewModel.emailValidate(email: email)
                 })
@@ -35,9 +34,11 @@ struct LoginEmailScreen: View {
             }}.onChange(of: signInViewModel.signInSuccess){signInSuccess in
                 if signInSuccess {
                     isPresented = false
-                    authSetting.authenticate()
                 }
-            }
+            }.onChange(of: signupViewModel.signUpSuccess){signUpSuccess in
+                if signUpSuccess {
+                    isPresented = false
+                }}
     }
 }
 
