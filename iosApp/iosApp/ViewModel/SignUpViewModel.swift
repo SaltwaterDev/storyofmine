@@ -41,14 +41,14 @@ class SignUpViewModel: ObservableObject {
         })
     }
     
-    func signUp(email: String, password: String, completion: @escaping () -> (Void)){
+    func signUp(email: String, password: String){
         authRepo.signUp(email: email, password: password, completionHandler: {result, error in
             print(result)
             switch (result){
                 case is AuthResultAuthorized<KotlinUnit>:
                     print("SignUp Success")
                     self.signUpSuccess = true
-                    completion()
+//                    completion()
                     break
                 case is AuthResultUnauthorized<KotlinUnit>:
                     print("Email not available")
