@@ -15,8 +15,8 @@ struct ProfileScreen: View {
 
     var body: some View {
         VStack{
-            let text = LocalizedStringKey(SharedRes.strings().my_string.desc().localized())
-            Text(text)
+//            let text = LocalizedStringKey(SharedRes.strings().my_string.desc().localized())
+//            Text(text)
             Text(greet)
             
             if (authSetting.isUserLoggedIn){

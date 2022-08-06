@@ -18,9 +18,10 @@ struct LoginEmailScreen: View {
     @State private var showSignUp = false
     @State private var email = ""
     
+    
     var body: some View {
+        VStack{
             NavigationView{
-            VStack{
                 TextField("Email", text: $email).padding().autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
                 NavigationLink(destination: SignUpScreen(signupViewModel: self.signupViewModel)){
                     Text("Sign Up")
@@ -31,6 +32,10 @@ struct LoginEmailScreen: View {
                 NavigationLink(destination: LoginScreen(signInViewModel: self.signInViewModel), isActive: $signInViewModel.userExists, label: {
                     EmptyView()
                 })
+                
+                if(signInViewModel.loading){
+                   ProgressView()
+                }
             }}.onChange(of: signInViewModel.signInSuccess){signInSuccess in
                 if signInSuccess {
                     isPresented = false

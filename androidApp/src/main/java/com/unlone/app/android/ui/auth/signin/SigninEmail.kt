@@ -64,11 +64,11 @@ fun SignInEmailScreen(
         ) {
 
             Spacer(modifier = Modifier.height(60.dp))
-            Text(text =  stringResource(resource = SharedRes.strings.sign_in__title), fontSize = 36.sp)
+            Text(text =  stringResource(SharedRes.strings.sign_in__title), fontSize = 36.sp)
             Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 value = uiState.email,
-                label = { Text(text =  stringResource(resource = SharedRes.strings.common__email), fontSize = 14.sp) },
+                label = { Text(text =  stringResource( SharedRes.strings.common__email), fontSize = 14.sp) },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInEmailChanged(it)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -80,7 +80,7 @@ fun SignInEmailScreen(
                 enabled = uiState.emailBtnEnabled,
                 modifier = Modifier.align(End)
             ) {
-                Text(text = stringResource(resource = SharedRes.strings.common__btn_next))
+                Text(text = stringResource( SharedRes.strings.common__btn_next))
             }
         }
     }
@@ -91,7 +91,7 @@ fun SignInEmailScreen(
                 viewModel.dismissMsg()
             },
             title = {
-                Text(text = stringResource(resource = SharedRes.strings.common__warning))
+                Text(text = stringResource(SharedRes.strings.common__warning))
             },
             text = {
                 Text(uiState.errorMsg)

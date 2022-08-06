@@ -15,6 +15,7 @@ public class SignInViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var userExists: Bool = false
     @Published var signInSuccess: Bool = false
+    @Published var loading: Bool = false
     
     init(){
 //        Task {await emailValidate()}
@@ -22,6 +23,7 @@ public class SignInViewModel: ObservableObject {
 
     func emailValidate(email: String){
         print("Validate email")
+        self.loading = true
         authRepo.signInEmail(email: email) {result,error  in
             print(result)
             switch (result){
@@ -43,11 +45,13 @@ public class SignInViewModel: ObservableObject {
                     self.userExists = false
                     break
             }
+            self.loading = false
         }
     }
     
     
     func signIn(password: String){
+        self.loading = true
         authRepo.signIn(email: self.email, password: password, completionHandler: {result, error in
             print(result)
             switch (result){
@@ -65,6 +69,7 @@ public class SignInViewModel: ObservableObject {
                     self.signInSuccess = false
                     break
             }
+            self.loading = false
         })
     }
 }

@@ -84,18 +84,18 @@ fun ProfileScreen(
     if (showSignOutAlert)
         AlertDialog(
             onDismissRequest = { showSignOutAlert = false },
-            title = { Text(text = stringResource(resource = SharedRes.strings.profile__sign_out_alert_title)) },
+            title = { Text(text = stringResource(SharedRes.strings.profile__sign_out_alert_title)) },
             dismissButton = {
                 TextButton(onClick = {
                     showSignOutAlert = false
                     viewModel.signOut()
                 }) {
-                    Text(text = stringResource(resource = SharedRes.strings.profile__sign_out))
+                    Text(text = stringResource(SharedRes.strings.profile__sign_out))
                 }
             },
             confirmButton = {
                 TextButton(onClick = { showSignOutAlert = false }) {
-                    Text(text = stringResource(resource = SharedRes.strings.common__btn_cancel))
+                    Text(text = stringResource(SharedRes.strings.common__btn_cancel))
                 }
             },
         )

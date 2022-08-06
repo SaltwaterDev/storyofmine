@@ -6,6 +6,7 @@ plugins {
     id("com.android.library")
     kotlin("plugin.serialization") version "1.7.0"
     id("io.realm.kotlin")
+    id("dev.icerock.mobile.multiplatform-resources")
 }
 
 version = "1.0"
@@ -91,6 +92,13 @@ kotlin {
             iosSimulatorArm64Test.dependsOn(this)
         }
     }
+
+    // export correct artifact to use all classes of moko-resources directly from Swift
+    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
+        binaries.withType(org.jetbrains.kotlin.gradle.plugin.mpp.Framework::class.java).all {
+            export("dev.icerock.moko:resources:0.20.1")
+        }
+    }
 }
 
 android {
@@ -114,4 +122,22 @@ object Deps {
         const val test = "io.insert-koin:koin-test:${Versions.koin}"
     }
 
+}
+
+
+
+// locale resources
+dependencies {
+    "commonMainApi"("dev.icerock.moko:resources:0.20.1")
+    "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")
+    "commonTestImplementation"("dev.icerock.moko:resources-test:0.20.1")
+}
+
+
+multiplatformResources {
+    multiplatformResourcesPackage = "org.example.library" // requiredcommonClientMain
+    multiplatformResourcesClassName = "SharedRes" // optional, default MR
+//    multiplatformResourcesVisibility = dev.icerock.gradle.MRVisibility.Internal // optional, default Public
+    iosBaseLocalizationRegion = "en" // optional, default "en"
+//    multiplatformResourcesSourceSet = "commonClientMain"  // optional, default "commonMain"
 }
