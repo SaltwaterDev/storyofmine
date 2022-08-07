@@ -26,6 +26,7 @@ struct LoginEmailScreen: View {
                 NavigationLink(destination: SignUpScreen(signupViewModel: self.signupViewModel)){
                     Text("Sign Up")
                 }
+                
                 Button("Sign In", action: {
                     signInViewModel.emailValidate(email: email)
                 })
@@ -36,14 +37,16 @@ struct LoginEmailScreen: View {
                 if(signInViewModel.loading){
                    ProgressView()
                 }
+                
             }}.onChange(of: signInViewModel.signInSuccess){signInSuccess in
                 if signInSuccess {
                     isPresented = false
                 }
-            }.onChange(of: signupViewModel.signUpSuccess){signUpSuccess in
+            }.onChange(of: signupViewModel.uiState.signUpSuccess){signUpSuccess in
                 if signUpSuccess {
                     isPresented = false
-                }}
+                }
+            }
     }
 }
 

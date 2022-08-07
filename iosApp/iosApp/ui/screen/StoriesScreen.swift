@@ -13,19 +13,35 @@ struct StoriesScreen: View {
     @EnvironmentObject var authSetting: AuthViewModel
     let greet = Greeting().greeting()
     @State private var showLogin = false
+    @State private var showSignup = false
+    @ObservedObject var signupViewModel = SignUpViewModel()
     
     var body: some View {
         VStack{
             if (authSetting.isUserLoggedIn){
                 Text(greet)
             }else{
-                Button("Sign In", action: {
-                    showLogin = true
-                }).sheet(isPresented: $showLogin, onDismiss: {
-                    authSetting.authenticate()
-                }, content: {
-                    LoginEmailScreen(isPresented: $showLogin)
-                })
+                HStack{
+                    Button("Sign In", action: {
+                        showLogin = true
+                    }).sheet(isPresented: $showLogin, onDismiss: {
+                        authSetting.authenticate()
+                    }, content: {
+                        LoginEmailScreen(isPresented: $showLogin)
+                    })
+                    
+                    Button("Sign Up", action: {
+                        showSignup = true
+                    }).sheet(isPresented: $showSignup, onDismiss: {
+    //                    authSetting.authenticate()
+                    }, content: {
+                        SignUpScreen(signupViewModel: signupViewModel)
+                    }).onChange(of: signupViewModel.uiState.signUpSuccess) { signUpSuccess in
+                        if signUpSuccess{
+                            showSignup.toggle()
+                        }
+                    }
+                }
             }
         }.onAppear {
             print("Stories Screen: \(authSetting.isUserLoggedIn)")
