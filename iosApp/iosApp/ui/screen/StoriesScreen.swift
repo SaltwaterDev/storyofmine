@@ -14,33 +14,36 @@ struct StoriesScreen: View {
     let greet = Greeting().greeting()
     @State private var showLogin = false
     @State private var showSignup = false
-    @ObservedObject var signupViewModel = SignUpViewModel()
     
     var body: some View {
         VStack{
             if (authSetting.isUserLoggedIn){
                 Text(greet)
             }else{
-                HStack{
-                    Button("Sign In", action: {
-                        showLogin = true
-                    }).sheet(isPresented: $showLogin, onDismiss: {
-                        authSetting.authenticate()
-                    }, content: {
-                        LoginEmailScreen(isPresented: $showLogin)
-                    })
+                VStack(spacing: 20){
+                    Text("Sign up to read other stories")
+                        .font(.headline)
                     
                     Button("Sign Up", action: {
                         showSignup = true
                     }).sheet(isPresented: $showSignup, onDismiss: {
-    //                    authSetting.authenticate()
+                        // authSetting.authenticate()
                     }, content: {
-                        SignUpScreen(signupViewModel: signupViewModel)
-                    }).onChange(of: signupViewModel.uiState.signUpSuccess) { signUpSuccess in
-                        if signUpSuccess{
-                            showSignup.toggle()
+                        SignUpScreen(showSignup: $showSignup)
+                    })
+            
+                    
+                    Button("Login Instead", action: {
+                        showLogin = true
+                    }).sheet(isPresented: $showLogin, onDismiss: {
+                         authSetting.authenticate()
+                    }, content: {
+                        LoginEmailScreen(showLogin: $showLogin){
+                            NavigationLink(destination: SignUpScreen(showSignup: $showSignup)){
+                                Text("Switch to Sign Up")
+                            }
                         }
-                    }
+                    })
                 }
             }
         }.onAppear {

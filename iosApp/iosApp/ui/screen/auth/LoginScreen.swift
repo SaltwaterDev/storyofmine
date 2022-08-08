@@ -10,22 +10,25 @@ import SwiftUI
 import shared
 
 struct LoginScreen: View {
-    @ObservedObject var signInViewModel: SignInViewModel
-    @State private var password = ""
+    @Binding var password: String
+    let onSignIn: () -> ()
     
     var body: some View {
-            VStack{
-                TextField("Email: \(signInViewModel.email)", text: $signInViewModel.email).padding().disabled(true).autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
-                SecureField("Password", text: $password).padding().autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
-                Button("Sign In", action: {
-                    signInViewModel.signIn(password: password)
-                })
+        VStack{
+            SecureField("Password", text: $password)
+                .padding()
+                .autocapitalization(UITextAutocapitalizationType.none)
+                .disableAutocorrection(true)
+            
+            Button("Sign In") {
+                onSignIn()
             }
+        }
     }
 }
 
-struct LoginScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginScreen(signInViewModel: SignInViewModel())
-    }
-}
+//struct LoginScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LoginScreen(signInViewModel: SignInViewModel())
+//    }
+//}

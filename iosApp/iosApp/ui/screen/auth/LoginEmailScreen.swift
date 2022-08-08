@@ -10,48 +10,52 @@ import SwiftUI
 import shared
 
 struct LoginEmailScreen: View {
-    @Binding var isPresented: Bool
+    @Binding var showLogin: Bool
     @ObservedObject var signInViewModel = SignInViewModel()
-    @ObservedObject var signupViewModel = SignUpViewModel()
     @EnvironmentObject var authSetting: AuthViewModel
-    
-    @State private var showSignUp = false
-    @State private var email = ""
-    
+    let onSignUp: () -> ()
     
     var body: some View {
-        VStack{
-            NavigationView{
-                TextField("Email", text: $email).padding().autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
-                NavigationLink(destination: SignUpScreen(signupViewModel: self.signupViewModel)){
-                    Text("Sign Up")
-                }
+        NavigationView{
+            VStack{
+                Text("Login").font(.largeTitle)
+            
+                TextField("Email", text: $signInViewModel.email)
+                    .padding()
+                    .autocapitalization(UITextAutocapitalizationType.none)
+                    .disableAutocorrection(true)
+                    .textContentType(.emailAddress)
+                    .keyboardType(.emailAddress)
                 
-                Button("Sign In", action: {
-                    signInViewModel.emailValidate(email: email)
-                })
-                NavigationLink(destination: LoginScreen(signInViewModel: self.signInViewModel), isActive: $signInViewModel.userExists, label: {
-                    EmptyView()
-                })
+                Button(
+                    "Sign In",
+                    action: {signInViewModel.emailValidate()}
+                ).disabled(signInViewModel.email.isEmpty)
+                
+
+                
+                NavigationLink(
+                    destination: LoginScreen(password: $signInViewModel.password, onSignIn: {signInViewModel.signIn()}),
+                    isActive: $signInViewModel.userExists,
+                    label: {EmptyView()}
+                )
                 
                 if(signInViewModel.loading){
-                   ProgressView()
-                }
-                
-            }}.onChange(of: signInViewModel.signInSuccess){signInSuccess in
-                if signInSuccess {
-                    isPresented = false
-                }
-            }.onChange(of: signupViewModel.uiState.signUpSuccess){signUpSuccess in
-                if signUpSuccess {
-                    isPresented = false
+                    ProgressView()
                 }
             }
+        }.onChange(of: signInViewModel.signInSuccess){signInSuccess in
+            if signInSuccess {
+                showLogin.toggle()
+            }
+        }
     }
 }
 
-struct LoginEmailScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginEmailScreen(isPresented: .constant(true))
-    }
-}
+
+//
+//struct LoginEmailScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LoginEmailScreen(isPresented: .constant(true))
+//    }
+//}

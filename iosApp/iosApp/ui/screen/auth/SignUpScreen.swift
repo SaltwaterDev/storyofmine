@@ -9,13 +9,13 @@
 import SwiftUI
 
 struct SignUpScreen: View {
-//    @Binding var isPresented: Bool
-    @ObservedObject var signupViewModel: SignUpViewModel
+    @Binding var showSignup: Bool
+    @ObservedObject var signupViewModel = SignUpViewModel()
     
     var body: some View {
         VStack{
             Text("Create account")
-                .font(.title)
+                .font(.largeTitle)
             
             TextField("Email", text: $signupViewModel.uiState.email, onEditingChanged: { editingChanged in
                 if !editingChanged{     // focus removed
@@ -51,13 +51,16 @@ struct SignUpScreen: View {
             if signupViewModel.uiState.loading{
                 ProgressView()
             }
+        }.onChange(of: signupViewModel.uiState.signUpSuccess) { signUpSuccess in
+            if signUpSuccess{
+                showSignup.toggle()
+            }
         }
-         
     }
 }
 
-struct SignUpScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        SignUpScreen(signupViewModel: SignUpViewModel())
-    }
-}
+//struct SignUpScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SignUpScreen(signupViewModel: SignUpViewModel())
+//    }
+//}
