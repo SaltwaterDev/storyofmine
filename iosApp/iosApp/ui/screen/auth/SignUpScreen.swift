@@ -13,11 +13,12 @@ struct SignUpScreen: View {
     @ObservedObject var signupViewModel = SignUpViewModel()
     
     var body: some View {
-        VStack{
+        NavigationView{
+            VStack{
             Text("Create account")
                 .font(.largeTitle)
             
-            TextField("Email", text: $signupViewModel.uiState.email, onEditingChanged: { editingChanged in
+            TextField("Email", text: $signupViewModel.email, onEditingChanged: { editingChanged in
                 if !editingChanged{     // focus removed
                     signupViewModel.signUpEmailVerify()
                 }
@@ -29,16 +30,18 @@ struct SignUpScreen: View {
             .autocapitalization(UITextAutocapitalizationType.none)
             .disableAutocorrection(true)
             
-            if !signupViewModel.uiState.emailAvailable{
+            if !signupViewModel.emailAvailable{
                 Text("This email has been used")
             }
-            SecureField("Password", text: $signupViewModel.uiState.password)
+            SecureField("Password", text: $signupViewModel.password)
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .autocapitalization(UITextAutocapitalizationType.none)
                 .disableAutocorrection(true)
             
-            SecureField("Confirm Password", text: $signupViewModel.uiState.confirmedPassword)
+            Text("Your password must contain at least one upper case letter, one lower case letter, and one number")
+            
+            SecureField("Confirm Password", text: $signupViewModel.confirmedPassword)
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .autocapitalization(UITextAutocapitalizationType.none)
@@ -46,16 +49,33 @@ struct SignUpScreen: View {
             
             Button("Sign Up", action: {
                 signupViewModel.signUp()}
-            ).disabled(!signupViewModel.uiState.enabled)
+            ).disabled(!signupViewModel.enabled)
+                .alert(item: $signupViewModel.error) { Identifiable in
+                    Alert(
+                        title: Text(signupViewModel.error!),
+                        dismissButton: .default(
+                            Text("OK"),
+                            action: {signupViewModel.dismissError()}
+                        )
+                    )
+                }
             
-            if signupViewModel.uiState.loading{
+            if signupViewModel.loading{
                 ProgressView()
             }
-        }.onChange(of: signupViewModel.uiState.signUpSuccess) { signUpSuccess in
+            
+            
+            NavigationLink(
+                destination: OtpEmailConfirmScreen(),
+                isActive: $signupViewModel.accountCreated,
+                label: {EmptyView()}
+            )
+        }
+        }.onChange(of: signupViewModel.signUpSuccess) { signUpSuccess in
             if signUpSuccess{
                 showSignup.toggle()
             }
-        }
+        }.environmentObject(signupViewModel)
     }
 }
 

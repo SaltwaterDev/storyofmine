@@ -19,6 +19,7 @@ public class SignInViewModel: ObservableObject {
     @Published var userExists: Bool = false
     @Published var signInSuccess: Bool = false
     @Published var loading: Bool = false
+    @Published var error: String? = nil
     
     func emailValidate(){
         print("Validate email")
@@ -63,10 +64,12 @@ public class SignInViewModel: ObservableObject {
                 case is AuthResultUnauthorized<KotlinUnit>:
                     print("Incorrect Password")
                     self.signInSuccess = false
+                    self.error = result.errorMsg ?? ""
                     break
                 case is AuthResultUnknownError<KotlinUnit>:
                     print("Unknown error")
                     self.signInSuccess = false
+                    self.error = result.errorMsg ?? ""
                     break
                 default:
                     self.signInSuccess = false
@@ -74,5 +77,9 @@ public class SignInViewModel: ObservableObject {
             }
             self.loading = false
         }
+    }
+    
+    func dismissError(){
+        self.error = nil
     }
 }

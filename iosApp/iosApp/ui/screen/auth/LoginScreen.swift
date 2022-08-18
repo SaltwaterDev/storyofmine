@@ -9,9 +9,12 @@
 import SwiftUI
 import shared
 
-struct LoginScreen: View {
+struct LoginPwScreen: View {
     @Binding var password: String
+    @Binding var errorMsg: String?
+    @Binding var loading: Bool
     let onSignIn: () -> ()
+    let dismissError: () -> ()
     
     var body: some View {
         VStack{
@@ -22,10 +25,30 @@ struct LoginScreen: View {
             
             Button("Sign In") {
                 onSignIn()
+            }.alert(item: $errorMsg) { Identifiable in
+                Alert(
+                    title: Text(errorMsg!),
+                    dismissButton: .default(
+                        Text("OK"),
+                        action: dismissError
+                    )
+                )
+            }
+            
+            if(loading){
+                ProgressView()
             }
         }
     }
 }
+
+extension String: Identifiable {
+    public typealias ID = Int
+    public var id: Int {
+        return hash
+    }
+}
+
 
 //struct LoginScreen_Previews: PreviewProvider {
 //    static var previews: some View {

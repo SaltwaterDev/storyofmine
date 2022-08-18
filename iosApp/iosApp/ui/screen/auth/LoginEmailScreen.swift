@@ -28,14 +28,18 @@ struct LoginEmailScreen: View {
                     .keyboardType(.emailAddress)
                 
                 Button(
-                    "Sign In",
+                    "Next",
                     action: {signInViewModel.emailValidate()}
                 ).disabled(signInViewModel.email.isEmpty)
                 
-
-                
                 NavigationLink(
-                    destination: LoginScreen(password: $signInViewModel.password, onSignIn: {signInViewModel.signIn()}),
+                    destination: LoginPwScreen(
+                        password: $signInViewModel.password,
+                        errorMsg: $signInViewModel.error,
+                        loading: $signInViewModel.loading,
+                        onSignIn: {signInViewModel.signIn()},
+                        dismissError: {signInViewModel.dismissError()}
+                    ),
                     isActive: $signInViewModel.userExists,
                     label: {EmptyView()}
                 )

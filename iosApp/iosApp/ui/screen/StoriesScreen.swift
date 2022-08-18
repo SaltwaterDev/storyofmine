@@ -27,7 +27,7 @@ struct StoriesScreen: View {
                     Button("Sign Up", action: {
                         showSignup = true
                     }).sheet(isPresented: $showSignup, onDismiss: {
-                        // authSetting.authenticate()
+                         authSetting.authenticate()
                     }, content: {
                         SignUpScreen(showSignup: $showSignup)
                     })
@@ -47,6 +47,7 @@ struct StoriesScreen: View {
                 }
             }
         }.onAppear {
+//            authSetting.authenticate()
             print("Stories Screen: \(authSetting.isUserLoggedIn)")
         }
     }
