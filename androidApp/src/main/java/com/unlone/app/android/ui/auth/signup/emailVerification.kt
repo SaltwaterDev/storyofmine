@@ -24,6 +24,7 @@ private enum class ScreenState {
 @Composable
 fun EmailVerificationScreen(
     state: SignUpUiState,
+    dismissError: () -> Unit,
     onCancelSignUp: () -> Unit,
     setOtp: (String) -> Unit,
     onOtpGenerate: () -> Unit,
@@ -69,6 +70,17 @@ fun EmailVerificationScreen(
         }
     }
 
+    state.errorMsg?.let { msg ->
+        AlertDialog(
+            onDismissRequest = dismissError, 
+            title = { Text(text = msg) },
+            confirmButton = {
+                Button(onClick = dismissError) {
+                    Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+                }
+            }
+        )
+    }
 
     if (state.verified) {
         LaunchedEffect(Unit) {
@@ -127,14 +139,12 @@ fun EmailConfirmBlock(
         ) {
             Text(text = stringResource(resource = SharedRes.strings.otp__btn_Send))
         }
-
     }
-
 }
 
 
 @Preview
 @Composable
 private fun Preview() {
-    EmailVerificationScreen(SignUpUiState(), {}, {}, {}, {}, {})
+    EmailVerificationScreen(SignUpUiState(), {}, {}, {}, {}, {}, {})
 }

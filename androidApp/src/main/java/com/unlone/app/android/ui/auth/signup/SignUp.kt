@@ -8,7 +8,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
@@ -170,11 +169,11 @@ fun SignUpScreen(
 
     uiState.errorMsg?.let {
         AlertDialog(
-            onDismissRequest = { viewModel.dismissMsg() },
+            onDismissRequest = { viewModel.dismissErrorMsg() },
             title = { Text(text = "Warning") },
             text = { Text(uiState.errorMsg) },
             confirmButton = {
-                Button(onClick = { viewModel.dismissMsg() }) { Text(stringResource(resource = SharedRes.strings.common__btn_confirm)) }
+                Button(onClick = { viewModel.dismissErrorMsg() }) { Text(stringResource(resource = SharedRes.strings.common__btn_confirm)) }
             },
         )
     }
