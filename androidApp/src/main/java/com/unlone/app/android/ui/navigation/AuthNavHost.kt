@@ -17,8 +17,6 @@ import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.compose.viewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 
 enum class AuthNav {
@@ -66,10 +64,12 @@ fun NavGraphBuilder.authGraph(
                     viewModel.removeSignUpRecord()
                     navController.popBackStack()
                 },
+
                 setOtp = viewModel.setOtp,
                 navToSetUsername = { navigateToSetUsername(navController) },
                 onOtpVerified = { viewModel.verifyOtp() },
-                onOtpGenerate = { viewModel.generateOtp() }
+                onOtpGenerate = { viewModel.generateOtp() },
+                dismissError = { viewModel.dismissErrorMsg() }
             )
         }
 

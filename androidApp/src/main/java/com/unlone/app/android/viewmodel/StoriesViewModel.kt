@@ -2,19 +2,17 @@ package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.domain.entities.StoryItem
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
-import com.unlone.app.android.model.PostsByTopic
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-data class LoungeUiState(
+data class StoriesScreenUiState(
     val loading: Boolean = true,
     val isUserLoggedIn: Boolean = true,
-    val postsByTopics: List<StoryItem.StoriesByTopic>? = listOf(
+    val storiesByTopics: List<StoryItem.StoriesByTopic>? = listOf(
         StoryItem.StoriesByTopic(),
         StoryItem.StoriesByTopic()
     ),
@@ -28,7 +26,7 @@ class StoriesViewModel(
     private val authRepository: AuthRepository,
     private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
 ) : ViewModel() {
-    private val _state: MutableStateFlow<LoungeUiState> = MutableStateFlow(LoungeUiState())
+    private val _state: MutableStateFlow<StoriesScreenUiState> = MutableStateFlow(StoriesScreenUiState())
     val state = _state.asStateFlow()
 
     init {
@@ -37,7 +35,7 @@ class StoriesViewModel(
                 getUserName()
                 _state.value = _state.value.copy(
                     isUserLoggedIn = true,
-                    postsByTopics = fetchStoryItemsUseCase(),       // fetch stories
+                    storiesByTopics = fetchStoryItemsUseCase(),       // fetch stories
                 )
             }
             _state.value = _state.value.copy(loading = false)

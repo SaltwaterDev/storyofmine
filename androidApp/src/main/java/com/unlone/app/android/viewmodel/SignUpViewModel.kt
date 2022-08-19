@@ -26,13 +26,15 @@ data class SignUpUiState(
     val pwError: Boolean = false,
     val loading: Boolean = false,
     val verified: Boolean = false,
-    val otp: Int? = null,
+    val otp: String = "",
     val success: Boolean = false,
 ) {
     val btnEnabled: Boolean = !loading &&
             email.isNotBlank() &&
             password.isNotBlank() &&
-            password == confirmedPassword
+            password == confirmedPassword &&
+            !emailError &&
+            !pwError
     val confirmedPwError: Boolean =
         confirmedPassword.isNotBlank() && (password != confirmedPassword)
 }
@@ -148,7 +150,7 @@ class SignUpViewModel(
         }
     }
 
-    fun dismissMsg() {
+    fun dismissErrorMsg() {
         uiState = uiState.copy(
             errorMsg = null
         )
@@ -174,7 +176,10 @@ class SignUpViewModel(
     fun verifyOtp() {
         uiState = uiState.copy(loading = true)
         viewModelScope.launch {
-            when (val result = uiState.otp?.let { authRepository.verifyOtp(uiState.email, it) }) {
+            when (val result = uiState.otp.toIntOrNull()?.let {
+                Log.d("TAG", "verifyOtp: $it")
+                authRepository.verifyOtp(uiState.email, it)
+            }) {
                 is AuthResult.Authorized -> {
                     uiState = uiState.copy(verified = true)
                     Timber.d("email validate")
@@ -198,5 +203,5 @@ class SignUpViewModel(
     }
 
     val setOtp: (String) -> Unit =
-        { otp: String -> otp.toIntOrNull()?.let { uiState = uiState.copy(otp = it) } }
+        { otp: String -> uiState = uiState.copy(otp = otp)}
 }

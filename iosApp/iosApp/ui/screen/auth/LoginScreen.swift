@@ -9,23 +9,49 @@
 import SwiftUI
 import shared
 
-struct LoginScreen: View {
-    @ObservedObject var signInViewModel: SignInViewModel
-    @State private var password = ""
+struct LoginPwScreen: View {
+    @Binding var password: String
+    @Binding var errorMsg: String?
+    @Binding var loading: Bool
+    let onSignIn: () -> ()
+    let dismissError: () -> ()
     
     var body: some View {
-            VStack{
-                TextField("Email: \(signInViewModel.email)", text: $signInViewModel.email).padding().disabled(true).autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
-                SecureField("Password", text: $password).padding().autocapitalization(UITextAutocapitalizationType.none).disableAutocorrection(true)
-                Button("Sign In", action: {
-                    signInViewModel.signIn(password: password)
-                })
+        VStack{
+            SecureField("Password", text: $password)
+                .padding()
+                .autocapitalization(UITextAutocapitalizationType.none)
+                .disableAutocorrection(true)
+            
+            Button("Sign In") {
+                onSignIn()
+            }.alert(item: $errorMsg) { Identifiable in
+                Alert(
+                    title: Text(errorMsg!),
+                    dismissButton: .default(
+                        Text("OK"),
+                        action: dismissError
+                    )
+                )
             }
+            
+            if(loading){
+                ProgressView()
+            }
+        }
     }
 }
 
-struct LoginScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginScreen(signInViewModel: SignInViewModel())
+extension String: Identifiable {
+    public typealias ID = Int
+    public var id: Int {
+        return hash
     }
 }
+
+
+//struct LoginScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LoginScreen(signInViewModel: SignInViewModel())
+//    }
+//}

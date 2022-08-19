@@ -9,6 +9,7 @@
 import Foundation
 import shared
 
+@MainActor
 class AuthViewModel: ObservableObject {
     private let authRepo = AuthRepositoryHelper().authRepo()
     @Published var isUserLoggedIn: Bool = false
@@ -18,7 +19,8 @@ class AuthViewModel: ObservableObject {
     }
     
     func authenticate() {
-        authRepo.authenticate(completionHandler: {result, error in
+        Task{
+            let result = try await authRepo.authenticate ()
             print(result)
             switch (result){
                 case is AuthResultAuthorized<KotlinUnit>:
@@ -38,7 +40,7 @@ class AuthViewModel: ObservableObject {
                     break
             }
             self.objectWillChange.send()
-        })
+        }
     }
 
     func signOut() {

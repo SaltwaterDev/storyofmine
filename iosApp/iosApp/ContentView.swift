@@ -6,11 +6,11 @@ struct ContentView: View {
     
 	var body: some View {
             TabView{
-                WritingScreen().tabItem{Image(systemName: "pencil")
+                WritingScreen().tabItem{Image(systemName: "pencil.and.outline")
                     Text("Write")}
-                StoriesScreen().tabItem{Image(systemName: "plus")
-                    Text("Lounge")}
-                ProfileScreen().tabItem{Image(systemName: "person.fill")
+                StoriesScreen().tabItem{Image(systemName: "book")
+                    Text("Stories")}
+                ProfileScreen().tabItem{Image(systemName: "person")
                     Text("Profile")}
             }.environmentObject(authSetting)
 	}
