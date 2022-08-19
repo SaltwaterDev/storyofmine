@@ -3,6 +3,7 @@ package com.unlone.app
 
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.di.appModule
+import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
@@ -24,6 +25,11 @@ class AuthRepositoryHelper : KoinComponent {
     suspend fun signIn(email: String, password: String) = authRepo.signIn(email, password)
     suspend fun authenticate() = authRepo.authenticate()
     fun signOut() = authRepo.signOut()*/
+}
+
+class UseCasesHelper : KoinComponent {
+	val fetchStoryItemsUseCase: FetchStoryItemsUseCase by inject()
+	//	fun authRepo(): AuthRepository = authRepo
 }
 
 

@@ -13,6 +13,10 @@
 		2B425AF028A695EF00906522 /* OtpEmailConfirmScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425AEF28A695EF00906522 /* OtpEmailConfirmScreen.swift */; };
 		2B425AF228A6960100906522 /* OtpInputScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425AF128A6960100906522 /* OtpInputScreen.swift */; };
 		2B425AF828A9320800906522 /* UsernameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425AF728A9320800906522 /* UsernameScreen.swift */; };
+		2B425AFB28AE76BF00906522 /* StoryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425AFA28AE76BF00906522 /* StoryCardView.swift */; };
+		2B425AFD28AE7CFC00906522 /* TopicStoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425AFC28AE7CFC00906522 /* TopicStoriesView.swift */; };
+		2B425B0028AE866E00906522 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425AFF28AE866E00906522 /* Story.swift */; };
+		2B425B0628AF51D000906522 /* StoriesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425B0528AF51D000906522 /* StoriesComponent.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		78C5E80D4608F31167846450 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40D82C9910C8110EE56E4EC0 /* Pods_iosApp.framework */; };
 		F507A0FF284CA75B00CA7936 /* WritingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507A0FE284CA75B00CA7936 /* WritingScreen.swift */; };
@@ -35,6 +39,10 @@
 		2B425AEF28A695EF00906522 /* OtpEmailConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpEmailConfirmScreen.swift; sourceTree = "<group>"; };
 		2B425AF128A6960100906522 /* OtpInputScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpInputScreen.swift; sourceTree = "<group>"; };
 		2B425AF728A9320800906522 /* UsernameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameScreen.swift; sourceTree = "<group>"; };
+		2B425AFA28AE76BF00906522 /* StoryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryCardView.swift; sourceTree = "<group>"; };
+		2B425AFC28AE7CFC00906522 /* TopicStoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicStoriesView.swift; sourceTree = "<group>"; };
+		2B425AFF28AE866E00906522 /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
+		2B425B0528AF51D000906522 /* StoriesComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesComponent.swift; sourceTree = "<group>"; };
 		40D82C9910C8110EE56E4EC0 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +80,24 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		2B425AF928AE76A200906522 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				2B425AFA28AE76BF00906522 /* StoryCardView.swift */,
+				2B425AFC28AE7CFC00906522 /* TopicStoriesView.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
+		2B425AFE28AE865E00906522 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2B425AFF28AE866E00906522 /* Story.swift */,
+				2B425B0528AF51D000906522 /* StoriesComponent.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		70F4553B1D7D0DC0739FA87E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +127,7 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				2B425AFE28AE865E00906522 /* Model */,
 				F50AD2132856200900CD4CBC /* ViewModel */,
 				F507A104284CA87F00CA7936 /* ui */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
@@ -124,6 +151,7 @@
 		F507A104284CA87F00CA7936 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				2B425AF928AE76A200906522 /* component */,
 				F507A105284CA88500CA7936 /* screen */,
 			);
 			path = ui;
@@ -283,16 +311,20 @@
 				F5AAE8242882AC1300B8A2BB /* StoriesViewModel.swift in Sources */,
 				F5F6B03C2856628700756A0D /* SignUpViewModel.swift in Sources */,
 				F507A0FF284CA75B00CA7936 /* WritingScreen.swift in Sources */,
+				2B425B0628AF51D000906522 /* StoriesComponent.swift in Sources */,
+				2B425AFB28AE76BF00906522 /* StoryCardView.swift in Sources */,
 				2B425AF028A695EF00906522 /* OtpEmailConfirmScreen.swift in Sources */,
 				2B425AF828A9320800906522 /* UsernameScreen.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				F54301D6287ABFD00015D14D /* SignUpScreen.swift in Sources */,
+				2B425AFD28AE7CFC00906522 /* TopicStoriesView.swift in Sources */,
 				2B425AF228A6960100906522 /* OtpInputScreen.swift in Sources */,
 				F507A102284CA7F400CA7936 /* StoriesScreen.swift in Sources */,
 				F52EFD712883BA7E0097DBE8 /* AuthViewModel.swift in Sources */,
 				F507A103284CA7F400CA7936 /* ProfileScreen.swift in Sources */,
 				F507A109284CA99100CA7936 /* LoginEmailScreen.swift in Sources */,
 				F572174D28689CCF002F1669 /* LoginScreen.swift in Sources */,
+				2B425B0028AE866E00906522 /* Story.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

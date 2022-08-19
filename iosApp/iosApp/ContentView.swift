@@ -9,7 +9,7 @@ struct ContentView: View {
                 WritingScreen().tabItem{Image(systemName: "pencil.and.outline")
                     Text("Write")}
                 StoriesScreen().tabItem{Image(systemName: "book")
-                    Text("Lounge")}
+                    Text("Stories")}
                 ProfileScreen().tabItem{Image(systemName: "person")
                     Text("Profile")}
             }.environmentObject(authSetting)

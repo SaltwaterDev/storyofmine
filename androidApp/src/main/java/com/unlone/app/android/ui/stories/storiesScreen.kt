@@ -64,7 +64,7 @@ fun StoriesScreen(
                     )
                 }
 
-                state.postsByTopics?.let { posts ->
+                state.storiesByTopics?.let { posts ->
                     items(posts) {
                         PostsByTopic(
                             it.topic,

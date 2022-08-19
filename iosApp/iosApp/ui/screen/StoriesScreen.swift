@@ -10,16 +10,27 @@ import SwiftUI
 import shared
 
 struct StoriesScreen: View {
-    @EnvironmentObject var authSetting: AuthViewModel
-    let greet = Greeting().greeting()
+    @StateObject private var storiesViewModel = StoriesViewModel()
     @State private var showLogin = false
     @State private var showSignup = false
     
     var body: some View {
         VStack{
-            if (authSetting.isUserLoggedIn){
-                Text(greet)
-            }else{
+            if (storiesViewModel.isUserLoggedIn){
+                ScrollView {
+                    Text("Hello \(storiesViewModel.username ?? "")")
+                        .font(.largeTitle)
+                    
+                    ForEach(storiesViewModel.storiesByTopics){
+                        TopicStoriesView(
+                            topicStories: StoriesComponent.TopicStories(
+                                topic: $0.topic,
+                                stories: $0.stories
+                            )
+                        )
+                    }
+                }
+            } else {
                 VStack(spacing: 20){
                     Text("Sign up to read other stories")
                         .font(.headline)
@@ -27,7 +38,7 @@ struct StoriesScreen: View {
                     Button("Sign Up", action: {
                         showSignup = true
                     }).sheet(isPresented: $showSignup, onDismiss: {
-                         authSetting.authenticate()
+                        storiesViewModel.checkAuth()
                     }, content: {
                         SignUpScreen(showSignup: $showSignup)
                     })
@@ -36,7 +47,7 @@ struct StoriesScreen: View {
                     Button("Login Instead", action: {
                         showLogin = true
                     }).sheet(isPresented: $showLogin, onDismiss: {
-                         authSetting.authenticate()
+                        storiesViewModel.checkAuth()
                     }, content: {
                         LoginEmailScreen(showLogin: $showLogin){
                             NavigationLink(destination: SignUpScreen(showSignup: $showSignup)){
@@ -47,14 +58,14 @@ struct StoriesScreen: View {
                 }
             }
         }.onAppear {
-//            authSetting.authenticate()
-            print("Stories Screen: \(authSetting.isUserLoggedIn)")
+            storiesViewModel.checkAuth()
+            print("Stories Screen: \(storiesViewModel.isUserLoggedIn)")
         }
     }
 }
 
-struct StoriesScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        StoriesScreen()
-    }
-}
+//struct StoriesScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StoriesScreen()
+//    }
+//}
