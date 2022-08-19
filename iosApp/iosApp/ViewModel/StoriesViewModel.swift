@@ -50,11 +50,16 @@ class StoriesViewModel: ObservableObject {
     private func getStoriesItems() async{
         do{
             let result = try await fetchStoryItemsUseCase.invoke(lastItemId: nil)
+            print(result)
             self.storiesByTopics = result.map{
                 StoriesComponent.TopicStories(
                     topic: $0.topic,
                     stories: $0.stories.map{ s in
-                        Story(title: s.title, bodyText: s.content)
+                        Story(
+                            id: s.id,
+                            title: s.title,
+                            bodyText: s.content
+                        )
                     }
                 )
             }

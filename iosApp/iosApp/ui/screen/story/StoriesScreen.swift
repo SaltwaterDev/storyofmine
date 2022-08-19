@@ -17,18 +17,21 @@ struct StoriesScreen: View {
     var body: some View {
         VStack{
             if (storiesViewModel.isUserLoggedIn){
-                ScrollView {
-                    Text("Hello \(storiesViewModel.username ?? "")")
-                        .font(.largeTitle)
-                    
-                    ForEach(storiesViewModel.storiesByTopics){
-                        TopicStoriesView(
-                            topicStories: StoriesComponent.TopicStories(
-                                topic: $0.topic,
-                                stories: $0.stories
+                NavigationView{
+                    ScrollView {
+                        Text("Hello \(storiesViewModel.username ?? "")")
+                            .font(.largeTitle)
+                        
+                        ForEach(storiesViewModel.storiesByTopics){
+                            TopicStoriesView(
+                                topicStories: StoriesComponent.TopicStories(
+                                    topic: $0.topic,
+                                    stories: $0.stories
+                                )
                             )
-                        )
-                    }
+                        }
+                    }.redacted(reason: storiesViewModel.loading ? .placeholder : [])
+                    .navigationBarHidden(true)
                 }
             } else {
                 VStack(spacing: 20){
@@ -57,10 +60,10 @@ struct StoriesScreen: View {
                     })
                 }
             }
-        }.onAppear {
-            storiesViewModel.checkAuth()
-            print("Stories Screen: \(storiesViewModel.isUserLoggedIn)")
-        }
+            }.onAppear {
+                storiesViewModel.checkAuth()
+                print("Stories Screen: \(storiesViewModel.isUserLoggedIn)")
+            }
     }
 }
 

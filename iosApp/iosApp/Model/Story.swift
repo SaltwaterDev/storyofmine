@@ -9,14 +9,16 @@
 import Foundation
 
 struct Story: Identifiable {
-    let id: UUID
+    let id: String
+    let topic: String
     let title: String
     let bodyText: String
     
-    init(id: UUID = UUID(), title: String, bodyText: String) {
+    init(id: String = UUID().uuidString, title: String, bodyText: String, topic: String = "") {
         self.id = id
         self.title = title
         self.bodyText = bodyText
+        self.topic = topic
     }
 }
 
