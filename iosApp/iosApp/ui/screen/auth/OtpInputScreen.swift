@@ -10,20 +10,24 @@ import SwiftUI
 
 struct OtpInputScreen: View {
     @EnvironmentObject var signupViewModel: SignUpViewModel
+    @Binding var otp: String
+    let onOtpVerified: () -> ()
+    @Binding var isVerified: Bool
     
     var body: some View {
         TextField(
-            "Enter verofy code",
-            text: $signupViewModel.otp
+            "Enter verify code",
+            text: $otp
         )
         
         Button("Submit") {
-            signupViewModel.verifyOtp()
+//            signupViewModel.verifyOtp()
+            onOtpVerified()
         }
         
         NavigationLink(
             destination: UsernameScreen(),
-            isActive: $signupViewModel.accountVerified,
+            isActive: $isVerified,
             label: {EmptyView()}
         )
     }

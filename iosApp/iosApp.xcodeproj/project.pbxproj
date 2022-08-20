@@ -18,6 +18,8 @@
 		2B425B0028AE866E00906522 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425AFF28AE866E00906522 /* Story.swift */; };
 		2B425B0628AF51D000906522 /* StoriesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425B0528AF51D000906522 /* StoriesComponent.swift */; };
 		2B425B0928AF709300906522 /* StoryDetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425B0828AF709300906522 /* StoryDetailScreen.swift */; };
+		2B425B0B28B0798200906522 /* OtpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425B0A28B0798100906522 /* OtpViewModel.swift */; };
+		2B425B0D28B07A9600906522 /* SetUsernameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B425B0C28B07A9600906522 /* SetUsernameViewModel.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		78C5E80D4608F31167846450 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40D82C9910C8110EE56E4EC0 /* Pods_iosApp.framework */; };
 		F507A0FF284CA75B00CA7936 /* WritingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507A0FE284CA75B00CA7936 /* WritingScreen.swift */; };
@@ -45,6 +47,8 @@
 		2B425AFF28AE866E00906522 /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
 		2B425B0528AF51D000906522 /* StoriesComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesComponent.swift; sourceTree = "<group>"; };
 		2B425B0828AF709300906522 /* StoryDetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailScreen.swift; sourceTree = "<group>"; };
+		2B425B0A28B0798100906522 /* OtpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpViewModel.swift; sourceTree = "<group>"; };
+		2B425B0C28B07A9600906522 /* SetUsernameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUsernameViewModel.swift; sourceTree = "<group>"; };
 		40D82C9910C8110EE56E4EC0 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -199,6 +203,8 @@
 				F5F6B03B2856628600756A0D /* SignUpViewModel.swift */,
 				F5AAE8232882AC1300B8A2BB /* StoriesViewModel.swift */,
 				F52EFD702883BA7E0097DBE8 /* AuthViewModel.swift */,
+				2B425B0A28B0798100906522 /* OtpViewModel.swift */,
+				2B425B0C28B07A9600906522 /* SetUsernameViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -317,10 +323,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B425B0B28B0798200906522 /* OtpViewModel.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				F50AD2152856203200CD4CBC /* SignInViewModel.swift in Sources */,
 				2B425B0928AF709300906522 /* StoryDetailScreen.swift in Sources */,
 				F5AAE8242882AC1300B8A2BB /* StoriesViewModel.swift in Sources */,
+				2B425B0D28B07A9600906522 /* SetUsernameViewModel.swift in Sources */,
 				F5F6B03C2856628700756A0D /* SignUpViewModel.swift in Sources */,
 				F507A0FF284CA75B00CA7936 /* WritingScreen.swift in Sources */,
 				2B425B0628AF51D000906522 /* StoriesComponent.swift in Sources */,
