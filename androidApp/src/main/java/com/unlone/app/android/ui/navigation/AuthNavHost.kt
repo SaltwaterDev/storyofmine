@@ -61,7 +61,6 @@ fun NavGraphBuilder.authGraph(
             EmailVerificationScreen(
                 state = viewModel.uiState,
                 onCancelSignUp = {
-                    viewModel.removeSignUpRecord()
                     navController.popBackStack()
                 },
 

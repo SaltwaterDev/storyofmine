@@ -21,6 +21,10 @@ class StoriesViewModel: ObservableObject {
     @Published private(set) var storiesByTopics: [StoriesComponent.TopicStories] = []
     
     init(){
+        initData()
+    }
+    
+    func initData(){
         loading = true
         Task{
             let result = try await authRepo.authenticate()

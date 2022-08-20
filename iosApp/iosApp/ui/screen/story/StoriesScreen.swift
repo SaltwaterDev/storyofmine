@@ -40,9 +40,11 @@ struct StoriesScreen: View {
                     
                     Button("Sign Up", action: {
                         showSignup = true
-                    }).sheet(isPresented: $showSignup, onDismiss: {
-                        storiesViewModel.checkAuth()
-                    }, content: {
+                    }).sheet(
+                        isPresented: $showSignup,
+                        onDismiss: {
+                            storiesViewModel.initData()
+                        }, content: {
                         SignUpScreen(showSignup: $showSignup)
                     })
             
@@ -50,7 +52,7 @@ struct StoriesScreen: View {
                     Button("Login Instead", action: {
                         showLogin = true
                     }).sheet(isPresented: $showLogin, onDismiss: {
-                        storiesViewModel.checkAuth()
+                        storiesViewModel.initData()
                     }, content: {
                         LoginEmailScreen(showLogin: $showLogin){
                             NavigationLink(destination: SignUpScreen(showSignup: $showSignup)){

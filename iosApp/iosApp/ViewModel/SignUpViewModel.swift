@@ -168,25 +168,6 @@ class SignUpViewModel: ObservableObject {
         }
     }
     
-    // MARK: reset sign up
-    func removeSignUpRecord() {
-        Task {
-            let result = try await authRepo.removeUserRecordByEmail(email: email)
-            switch(result){
-            case is AuthResultAuthorized<KotlinUnit>:
-                print("signup record removed")
-                break
-            case is AuthResultUnauthorized<KotlinUnit>:
-                error = result.errorMsg
-                break
-            case is AuthResultUnknownError<KotlinUnit>:
-                let rawMsg = result.errorMsg ?? ""
-                error = "unknown error: " + rawMsg
-                break
-            default: break
-            }
-        }
-    }
 }
 
 
