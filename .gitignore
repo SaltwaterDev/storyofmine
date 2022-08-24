@@ -28,3 +28,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+
+# Android
+#
+release/

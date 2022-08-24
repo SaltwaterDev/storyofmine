@@ -3,6 +3,7 @@ package com.unlone.app
 
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.di.appModule
+import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,7 +30,7 @@ class AuthRepositoryHelper : KoinComponent {
 
 class UseCasesHelper : KoinComponent {
 	val fetchStoryItemsUseCase: FetchStoryItemsUseCase by inject()
-	//	fun authRepo(): AuthRepository = authRepo
+    val fetchStoryDetailUseCase: FetchStoryDetailUseCase by inject()
 }
 
 

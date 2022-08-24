@@ -10,26 +10,23 @@ import SwiftUI
 
 struct TopicStoriesView: View {
     let topicStories: StoriesComponent.TopicStories
-//    let loading: Boolean
     
     var body: some View {
         VStack(alignment: .leading){
             Text(topicStories.topic)
                 .padding(.leading)
                 .font(.title)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20) {
-                    ForEach(topicStories.stories) {story in
-                        NavigationLink{
-                            StoryDetailScreen(storyId: story.id)
-                        } label: {
-                            StoryCardView(title: story.title, bodyText: story.bodyText)
-                        }
-                        
+            
+            LazyHStack(spacing: 20) {
+                ForEach(topicStories.stories) {story in
+                    NavigationLink{
+                        StoryDetailScreen(storyId: story.id)
+                    } label: {
+                        StoryCardView(title: story.title, bodyText: story.bodyText)
                     }
                 }
-                .padding()
             }
+            .padding()
         }
     }
 }
@@ -39,9 +36,8 @@ struct TopicStoriesView_Previews: PreviewProvider {
         TopicStoriesView(
             topicStories: StoriesComponent.TopicStories(
                 topic: "Topic",
-                stories: Story.sampleData
+                stories: SimpleStory.sampleData
             )
-//            loading: true
         )
     }
 }

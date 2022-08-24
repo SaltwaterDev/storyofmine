@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct OtpInputScreen: View {
-    @EnvironmentObject var signupViewModel: SignUpViewModel
     @Binding var otp: String
+    let email: String
     let onOtpVerified: () -> ()
     @Binding var isVerified: Bool
     
@@ -21,12 +21,11 @@ struct OtpInputScreen: View {
         )
         
         Button("Submit") {
-//            signupViewModel.verifyOtp()
             onOtpVerified()
         }
         
         NavigationLink(
-            destination: UsernameScreen(),
+            destination: UsernameScreen(email: email),
             isActive: $isVerified,
             label: {EmptyView()}
         )

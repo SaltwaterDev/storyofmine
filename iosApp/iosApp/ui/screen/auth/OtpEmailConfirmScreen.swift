@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct OtpEmailConfirmScreen: View {
-    // FIXME： to be removed
-//    @EnvironmentObject var signupViewModel: SignUpViewModel
     
     let email: String
     @StateObject private var otpViewModel = OtpViewModel()
@@ -22,7 +20,6 @@ struct OtpEmailConfirmScreen: View {
             Text(email)
             
             Button("Send") {
-//                signupViewModel.generateOtp()
                 otpViewModel.generateOtp(email: email)
                 nextPage = true
             }
@@ -30,6 +27,7 @@ struct OtpEmailConfirmScreen: View {
             NavigationLink(
                 destination: OtpInputScreen(
                     otp: $otpViewModel.otp,
+                    email: email,
                     onOtpVerified: {otpViewModel.verifyOtp(email: email)},
                     isVerified: $otpViewModel.accountVerified
                 ),
