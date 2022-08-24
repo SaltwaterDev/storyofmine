@@ -156,23 +156,6 @@ class SignUpViewModel(
         )
     }
 
-    fun removeSignUpRecord() {
-        viewModelScope.launch {
-            when (val result = authRepository.removeUserRecordByEmail(uiState.email)) {
-                is AuthResult.Authorized -> {
-//                    Timber.d("signup record removed")
-                    Log.d("Tag", "signup record removed")
-                }
-                is AuthResult.Unauthorized -> {
-                    uiState = uiState.copy(errorMsg = result.errorMsg)
-                }
-                is AuthResult.UnknownError -> {
-                    uiState = uiState.copy(errorMsg = "unknown error: " + result.errorMsg)
-                }
-            }
-        }
-    }
-
     fun verifyOtp() {
         uiState = uiState.copy(loading = true)
         viewModelScope.launch {

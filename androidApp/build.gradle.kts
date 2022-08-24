@@ -11,7 +11,7 @@ android {
         applicationId = "com.unlone.app.android"
         minSdk = 24
         targetSdk = 32
-        versionCode = 20
+        versionCode = 1
         versionName = "1.0"
     }
     buildFeatures {

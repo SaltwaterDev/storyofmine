@@ -10,10 +10,23 @@ import SwiftUI
 
 struct StoryDetailScreen: View {
     let storyId: String
+    @StateObject var storyDetailViewModel = StoryDetailViewModel()
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-        Text("Story Id: \(storyId)")
+        VStack{
+            ScrollView{
+                Text(storyDetailViewModel.title)
+                    .font(.largeTitle)
+                    .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
+                
+                Text(storyDetailViewModel.body)
+                    .font(.body)
+                    .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
+                    .padding()
+            }
+        }.task {
+            await storyDetailViewModel.getStoryDetail(pid: storyId)
+        }
     }
 }
 

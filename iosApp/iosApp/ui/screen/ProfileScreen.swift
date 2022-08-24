@@ -17,13 +17,27 @@ struct ProfileScreen: View {
         VStack{
 //            let text = LocalizedStringKey(SharedRes.strings().my_string.desc().localized())
 //            Text(text)
-            Text(greet)
             
-            if (authSetting.isUserLoggedIn){
-                Button("Sign Out", action: {
-                    authSetting.signOut()
-                })
+            List {
+                    Text("A List Item")
+                    Text("A Second List Item")
+                    Text("A Third List Item")
+                if (authSetting.isUserLoggedIn){
+                    Button {
+                        authSetting.signOut()
+                    } label: {
+                        Text(
+                            LocalizedStringKey(SharedRes.strings().profile__sign_out.desc().localized())
+                        )
+                    }
+                }
             }
+            
+//            if (authSetting.isUserLoggedIn){
+//                Button("Sign Out", action: {
+//                    authSetting.signOut()
+//                })
+//            }
         }.onAppear {
             print("Profile Screen: \(authSetting.isUserLoggedIn)")
         }

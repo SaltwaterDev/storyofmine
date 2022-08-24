@@ -10,13 +10,15 @@ import SwiftUI
 
 struct UsernameScreen: View {
     @EnvironmentObject var signupViewModel: SignUpViewModel
+    let email: String
+    @StateObject var setUsernameViewModel = SetUsernameViewModel()
     
     var body: some View {
         Text("You are verified! Please eneter your username")
         TextField("Username", text: $signupViewModel.username)
         
         Button("Finish") {
-            signupViewModel.setUsername()
+            setUsernameViewModel.setUsername(email: email)
         }
     }
 }

@@ -66,7 +66,7 @@ struct SignUpScreen: View {
             
             
             NavigationLink(
-                destination: OtpEmailConfirmScreen(),
+                destination: OtpEmailConfirmScreen(email: signupViewModel.email),
                 isActive: $signupViewModel.accountCreated,
                 label: {EmptyView()}
             )

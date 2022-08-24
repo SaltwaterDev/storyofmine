@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "1050092227444",
+    "firebase_url": "https://unlone-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "unlone",
+    "storage_bucket": "unlone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050092227444:android:dd020929ae6919e2267a21",
+        "android_client_info": {
+          "package_name": "com.example.unlone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050092227444-hspuvbs2te2k35p5cl7qe93ef8mo5bn2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA503YbL_w2am7YUE_y3UJqj-syG96bgSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050092227444-hspuvbs2te2k35p5cl7qe93ef8mo5bn2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050092227444:android:7856870a65a1e01c267a21",
+        "android_client_info": {
+          "package_name": "com.unlone.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050092227444-hspuvbs2te2k35p5cl7qe93ef8mo5bn2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA503YbL_w2am7YUE_y3UJqj-syG96bgSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050092227444-hspuvbs2te2k35p5cl7qe93ef8mo5bn2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050092227444:android:91959246e2efd52c267a21",
+        "android_client_info": {
+          "package_name": "com.unlone.app.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050092227444-hspuvbs2te2k35p5cl7qe93ef8mo5bn2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA503YbL_w2am7YUE_y3UJqj-syG96bgSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050092227444-hspuvbs2te2k35p5cl7qe93ef8mo5bn2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

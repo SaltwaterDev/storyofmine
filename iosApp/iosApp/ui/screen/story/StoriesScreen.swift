@@ -11,12 +11,14 @@ import shared
 
 struct StoriesScreen: View {
     @StateObject private var storiesViewModel = StoriesViewModel()
+    @EnvironmentObject private var authSetting: AuthViewModel
+    
     @State private var showLogin = false
     @State private var showSignup = false
     
     var body: some View {
         VStack{
-            if (storiesViewModel.isUserLoggedIn){
+            if (authSetting.isUserLoggedIn){
                 NavigationView{
                     ScrollView {
                         Text("Hello \(storiesViewModel.username ?? "")")
@@ -32,6 +34,11 @@ struct StoriesScreen: View {
                         }
                     }.redacted(reason: storiesViewModel.loading ? .placeholder : [])
                     .navigationBarHidden(true)
+                }.task {
+                    if(storiesViewModel.shouldReload){
+                        await self.initData()
+                        storiesViewModel.shouldReload = false
+                    }
                 }
             } else {
                 VStack(spacing: 20){
@@ -40,17 +47,19 @@ struct StoriesScreen: View {
                     
                     Button("Sign Up", action: {
                         showSignup = true
-                    }).sheet(isPresented: $showSignup, onDismiss: {
-                        storiesViewModel.checkAuth()
-                    }, content: {
-                        SignUpScreen(showSignup: $showSignup)
-                    })
+                    }).sheet(
+                        isPresented: $showSignup,
+                        onDismiss: {
+                            self.authSetting.authenticate()
+                        }, content: {
+                            SignUpScreen(showSignup: $showSignup)
+                        })
             
                     
                     Button("Login Instead", action: {
                         showLogin = true
                     }).sheet(isPresented: $showLogin, onDismiss: {
-                        storiesViewModel.checkAuth()
+                        self.authSetting.authenticate()
                     }, content: {
                         LoginEmailScreen(showLogin: $showLogin){
                             NavigationLink(destination: SignUpScreen(showSignup: $showSignup)){
@@ -60,10 +69,16 @@ struct StoriesScreen: View {
                     })
                 }
             }
-            }.onAppear {
-                storiesViewModel.checkAuth()
-                print("Stories Screen: \(storiesViewModel.isUserLoggedIn)")
-            }
+        }
+    }
+}
+
+extension StoriesScreen {
+    func initData() async {
+        storiesViewModel.loading = true
+        await self.storiesViewModel.getStoriesItems()
+        await self.storiesViewModel.getUserName()
+        storiesViewModel.loading = false
     }
 }
 
