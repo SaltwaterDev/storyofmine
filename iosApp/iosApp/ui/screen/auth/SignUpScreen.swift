@@ -49,8 +49,9 @@ struct SignUpScreen: View {
             
             Button("Sign Up", action: {
                 signupViewModel.signUp()}
-            ).disabled(!signupViewModel.enabled)
-                .alert(item: $signupViewModel.error) { Identifiable in
+            )
+            .disabled(!signupViewModel.enabled)
+            .alert(item: $signupViewModel.error) {Identifiable in
                     Alert(
                         title: Text(signupViewModel.error!),
                         dismissButton: .default(

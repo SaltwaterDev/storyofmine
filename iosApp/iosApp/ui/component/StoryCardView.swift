@@ -17,12 +17,15 @@ struct StoryCardView: View {
             Text(title)
                 .font(.headline)
                 .lineLimit(2)
+//                .frame(maxWidth: .infinity, alignment: .leading)
+            
             Text(bodyText)
                 .font(.body)
                 .lineLimit(4)
+//                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(width: UIScreen.main.bounds.width * 0.85, alignment: .leading)
         .padding()
-        .frame(width: UIScreen.main.bounds.width * 0.85, alignment: .topLeading)        
         .overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.blue)

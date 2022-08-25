@@ -1,6 +1,7 @@
 package com.unlone.app.data.write
 
 import com.unlone.app.data.story.*
+import com.unlone.app.utils.unloneConfig
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -30,6 +31,12 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             json()
         }
     }
+
+    private val localBaseUrlForEmulator = "http://10.0.2.2:8080/"
+    private val localBaseUrl = "http://192.168.8.154:8080/"
+    private val serverUrl = unloneConfig.baseUrl
+    private val baseUrl = serverUrl
+
 
 
     override suspend fun postStory(request: StoryRequest, jwt: String) {
@@ -65,13 +72,5 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             header("Authorization", token)
         }
         return response.body()
-    }
-
-
-    companion object {
-//                local IP address for running on an emulator
-//        private const val baseUrl = "http://10.0.2.2:8080/"
-//        private const val baseUrl = "http://192.168.8.154:8080/"
-        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }

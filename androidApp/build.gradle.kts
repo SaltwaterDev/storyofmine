@@ -28,6 +28,10 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
+        create("staging") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".debugStaging"
+        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.2.0"

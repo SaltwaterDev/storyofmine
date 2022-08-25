@@ -32,12 +32,6 @@ struct ProfileScreen: View {
                     }
                 }
             }
-            
-//            if (authSetting.isUserLoggedIn){
-//                Button("Sign Out", action: {
-//                    authSetting.signOut()
-//                })
-//            }
         }.onAppear {
             print("Profile Screen: \(authSetting.isUserLoggedIn)")
         }

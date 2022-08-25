@@ -13,18 +13,22 @@ struct StoryDetailScreen: View {
     @StateObject var storyDetailViewModel = StoryDetailViewModel()
     
     var body: some View {
-        VStack{
+        VStack(alignment: .leading){
             ScrollView{
                 Text(storyDetailViewModel.title)
                     .font(.largeTitle)
                     .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
                 
                 Text(storyDetailViewModel.body)
                     .font(.body)
                     .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
             }
-        }.task {
+        }
+        .task {
             await storyDetailViewModel.getStoryDetail(pid: storyId)
         }
     }
