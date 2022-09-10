@@ -4,12 +4,12 @@ import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.domain.entities.StoryItem
 
 class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
-    suspend operator fun invoke(lastItemId: String? = null): List<StoryItem.StoriesByTopic> {
-        return storyRepository.fetchStoriesByPosts(postsPerPage, pagingItems, lastItemId)
+    suspend operator fun invoke(): List<StoryItem.StoriesByTopic> {
+        return storyRepository.fetchStoriesByPosts(postsPerPage, itemsPerPage)
     }
 
     companion object {
-        private const val postsPerPage = 10
-        private const val pagingItems = 5
+        private const val postsPerPage = 7
+        private const val itemsPerPage = 5
     }
 }

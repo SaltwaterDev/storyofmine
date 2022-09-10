@@ -17,16 +17,25 @@ struct TopicStoriesView: View {
                 .padding(.leading)
                 .font(.title)
             
-            LazyHStack(spacing: 20) {
+            TabView{
                 ForEach(topicStories.stories) {story in
-                    NavigationLink{
-                        StoryDetailScreen(storyId: story.id)
-                    } label: {
-                        StoryCardView(title: story.title, bodyText: story.bodyText)
+                    VStack{
+                        NavigationLink{
+                            StoryDetailScreen(storyId: story.id)
+                        } label: {
+                            StoryCardView(
+                                title: story.title, bodyText: story.bodyText
+                            )
+                        }
+                        Spacer()
                     }
                 }
+                .padding(.horizontal, 10)
+                .frame(alignment: .topLeading)
+                    
             }
-            .padding()
+            .frame(height: 200)
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         }
     }
 }

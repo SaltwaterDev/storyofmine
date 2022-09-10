@@ -17,14 +17,16 @@ struct StoryCardView: View {
             Text(title)
                 .font(.headline)
                 .lineLimit(2)
-//                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Text(bodyText)
                 .font(.body)
                 .lineLimit(4)
-//                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(width: UIScreen.main.bounds.width * 0.85, alignment: .leading)
+//        .frame(alignment: .topLeading)
         .padding()
         .overlay(
             RoundedRectangle(cornerRadius: 8)
@@ -36,6 +38,5 @@ struct StoryCardView: View {
 struct StoryCardCiew_Previews: PreviewProvider {
     static var previews: some View {
         StoryCardView(title: "Title", bodyText: "Body")
-//            .previewLayout(.fixed(width: 400, height: 100))
     }
 }

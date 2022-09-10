@@ -24,7 +24,7 @@ class StoryDetailViewModel: ObservableObject {
     @Published var allowSave: Bool = false
     @Published var errorMsg: String? = nil
     @Published var loading: Bool = false
-    
+
     
     func getStoryDetail(pid: String) async {
         do{

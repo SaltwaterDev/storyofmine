@@ -6,8 +6,7 @@ import com.unlone.app.domain.entities.StoryItem
 interface StoryRepository {
     suspend fun fetchStoriesByPosts(
         postPerFetching: Int,
-        pagingItems: Int,
-        lastItemId: String?
+        itemsPerPage: Int,
     ): List<StoryItem.StoriesByTopic>
 
     suspend fun postStory(

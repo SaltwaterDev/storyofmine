@@ -16,7 +16,7 @@ import com.unlone.app.android.ui.auth.signup.SignUpScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.koin.androidx.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 enum class AuthNav {
@@ -36,7 +36,7 @@ fun NavGraphBuilder.authGraph(
 
         composable(AuthNav.SignUp.name) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SignUpScreen(
                 viewModel = viewModel,
@@ -46,7 +46,7 @@ fun NavGraphBuilder.authGraph(
         }
         composable(AuthNav.SignUp.name + "/setUsername") {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SetUsernameScreen(
                 viewModel = viewModel,
@@ -56,7 +56,7 @@ fun NavGraphBuilder.authGraph(
 
         composable(AuthNav.SignUp.name + "/emailVerification") {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             EmailVerificationScreen(
                 state = viewModel.uiState,
@@ -76,7 +76,7 @@ fun NavGraphBuilder.authGraph(
             AuthNav.SignIn.name + "/email",
         ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
                 navToSignInPw = { navigateToSignInPw(navController) },
                 navToSignUp = { navigateToSignUp(navController) },
@@ -93,7 +93,7 @@ fun NavGraphBuilder.authGraph(
             },
         ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInPasswordScreen(
                 onSignInSuccess = onSigninOrSignupFinished,
                 back = { navController.popBackStack() },
