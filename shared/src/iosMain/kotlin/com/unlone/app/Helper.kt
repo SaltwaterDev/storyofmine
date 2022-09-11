@@ -5,6 +5,10 @@ import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.di.appModule
 import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
+import com.unlone.app.domain.useCases.write.CreateNewDraftUseCase
+import com.unlone.app.domain.useCases.write.PostStoryUseCase
+import com.unlone.app.domain.useCases.write.QueryDraftUseCase
+import com.unlone.app.domain.useCases.write.SaveDraftUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
@@ -31,6 +35,12 @@ class AuthRepositoryHelper : KoinComponent {
 class UseCasesHelper : KoinComponent {
 	val fetchStoryItemsUseCase: FetchStoryItemsUseCase by inject()
     val fetchStoryDetailUseCase: FetchStoryDetailUseCase by inject()
+
+    val saveDraftUseCase: SaveDraftUseCase by inject()
+    val createNewDraftUseCase: CreateNewDraftUseCase by inject()
+    val queryDraftUseCase: QueryDraftUseCase by inject()
+    val postStoryUseCase: PostStoryUseCase by inject()
+
 }
 
 
