@@ -13,6 +13,7 @@ import shared
 class AuthViewModel: ObservableObject {
     private let authRepo = AuthRepositoryHelper().authRepo()
     @Published private(set) var isUserLoggedIn: Bool = false
+    @Published private(set) var username: String? = nil
     
     init(){
         self.authenticate()
@@ -41,5 +42,20 @@ class AuthViewModel: ObservableObject {
     func signOut() {
         authRepo.signOut()
         self.authenticate()
+    }
+    
+    func getUserName() async {
+        do{
+            let getUsernameResponse = try await authRepo.getUsername()
+            switch (getUsernameResponse){
+                case is AuthResultAuthorized<NSString>:
+                    if( getUsernameResponse.data != nil){
+                        username = getUsernameResponse.data as String?
+                    }
+                default: return // todo
+            }
+        }catch{
+            print(error)
+        }
     }
 }

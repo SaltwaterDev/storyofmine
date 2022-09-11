@@ -15,11 +15,11 @@ internal class StoryRepositoryImpl(
 ) : StoryRepository {
     override suspend fun fetchStoriesByPosts(
         postPerFetching: Int,
-        pagingItems: Int,
-        lastItemId: String?
+        itemsPerPage: Int,
     ): List<StoryItem.StoriesByTopic> {
+        val page = 0    // in far
         val response = storyApi.fetchStoriesPerPost(
-            postPerFetching, pagingItems, lastItemId
+            postPerFetching, itemsPerPage, page
         )
         return response.data.map {
             StoryItem.StoriesByTopic(

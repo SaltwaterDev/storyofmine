@@ -2,10 +2,9 @@ package com.unlone.app.android.ui.profile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -48,19 +47,21 @@ fun ProfileScreen(
 
 
     Column {
-        Text(
-            text = state.username,
-            fontSize = 31.sp,
-            modifier = Modifier
-                .padding(20.dp, 30.dp)
-                .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
-        )
+        Row(Modifier.padding(20.dp, 30.dp)) {
+            Text(
+                text = state.username,
+                fontSize = 31.sp,
+                modifier = Modifier
+                    .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
+            )
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Rounded.Edit, "edit profile")
+            }
+        }
 
 //        val text = stringResource(resource = SharedRes.strings.my_string)
 //        Text(text = text)
 
-
-        Spacer(modifier = Modifier.height(30.dp))
 
         state.profileItemList.forEach { item ->
             Divider(Modifier.fillMaxWidth())

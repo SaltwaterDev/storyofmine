@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = ConfigData.compileSdkVersion
     defaultConfig {
         applicationId = "com.unlone.app.android"
-        minSdk = 24
-        targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
+        versionCode = ConfigData.versionCode
+        versionName = ConfigData.versionName
     }
     buildFeatures {
         compose = true
@@ -28,90 +28,73 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
+        create("staging") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".debugStaging"
+        }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = Versions.composeCompiler
     }
 }
 
 dependencies {
     implementation(project(":shared"))
-    implementation("com.google.android.material:material:1.6.1")
-    implementation("androidx.appcompat:appcompat:1.4.2")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.activity:activity-ktx:1.5.1")
+    implementation(Deps.constraintLayout)
+    implementation(Deps.materialDesign)
+    implementation(Deps.appCompat)
+    implementation(Deps.activity)
+    implementation("androidx.core:core-ktx:1.9.0")
 
-    // compose
-    val composeVersion = "1.2.0-rc03"
-    val composeLifecycleVersion = "1.2.0-rc03"
-    implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.5.1")
-    implementation("androidx.navigation:navigation-compose:$composeLifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$composeLifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$composeLifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.composeLifecycle}")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.composeLifecycle}")
 
-    // accompanist
-    val accompanistVersion = "0.24.13-rc"
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+    with(Compose) {
+        implementation(ui)
+        implementation(preview)
+        implementation(material)
+        implementation(activity)
+        implementation(navigation)
+        implementation(viewModel)
+        implementation(materialIcon)
+    }
 
+    with(Accompanist) {
+        implementation(systemUiController)
+        implementation(insets)
+        implementation(insetsUi)
+        implementation(placeholder)
+        implementation(navAnimation)
+        implementation(swipeRefresh)
+    }
 
     // testing
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("junit:junit:${Versions.jUnit}")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.compose}")
+    debugImplementation("androidx.compose.ui:ui-tooling:${Versions.compose}")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:${Versions.compose}")
 
-
-    // ktx
-    implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$composeLifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$composeLifecycleVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+    with(Ktx) {
+        implementation(core)
+        with(Ktx.Coroutine){
+            implementation(core)
+            implementation(android)
+            implementation(playService)
+        }
+    }
 
     // log
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation(Deps.timber)
 
     // compose markdown
-    val richtext_version = "0.13.0"
-    implementation ("com.halilibo.compose-richtext:richtext-commonmark:${richtext_version}")
+    implementation("com.halilibo.compose-richtext:richtext-commonmark:${Versions.richText}")
 
-    // koin
-    with(Deps.Koin) {
+    with(Koin) {
         implementation(core)
         implementation(android)
         implementation(navGraph)
         implementation(compose)
     }
-
-
 }
-
-
-
-object Versions {
-    const val koin = "3.2.0-beta-1"
-}
-
-object Deps {
-
-    object Koin {
-        const val core = "io.insert-koin:koin-core:${Versions.koin}"
-        const val test = "io.insert-koin:koin-test:${Versions.koin}"
-        const val android = "io.insert-koin:koin-android:${Versions.koin}"
-        const val navGraph = "io.insert-koin:koin-androidx-navigation:${Versions.koin}"
-        const val compose = "io.insert-koin:koin-androidx-compose:${Versions.koin}"
-    }
-
-}
-

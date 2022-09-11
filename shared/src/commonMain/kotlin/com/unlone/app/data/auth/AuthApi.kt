@@ -1,5 +1,6 @@
 package com.unlone.app.data.auth
 
+import com.unlone.app.utils.unloneConfig
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -29,6 +30,11 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
             json()
         }
     }
+
+    private val localBaseUrlForEmulator = "http://10.0.2.2:8080/"
+    private val localBaseUrl = "http://192.168.8.154:8080/"
+    private val serverUrl = unloneConfig.baseUrl
+    private val baseUrl = serverUrl
 
 
     override suspend fun signUp(request: AuthRequest) {
@@ -104,10 +110,5 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
         }
     }
 
-    companion object {
-        // local IP address for running on an emulator
-//        private const val baseUrl = "http://10.0.2.2:8080/"
-//        private const val baseUrl = "http://192.168.8.154:8080/"
-        private const val baseUrl = "https://unlone.an.r.appspot.com/"
-    }
+
 }

@@ -1,6 +1,7 @@
 package com.unlone.app.data.write
 
 import com.unlone.app.data.story.*
+import com.unlone.app.utils.unloneConfig
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -16,7 +17,7 @@ interface StoryApi {
     suspend fun fetchStoriesPerPost(
         postsPerTopic: Int,
         pagingItems: Int,
-        lastItemId: String?
+        page: Int,
     ): StoriesPerTopicsResponse
 
     suspend fun getAllTopics(): AllTopicResponse
@@ -31,6 +32,12 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         }
     }
 
+    private val localBaseUrlForEmulator = "http://10.0.2.2:8080/"
+    private val localBaseUrl = "http://192.168.8.154:8080/"
+    private val serverUrl = unloneConfig.baseUrl
+    private val baseUrl = serverUrl
+
+
 
     override suspend fun postStory(request: StoryRequest, jwt: String) {
         client.post(baseUrl + "story/post") {
@@ -43,13 +50,13 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     override suspend fun fetchStoriesPerPost(
         postsPerTopic: Int,
         pagingItems: Int,
-        lastItemId: String?
+        page: Int,
     ): StoriesPerTopicsResponse {
         val response = client.get(baseUrl + "story/allStories") {
             url {
                 parameters.append("postsPerTopic", postsPerTopic.toString())
-                parameters.append("pagingItems", pagingItems.toString())
-                lastItemId?.let { parameters.append("pagingItems", it) }
+                parameters.append("itemsPerPage", pagingItems.toString())
+                parameters.append("page", page.toString())
             }
         }
         return response.body()
@@ -65,13 +72,5 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             header("Authorization", token)
         }
         return response.body()
-    }
-
-
-    companion object {
-//                local IP address for running on an emulator
-//        private const val baseUrl = "http://10.0.2.2:8080/"
-//        private const val baseUrl = "http://192.168.8.154:8080/"
-        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }

@@ -1,5 +1,3 @@
-import Build_gradle.Versions.ktorVersion
-
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -28,16 +26,17 @@ kotlin {
         }
     }
 
+
     sourceSets {
 
         val commonMain by getting {
             dependencies {
-                // ktor
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                // koin
-                with(Deps.Koin) {
+                with(Ktor){
+                    implementation(contentNegotiation)
+                    implementation(clientCore)
+                    implementation(serialization)
+                }
+                with(Koin) {
                     api(core)
                     api(test)
                 }
@@ -45,7 +44,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation("co.touchlab:kermit:1.1.3")
                 // mongodb realm
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation(Ktx.Coroutine.core)
                 implementation("io.realm.kotlin:library-base:1.0.0")
                 // datetime
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.3")
@@ -54,18 +53,18 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-//                implementation("io.mockk:mockk:1.12.5")
                 implementation("io.kotest:kotest-framework-engine:5.4.2")
                 implementation ("io.kotest:kotest-assertions-core:5.4.2")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-                implementation("io.ktor:ktor-client-mock:$ktorVersion")
+                implementation (Ktx.Coroutine.test)
+                implementation(Ktor.clientMock)
+//                implementation("io.mockk:mockk:1.12.5")
 //                testImplementation("io.mockk:mockk:1.12.5")
 //                testImplementation "io.mockk:mockk-common:1.12.5"
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                implementation(Ktor.okHttp)
                 // security
                 implementation("androidx.security:security-crypto:1.0.0")
             }
@@ -84,7 +83,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+                implementation(Ktor.darwin)
             }
         }
         val iosX64Test by getting
@@ -114,21 +113,6 @@ android {
         targetSdk = 32
     }
 }
-
-object Versions {
-    const val koin = "3.2.0"
-    const val ktorVersion = "2.0.2"
-}
-
-object Deps {
-
-    object Koin {
-        const val core = "io.insert-koin:koin-core:${Versions.koin}"
-        const val test = "io.insert-koin:koin-test:${Versions.koin}"
-    }
-
-}
-
 
 
 dependencies {

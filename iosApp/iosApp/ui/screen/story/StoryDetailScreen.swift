@@ -13,19 +13,38 @@ struct StoryDetailScreen: View {
     @StateObject var storyDetailViewModel = StoryDetailViewModel()
     
     var body: some View {
-        VStack{
-            ScrollView{
+        VStack(alignment: .leading){
+            ScrollView {
                 Text(storyDetailViewModel.title)
                     .font(.largeTitle)
                     .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
+                Text(storyDetailViewModel.createdDate)
+                    .font(.caption)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
                 
                 Text(storyDetailViewModel.body)
                     .font(.body)
                     .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+            }
+        }
+        .task {
+            await storyDetailViewModel.getStoryDetail(pid: storyId)
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Image(systemName: "bookmark")
                     .padding()
             }
-        }.task {
-            await storyDetailViewModel.getStoryDetail(pid: storyId)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Image(systemName: "ellipsis")
+                    
+            }
         }
     }
 }

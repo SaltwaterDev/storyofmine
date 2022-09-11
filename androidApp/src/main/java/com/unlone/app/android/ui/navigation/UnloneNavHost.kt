@@ -24,6 +24,7 @@ import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
 import com.unlone.app.android.ui.stories.TopicDetail
+import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.compose.viewModel
 
 
@@ -49,7 +50,7 @@ fun MainNavHost(
         Log.d("wesley", "MainNavHost: ${navController.currentDestination}")
 
         composable(UnloneBottomDestinations.Write.route) {
-            val viewModel by viewModel<WritingViewModel>()
+            val viewModel = koinViewModel<WritingViewModel>()
             WritingScreen(
                 viewModel,
                 navToEditHistory = { navToEditHistory() },
@@ -64,7 +65,7 @@ fun MainNavHost(
             exitTransition = null,
             popExitTransition = null,
         ) {
-            val viewModel by viewModel<StoriesViewModel>()
+            val viewModel = koinViewModel<StoriesViewModel>()
             StoriesScreen(
                 viewModel = viewModel,
                 navToPostDetail = { navigateToStoryDetail(navController, it) },
@@ -77,7 +78,7 @@ fun MainNavHost(
             popEnterTransition = null,
             enterTransition = null,
         ) {
-            val viewModel by viewModel<ProfileViewModel>()
+            val viewModel = koinViewModel<ProfileViewModel>()
             ProfileScreen(viewModel)
         }
         composable(
@@ -85,7 +86,7 @@ fun MainNavHost(
             arguments = listOf(navArgument("pid") { type = NavType.StringType })
         ) {
             val pid: String? = it.arguments?.getString("pid")
-            val viewModel by viewModel<StoryDetailViewModel>()
+            val viewModel = koinViewModel<StoryDetailViewModel>()
             StoryDetail(
                 pid,
                 navigateUp,

@@ -6,12 +6,16 @@ import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.domain.entities.StoryItem
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class StoriesScreenUiState(
     val loading: Boolean = true,
     val isUserLoggedIn: Boolean = true,
+    val isRefreshing: Boolean = false,
     val storiesByTopics: List<StoryItem.StoriesByTopic>? = listOf(
         StoryItem.StoriesByTopic(),
         StoryItem.StoriesByTopic()
@@ -26,20 +30,35 @@ class StoriesViewModel(
     private val authRepository: AuthRepository,
     private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
 ) : ViewModel() {
-    private val _state: MutableStateFlow<StoriesScreenUiState> = MutableStateFlow(StoriesScreenUiState())
+    private val _state: MutableStateFlow<StoriesScreenUiState> =
+        MutableStateFlow(StoriesScreenUiState())
     val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            if (authRepository.authenticate() is AuthResult.Authorized) {
-                getUserName()
-                _state.value = _state.value.copy(
-                    isUserLoggedIn = true,
-                    storiesByTopics = fetchStoryItemsUseCase(),       // fetch stories
-                )
-            }
-            _state.value = _state.value.copy(loading = false)
+            initData()
         }
+    }
+
+    fun refreshData() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isRefreshing = true)
+            withContext(Dispatchers.Default) { initData() }
+            _state.value = _state.value.copy(isRefreshing = false)
+
+        }
+    }
+
+    private suspend fun initData() {
+        _state.value = _state.value.copy(loading = true)
+        if (authRepository.authenticate() is AuthResult.Authorized) {
+            getUserName()
+            _state.value = _state.value.copy(
+                isUserLoggedIn = true,
+                storiesByTopics = fetchStoryItemsUseCase(),       // fetch stories
+            )
+        }
+        _state.value = _state.value.copy(loading = false)
     }
 
     private suspend fun getUserName() {

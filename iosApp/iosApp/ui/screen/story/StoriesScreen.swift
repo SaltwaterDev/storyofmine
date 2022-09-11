@@ -17,58 +17,73 @@ struct StoriesScreen: View {
     @State private var showSignup = false
     
     var body: some View {
-        VStack{
-            if (authSetting.isUserLoggedIn){
-                NavigationView{
-                    ScrollView {
-                        Text("Hello \(storiesViewModel.username ?? "")")
-                            .font(.largeTitle)
-                        
-                        ForEach(storiesViewModel.storiesByTopics){
-                            TopicStoriesView(
-                                topicStories: StoriesComponent.TopicStories(
-                                    topic: $0.topic,
-                                    stories: $0.stories
-                                )
+        if (authSetting.isUserLoggedIn){
+            storyView
+        } else {
+            loginRequiredVIew
+        }
+    }
+
+    var storyView: some View{
+        VStack {
+            NavigationView{
+                ScrollView {
+                    Text("Hello \(storiesViewModel.username ?? "")")
+                        .font(.largeTitle)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.all)
+                    
+                    ForEach(storiesViewModel.storiesByTopics){
+                        TopicStoriesView(
+                            topicStories: StoriesComponent.TopicStories(
+                                topic: $0.topic,
+                                stories: $0.stories
                             )
-                        }
-                    }.redacted(reason: storiesViewModel.loading ? .placeholder : [])
-                    .navigationBarHidden(true)
-                }.task {
-                    if(storiesViewModel.shouldReload){
-                        await self.initData()
-                        storiesViewModel.shouldReload = false
+                        )
                     }
+                }.redacted(reason: storiesViewModel.loading ? .placeholder : [])
+                .navigationBarHidden(true)
+                .frame(alignment: .leading)
+                .refreshable {
+                    print("refreshing...")
+                    await self.initData()
                 }
-            } else {
-                VStack(spacing: 20){
-                    Text("Sign up to read other stories")
-                        .font(.headline)
-                    
-                    Button("Sign Up", action: {
-                        showSignup = true
-                    }).sheet(
-                        isPresented: $showSignup,
-                        onDismiss: {
-                            self.authSetting.authenticate()
-                        }, content: {
-                            SignUpScreen(showSignup: $showSignup)
-                        })
-            
-                    
-                    Button("Login Instead", action: {
-                        showLogin = true
-                    }).sheet(isPresented: $showLogin, onDismiss: {
-                        self.authSetting.authenticate()
-                    }, content: {
-                        LoginEmailScreen(showLogin: $showLogin){
-                            NavigationLink(destination: SignUpScreen(showSignup: $showSignup)){
-                                Text("Switch to Sign Up")
-                            }
-                        }
-                    })
+            }.task {
+                if(storiesViewModel.shouldReload){
+                    await self.initData()
+                    storiesViewModel.shouldReload = false
                 }
             }
+        }
+    }
+    
+    var loginRequiredVIew: some View{
+        VStack(spacing: 20){
+            Text("Sign up to read other stories")
+                .font(.headline)
+            
+            Button("Sign Up", action: {
+                showSignup = true
+            }).sheet(
+                isPresented: $showSignup,
+                onDismiss: {
+                    self.authSetting.authenticate()
+                }, content: {
+                    SignUpScreen(showSignup: $showSignup)
+                })
+    
+            
+            Button("Login Instead", action: {
+                showLogin = true
+            }).sheet(isPresented: $showLogin, onDismiss: {
+                self.authSetting.authenticate()
+            }, content: {
+                LoginEmailScreen(showLogin: $showLogin){
+                    NavigationLink(destination: SignUpScreen(showSignup: $showSignup)){
+                        Text("Switch to Sign Up")
+                    }
+                }
+            })
         }
     }
 }
