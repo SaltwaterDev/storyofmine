@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
-import com.unlone.app.android.ui.comonComponent.Post
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.data.story.SimpleStory
 import dev.icerock.moko.resources.compose.stringResource
@@ -41,43 +43,48 @@ fun StoriesScreen(
     else {
         viewModel.checkAuth()   // to ensure again user has authorized
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            LazyColumn(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(state.isRefreshing),
+                onRefresh = { viewModel.refreshData() }) {
+                LazyColumn(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
 
-                item {
-                    Text(
-                        text = stringResource(
-                            resource = SharedRes.strings.stories_header_greeting,
-                            state.username ?: ""
-                        ),
-                        modifier = Modifier
-                            .padding(16.dp, 40.dp)
-                            .placeholder(
-                                visible = state.loading,
-                                highlight = PlaceholderHighlight.fade()
+                    item {
+                        Text(
+                            text = stringResource(
+                                resource = SharedRes.strings.stories_header_greeting,
+                                state.username ?: ""
                             ),
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                            modifier = Modifier
+                                .padding(16.dp, 40.dp)
+                                .placeholder(
+                                    visible = state.loading,
+                                    highlight = PlaceholderHighlight.fade()
+                                ),
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
 
-                state.storiesByTopics?.let { posts ->
-                    items(posts) {
-                        PostsByTopic(
-                            it.topic,
-                            state.loading,
-                            it.stories,
-                            navToTopicPosts
-                        ) { pid ->
-                            navToPostDetail(pid)
+                    state.storiesByTopics?.let { posts ->
+                        items(posts) {
+                            PostsByTopic(
+                                it.topic,
+                                state.loading,
+                                it.stories,
+                                navToTopicPosts
+                            ) { pid ->
+                                navToPostDetail(pid)
+                            }
+                            Spacer(modifier = Modifier.height(30.dp))
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
                     }
                 }
             }
+
         }
 
         state.errorMsg?.let {
@@ -139,7 +146,7 @@ fun PostsByTopic(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(stories) {
-                Post(
+                StoryCard(
                     it.title,
                     it.content,
                     loading,

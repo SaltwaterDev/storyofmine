@@ -5,22 +5,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Face
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowInsetsCompat
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.R
@@ -85,7 +83,10 @@ fun WriteScreenTopBar(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = openOptions) {
-                Icon(painterResource(id = R.drawable.ic_menu), contentDescription = "options")
+                Icon(
+                    Icons.Rounded.Menu,
+                    contentDescription = "options"
+                )
             }
             TextButton(onClick = openPreview) {
                 Text(text = stringResource(resource = SharedRes.strings.writing__preview))
@@ -136,29 +137,17 @@ fun StoryDetailTopBar(
             }
 
             Row(Modifier.align(Alignment.CenterEnd)) {
-                if (!isSelfWritten) {
-                    IconButton(onClick = report) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_round_outlined_flag_24),
-                            contentDescription = "report"
-                        )
-                    }
-                    IconButton(onClick = save) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_baseline_bookmark_border_24),
-                            contentDescription = "save"
-                        )
-                    }
-                } else {
-                    IconButton(onClick = traceHistory) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_history),
-                            contentDescription = "History"
-                        )
-                    }
-                    IconButton(onClick = edit) {
-                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "edit")
-                    }
+                IconButton(onClick = save) {
+                    Icon(
+                        Icons.Rounded.Bookmark,
+                        contentDescription = "save"
+                    )
+                }
+                IconButton(onClick = {}) {
+                    Icon(
+                        Icons.Rounded.MoreVert,
+                        contentDescription = "more"
+                    )
                 }
             }
         }

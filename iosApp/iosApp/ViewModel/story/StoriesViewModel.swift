@@ -24,7 +24,7 @@ class StoriesViewModel: ObservableObject {
     
     func getStoriesItems() async{
         do{
-            let result = try await fetchStoryItemsUseCase.invoke(lastItemId: nil)
+            let result = try await fetchStoryItemsUseCase.invoke()
             print(result)
             self.storiesByTopics = result.map{
                 StoriesComponent.TopicStories(

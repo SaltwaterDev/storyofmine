@@ -14,10 +14,15 @@ struct StoryDetailScreen: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            ScrollView{
+            ScrollView {
                 Text(storyDetailViewModel.title)
                     .font(.largeTitle)
                     .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
+                Text(storyDetailViewModel.createdDate)
+                    .font(.caption)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                 
@@ -25,11 +30,21 @@ struct StoryDetailScreen: View {
                     .font(.body)
                     .redacted(reason: storyDetailViewModel.loading ? .placeholder : [])
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
+                    .padding(.horizontal)
             }
         }
         .task {
             await storyDetailViewModel.getStoryDetail(pid: storyId)
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Image(systemName: "bookmark")
+                    .padding()
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Image(systemName: "ellipsis")
+                    
+            }
         }
     }
 }

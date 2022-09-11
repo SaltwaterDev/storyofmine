@@ -56,6 +56,7 @@ dependencies {
         implementation(activity)
         implementation(navigation)
         implementation(viewModel)
+        implementation(materialIcon)
     }
 
     with(Accompanist) {
@@ -64,6 +65,7 @@ dependencies {
         implementation(insetsUi)
         implementation(placeholder)
         implementation(navAnimation)
+        implementation(swipeRefresh)
     }
 
     // testing

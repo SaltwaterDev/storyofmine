@@ -12,6 +12,8 @@ struct StoryCardView: View {
     let title: String
     let bodyText: String
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(title)
@@ -26,12 +28,13 @@ struct StoryCardView: View {
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-//        .frame(alignment: .topLeading)
         .padding()
-        .overlay(
+        .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.blue)
+                .opacity(0)
+                .shadow(radius: 8)
         )
+        
     }
 }
 

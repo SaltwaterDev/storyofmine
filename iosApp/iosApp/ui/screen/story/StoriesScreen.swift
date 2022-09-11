@@ -44,6 +44,10 @@ struct StoriesScreen: View {
                 }.redacted(reason: storiesViewModel.loading ? .placeholder : [])
                 .navigationBarHidden(true)
                 .frame(alignment: .leading)
+                .refreshable {
+                    print("refreshing...")
+                    await self.initData()
+                }
             }.task {
                 if(storiesViewModel.shouldReload){
                     await self.initData()

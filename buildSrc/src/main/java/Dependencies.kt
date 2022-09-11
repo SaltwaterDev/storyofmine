@@ -43,6 +43,7 @@ object Compose {
     const val navigation = "androidx.navigation:navigation-compose:${Versions.navCompose}"
     const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.composeLifecycle}"
     const val preview = "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
+    const val materialIcon = "androidx.compose.material:material-icons-extended:${Versions.compose}"
 }
 
 object Koin {
@@ -59,6 +60,7 @@ object Accompanist {
     const val insetsUi = "com.google.accompanist:accompanist-insets-ui:${Versions.accompanist}"
     const val placeholder = "com.google.accompanist:accompanist-placeholder-material:${Versions.accompanist}"
     const val navAnimation = "com.google.accompanist:accompanist-navigation-animation:${Versions.accompanist}"
+    const val swipeRefresh = "com.google.accompanist:accompanist-swiperefresh:${Versions.accompanist}"
 }
 
 object Ktor{

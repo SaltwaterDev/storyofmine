@@ -30,7 +30,7 @@ struct TopicStoriesView: View {
                         Spacer()
                     }
                 }
-                .padding(.horizontal, 10)
+                .padding(.all, 10)
                 .frame(alignment: .topLeading)
                     
             }
