@@ -17,4 +17,5 @@ object Versions {
     const val navCompose = "2.5.2"
     const val timber = "5.0.1"
     const val richText = "0.13.0"
+    const val kotest = "5.4.2"
 }

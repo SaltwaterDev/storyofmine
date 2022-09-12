@@ -1,4 +1,4 @@
-package com.unlone.app
+package com.unlone.app.data.api
 
 import com.unlone.app.data.auth.AuthApiService
 import io.ktor.client.engine.mock.*
@@ -22,7 +22,6 @@ class AuthApiTest {
     }
     private val authApiService = AuthApiService(mockEngine)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun sampleClientTest() {
         runBlocking {
