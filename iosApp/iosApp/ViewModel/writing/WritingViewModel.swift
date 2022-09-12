@@ -88,7 +88,7 @@ class WritingViewModel: ObservableObject {
         do {
             await saveDraft()
             let result = createNewDraftUseCase.invoke()
-            
+            print(result)
         }catch{ print(error) }
     }
     

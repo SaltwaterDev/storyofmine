@@ -8,8 +8,10 @@
 
 import SwiftUI
 
-struct MenuItem: View {
+struct MenuItemView: View {
+    @Binding var showMenu: Bool
     var title = ""
+    var callback: (_ title: String) async -> Void
     
     var body: some View {
         HStack {
@@ -19,12 +21,17 @@ struct MenuItem: View {
             Text(title)
                     .foregroundColor(.gray)
                     .font(.headline)
+        }.onTapGesture {
+            Task{
+                await callback(title)
+                showMenu = false
+            }
         }
     }
 }
 
-struct MenuItem_Previews: PreviewProvider {
-    static var previews: some View {
-        MenuItem()
-    }
-}
+//struct MenuItem_Previews: PreviewProvider {
+//    static var previews: some View {
+//        MenuItemView()
+//    }
+//}
