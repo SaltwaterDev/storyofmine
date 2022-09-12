@@ -34,7 +34,7 @@ struct WritingScreen: View {
                         TextEditor(text: $writingViewModel.content).textInputAutocapitalization(.never).disableAutocorrection(true).padding()
                     }
                     if self.showMenu {
-                        MenuView()
+                        MenuView(showMenu: $showMenu, menuItems: writingViewModel.menuItemList, callback: writingViewModel.onMenuClicked)
                     }
                 }.gesture(drag)
             }

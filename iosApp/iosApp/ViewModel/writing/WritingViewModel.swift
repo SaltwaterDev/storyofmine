@@ -19,8 +19,8 @@ class WritingViewModel: ObservableObject {
     var currentDraftId: String? = nil
     var title: String = ""
     var content: String = ""
-//        var draftList: Map<String, String> = mapOf()
-//        var topicList: List<String> = listOf()
+    //        var draftList: Map<String, String> = mapOf()
+    //        var topicList: List<String> = listOf()
     var selectedTopic: String = ""
     var isPublished: Bool = false
     var commentAllowed: Bool = false
@@ -30,8 +30,21 @@ class WritingViewModel: ObservableObject {
     var loading: Bool = false
     var isUserSignedIn: Bool = false
     
+    var menuItemList: [String] = ["Clear", "Edit History", "New Draft"]
+    
     init() {
         
+    }
+    
+    func onMenuClicked(indentifier: String) async {
+        switch indentifier {
+        case "Clear":
+            clearTitleAndContent()
+        case "Edit History": break
+        case "New Draft":
+            await createNewDraft()
+        default: break
+        }
     }
     
     func setTitle(title: String) {
@@ -60,7 +73,7 @@ class WritingViewModel: ObservableObject {
     func setSaveAllowed(saveAllowed: Bool) {
         self.saveAllowed = saveAllowed
     }
-
+    
     func setTopic(topic: String) {
         self.selectedTopic = topic
     }
@@ -93,15 +106,15 @@ class WritingViewModel: ObservableObject {
             let result = try await postStoryUseCase.invoke(title: self.title, content: self.content, topic: self.selectedTopic, isPublished: self.isPublished, commentAllowed: self.commentAllowed, saveAllowed: self.saveAllowed)
             
             switch (result){
-                case is StoryResultSuccess<AnyObject>:
-                    await createNewDraft()
-                    self.postSuccess = true
-                    self.loading = false
-                    break
-                default:
-                    self.error = result.errorMsg
-                    self.loading = false
-                    break
+            case is StoryResultSuccess<AnyObject>:
+                await createNewDraft()
+                self.postSuccess = true
+                self.loading = false
+                break
+            default:
+                self.error = result.errorMsg
+                self.loading = false
+                break
             }
         }catch{ print(error) }
     }
