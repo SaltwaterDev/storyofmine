@@ -89,7 +89,8 @@ dependencies {
     implementation(Deps.timber)
 
     // compose markdown
-    implementation("com.halilibo.compose-richtext:richtext-commonmark:${Versions.richText}")
+//    implementation("com.halilibo.compose-richtext:richtext-commonmark:${Versions.richText}")
+    implementation("com.github.jeziellago:compose-markdown:0.3.0")
 
     with(Koin) {
         implementation(core)

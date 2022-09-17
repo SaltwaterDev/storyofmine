@@ -47,20 +47,21 @@ fun ProfileScreen(
 
 
     Column {
+
         Row(Modifier.padding(20.dp, 30.dp)) {
-            Text(
-                text = state.username,
-                fontSize = 31.sp,
-                modifier = Modifier
-                    .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
-            )
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Rounded.Edit, "edit profile")
+            if (state.username.isNotBlank()) {
+                Text(
+                    text = state.username,
+                    fontSize = 31.sp,
+                    modifier = Modifier
+                        .placeholder(state.loading, highlight = PlaceholderHighlight.fade())
+                )
+
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Rounded.Edit, "edit profile")
+                }
             }
         }
-
-//        val text = stringResource(resource = SharedRes.strings.my_string)
-//        Text(text = text)
 
 
         state.profileItemList.forEach { item ->

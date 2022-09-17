@@ -5,7 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.0"
     id("io.realm.kotlin")
     id("dev.icerock.mobile.multiplatform-resources")
-    id("io.kotest.multiplatform") version "5.4.2"
+    id("io.kotest.multiplatform") version Versions.kotest
 }
 
 version = "1.0"
@@ -53,13 +53,12 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("io.kotest:kotest-framework-engine:5.4.2")
-                implementation ("io.kotest:kotest-assertions-core:5.4.2")
-                implementation (Ktx.Coroutine.test)
+                implementation("io.kotest:kotest-framework-engine:${Versions.kotest}")
+                implementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
+                implementation(Ktx.Coroutine.test)
                 implementation(Ktor.clientMock)
-//                implementation("io.mockk:mockk:1.12.5")
-//                testImplementation("io.mockk:mockk:1.12.5")
-//                testImplementation "io.mockk:mockk-common:1.12.5"
+                implementation("io.mockk:mockk:1.12.5")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             }
         }
         val androidMain by getting {
@@ -122,6 +121,7 @@ dependencies {
     "commonTestImplementation"("dev.icerock.moko:resources-test:0.20.1")
     // testing
     "commonTestImplementation"("io.mockk:mockk-common:1.12.5")
+//    "testImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 
 

@@ -2,8 +2,6 @@ package com.unlone.app.android.ui.write
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,7 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
@@ -44,9 +44,16 @@ fun WritingScreen(
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
+    val keyboardController = LocalSoftwareKeyboardController.current
     var showPostingDialog by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    var bodyTextFieldValueState = uiState.body
+    // launch for open gallery
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        viewModel.addImageMD(it)
+
+    }
+
 
     DisposableEffect(key1 = context) {
         onDispose {
@@ -87,7 +94,7 @@ fun WritingScreen(
             sheetContent = {
                 PreviewBottomSheet(
                     title = uiState.title,
-                    content = uiState.content,
+                    content = uiState.body.text,
                     onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } }
                 )
             },
@@ -141,8 +148,10 @@ fun WritingScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) imeToolBarHeight.dp else 0.dp),
-                    value = uiState.content,
-                    onValueChange = { viewModel.setContent(it) },
+                    value = bodyTextFieldValueState,
+                    onValueChange = {
+                        viewModel.setBody(it.text)
+                    },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -176,13 +185,6 @@ fun WritingScreen(
         }
 
 
-        // launch for open gallery
-        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-            it?.let {
-            val imageMD = "![image]($it)"
-            viewModel.setContent(uiState.content + imageMD)
-            }
-        }
 
         if (isKeyboardVisible)
             Row(
@@ -192,7 +194,6 @@ fun WritingScreen(
                     .height(imeToolBarHeight.dp)
                     .fillMaxWidth()
                     .border(1.dp, Color.Green)
-//                    .background(Color.Green)
             ) {
                 IconButton(onClick = {
                     launcher.launch("image/*")

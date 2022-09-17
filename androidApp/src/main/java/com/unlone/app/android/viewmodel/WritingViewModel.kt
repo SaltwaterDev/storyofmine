@@ -1,6 +1,9 @@
 package com.unlone.app.android.viewmodel
 
+import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
@@ -15,7 +18,7 @@ import kotlinx.coroutines.launch
 data class WritingUiState(
     val currentDraftId: String? = null,
     val title: String = "",
-    val content: String = "",
+    val body: TextFieldValue = TextFieldValue(text = ""),
     val draftList: Map<String, String> = mapOf(),
     val topicList: List<String> = listOf(),
     val selectedTopic: String = "",
@@ -61,7 +64,7 @@ class WritingViewModel(
                         WritingUiState(
                             currentDraftId = lastOpened.first,
                             title = lastOpened.second.title,
-                            content = lastOpened.second.content,
+                            body = TextFieldValue(text = lastOpened.second.content),
                             topicList = topicRepository.getAllTopic().map { topic -> topic.name },
                         )
                     )
@@ -76,15 +79,15 @@ class WritingViewModel(
         }
     }
 
-    fun setContent(content: String) {
+    fun setBody(content: String) {
         viewModelScope.launch {
-            changedChannel.send(state.value.copy(content = content))
+            changedChannel.send(state.value.copy(body = state.value.body.copy(text = content, selection = TextRange(content.length))))
         }
     }
 
     fun clearTitleAndContent() {
         viewModelScope.launch {
-            changedChannel.send(state.value.copy(title = "", content = ""))
+            changedChannel.send(state.value.copy(title = "", body = TextFieldValue(text = "")))
         }
     }
 
@@ -92,7 +95,7 @@ class WritingViewModel(
         saveDraftUseCase(
             state.value.currentDraftId,
             state.value.title,
-            state.value.content
+            state.value.body.text
         )
     }
 
@@ -104,7 +107,7 @@ class WritingViewModel(
                 state.value.copy(
                     currentDraftId = newDraftMap["id"],
                     title = newDraftMap["title"] ?: "",
-                    content = newDraftMap["content"] ?: "",
+                    body = TextFieldValue(text = newDraftMap["content"] ?: ""),
                     selectedTopic = newDraftMap["selectedTopic"] ?: "",
                 )
             )
@@ -119,7 +122,7 @@ class WritingViewModel(
                     state.value.copy(
                         currentDraftId = it.first,
                         title = it.second.title,
-                        content = it.second.content,
+                        body = TextFieldValue(text = it.second.content),
                     )
                 )
             }
@@ -165,7 +168,7 @@ class WritingViewModel(
             )
             val result = postStoryUseCase(
                 state.value.title,
-                state.value.content,
+                state.value.body.text,
                 state.value.selectedTopic,
                 state.value.isPublished,
                 state.value.commentAllowed,
@@ -213,5 +216,12 @@ class WritingViewModel(
     }
 
     suspend fun getIsUserSignedIn() = isUserSignedInUseCase()
+
+    fun addImageMD(uri: Uri?) {
+        uri?.let {
+            val imageMD = "![image]($it)"
+            setBody(state.value.body.text + imageMD)
+        }
+    }
 
 }
