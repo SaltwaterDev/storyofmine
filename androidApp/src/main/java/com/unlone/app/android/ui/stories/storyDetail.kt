@@ -97,7 +97,10 @@ fun StoryDetail(
 
     state.errorMsg?.let {
         AlertDialog(
-            onDismissRequest = viewModel::dismissError,
+            onDismissRequest = {
+                viewModel.dismissError()
+                back()
+            },
             title = { Text(text = it) },
             confirmButton = {
                 Button(onClick = {

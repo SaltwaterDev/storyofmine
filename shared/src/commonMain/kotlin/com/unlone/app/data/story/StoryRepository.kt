@@ -23,4 +23,10 @@ interface StoryRepository {
     suspend fun fetchStoryDetail(
         id: String
     ): StoryResult<Story>
+
+    suspend fun fetchStoriesByTopic(
+        topic: String,
+        pagingItems: Int,
+        page: Int?,
+    ): StoryResult<List<SimpleStory>>
 }

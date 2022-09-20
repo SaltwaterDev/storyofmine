@@ -85,12 +85,6 @@ fun NavGraphBuilder.authGraph(
         }
         composable(
             AuthNav.SignIn.name + "/password",
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Start,
-                    animationSpec = tween(200)
-                )
-            },
         ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)

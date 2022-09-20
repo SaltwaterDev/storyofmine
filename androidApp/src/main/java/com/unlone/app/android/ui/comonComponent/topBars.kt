@@ -185,7 +185,7 @@ fun TopicDetailTopBar(
     back: () -> Unit,
     topicTitle: String,
     isFollowing: Boolean,
-    toggleFollowing: (Boolean) -> Unit
+    toggleFollowing: () -> Unit
 ) {
     TopAppBar() {
 
@@ -197,11 +197,11 @@ fun TopicDetailTopBar(
         }
         // follow button
         if (isFollowing)
-            OutlinedButton(onClick = { toggleFollowing(false) }) {
+            OutlinedButton(onClick = { toggleFollowing() }) {
                 Text(text = "_Following")
             }
         else
-            Button(onClick = { toggleFollowing(true) }) {
+            Button(onClick = { toggleFollowing() }) {
                 Text(text = "_Follow")
             }
     }

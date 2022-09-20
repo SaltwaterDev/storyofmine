@@ -36,7 +36,7 @@
 
     <string name="stories_auth_required_title">Sign up to see other stories</string>
     <string name="stories_header_greeting">Hello %s</string>
-    <string name="stories_show_more">Show more</string>
+    <string name="stories_show_more">more</string>
 
     <string name="profile__sign_out">Sign out</string>
     <string name="profile__sign_out_alert_title">Are you sure to log out?</string>

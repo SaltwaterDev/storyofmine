@@ -19,11 +19,8 @@ import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.stories.StoryDetail
 import com.unlone.app.android.ui.write.WritingScreen
-import com.unlone.app.android.viewmodel.ProfileViewModel
-import com.unlone.app.android.viewmodel.StoriesViewModel
-import com.unlone.app.android.viewmodel.StoryDetailViewModel
-import com.unlone.app.android.viewmodel.WritingViewModel
 import com.unlone.app.android.ui.stories.TopicDetail
+import com.unlone.app.android.viewmodel.*
 import org.koin.androidx.compose.viewModel
 
 
@@ -68,7 +65,7 @@ fun MainNavHost(
             StoriesScreen(
                 viewModel = viewModel,
                 navToPostDetail = { navigateToStoryDetail(navController, it) },
-                navToTopicPosts = { navigateToTopicDetail(navController) },
+                navToTopicPosts = { navigateToTopicDetail(navController, it) },
                 navToAuthGraph = { navigateToAuth(navController) }
             )
         }
@@ -89,15 +86,21 @@ fun MainNavHost(
             StoryDetail(
                 pid,
                 navigateUp,
-                { navigateToTopicDetail(navController) },
+                { topicId -> navigateToTopicDetail(navController, topicId) },
                 viewModel
             )
         }
-        composable("topic") {
+        composable(
+            "topic/{topic}",
+            arguments = listOf(navArgument("topic") { type = NavType.StringType })
+        ) {
+            val topic = it.arguments?.getString("topic")
+            val viewModel by viewModel<TopicDetailViewModel>()
             TopicDetail(
-                "_some topic",
+                topic,
                 navController::navigateUp,
-                {}
+                navToStoryDetail = { pid -> navigateToStoryDetail(navController, pid) },
+                viewModel
             )
         }
 
@@ -132,6 +135,6 @@ fun navigateToStoryDetail(navController: NavHostController, pid: String) {
     navController.navigate("${UnloneBottomDestinations.Stories.route}/$pid")
 }
 
-fun navigateToTopicDetail(navController: NavHostController) {
-    navController.navigate("topic")
+fun navigateToTopicDetail(navController: NavHostController, topicId: String) {
+    navController.navigate("topic/$topicId")
 }
