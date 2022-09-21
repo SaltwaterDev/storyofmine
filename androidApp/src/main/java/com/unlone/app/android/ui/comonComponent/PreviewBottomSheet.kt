@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.RichText
 import com.unlone.app.android.R
+import com.unlone.app.android.ui.theme.Typography
 
 
 @Composable
@@ -36,7 +37,7 @@ fun PreviewBottomSheet(
                 modifier = Modifier.size(30.dp)
             )
         }
-        Text(text = title, modifier = Modifier.padding(horizontal = 16.dp))
+        Text(text = title, modifier = Modifier.padding(horizontal = 16.dp), style = Typography.h5)
         Spacer(modifier = Modifier.height(34.dp))
         RichText(modifier = Modifier.padding(horizontal = 16.dp)) {
             Markdown(content = content.trimIndent())

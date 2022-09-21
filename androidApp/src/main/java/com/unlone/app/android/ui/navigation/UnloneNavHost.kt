@@ -56,10 +56,6 @@ fun MainNavHost(
 
         composable(
             UnloneBottomDestinations.Stories.route,
-            popEnterTransition = null,
-            enterTransition = null,
-            exitTransition = null,
-            popExitTransition = null,
         ) {
             val viewModel by viewModel<StoriesViewModel>()
             StoriesScreen(
@@ -71,8 +67,6 @@ fun MainNavHost(
         }
         composable(
             UnloneBottomDestinations.Profile.route,
-            popEnterTransition = null,
-            enterTransition = null,
         ) {
             val viewModel by viewModel<ProfileViewModel>()
             ProfileScreen(viewModel)

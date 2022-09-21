@@ -72,7 +72,8 @@ private fun TopicRow(
                 )
             },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
 //            readOnly = expanded
         )
         // filter options based on text field value

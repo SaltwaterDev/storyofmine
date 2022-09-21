@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.ui.comonComponent.StoryDetailTopBar
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
@@ -38,7 +39,6 @@ fun StoryDetail(
     navToTopicDetail: (String) -> Unit,
     viewModel: StoryDetailViewModel
 ) {
-
     LaunchedEffect(Unit) {
         if (postId != null) {
             viewModel.getStoryDetail(postId)
@@ -74,16 +74,11 @@ fun StoryDetail(
                         .padding(horizontal = 30.dp)
                 ) {
                     Spacer(modifier = Modifier.height(60.dp))
-                    Text(text = state.title, style = Typography.h1)
+                    Text(text = state.title, style = Typography.h5)
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = state.createdDate, style = Typography.caption)
                     Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = state.content,
-                        style = Typography.body1,
-                        lineHeight = 32.sp,
-                        letterSpacing = 1.sp
-                    )
+                    Text(text = state.content, style = Typography.body1)
                 }
             }
             item {

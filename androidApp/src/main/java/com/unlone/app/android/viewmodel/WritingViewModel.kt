@@ -31,7 +31,7 @@ data class WritingUiState(
 
 class WritingViewModel(
     getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
-    getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
+    private val getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
     private val createNewDraftUseCase: CreateNewDraftUseCase,
@@ -43,31 +43,32 @@ class WritingViewModel(
     private val changedChannel = Channel<WritingUiState>()
     private val stateChangedResult = changedChannel.receiveAsFlow()
 
-    val state: StateFlow<WritingUiState>
-        = combine(
-            stateChangedResult,
-            getAllDraftsTitleUseCase(),
-        ) { changed, allDraftTitles ->
-            changed.copy(
-                draftList = allDraftTitles
-            )
-        }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
+    val state: StateFlow<WritingUiState> = combine(
+        stateChangedResult,
+        getAllDraftsTitleUseCase(),
+    ) { changed, allDraftTitles ->
+        changed.copy(
+            draftList = allDraftTitles
+        )
+    }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
     init {
         viewModelScope.launch {
-            getLastOpenedDraftUseCase()
-                ?.let { lastOpened ->
-                    changedChannel.send(
-                        WritingUiState(
-                            currentDraftId = lastOpened.first,
-                            title = lastOpened.second.title,
-                            content = lastOpened.second.content,
-                            topicList = topicRepository.getAllTopic().map { topic -> topic.name },
-                        )
-                    )
-                }
+            refreshData()
         }
     }
+
+    private suspend fun refreshData() = getLastOpenedDraftUseCase()
+        ?.let { lastOpened ->
+            changedChannel.send(
+                WritingUiState(
+                    currentDraftId = lastOpened.first,
+                    title = lastOpened.second.title,
+                    content = lastOpened.second.content,
+                    topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                )
+            )
+        }
 
 
     fun setTitle(title: String) {
@@ -89,11 +90,13 @@ class WritingViewModel(
     }
 
     fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
+        Log.d("TAG", "saveDraft: " + state.value.currentDraftId)
         saveDraftUseCase(
             state.value.currentDraftId,
             state.value.title,
             state.value.content
         )
+        refreshData()
     }
 
     fun createNewDraft() {

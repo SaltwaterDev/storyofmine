@@ -23,6 +23,7 @@ import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
+import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.WritingViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ fun WritingScreen(
     var requireSignInDialog by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    DisposableEffect(key1 = context) {
+    DisposableEffect(key1 = Unit) {
         onDispose {
             viewModel.saveDraft()
         }
@@ -125,6 +126,7 @@ fun WritingScreen(
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = uiState.title,
+                    textStyle = Typography.h5,
                     onValueChange = { viewModel.setTitle(it) },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,

@@ -1,6 +1,5 @@
 package com.unlone.app.android.ui.stories
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,6 +18,7 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.comonComponent.Post
+import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.data.story.SimpleStory
 import dev.icerock.moko.resources.compose.stringResource
@@ -97,7 +96,7 @@ fun StoriesScreen(
 
 @Composable
 fun PostsByTopic(
-    title: String,
+    topic: String,
     loading: Boolean,
     stories: List<SimpleStory>,
     viewMorePost: () -> Unit,
@@ -114,9 +113,8 @@ fun PostsByTopic(
             verticalAlignment = Alignment.Bottom
         ) {
             Text(
-                text = title,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
+                text = topic,
+                style = Typography.h5,
                 modifier = Modifier
                     .weight(1f, false)
                     .placeholder(
@@ -132,7 +130,6 @@ fun PostsByTopic(
                         .clickable { viewMorePost() }
                         .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                     fontSize = 10.sp,
-                    color = Color.Black.copy(0.6f)
                 )
         }
         Spacer(modifier = Modifier.height(7.dp))
