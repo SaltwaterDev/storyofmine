@@ -55,7 +55,7 @@ fun WritingScreen(
     }
 
 
-    DisposableEffect(key1 = context) {
+    DisposableEffect(key1 = Unit) {
         onDispose {
             viewModel.saveDraft()
         }

@@ -72,4 +72,26 @@ internal class StoryRepositoryImpl(
             StoryResult.Failed(errorMsg = e.message)
         }
     }
+
+    override suspend fun fetchStoriesByTopic(
+        topic: String,
+        pagingItems: Int,
+        page: Int?
+    ): StoryResult<List<SimpleStory>> {
+        return try {
+            val response = storyApi.fetchStoriesByTopic(
+                topic, pagingItems, page
+            )
+            StoryResult.Success(response.data.flatMap {
+                it.stories
+            })
+        } catch (e: RedirectResponseException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: ClientRequestException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: Exception) {
+            Logger.e { e.toString() }
+            StoryResult.Failed(errorMsg = e.message)
+        }
+    }
 }

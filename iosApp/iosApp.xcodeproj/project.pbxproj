@@ -33,6 +33,9 @@
 		F572174D28689CCF002F1669 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F572174C28689CCF002F1669 /* LoginScreen.swift */; };
 		F5AAE8242882AC1300B8A2BB /* StoriesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AAE8232882AC1300B8A2BB /* StoriesViewModel.swift */; };
 		F5F6B03C2856628700756A0D /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F6B03B2856628600756A0D /* SignUpViewModel.swift */; };
+		FE33C34E28C4EFE90075E875 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE33C34D28C4EFE90075E875 /* MenuView.swift */; };
+		FE5FDEA928B7AE40002BC4C9 /* WritingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5FDEA828B7AE40002BC4C9 /* WritingViewModel.swift */; };
+		FE9B01F528CF2C53007B83C5 /* MenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9B01F428CF2C53007B83C5 /* MenuItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,7 +59,7 @@
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D598471EC8D0A1B545A7138C /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
-		F507A0FE284CA75B00CA7936 /* WritingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingScreen.swift; sourceTree = "<group>"; };
+		F507A0FE284CA75B00CA7936 /* WritingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WritingScreen.swift; path = ../WritingScreen.swift; sourceTree = "<group>"; };
 		F507A100284CA7F400CA7936 /* StoriesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesScreen.swift; sourceTree = "<group>"; };
 		F507A101284CA7F400CA7936 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
 		F507A108284CA99100CA7936 /* LoginEmailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEmailScreen.swift; sourceTree = "<group>"; };
@@ -66,6 +69,9 @@
 		F572174C28689CCF002F1669 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		F5AAE8232882AC1300B8A2BB /* StoriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesViewModel.swift; sourceTree = "<group>"; };
 		F5F6B03B2856628600756A0D /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
+		FE33C34D28C4EFE90075E875 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		FE5FDEA828B7AE40002BC4C9 /* WritingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingViewModel.swift; sourceTree = "<group>"; };
+		FE9B01F428CF2C53007B83C5 /* MenuItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +99,7 @@
 			children = (
 				2B425AFA28AE76BF00906522 /* StoryCardView.swift */,
 				2B425AFC28AE7CFC00906522 /* TopicStoriesView.swift */,
+				FE33C34F28C4F4210075E875 /* Menu */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -198,10 +205,10 @@
 		F507A105284CA88500CA7936 /* screen */ = {
 			isa = PBXGroup;
 			children = (
+				FE33C34A28C1264B0075E875 /* writing */,
 				2B425B0728AF708100906522 /* story */,
 				F507A107284CA97300CA7936 /* auth */,
 				F507A101284CA7F400CA7936 /* ProfileScreen.swift */,
-				F507A0FE284CA75B00CA7936 /* WritingScreen.swift */,
 			);
 			path = screen;
 			sourceTree = "<group>";
@@ -222,10 +229,36 @@
 		F50AD2132856200900CD4CBC /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				FE5FDEA728B7AE28002BC4C9 /* writing */,
 				2BF74E7328B6666D007E990A /* auth */,
 				2BF74E7228B66658007E990A /* story */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		FE33C34A28C1264B0075E875 /* writing */ = {
+			isa = PBXGroup;
+			children = (
+				F507A0FE284CA75B00CA7936 /* WritingScreen.swift */,
+			);
+			path = writing;
+			sourceTree = "<group>";
+		};
+		FE33C34F28C4F4210075E875 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				FE33C34D28C4EFE90075E875 /* MenuView.swift */,
+				FE9B01F428CF2C53007B83C5 /* MenuItemView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		FE5FDEA728B7AE28002BC4C9 /* writing */ = {
+			isa = PBXGroup;
+			children = (
+				FE5FDEA828B7AE40002BC4C9 /* WritingViewModel.swift */,
+			);
+			path = writing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,6 +385,7 @@
 				F5F6B03C2856628700756A0D /* SignUpViewModel.swift in Sources */,
 				F507A0FF284CA75B00CA7936 /* WritingScreen.swift in Sources */,
 				2B425B0628AF51D000906522 /* StoriesComponent.swift in Sources */,
+				FE33C34E28C4EFE90075E875 /* MenuView.swift in Sources */,
 				2B425AFB28AE76BF00906522 /* StoryCardView.swift in Sources */,
 				2B425AF028A695EF00906522 /* OtpEmailConfirmScreen.swift in Sources */,
 				2B425AF828A9320800906522 /* UsernameScreen.swift in Sources */,
@@ -359,10 +393,12 @@
 				F54301D6287ABFD00015D14D /* SignUpScreen.swift in Sources */,
 				2B425AFD28AE7CFC00906522 /* TopicStoriesView.swift in Sources */,
 				2B425AF228A6960100906522 /* OtpInputScreen.swift in Sources */,
+				FE5FDEA928B7AE40002BC4C9 /* WritingViewModel.swift in Sources */,
 				F507A102284CA7F400CA7936 /* StoriesScreen.swift in Sources */,
 				F52EFD712883BA7E0097DBE8 /* AuthViewModel.swift in Sources */,
 				F507A103284CA7F400CA7936 /* ProfileScreen.swift in Sources */,
 				F507A109284CA99100CA7936 /* LoginEmailScreen.swift in Sources */,
+				FE9B01F528CF2C53007B83C5 /* MenuItemView.swift in Sources */,
 				F572174D28689CCF002F1669 /* LoginScreen.swift in Sources */,
 				2B425B0028AE866E00906522 /* SimpleStory.swift in Sources */,
 			);

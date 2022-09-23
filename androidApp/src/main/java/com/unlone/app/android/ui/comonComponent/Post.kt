@@ -44,9 +44,8 @@ fun StoryCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(18.dp),
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
                 maxLines = 5,
+                style = Typography.body2
             )
             Spacer(modifier = Modifier.height(25.dp))
         }

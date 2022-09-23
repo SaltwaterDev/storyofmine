@@ -19,6 +19,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.ui.comonComponent.StoryDetailTopBar
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
@@ -34,7 +36,6 @@ fun StoryDetail(
     navToTopicDetail: (String) -> Unit,
     viewModel: StoryDetailViewModel
 ) {
-
     LaunchedEffect(Unit) {
         if (postId != null) {
             viewModel.getStoryDetail(postId)
@@ -88,7 +89,10 @@ fun StoryDetail(
 
     state.errorMsg?.let {
         AlertDialog(
-            onDismissRequest = viewModel::dismissError,
+            onDismissRequest = {
+                viewModel.dismissError()
+                back()
+            },
             title = { Text(text = it) },
             confirmButton = {
                 Button(onClick = {

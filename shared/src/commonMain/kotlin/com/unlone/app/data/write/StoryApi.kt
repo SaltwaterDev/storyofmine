@@ -9,7 +9,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.Serializable
 
 
 interface StoryApi {
@@ -22,6 +21,11 @@ interface StoryApi {
 
     suspend fun getAllTopics(): AllTopicResponse
     suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse
+    suspend fun fetchStoriesByTopic(
+        topic: String,
+        pagingSize: Int,
+        page: Int?
+    ): StoriesPerTopicsResponse
 }
 
 internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
@@ -72,5 +76,28 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             header("Authorization", token)
         }
         return response.body()
+    }
+
+    override suspend fun fetchStoriesByTopic(
+        topic: String,
+        pagingSize: Int,
+        page: Int?
+    ): StoriesPerTopicsResponse {
+        val response = client.get(baseUrl + "story/allStoriesFromTopic") {
+            url {
+                parameters.append("topic", topic)
+                parameters.append("pagingSize", pagingSize.toString())
+                page?.let { parameters.append("page", page.toString()) }
+            }
+        }
+        return response.body()
+    }
+
+
+    companion object {
+        //                local IP address for running on an emulator
+//        private const val baseUrl = "http://10.0.2.2:8080/"
+//        private const val baseUrl = "http://192.168.8.154:8080/"
+        private const val baseUrl = "https://unlone.an.r.appspot.com/"
     }
 }
