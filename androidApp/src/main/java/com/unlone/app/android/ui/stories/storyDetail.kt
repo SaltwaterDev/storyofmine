@@ -6,11 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.DismissDirection.StartToEnd
 import androidx.compose.material.icons.Icons
@@ -23,9 +19,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.unlone.app.android.ui.comonComponent.StoryDetailTopBar
 import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
@@ -71,19 +67,14 @@ fun StoryDetail(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 30.dp)
+                        .padding(horizontal = 20.dp)
                 ) {
-                    Spacer(modifier = Modifier.height(60.dp))
-                    Text(text = state.title, style = Typography.h1)
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(40.dp))
+                    Text(text = state.title, style = Typography.titleLarge)
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(text = state.createdDate, style = Typography.caption)
                     Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = state.content,
-                        style = Typography.body1,
-                        lineHeight = 32.sp,
-                        letterSpacing = 1.sp
-                    )
+                    Text(text = state.content, style = Typography.body1)
                 }
             }
             item {

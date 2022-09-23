@@ -14,47 +14,7 @@ data class ProfileUiState(
     val errorMsg: String? = null,
     val loading: Boolean = true,
     val username: String = ""
-) {
-    val profileItemList: List<ProfileItemList> =
-        listOf(
-            ProfileItemList.MyStories(),
-            ProfileItemList.Saved(),
-            ProfileItemList.Setting(),
-            ProfileItemList.Help(),
-            ProfileItemList.Logout(),
-        )
-}
-
-
-sealed class ProfileItemList(
-    open val name: String,
-    open val requireLoggedIn: Boolean,
-) {
-    data class MyStories(
-        override val name: String = "MyStories",
-        override val requireLoggedIn: Boolean = false
-    ) : ProfileItemList(name, requireLoggedIn)
-
-    data class Saved(
-        override val name: String = "Saved",
-        override val requireLoggedIn: Boolean = false
-    ) : ProfileItemList(name, requireLoggedIn)
-
-    data class Setting(
-        override val name: String = "Setting",
-        override val requireLoggedIn: Boolean = false
-    ) : ProfileItemList(name, requireLoggedIn)
-
-    data class Help(
-        override val name: String = "Help",
-        override val requireLoggedIn: Boolean = false
-    ) : ProfileItemList(name, requireLoggedIn)
-
-    data class Logout(
-        override val name: String = "Logout",
-        override val requireLoggedIn: Boolean = true
-    ) : ProfileItemList(name, requireLoggedIn)
-}
+)
 
 
 class ProfileViewModel(
