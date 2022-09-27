@@ -139,6 +139,7 @@ internal class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
+            Logger.e{ e.toString() }
             AuthResult.UnknownError()
         }
     }

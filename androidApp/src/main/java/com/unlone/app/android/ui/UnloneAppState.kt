@@ -11,10 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -27,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.unlone.app.android.R
+import androidx.navigation.compose.currentBackStackEntryAsState as currentBackStackEntryAsState
 
 /**
  * Destinations used in the [UnloneApp].
@@ -70,11 +68,16 @@ class UnloneAppState(
     // Reading this attribute will cause recompositions when the bottom bar needs shown, or not.
     // Not all routes need to show the bottom bar.
     val shouldShowBottomBar: Boolean
-        @Composable get() = !WindowInsets.isImeVisible
+        @Composable get() = !WindowInsets.isImeVisible &&
+                bottomBarTabs.any { it.route == navBackStackEntry.value?.destination?.route }
 
     // ----------------------------------------------------------
     // Navigation state source of truth
     // ----------------------------------------------------------
+
+    // Subscribe to navBackStackEntry, required to get current route
+    val navBackStackEntry: State<NavBackStackEntry?>
+        @Composable get() = navController.currentBackStackEntryAsState()
 
     val currentRoute: String?
         get() = navController.currentDestination?.route
@@ -91,7 +94,7 @@ class UnloneAppState(
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.
                 popUpTo(findStartDestination(navController.graph).id) {
-                    saveState = false
+                    saveState = true
                 }
             }
         }

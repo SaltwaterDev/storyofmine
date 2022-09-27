@@ -16,13 +16,13 @@ import com.google.accompanist.navigation.animation.composable
 import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.profile.ProfileScreen
+import com.unlone.app.android.ui.stories.ReportScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.stories.StoryDetail
 import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.ui.stories.TopicDetail
 import com.unlone.app.android.viewmodel.*
 import org.koin.androidx.compose.koinViewModel
-import org.koin.androidx.compose.viewModel
 
 
 @ExperimentalAnimationApi
@@ -37,6 +37,8 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit
 ) {
+    Log.d("wesley", "MainNavHost: ${navController.currentDestination?.route}")
+
     AnimatedNavHost(
         navController = navController,
         startDestination = UnloneBottomDestinations.Write.route,
@@ -44,7 +46,6 @@ fun MainNavHost(
         route = "main",
     ) {
 
-        Log.d("wesley", "MainNavHost: ${navController.currentDestination}")
 
         composable(UnloneBottomDestinations.Write.route) {
             val viewModel = koinViewModel<WritingViewModel>()
@@ -70,7 +71,7 @@ fun MainNavHost(
             UnloneBottomDestinations.Profile.route,
         ) {
             val viewModel = koinViewModel<ProfileViewModel>()
-            ProfileScreen(viewModel)
+            ProfileScreen(viewModel, {}, {}, {}, {}, {})
         }
         composable(
             "${UnloneBottomDestinations.Stories.route}/{pid}",
@@ -82,6 +83,11 @@ fun MainNavHost(
                 pid,
                 navigateUp,
                 { topicId -> navigateToTopicDetail(navController, topicId) },
+                {
+                    if (pid != null) {
+                        navToReport(navController, "story", pid)
+                    }
+                },
                 viewModel
             )
         }
@@ -90,13 +96,29 @@ fun MainNavHost(
             arguments = listOf(navArgument("topic") { type = NavType.StringType })
         ) {
             val topic = it.arguments?.getString("topic")
-            val viewModel by viewModel<TopicDetailViewModel>()
+            val viewModel = koinViewModel<TopicDetailViewModel>()
             TopicDetail(
                 topic,
                 navController::navigateUp,
                 navToStoryDetail = { pid -> navigateToStoryDetail(navController, pid) },
                 viewModel
             )
+        }
+
+        composable("report/{type}/{reported}",
+            arguments = listOf(
+                navArgument("type") { type = NavType.StringType },
+                navArgument("reported") { type = NavType.StringType }
+            )) {
+            val viewModel = koinViewModel<ReportViewModel>()
+            val type = it.arguments?.getString("type")
+            val reported = it.arguments?.getString("reported")
+
+            ReportScreen(
+                viewModel = viewModel,
+                type = type,
+                reported = reported,
+                back = { navController.popBackStack() })
         }
 
         authGraph(
@@ -132,4 +154,8 @@ fun navigateToStoryDetail(navController: NavHostController, pid: String) {
 
 fun navigateToTopicDetail(navController: NavHostController, topicId: String) {
     navController.navigate("topic/$topicId")
+}
+
+fun navToReport(navController: NavHostController, type: String, reported: String) {
+    navController.navigate("report/${type}/${reported}")
 }

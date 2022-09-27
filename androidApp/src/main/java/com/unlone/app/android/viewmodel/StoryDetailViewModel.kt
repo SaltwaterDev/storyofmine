@@ -2,11 +2,13 @@ package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlone.app.data.story.CommentRepository
 import com.unlone.app.data.story.StoryResult
+import com.unlone.app.domain.entities.Comment
 import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.time.Instant
 
 data class StoryDetailUiState(
     val pid: String = "",
@@ -15,46 +17,91 @@ data class StoryDetailUiState(
     val authorId: String = "",
     val topic: String = "Topic",
     val createdDate: String = "",
-    val comments: List<String> = listOf("comment", "comment", "comment", "comment", "comment", "comment"),
+    val comments: List<Comment> = listOf(),
     val isSelfWritten: Boolean = false,
     val allowComment: Boolean = false,
     val allowSave: Boolean = false,
     val errorMsg: String? = null,
+    val loading: Boolean = false,
+    val postCommentLoading: Boolean = false,
+    val commentText: String = "",
 )
 
 class StoryDetailViewModel(
     private val fetchStoryDetailUseCase: FetchStoryDetailUseCase,
+    private val commentRepository: CommentRepository
 ) : ViewModel() {
 
-    fun getStoryDetail(postId: String) {
-        viewModelScope.launch {
-            when (val result = fetchStoryDetailUseCase(postId)) {
+    var state = MutableStateFlow(StoryDetailUiState())
+        private set
+
+    fun getStoryDetail(storyId: String) {
+        viewModelScope.launch(Dispatchers.Default) {
+            state.value = state.value.copy(loading = true)
+            when (val result = fetchStoryDetailUseCase(storyId)) {
                 is StoryResult.Success -> {
-                    result.data?.let { story ->
-                        state.value = state.value.copy(
-                            pid = postId,
-                            title = story.title,
-                            content = story.content,
-                            authorId = story.author,
-                            topic = story.topic,
-                            createdDate = story.createdDate,
-                            allowComment = story.commentAllowed,
-                            allowSave = story.saveAllowed,
-                            isSelfWritten = story.isSelfWritten,
-                        )
+                    launch { getComments(storyId) }
+                    launch {
+                        result.data?.let { story ->
+                            state.value = state.value.copy(
+                                pid = storyId,
+                                title = story.title,
+                                content = story.content,
+                                authorId = story.author,
+                                topic = story.topic,
+                                createdDate = story.createdDate,
+                                allowComment = story.commentAllowed,
+                                allowSave = story.saveAllowed,
+                                isSelfWritten = story.isSelfWritten,
+                            )
+                        }
                     }
                 }
                 else -> {
                     state.value = state.value.copy(errorMsg = result.errorMsg)
                 }
             }
+            state.value = state.value.copy(loading = false)
         }
     }
 
-    var state = MutableStateFlow(StoryDetailUiState())
-        private set
-
     fun dismissError() {
         state.value = state.value.copy(errorMsg = null)
+    }
+
+    fun getComments(sid: String) {
+        viewModelScope.launch(Dispatchers.Default) {
+            state.value = state.value.copy(loading = true)
+            when (val result = commentRepository.getComments(sid)) {
+                // todo: convert to ui state class
+                is StoryResult.Success -> result.data?.let {
+                    state.value = state.value.copy(comments = it)
+                }
+                is StoryResult.Failed -> state.value = state.value.copy(errorMsg = result.errorMsg)
+                is StoryResult.UnknownError -> state.value =
+                    state.value.copy(errorMsg = result.errorMsg)
+            }
+            state.value = state.value.copy(loading = false)
+        }
+    }
+
+    fun setCommentText(text: String) {
+        state.value = state.value.copy(commentText = text)
+    }
+
+    fun postComment(sid: String) = viewModelScope.launch {
+        if (state.value.commentText.isNotBlank()) {
+            state.value = state.value.copy(postCommentLoading = true)
+            when (val result = commentRepository.postComment(sid, state.value.commentText)) {
+                is StoryResult.Success -> result.data?.let {
+                    state.value =
+                        state.value.copy(comments = state.value.comments + it, commentText = "")
+                }
+                is StoryResult.Failed -> state.value = state.value.copy(errorMsg = result.errorMsg)
+                is StoryResult.UnknownError -> state.value =
+                    state.value.copy(errorMsg = "_Server Error")
+            }
+            state.value = state.value.copy(postCommentLoading = false)
+        }
     }
 }

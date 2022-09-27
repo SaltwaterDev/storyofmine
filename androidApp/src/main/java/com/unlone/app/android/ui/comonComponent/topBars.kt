@@ -8,10 +8,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -115,6 +112,9 @@ fun StoryDetailTopBar(
     topic: String,
     isSelfWritten: Boolean,
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
+
     TopAppBar(
         Modifier.statusBarsPadding()
     ) {
@@ -143,15 +143,37 @@ fun StoryDetailTopBar(
                         contentDescription = "save"
                     )
                 }
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Rounded.MoreVert,
-                        contentDescription = "more"
-                    )
+
+                Box() {
+                    IconButton(onClick = {expanded = true}) {
+                        Icon(
+                            Icons.Rounded.MoreVert,
+                            contentDescription = "more"
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(onClick = report) {
+                            Text("Report")
+                        }
+                        DropdownMenuItem(onClick = { /* Handle settings! */ }) {
+                            Text("Settings")
+                        }
+                        Divider()
+                        DropdownMenuItem(onClick = { /* Handle send feedback! */ }) {
+                            Text("Send Feedback")
+                        }
+                    }
+
+
                 }
             }
         }
     }
+
 }
 
 @Preview
@@ -182,7 +204,10 @@ fun TopicDetailTopBar(
             IconButton(onClick = back) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
             }
-            Text(text = topicTitle)
+            Text(
+                text = topicTitle,
+                color = contentColorFor(backgroundColor = MaterialTheme.colors.primarySurface)
+            )
         }
         // follow button
         if (isFollowing)
@@ -198,7 +223,7 @@ fun TopicDetailTopBar(
 
 @Preview
 @Composable
-fun TopicDetailTopBarPreview(){
+fun TopicDetailTopBarPreview() {
     TopicDetailTopBar(
         {},
         "Apple",

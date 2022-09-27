@@ -1,6 +1,5 @@
-package com.unlone.app.data.write
+package com.unlone.app.data.story
 
-import com.unlone.app.data.story.*
 import com.unlone.app.utils.unloneConfig
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -26,6 +25,15 @@ interface StoryApi {
         pagingSize: Int,
         page: Int?
     ): StoriesPerTopicsResponse
+
+    suspend fun getReportReasons(): ReportReasonResponse
+    suspend fun postReport(
+        reportRequest: ReportRequest,
+        token: String
+    )
+
+    suspend fun getComments(storyId: String, token: String): CommentResponse
+    suspend fun postComment(commentRequest: CommentRequest, token: String): CommentResponse
 }
 
 internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
@@ -42,9 +50,8 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     private val baseUrl = serverUrl
 
 
-
     override suspend fun postStory(request: StoryRequest, jwt: String) {
-        client.post(baseUrl + "story/post") {
+        client.post("$baseUrl/story/post") {
             contentType(ContentType.Application.Json)
             header("Authorization", jwt)
             setBody(request)
@@ -56,7 +63,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         pagingItems: Int,
         page: Int,
     ): StoriesPerTopicsResponse {
-        val response = client.get(baseUrl + "story/allStories") {
+        val response = client.get("$baseUrl/story/allStories") {
             url {
                 parameters.append("postsPerTopic", postsPerTopic.toString())
                 parameters.append("itemsPerPage", pagingItems.toString())
@@ -67,12 +74,12 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     }
 
     override suspend fun getAllTopics(): AllTopicResponse {
-        val response = client.get(baseUrl + "story/allTopics")
+        val response = client.get("$baseUrl/story/allTopics")
         return response.body()
     }
 
     override suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse {
-        val response = client.get(baseUrl + "story/$pid") {
+        val response = client.get("$baseUrl/story/$pid") {
             header("Authorization", token)
         }
         return response.body()
@@ -83,7 +90,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         pagingSize: Int,
         page: Int?
     ): StoriesPerTopicsResponse {
-        val response = client.get(baseUrl + "story/allStoriesFromTopic") {
+        val response = client.get("$baseUrl/story/allStoriesFromTopic") {
             url {
                 parameters.append("topic", topic)
                 parameters.append("pagingSize", pagingSize.toString())
@@ -93,11 +100,39 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
+    override suspend fun getReportReasons(): ReportReasonResponse {
+        val response = client.get("$baseUrl/report/allReportReasons")
+        return response.body()
+    }
 
-    companion object {
-        //                local IP address for running on an emulator
-//        private const val baseUrl = "http://10.0.2.2:8080/"
-//        private const val baseUrl = "http://192.168.8.154:8080/"
-        private const val baseUrl = "https://unlone.an.r.appspot.com/"
+    override suspend fun postReport(
+        reportRequest: ReportRequest,
+        token: String
+    ) {
+        client.post("$baseUrl/report/createReport") {
+            contentType(ContentType.Application.Json)
+            header("Authorization", token)
+            setBody(reportRequest)
+        }
+    }
+
+    override suspend fun getComments(storyId: String, token: String): CommentResponse {
+        val response = client.get("$baseUrl/comment/getComments") {
+            header("Authorization", token)
+            url { parameters.append("storyId", storyId) }
+        }
+        return response.body()
+    }
+
+    override suspend fun postComment(
+        commentRequest: CommentRequest,
+        token: String
+    ): CommentResponse {
+        val response = client.post("$baseUrl/comment/postComment") {
+            contentType(ContentType.Application.Json)
+            header("Authorization", token)
+            setBody(commentRequest)
+        }
+        return response.body()
     }
 }

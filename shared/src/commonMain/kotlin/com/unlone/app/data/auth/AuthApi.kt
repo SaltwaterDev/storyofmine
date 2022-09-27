@@ -38,14 +38,14 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
 
 
     override suspend fun signUp(request: AuthRequest) {
-        client.post(baseUrl + "signup/emailAndPassword") {
+        client.post("$baseUrl/signup/emailAndPassword") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
     }
 
     override suspend fun checkEmailExisted(request: AuthEmailRequest) {
-        client.post(baseUrl + "signup/email") {
+        val post = client.post("$baseUrl/signup/email") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -53,7 +53,7 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
 
 
     override suspend fun validateEmail(request: AuthEmailRequest) {
-        client.post(baseUrl + "signin/email") {
+        client.post("$baseUrl/signin/email") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -61,7 +61,7 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
 
 
     override suspend fun signIn(request: AuthRequest): TokenResponse {
-        val response = client.post(baseUrl + "signin/emailAndPassword") {
+        val response = client.post("$baseUrl/signin/emailAndPassword") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -70,34 +70,34 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
 
 
     override suspend fun authenticate(token: String) {
-        client.get(baseUrl + "authenticate") {
+        client.get("$baseUrl/authenticate") {
             header("Authorization", token)
         }
     }
 
     override suspend fun requestOtp(email: String) {
-        client.post(baseUrl + "otp/request"){
+        client.post("$baseUrl/otp/request"){
             contentType(ContentType.Application.Json)
             setBody(AuthEmailRequest(email))
         }
     }
 
     override suspend fun verifyOtp(request: AuthOtpRequest) {
-        client.post(baseUrl + "otp/verify") {
+        client.post("$baseUrl/otp/verify") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
     }
 
     override suspend fun setUserName(email: String, username: String) {
-        client.post(baseUrl + "setUsername") {
+        client.post("$baseUrl/setUsername") {
             contentType(ContentType.Application.Json)
             setBody(AuthUsernameRequest(email, username))
         }
     }
 
     override suspend fun getUserName(token: String): String {
-        val response = client.get(baseUrl + "getUsername") {
+        val response = client.get("$baseUrl/getUsername") {
             header("Authorization", "Bearer $token")
         }
         return response.body()
@@ -109,6 +109,4 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
             setBody(AuthEmailRequest(email))
         }
     }
-
-
 }

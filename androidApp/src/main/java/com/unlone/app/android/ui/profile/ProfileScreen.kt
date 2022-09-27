@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
+import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
@@ -18,23 +20,21 @@ import org.example.library.SharedRes
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel
+    viewModel: ProfileViewModel,
+    goToDraft: () -> Unit,
+    goToMyStories: () -> Unit,
+    goToSavedStories: () -> Unit,
+    goToSetting: () -> Unit,
+    goToHelp: () -> Unit,
 ) {
 
     val state = viewModel.state.collectAsState().value
     var showSignOutAlert by remember { mutableStateOf(false) }
 
 
-    //    fun goToDraft() {}
-    fun goToMyStories() {}
-    fun goToSavedStories() {}
-    fun goToSetting() {}
-    fun goToHelp() {}
-
 
 
     Column(Modifier.fillMaxSize()) {
-
         if (state.isUserLoggedIn) {
             Text(
                 text = state.username,
@@ -45,26 +45,23 @@ fun ProfileScreen(
             )
         }
 
-//        val text = stringResource(resource = SharedRes.strings.my_string)
-//        Text(text = text)
-
-
         if (!state.isUserLoggedIn)
             Spacer(modifier = Modifier.height(100.dp))
 
         if (state.isUserLoggedIn) {
-            ListItem(Modifier.clickable { goToMyStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__my_stories)) }
-            Divider(Modifier.fillMaxWidth())
-            ListItem(Modifier.clickable { goToSavedStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__saved)) }
-            Divider(Modifier.fillMaxWidth())
+            ProfileScreenDivider()
+            ListItem(Modifier.clickable { goToMyStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__my_stories), style = Typography.subtitle1) }
+            ProfileScreenDivider()
+            ListItem(Modifier.clickable { goToSavedStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__saved), style = Typography.subtitle1) }
         }
-        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings)) }
-        Divider(Modifier.fillMaxWidth())
-        ListItem(Modifier.clickable { goToHelp() }) { Text(text = stringResource(resource = SharedRes.strings.profile__help)) }
-        Divider(Modifier.fillMaxWidth())
+        ProfileScreenDivider()
+        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
+        ProfileScreenDivider()
+        ListItem(Modifier.clickable { goToHelp() }) { Text(text = stringResource(resource = SharedRes.strings.profile__help), style = Typography.subtitle1) }
+        ProfileScreenDivider()
         if (state.isUserLoggedIn) {
-            ListItem(Modifier.clickable { showSignOutAlert = true }) { Text(text = stringResource(resource = SharedRes.strings.profile__sign_out)) }
-            Divider(Modifier.fillMaxWidth())
+            ListItem(Modifier.clickable { showSignOutAlert = true }) { Text(text = stringResource(resource = SharedRes.strings.profile__sign_out), style = Typography.subtitle1) }
+            ProfileScreenDivider()
         }
 
     }
@@ -88,4 +85,9 @@ fun ProfileScreen(
             },
         )
     }
+}
+
+@Composable
+fun ProfileScreenDivider(){
+    Divider(Modifier.fillMaxWidth(), color = MaterialTheme.colors.onSurface)
 }

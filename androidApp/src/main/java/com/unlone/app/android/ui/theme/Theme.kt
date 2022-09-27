@@ -16,10 +16,10 @@ private val DarkColorScheme = darkColors(
 )
 
 private val LightColorScheme = lightColors(
-    primary = Color(0xFF494949),
+    primary = PrimaryGray,
     secondary = PurpleGrey40,
-    background = Color(0xFFCDB699),
-    surface = Color(0xFFCDB699),
+    background = Color(0xFFDFD3C3),
+    surface = Color(0xFFF8EDE3),
     onPrimary = Color.White,
     onSecondary = Color.White,
 //    onTertiary = Color.White,
@@ -43,13 +43,17 @@ fun UnloneTheme(
 //            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
 //            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
             if (darkTheme) {
-                systemUiController.setSystemBarsColor(
-                    color = colorScheme.background
-                )
+//                systemUiController.setSystemBarsColor(
+//                    color = colorScheme.background
+//                )
             } else {
                 systemUiController.setStatusBarColor(
                     color = Color.Transparent,
                     darkIcons = true,
+                )
+                systemUiController.setNavigationBarColor(
+                    color = Color.Transparent,
+//                    darkIcons = true,
                 )
             }
         }

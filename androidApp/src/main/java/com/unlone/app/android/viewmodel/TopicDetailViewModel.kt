@@ -47,6 +47,12 @@ class TopicDetailViewModel(
                     )
                     Log.e("TAG", "initData: ${result.errorMsg}")
                 }
+                is StoryResult.UnknownError -> {
+                    _state.value = _state.value.copy(
+                        errorMsg = result.errorMsg
+                    )
+                    Log.e("TAG", "initData: ${result.errorMsg}")
+                }
             }
             _state.value = _state.value.copy(
                 loading = false

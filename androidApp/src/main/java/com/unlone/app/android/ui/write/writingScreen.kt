@@ -2,7 +2,6 @@ package com.unlone.app.android.ui.write
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -13,12 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.ui.theme.Typography
@@ -58,6 +55,7 @@ fun WritingScreen(
     DisposableEffect(key1 = Unit) {
         onDispose {
             viewModel.saveDraft()
+            scope.launch { viewModel.refreshData() }
         }
     }
 
@@ -103,7 +101,7 @@ fun WritingScreen(
                 OptionsDrawer(
                     uiState.draftList,
                     clearAll = {
-                        viewModel.clearTitleAndContent()
+                        viewModel.clearBody()
                         scope.launch { scaffoldState.drawerState.close() }
                     },
                     newDraft = {
@@ -121,6 +119,7 @@ fun WritingScreen(
                 )
             },
         ) { innerPadding ->
+
             Column(
                 Modifier
                     .padding(innerPadding)
@@ -161,6 +160,7 @@ fun WritingScreen(
                     textStyle = Typography.body1
                 )
             }
+
             if (showPostingDialog)
                 PostingDialog(
                     uiState.topicList,
@@ -186,21 +186,32 @@ fun WritingScreen(
 
 
 
-        if (isKeyboardVisible)
-            Row(
-                Modifier
-                    .align(Alignment.BottomStart)
-                    .imePadding()
-                    .height(imeToolBarHeight.dp)
-                    .fillMaxWidth()
-                    .border(1.dp, Color.Green)
-            ) {
-                IconButton(onClick = {
-                    launcher.launch("image/*")
-                }) {
-                    Icon(painterResource(id = R.drawable.image), contentDescription = "input image")
-                }
-            }
+//        Crossfade(
+//            targetState = isKeyboardVisible,
+//            modifier = Modifier
+//                .align(Alignment.BottomStart)
+//                .imePadding(),
+//        ) {
+//            if (isKeyboardVisible) {
+//                Row(
+//                    Modifier
+//                        .height(imeToolBarHeight.dp)
+//                        .fillMaxWidth()
+//                        .border(1.dp, Color.Green)
+//                ) {
+//                    IconButton(onClick = {
+//                        launcher.launch("image/*")
+//                    }) {
+//                        Icon(
+//                            painterResource(id = R.drawable.image),
+//                            contentDescription = "input image"
+//                        )
+//                    }
+//                }
+//            }
+//        }
+
+
 
         if (uiState.loading)
             Surface(Modifier.align(Alignment.Center)) {

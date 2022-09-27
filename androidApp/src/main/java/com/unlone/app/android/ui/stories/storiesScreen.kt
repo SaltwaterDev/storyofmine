@@ -35,7 +35,6 @@ fun StoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-
     if (!state.isUserLoggedIn)
         Box(Modifier.fillMaxSize()) {
             LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
@@ -121,7 +120,7 @@ fun PostsByTopic(
         ) {
             Text(
                 text = topic,
-                style = Typography.h5,
+                style = Typography.subtitle1,
                 modifier = Modifier
                     .weight(1f, false)
                     .placeholder(

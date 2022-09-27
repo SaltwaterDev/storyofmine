@@ -3,7 +3,7 @@ object Versions {
     const val activity = "1.5.1"
     const val appCompat = "1.5.1"
     const val composeLifecycle = "2.5.1"
-    const val compose = "1.2.1"
+    const val compose = "1.3.0-beta03"
     const val composeCompiler = "1.3.1"
     const val constraintLayout = "2.1.4"
     const val gradlePlugin = "4.2.1"

@@ -57,7 +57,7 @@ kotlin {
                 implementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
                 implementation(Ktx.Coroutine.test)
                 implementation(Ktor.clientMock)
-                implementation("io.mockk:mockk:1.12.5")
+                implementation("io.mockk:mockk:1.13.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             }
         }
@@ -120,7 +120,7 @@ dependencies {
     "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")
     "commonTestImplementation"("dev.icerock.moko:resources-test:0.20.1")
     // testing
-    "commonTestImplementation"("io.mockk:mockk-common:1.12.5")
+//    "commonTestImplementation"("io.mockk:mockk-common:1.13.1")
 //    "testImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 

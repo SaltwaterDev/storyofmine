@@ -61,7 +61,7 @@ class WritingViewModel(
         }
     }
 
-    private suspend fun refreshData() = getLastOpenedDraftUseCase()
+    suspend fun refreshData() = getLastOpenedDraftUseCase()
         ?.let { lastOpened ->
             changedChannel.send(
                 WritingUiState(
@@ -82,24 +82,31 @@ class WritingViewModel(
 
     fun setBody(content: String) {
         viewModelScope.launch {
-            changedChannel.send(state.value.copy(body = state.value.body.copy(text = content, selection = TextRange(content.length))))
+            changedChannel.send(
+                state.value.copy(
+                    body = state.value.body.copy(
+                        text = content,
+                        selection = TextRange(content.length)
+                    )
+                )
+            )
         }
     }
 
-    fun clearTitleAndContent() {
+    fun clearBody() {
         viewModelScope.launch {
-            changedChannel.send(state.value.copy(title = "", body = TextFieldValue(text = "")))
+            changedChannel.send(state.value.copy(body = TextFieldValue(text = "")))
         }
     }
 
     fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
         Log.d("TAG", "saveDraft: " + state.value.currentDraftId)
-        saveDraftUseCase(
-            state.value.currentDraftId,
-            state.value.title,
-            state.value.body.text
-        )
-        refreshData()
+        if (state.value.title.isNotBlank())
+            saveDraftUseCase(
+                state.value.currentDraftId,
+                state.value.title,
+                state.value.body.text
+            )
     }
 
     fun createNewDraft() {
@@ -187,6 +194,11 @@ class WritingViewModel(
                         )
                     }
                     is StoryResult.Failed ->
+                        state.value.copy(
+                            error = result.errorMsg,
+                            loading = false,
+                        )
+                    is StoryResult.UnknownError ->
                         state.value.copy(
                             error = result.errorMsg,
                             loading = false,

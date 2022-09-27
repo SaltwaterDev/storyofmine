@@ -1,7 +1,10 @@
 package com.unlone.app.android.ui
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -39,8 +42,14 @@ fun UnloneApp() {
             modifier = Modifier.navigationBarsPadding(),
             bottomBar = {
                 Log.d("TAG", "UnloneApp: ${appState.shouldShowBottomBar}")
-                if (appState.shouldShowBottomBar)
-                    UnloneBottomBar(appState)
+                AnimatedVisibility(
+                    visible = appState.shouldShowBottomBar,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it }),
+                    content = {
+                        UnloneBottomBar(appState)
+                    }
+                )
             }
         ) { contentPadding ->
             MainNavHost(navController, Modifier.padding(contentPadding), appState::upPress)
@@ -57,6 +66,7 @@ fun UnloneBottomBar(
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.surface
     ) {
+        // tune system bar color
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         appState.bottomBarTabs.forEach { screen ->

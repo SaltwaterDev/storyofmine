@@ -6,13 +6,9 @@ import kotlinx.serialization.Serializable
 sealed class StoryResult<T>(val data: T? = null, val errorMsg: String? = null) {
     class Success<T>(data: T? = null) : StoryResult<T>(data = data)
     class Failed<T>(errorMsg: String?) : StoryResult<T>(errorMsg = errorMsg)
+    class UnknownError<T>(errorMsg: String?) : StoryResult<T>(errorMsg = errorMsg)
 }
 
-
-@Serializable
-data class AllTopicResponse(
-    val data: List<Topic>,
-)
 
 @Serializable
 data class StoryResponse(
@@ -43,4 +39,3 @@ data class StoryResponse(
         )
     }
 }
-

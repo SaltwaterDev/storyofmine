@@ -28,7 +28,7 @@ fun StoryCard(
         enabled = !loading,
         shape = RoundedCornerShape(8.dp),
         modifier = modifier,
-        elevation = 4.dp,
+        elevation = 0.dp,
     ) {
         Column(Modifier) {
             Text(

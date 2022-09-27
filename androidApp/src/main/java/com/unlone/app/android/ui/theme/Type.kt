@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.theme
 
 import androidx.compose.material.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -29,6 +30,17 @@ val NotoSansHKFontFamily = FontFamily(
     Font(googleFont = NotoSansHK, fontProvider = provider, weight = FontWeight.Bold)
 )
 
+@OptIn(ExperimentalTextApi::class)
+val Montserrat = GoogleFont(name = "Montserrat")
+
+@OptIn(ExperimentalTextApi::class)
+val MontserratFontFamily = FontFamily(
+    Font(googleFont = Montserrat, fontProvider = provider),
+    Font(googleFont = Montserrat, fontProvider = provider, weight = FontWeight.SemiBold),
+    Font(googleFont = Montserrat, fontProvider = provider, weight = FontWeight.Medium),
+    Font(googleFont = Montserrat, fontProvider = provider, weight = FontWeight.Bold)
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     h1 = TextStyle(
@@ -45,12 +57,18 @@ val Typography = Typography(
         fontFamily = NotoSansHKFontFamily,
     ),
     body1 = TextStyle(
+        color = Black95,
         fontWeight = FontWeight.Normal,
-        fontSize = 19.sp,
-        letterSpacing = 1.6.sp,
+        fontSize = 16.sp,
+        letterSpacing = 2.4.sp,
         fontFamily = NotoSansHKFontFamily,
         lineHeight = 32.sp,
     ),
+    subtitle1 = TextStyle(
+        fontFamily = MontserratFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp,
+    )
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -71,6 +89,7 @@ val Typography = Typography(
 
 val Typography.titleLarge: TextStyle
     get() = TextStyle(
+        color = Color.Black,
         fontFamily = NotoSansHKFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 29.sp,
