@@ -23,39 +23,45 @@ struct WritingScreen: View {
                     withAnimation {
                         self.showMenu = false
                     }
+                } else {
+                    withAnimation {
+                        self.showMenu = true
+                    }
                 }
             }
         
-        return NavigationView {
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
+        return GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                NavigationView {
                     VStack{
                         TextField("Untitled", text: $writingViewModel.title).textInputAutocapitalization(.never).disableAutocorrection(true).padding()
                         TextEditor(text: $writingViewModel.content).textInputAutocapitalization(.never).disableAutocorrection(true).padding()
                     }
-                    if self.showMenu {
-                        MenuView(showMenu: $showMenu, menuItems: writingViewModel.menuItemList, callback: writingViewModel.onMenuClicked)
-                    }
-                }.gesture(drag)
-            }
-            .navigationBarTitle("Preview", displayMode: .inline)
-            .navigationBarItems(leading: (
-                Button(action: {
-                    withAnimation {
-                        self.showMenu.toggle()
-                    }
-                }) {
-                    Image(systemName: "line.horizontal.3")
-                        .imageScale(.large)
+                    .navigationBarTitle("Preview", displayMode: .inline)
+                    .navigationBarItems(leading: (
+                        Button(action: {
+                            withAnimation {
+                                self.showMenu.toggle()
+                            }
+                        }) {
+                            Image(systemName: "line.horizontal.3")
+                                .imageScale(.large)
+                        }
+                    ), trailing: (Button(action: {
+                        withAnimation {
+                            //
+                        }
+                    }) {
+                        Image(systemName: "paperplane")
+                            .imageScale(.large)
+                    }))
                 }
-            ), trailing: (Button(action: {
-                withAnimation {
-//
+                .frame(width: geometry.size.width, height: geometry.size.height).disabled(self.showMenu ? true : false)
+                    .offset(x: self.showMenu ? geometry.size.width/2 : 0)
+                if self.showMenu {
+                    MenuView(showMenu: $showMenu, menuItems: writingViewModel.menuItemList, callback: writingViewModel.onMenuClicked).frame(width: geometry.size.width/2).transition(.move(edge: .leading))
                 }
-            }) {
-                Image(systemName: "paperplane")
-                    .imageScale(.large)
-            }))
+            }.gesture(drag)
         }
     }
 }
