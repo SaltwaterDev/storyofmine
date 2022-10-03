@@ -55,7 +55,7 @@ class WritingViewModel: ObservableObject {
     func onMenuClicked(indentifier: String) async {
         switch indentifier {
         case "Clear":
-            clearTitleAndContent()
+            clearDraft()
         case "Edit History": break
         case "New Draft":
             await createNewDraft()
@@ -71,8 +71,7 @@ class WritingViewModel: ObservableObject {
         self.content = content
     }
     
-    func clearTitleAndContent() {
-        self.title = ""
+    func clearDraft() {
         self.content = ""
     }
     
@@ -116,6 +115,7 @@ class WritingViewModel: ObservableObject {
     func saveDraft() {
         Task {
             do {
+                guard !self.title.isEmpty else { return }
                 try await saveDraftUseCase.invoke(id: self.currentDraftId, title: self.title, content: self.content)
             } catch{ print(error) }
         }
