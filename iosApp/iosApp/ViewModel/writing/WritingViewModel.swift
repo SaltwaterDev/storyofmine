@@ -11,28 +11,44 @@ import shared
 
 @MainActor
 class WritingViewModel: ObservableObject {
+    private let topicRepo = TopicRepositoryHelper().topicRepo
+    private let getAllDraftsTitleUseCase = UseCasesHelper().getAllDraftsTitleUseCase
+    private let getLastOpenedUseCase = UseCasesHelper().getLastOpenedUseCase
     private let saveDraftUseCase = UseCasesHelper().saveDraftUseCase
     private let createNewDraftUseCase = UseCasesHelper().createNewDraftUseCase
     private let queryDraftUseCase = UseCasesHelper().queryDraftUseCase
     private let postStoryUseCase = UseCasesHelper().postStoryUseCase
     
-    var currentDraftId: String? = nil
-    var title: String = ""
-    var content: String = ""
-    //        var draftList: Map<String, String> = mapOf()
-    //        var topicList: List<String> = listOf()
-    var selectedTopic: String = ""
-    var isPublished: Bool = false
-    var commentAllowed: Bool = false
-    var saveAllowed: Bool = false
-    var error: String? = nil
-    var postSuccess: Bool = false
-    var loading: Bool = false
-    var isUserSignedIn: Bool = false
+    @Published var currentDraftId: String? = nil
+    @Published var title: String = ""
+    @Published var content: String = ""
+    @Published var draftList: [String:String] = [String:String]()
+    @Published var topicList: [String] = []
+    @Published var selectedTopic: String = ""
+    @Published var isPublished: Bool = false
+    @Published var commentAllowed: Bool = false
+    @Published var saveAllowed: Bool = false
+    @Published var error: String? = nil
+    @Published var postSuccess: Bool = false
+    @Published var loading: Bool = false
+    @Published var isUserSignedIn: Bool = false
     
     var menuItemList: [String] = ["Clear", "Edit History", "New Draft"]
     
     init() {
+        refreshData()
+    }
+    
+    func refreshData() {
+        Task {
+            do {
+                let lastOpened = try await getLastOpenedUseCase.invoke()
+                self.currentDraftId = lastOpened?.first as? String ?? ""
+                self.title = lastOpened?.second?.title as? String ?? ""
+                self.content = lastOpened?.second?.content as? String ?? ""
+                self.getTopicList()
+            } catch { print(error) }
+        }
         
     }
     
@@ -78,25 +94,58 @@ class WritingViewModel: ObservableObject {
         self.selectedTopic = topic
     }
     
-    func saveDraft() async {
-        do {
-            try await saveDraftUseCase.invoke(id: self.currentDraftId, title: self.title, content: self.content)
-        } catch{ print(error) }
+    func getAllDraftsTitle() {
+        Task {
+            do {
+                try await getAllDraftsTitleUseCase.invoke().collect(collector: Collector<[String:String]> { response in
+                    self.draftList = response
+                })
+            } catch {
+                print(error)
+            }
+        }
     }
     
-    func createNewDraft() async {
-        do {
-            await saveDraft()
-            let result = createNewDraftUseCase.invoke()
-            print(result)
-        }catch{ print(error) }
+    func getTopicList() {
+        Task {
+            let topicList = try await self.topicRepo().getAllTopic()
+            self.topicList = topicList.map({ $0.name })
+        }
     }
     
-    func switchDraft(id: String) async{
-        do{
-            await saveDraft()
-            queryDraftUseCase.invoke(id: id)
-        }catch{ print(error) }
+    func saveDraft() {
+        Task {
+            do {
+                try await saveDraftUseCase.invoke(id: self.currentDraftId, title: self.title, content: self.content)
+            } catch{ print(error) }
+        }
+    }
+    
+    func createNewDraft() {
+        saveDraft()
+        let result = createNewDraftUseCase.invoke()
+        // Get data from result
+        self.currentDraftId = result["id"] as? String
+        self.title = result["title"] as! String
+        self.selectedTopic = result["selectedTopic"] as! String
+        self.content = result["content"] as! String
+        
+    }
+    
+    func switchDraft(id: String) {
+        saveDraft()
+        Task {
+            do {
+                try await queryDraftUseCase.invoke(id: id).collect(collector: Collector<AnyObject> { draft in
+                    print(draft)
+//                    self.currentDraftId = draft.first as? String ?? ""
+//                    self.title = draft.second.title as? String ?? ""
+//                    self.content = draft.second.content as? String ?? ""
+                })
+            } catch {
+                print(error)
+            }
+        }
     }
     
     func postDraft() async{

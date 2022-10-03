@@ -62,6 +62,10 @@ struct WritingScreen: View {
                     MenuView(showMenu: $showMenu, menuItems: writingViewModel.menuItemList, callback: writingViewModel.onMenuClicked).frame(width: geometry.size.width/2).transition(.move(edge: .leading))
                 }
             }.gesture(drag)
+        }.onAppear {
+            writingViewModel.getAllDraftsTitle()
+        }.onDisappear {
+            writingViewModel.saveDraft()
         }
     }
 }
