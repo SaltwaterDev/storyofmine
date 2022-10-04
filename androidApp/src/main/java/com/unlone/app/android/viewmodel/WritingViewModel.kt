@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
+import com.unlone.app.data.write.DraftRepository
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -41,6 +42,7 @@ class WritingViewModel(
     private val postStoryUseCase: PostStoryUseCase,
     private val topicRepository: TopicRepository,
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
+    private val draftRepository: DraftRepository
 ) : ViewModel() {
 
     private val changedChannel = Channel<WritingUiState>()
@@ -50,29 +52,36 @@ class WritingViewModel(
         stateChangedResult,
         getAllDraftsTitleUseCase(),
     ) { changed, allDraftTitles ->
-        changed.copy(
-            draftList = allDraftTitles
-        )
+        changed.copy(draftList = allDraftTitles)
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
-    init {
-        viewModelScope.launch {
-            refreshData()
+
+    suspend fun refreshData(draftId: String? = null, version: String? = null) {
+        if (draftId == null || version == null) {
+            getLastOpenedDraftUseCase()
+                ?.let { lastOpened ->
+                    changedChannel.send(
+                        WritingUiState(
+                            currentDraftId = lastOpened.first,
+                            title = lastOpened.second.title,
+                            body = TextFieldValue(lastOpened.second.content),
+                            topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                        )
+                    )
+                }
+        } else {
+            queryDraftUseCase(draftId, version).collectLatest {
+                changedChannel.send(
+                    WritingUiState(
+                        currentDraftId = it.first,
+                        title = it.second.title,
+                        body = TextFieldValue(it.second.content),
+                        topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                    )
+                )
+            }
         }
     }
-
-    suspend fun refreshData() = getLastOpenedDraftUseCase()
-        ?.let { lastOpened ->
-            changedChannel.send(
-                WritingUiState(
-                    currentDraftId = lastOpened.first,
-                    title = lastOpened.second.title,
-                    body = TextFieldValue(lastOpened.second.content),
-                    topicList = topicRepository.getAllTopic().map { topic -> topic.name },
-                )
-            )
-        }
-
 
     fun setTitle(title: String) {
         viewModelScope.launch {
@@ -239,4 +248,9 @@ class WritingViewModel(
         }
     }
 
+    fun deleteDraft(id: String) {
+        viewModelScope.launch {
+            draftRepository.deleteDraft(id)
+        }
+    }
 }

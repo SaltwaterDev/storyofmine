@@ -145,7 +145,7 @@ fun StoryDetailTopBar(
                 }
 
                 Box() {
-                    IconButton(onClick = {expanded = true}) {
+                    IconButton(onClick = { expanded = true }) {
                         Icon(
                             Icons.Rounded.MoreVert,
                             contentDescription = "more"
@@ -159,13 +159,13 @@ fun StoryDetailTopBar(
                         DropdownMenuItem(onClick = report) {
                             Text("Report")
                         }
-                        DropdownMenuItem(onClick = { /* Handle settings! */ }) {
+                        /*DropdownMenuItem(onClick = { *//* Handle settings! *//* }) {
                             Text("Settings")
                         }
                         Divider()
-                        DropdownMenuItem(onClick = { /* Handle send feedback! */ }) {
+                        DropdownMenuItem(onClick = { *//* Handle send feedback! *//* }) {
                             Text("Send Feedback")
-                        }
+                        }*/
                     }
 
 
@@ -212,11 +212,11 @@ fun TopicDetailTopBar(
         // follow button
         if (isFollowing)
             OutlinedButton(onClick = { toggleFollowing() }) {
-                Text(text = "_Following")
+                Text(text = stringResource(resource = SharedRes.strings.common__btn_following))
             }
         else
             Button(onClick = { toggleFollowing() }) {
-                Text(text = "_Follow")
+                Text(text = stringResource(resource = SharedRes.strings.common__btn_follow))
             }
     }
 }

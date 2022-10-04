@@ -21,6 +21,7 @@ object Deps {
 
 object Ktx{
     const val core = "androidx.core:core-ktx:1.9.0"
+    const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 
     object Coroutine{
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.ktxCoroutine}"

@@ -2,6 +2,7 @@ package com.unlone.app.android.ui.write
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 import org.example.library.SharedRes
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalComposeUiApi
 @ExperimentalAnimatedInsets
 @ExperimentalLayoutApi
@@ -33,24 +35,26 @@ import org.example.library.SharedRes
 @Composable
 fun WritingScreen(
     viewModel: WritingViewModel,
+    draftId: String?,
+    draftVersionId: String?,
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
 ) {
     val uiState = viewModel.state.collectAsState().value
-    val context = LocalContext.current
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
     var showPostingDialog by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
-    var bodyTextFieldValueState = uiState.body
     // launch for open gallery
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         viewModel.addImageMD(it)
-
     }
 
+    LaunchedEffect(draftId) {
+        viewModel.refreshData(draftId, draftVersionId)
+    }
 
     DisposableEffect(key1 = Unit) {
         onDispose {
@@ -115,7 +119,8 @@ fun WritingScreen(
                     switchDraft = {
                         viewModel.switchDraft(it)
                         scope.launch { scaffoldState.drawerState.close() }
-                    }
+                    },
+                    deleteDraft = viewModel::deleteDraft
                 )
             },
         ) { innerPadding ->
@@ -148,7 +153,7 @@ fun WritingScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) imeToolBarHeight.dp else 0.dp),
-                    value = bodyTextFieldValueState,
+                    value = uiState.body,
                     onValueChange = { viewModel.setBody(it.text) },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -185,7 +190,6 @@ fun WritingScreen(
         }
 
 
-
 //        Crossfade(
 //            targetState = isKeyboardVisible,
 //            modifier = Modifier
@@ -210,7 +214,6 @@ fun WritingScreen(
 //                }
 //            }
 //        }
-
 
 
         if (uiState.loading)

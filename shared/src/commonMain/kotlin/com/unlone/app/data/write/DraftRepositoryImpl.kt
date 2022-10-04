@@ -41,9 +41,7 @@ internal class DraftRepositoryImpl : DraftRepository {
         val objectId = ObjectId.from(id)
         return realm.query<ParentDraftRealmObject>("id == $0", objectId)
             .asFlow()
-            .map {
-                it.list.first().toParentDraft()
-            }
+            .map { it.list.first().toParentDraft() }
     }
 
     override fun getLastOpenedDraft(): Flow<Draft?> {
@@ -74,10 +72,15 @@ internal class DraftRepositoryImpl : DraftRepository {
                 query<ParentDraftRealmObject>("id == $0", parentDraftRealmObject.id).first()
                     .find()
             if (existingParentDraftRealmObject != null) {
-                // new Draft
-                existingParentDraftRealmObject.childDraftRealmObjects =
-                    parentDraftRealmObject.childDraftRealmObjects
-                existingParentDraftRealmObject.topics = parentDraftRealmObject.topics
+                if (existingParentDraftRealmObject.childDraftRealmObjects.all { it.title != title || it.content != content }) {
+                    // insert new Version
+                    parentDraftRealmObject.childDraftRealmObjects.forEach {
+                        existingParentDraftRealmObject.childDraftRealmObjects.add(it)
+                    }
+                    existingParentDraftRealmObject.topics = parentDraftRealmObject.topics
+                } else {
+                    return@write
+                }
             } else {
                 copyToRealm(parentDraftRealmObject)
             }
@@ -95,10 +98,8 @@ internal class DraftRepositoryImpl : DraftRepository {
     }
 
     override suspend fun deleteDraft(id: String) = realm.write {
-            // fetch the frog by primary key value, passed in as argument number 0
-            val parentDraftRealmObject =
-                this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).find().first()
-            // call delete on the results of a query to delete the object permanently
-            delete(parentDraftRealmObject)
-        }
+        val parentDraftRealmObject =
+            this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).find().first()
+        delete(parentDraftRealmObject)
+    }
 }

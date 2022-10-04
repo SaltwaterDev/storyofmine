@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -89,4 +90,26 @@ fun CommentItem(comment: Comment) {
             }
         }
     )
+}
+
+
+
+@Composable
+fun CommentInput(
+    modifier: Modifier = Modifier,
+    comment: String,
+    setComment: (String) -> Unit,
+    onCommentSent: () -> Unit
+) {
+    Row(modifier) {
+        TextField(
+            value = comment,
+            onValueChange = setComment,
+            placeholder = { Text(text = "_comment here") },
+            modifier = Modifier.weight(1f),
+        )
+        Button(onClick = onCommentSent) {
+            Text(text = "Send")
+        }
+    }
 }

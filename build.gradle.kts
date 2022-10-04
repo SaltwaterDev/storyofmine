@@ -11,6 +11,8 @@ buildscript {
         classpath("io.realm.kotlin:gradle-plugin:1.0.0")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2")
         classpath("dev.icerock.moko:resources-generator:0.20.1")
+        // build kconfig
+        classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.13.3")
     }
 }
 

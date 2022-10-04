@@ -1,6 +1,5 @@
 package com.unlone.app.android.ui.navigation
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -10,17 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.unlone.app.android.ui.UnloneBottomDestinations
 import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.stories.ReportScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.stories.StoryDetail
-import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.ui.stories.TopicDetail
+import com.unlone.app.android.ui.write.EditHistoryScreen
+import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.*
 import org.koin.androidx.compose.koinViewModel
 
@@ -37,8 +37,6 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit
 ) {
-    Log.d("wesley", "MainNavHost: ${navController.currentDestination?.route}")
-
     AnimatedNavHost(
         navController = navController,
         startDestination = UnloneBottomDestinations.Write.route,
@@ -46,15 +44,7 @@ fun MainNavHost(
         route = "main",
     ) {
 
-
-        composable(UnloneBottomDestinations.Write.route) {
-            val viewModel = koinViewModel<WritingViewModel>()
-            WritingScreen(
-                viewModel,
-                navToEditHistory = { navToEditHistory() },
-                navToSignIn = { navigateToAuth(navController) },
-            )
-        }
+        writeGraph(navController)
 
         composable(
             UnloneBottomDestinations.Stories.route,
@@ -74,7 +64,7 @@ fun MainNavHost(
             ProfileScreen(viewModel, {}, {}, {}, {}, {})
         }
         composable(
-            "${UnloneBottomDestinations.Stories.route}/{pid}",
+            "storyDetail/{pid}",
             arguments = listOf(navArgument("pid") { type = NavType.StringType })
         ) {
             val pid: String? = it.arguments?.getString("pid")
@@ -135,13 +125,11 @@ fun MainNavHost(
             },
         )
 
+
         // todo: Add on-boarding Screens
     }
 }
 
-fun navToEditHistory() {
-    /*TODO("Not yet implemented")*/
-}
 
 fun navToStories() {
     /*TODO("Not yet implemented")*/
@@ -149,7 +137,7 @@ fun navToStories() {
 
 
 fun navigateToStoryDetail(navController: NavHostController, pid: String) {
-    navController.navigate("${UnloneBottomDestinations.Stories.route}/$pid")
+    navController.navigate("storyDetail/$pid")
 }
 
 fun navigateToTopicDetail(navController: NavHostController, topicId: String) {

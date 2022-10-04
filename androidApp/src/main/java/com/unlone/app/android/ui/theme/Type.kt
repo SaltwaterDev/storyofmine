@@ -57,7 +57,7 @@ val Typography = Typography(
         fontFamily = NotoSansHKFontFamily,
     ),
     body1 = TextStyle(
-        color = Black95,
+//        color = Black95,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         letterSpacing = 2.4.sp,
@@ -89,7 +89,7 @@ val Typography = Typography(
 
 val Typography.titleLarge: TextStyle
     get() = TextStyle(
-        color = Color.Black,
+//        color = Color.Black,
         fontFamily = NotoSansHKFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 29.sp,

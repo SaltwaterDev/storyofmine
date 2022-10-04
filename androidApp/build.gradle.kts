@@ -79,7 +79,8 @@ dependencies {
 
     with(Ktx) {
         implementation(core)
-        with(Ktx.Coroutine){
+        implementation(datetime)
+        with(Ktx.Coroutine) {
             implementation(core)
             implementation(android)
             implementation(playService)
@@ -90,7 +91,7 @@ dependencies {
     implementation(Deps.timber)
 
     // compose markdown
-//    implementation("com.halilibo.compose-richtext:richtext-commonmark:${Versions.richText}")
+    // implementation("com.halilibo.compose-richtext:richtext-commonmark:${Versions.richText}")
     implementation("com.github.jeziellago:compose-markdown:0.3.0")
 
     with(Koin) {

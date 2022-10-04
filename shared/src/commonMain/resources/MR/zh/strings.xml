@@ -46,6 +46,7 @@
     <string name="profile__sign_out_alert_title">Are you sure to log out?</string>
     <string name="profile__btn_sign_out">Log out</string>
 
+    <string name="edit_history_title">Edit History</string>
 
 
     <string name="common__email">Email</string>
@@ -62,5 +63,7 @@
     <string name="common__btn_cancel">Cancel</string>
     <string name="common__btn_sign_in">Sign in</string>
     <string name="common__btn_sign_up">Sign up</string>
+    <string name="common__btn_follow">Following</string>
+    <string name="common__btn_following">Following</string>
 
 </resources>

@@ -1,39 +1,21 @@
 package com.unlone.app.android.ui
 
-import android.content.res.Resources
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.unlone.app.android.R
-import androidx.navigation.compose.currentBackStackEntryAsState as currentBackStackEntryAsState
+import com.unlone.app.android.ui.navigation.UnloneBottomDestinations
 
-/**
- * Destinations used in the [UnloneApp].
- */
-enum class UnloneBottomDestinations(val icon: Int, val route: String) {
-    Write(icon = R.drawable.ic_write, route = "write"),
-    Stories(icon = R.drawable.ic_book, route = "stories"),
-    Profile(icon = R.drawable.ic_profile, route = "profiles");
-}
 
 /**
  * Remembers and creates an instance of [UnloneAppState]
@@ -69,7 +51,9 @@ class UnloneAppState(
     // Not all routes need to show the bottom bar.
     val shouldShowBottomBar: Boolean
         @Composable get() = !WindowInsets.isImeVisible &&
-                bottomBarTabs.any { it.route == navBackStackEntry.value?.destination?.route }
+                bottomBarTabs.any { batTab ->
+                    currentRoute?.let { it.startsWith(batTab.route) } ?: false
+                }
 
     // ----------------------------------------------------------
     // Navigation state source of truth

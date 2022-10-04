@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalView
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColors(
-    primary = Purple80,
+    primary = Color(0xFFF8EDE3),
     secondary = PurpleGrey80,
 )
 
@@ -46,6 +46,7 @@ fun UnloneTheme(
 //                systemUiController.setSystemBarsColor(
 //                    color = colorScheme.background
 //                )
+                systemUiController.setNavigationBarColor(color = Color.Transparent)
             } else {
                 systemUiController.setStatusBarColor(
                     color = Color.Transparent,

@@ -85,18 +85,14 @@ class WritingViewModel: ObservableObject {
     }
     
     func createNewDraft() async {
-        do {
-            await saveDraft()
-            let result = createNewDraftUseCase.invoke()
-            print(result)
-        }catch{ print(error) }
+        await saveDraft()
+        let result = createNewDraftUseCase.invoke()
+        print(result)
     }
     
     func switchDraft(id: String) async{
-        do{
-            await saveDraft()
-            queryDraftUseCase.invoke(id: id)
-        }catch{ print(error) }
+        await saveDraft()
+        queryDraftUseCase.invoke(id: id, version: nil)
     }
     
     func postDraft() async{
