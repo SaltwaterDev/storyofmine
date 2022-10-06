@@ -4,12 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -19,8 +15,6 @@ import com.unlone.app.android.ui.stories.ReportScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.stories.StoryDetail
 import com.unlone.app.android.ui.stories.TopicDetail
-import com.unlone.app.android.ui.write.EditHistoryScreen
-import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.*
 import org.koin.androidx.compose.koinViewModel
 
@@ -64,10 +58,10 @@ fun MainNavHost(
             ProfileScreen(viewModel, {}, {}, {}, {}, {})
         }
         composable(
-            "storyDetail/{pid}",
-            arguments = listOf(navArgument("pid") { type = NavType.StringType })
+            StoryDetail.routeWithArgs,
+            arguments = StoryDetail.arguments
         ) {
-            val pid: String? = it.arguments?.getString("pid")
+            val pid: String? = it.arguments?.getString(StoryDetail.storyArg)
             val viewModel = koinViewModel<StoryDetailViewModel>()
             StoryDetail(
                 pid,
@@ -82,10 +76,10 @@ fun MainNavHost(
             )
         }
         composable(
-            "topic/{topic}",
-            arguments = listOf(navArgument("topic") { type = NavType.StringType })
+            TopicDetail.routeWithArgs,
+            arguments = TopicDetail.arguments
         ) {
-            val topic = it.arguments?.getString("topic")
+            val topic = it.arguments?.getString(TopicDetail.topicArg)
             val viewModel = koinViewModel<TopicDetailViewModel>()
             TopicDetail(
                 topic,
@@ -95,14 +89,13 @@ fun MainNavHost(
             )
         }
 
-        composable("report/{type}/{reported}",
-            arguments = listOf(
-                navArgument("type") { type = NavType.StringType },
-                navArgument("reported") { type = NavType.StringType }
-            )) {
+        composable(
+            Report.routeWithArgs,
+            arguments = Report.arguments
+        ) {
             val viewModel = koinViewModel<ReportViewModel>()
-            val type = it.arguments?.getString("type")
-            val reported = it.arguments?.getString("reported")
+            val type = it.arguments?.getString(Report.reportTypeArg)
+            val reported = it.arguments?.getString(Report.reportIdArg)
 
             ReportScreen(
                 viewModel = viewModel,
@@ -137,13 +130,13 @@ fun navToStories() {
 
 
 fun navigateToStoryDetail(navController: NavHostController, pid: String) {
-    navController.navigate("storyDetail/$pid")
+    navController.navigate("${StoryDetail.route}/$pid")
 }
 
 fun navigateToTopicDetail(navController: NavHostController, topicId: String) {
-    navController.navigate("topic/$topicId")
+    navController.navigate("${TopicDetail.route}/$topicId")
 }
 
 fun navToReport(navController: NavHostController, type: String, reported: String) {
-    navController.navigate("report/${type}/${reported}")
+    navController.navigate("${Report.route}/${type}/${reported}")
 }

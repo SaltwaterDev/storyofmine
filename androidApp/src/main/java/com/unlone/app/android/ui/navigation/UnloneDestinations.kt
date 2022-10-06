@@ -46,3 +46,29 @@ object EditDraftHistory : UnloneDestination {
 }
 
 
+object StoryDetail : UnloneDestination {
+    override val route = "storyDetail"
+    const val storyArg = "storyId"
+    val routeWithArgs = "$route/{$storyArg}"
+    val arguments = listOf(navArgument(storyArg) { type = NavType.StringType })
+}
+
+object TopicDetail : UnloneDestination {
+    override val route = "topicDetail"
+    const val topicArg = "topic"
+    val routeWithArgs = "$route/{$topicArg}"
+    val arguments = listOf(navArgument(topicArg) { type = NavType.StringType })
+}
+
+object Report : UnloneDestination {
+    override val route = "report"
+    const val reportTypeArg = "type"
+    const val reportIdArg = "reportId"
+    val routeWithArgs = "$route/{$reportTypeArg}/{$reportIdArg}"
+    val arguments = listOf(
+        navArgument(reportTypeArg) { type = NavType.StringType },
+        navArgument(reportIdArg) { type = NavType.StringType },
+    )
+}
+
+
