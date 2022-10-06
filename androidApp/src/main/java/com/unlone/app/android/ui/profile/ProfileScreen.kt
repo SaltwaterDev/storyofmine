@@ -28,11 +28,11 @@ fun ProfileScreen(
     goToHelp: () -> Unit,
 ) {
 
+    LaunchedEffect(Unit){
+        viewModel.getUserName()
+    }
     val state = viewModel.state.collectAsState().value
     var showSignOutAlert by remember { mutableStateOf(false) }
-
-
-
 
     Column(Modifier.fillMaxSize()) {
         if (state.isUserLoggedIn) {
@@ -63,7 +63,6 @@ fun ProfileScreen(
             ListItem(Modifier.clickable { showSignOutAlert = true }) { Text(text = stringResource(resource = SharedRes.strings.profile__sign_out), style = Typography.subtitle1) }
             ProfileScreenDivider()
         }
-
     }
 
     if (showSignOutAlert) {

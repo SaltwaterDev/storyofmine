@@ -142,10 +142,10 @@ buildkonfig {
 //     exposeObjectWithName = "YourAwesomePublicConfig"
 
     defaultConfigs {
-        buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
+        buildConfigField(STRING, "baseUrl", "https://unlone-dev-dot-unlone.an.r.appspot.com")
     }
     // flavor is passed as a first argument of defaultConfigs
-    defaultConfigs("uat") {
+    defaultConfigs("staging") {
         buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
     }
 

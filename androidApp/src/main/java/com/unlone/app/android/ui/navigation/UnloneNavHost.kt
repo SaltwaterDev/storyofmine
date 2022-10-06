@@ -29,7 +29,7 @@ import org.koin.androidx.compose.koinViewModel
 @ExperimentalMaterialApi
 @ExperimentalLayoutApi
 @OptIn(
-    ExperimentalAnimatedInsets::class, ExperimentalComposeUiApi::class
+    ExperimentalAnimatedInsets::class
 )
 @Composable
 fun MainNavHost(

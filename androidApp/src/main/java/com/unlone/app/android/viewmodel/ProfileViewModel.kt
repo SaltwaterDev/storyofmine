@@ -24,10 +24,6 @@ class ProfileViewModel(
     private var _state = MutableStateFlow(ProfileUiState())
     val state = _state.asStateFlow()
 
-    init {
-        authenticate()
-    }
-
     private fun authenticate() {
         _state.value = _state.value.copy(loading = true)
         viewModelScope.launch {
@@ -48,16 +44,17 @@ class ProfileViewModel(
         }
     }
 
-    private fun getUserName() {
+    fun getUserName() {
         viewModelScope.launch {
+            _state.value = _state.value.copy(loading = true)
             when (val getUsernameResponse = authRepository.getUsername()) {
-                // getUsername
                 is AuthResult.Authorized -> getUsernameResponse.data?.let {
-                    _state.value = _state.value.copy(username = it)
+                    _state.value = _state.value.copy(username = it, isUserLoggedIn = true)
                 }
                 else -> _state.value =
                     _state.value.copy(errorMsg = getUsernameResponse.errorMsg)
             }
+            _state.value = _state.value.copy(loading = false)
         }
     }
 

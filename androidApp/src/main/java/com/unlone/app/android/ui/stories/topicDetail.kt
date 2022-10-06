@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.ui.comonComponent.TopicDetailTopBar
 import com.unlone.app.android.viewmodel.TopicDetailViewModel
@@ -26,40 +28,42 @@ fun TopicDetail(
     viewModel: TopicDetailViewModel
 ) {
     val uiState = viewModel.state.value
-    LaunchedEffect(key1 = Unit, block = {
+    LaunchedEffect(Unit) {
         topic?.let { viewModel.initData(it) }
-    })
+    }
 
-    Scaffold(
-        modifier = Modifier
-            .displayCutoutPadding()
-            .statusBarsPadding(),
-        topBar = {
-            TopicDetailTopBar(
-                back,
-                uiState.topic ?: "",
-                true,
-                viewModel::toggleFollowing,
-            )
-        }
-    ) {
-        LazyColumn {
-            uiState.stories?.let {
-                items(it) { story ->
-                    StoryCard(
-                        story.title,
-                        story.content,
-                        uiState.loading,
-                        Modifier
-                            .padding(16.dp)
-                            .fillParentMaxWidth()
-                            .placeholder(
-                                visible = uiState.loading,
-                                highlight = PlaceholderHighlight.fade()
-                            )
-                    ) { navToStoryDetail(story.id) }
+    Scaffold(modifier = Modifier
+        .displayCutoutPadding()
+        .statusBarsPadding(), topBar = {
+        TopicDetailTopBar(
+            back,
+            uiState.topic ?: "",
+            true,
+            viewModel::toggleFollowing,
+        )
+    }) {
+        SwipeRefresh(state = rememberSwipeRefreshState(uiState.loading),
+            onRefresh = { topic?.let { it1 -> viewModel.initData(it1) } }) {
+
+            LazyColumn {
+                uiState.stories?.let {
+                    items(it) { story ->
+                        StoryCard(
+                            story.title,
+                            story.content,
+                            uiState.loading,
+                            Modifier
+                                .padding(16.dp)
+                                .fillParentMaxWidth()
+                                .placeholder(
+                                    visible = uiState.loading,
+                                    highlight = PlaceholderHighlight.fade()
+                                )
+                        ) { navToStoryDetail(story.id) }
+                    }
                 }
             }
+
         }
     }
 }

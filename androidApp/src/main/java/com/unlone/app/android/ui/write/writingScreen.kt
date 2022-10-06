@@ -131,7 +131,6 @@ fun WritingScreen(
                     .statusBarsPadding()
                     .navigationBarsPadding()
                     .imePadding()
-                    .imeNestedScroll()
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth(),

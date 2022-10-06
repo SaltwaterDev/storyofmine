@@ -151,7 +151,7 @@ private fun DismissableBlockWithIcon(
                     .fillMaxSize()
                     .background(color)
                     .padding(horizontal = 20.dp),
-                contentAlignment = Alignment.CenterEnd
+                contentAlignment = Alignment.CenterStart
             ) {
                 Icon(
                     Icons.Default.Delete,
