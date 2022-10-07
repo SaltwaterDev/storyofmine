@@ -69,7 +69,7 @@ fun MainNavHost(
                 { topicId -> navigateToTopicDetail(navController, topicId) },
                 {
                     if (pid != null) {
-                        navToReport(navController, "story", pid)
+                        navToReport(navController, ReportType.story.name, pid)
                     }
                 },
                 viewModel

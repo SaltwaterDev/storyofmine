@@ -251,6 +251,12 @@ class WritingViewModel(
     fun deleteDraft(id: String) {
         viewModelScope.launch {
             draftRepository.deleteDraft(id)
+            // remove current content if deleting the current one
+            if (id == state.value.currentDraftId){
+                changedChannel.send(
+                    state.value.copy(title = "", body = TextFieldValue(""))
+                )
+            }
         }
     }
 }

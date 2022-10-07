@@ -71,4 +71,9 @@ object Report : UnloneDestination {
     )
 }
 
+enum class ReportType{
+    story,
+    comment
+}
+
 
