@@ -17,7 +17,8 @@ data class TopicStoriesUiState(
     val errorMsg: String? = null,
     val lastPage: Int? = null,
     val isFollowing: Boolean = false,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val isRefreshing: Boolean = false
 )
 
 
@@ -29,41 +30,49 @@ class TopicDetailViewModel(
         MutableStateFlow(TopicStoriesUiState())
     val state = _state.asStateFlow()
 
-    fun initData(topic: String) {
+    suspend fun initData(topic: String) {
         _state.value = _state.value.copy(
             topic = topic,
             loading = true
         )
-        viewModelScope.launch {
-            when (val result = fetchStoriesByTopicUseCase(topic, state.value.lastPage)) {
-                is StoryResult.Success -> {
-                    _state.value = _state.value.copy(
-                        stories = result.data
-                    )
-                }
-                is StoryResult.Failed -> {
-                    _state.value = _state.value.copy(
-                        errorMsg = result.errorMsg
-                    )
-                    Log.e("TAG", "initData: ${result.errorMsg}")
-                }
-                is StoryResult.UnknownError -> {
-                    _state.value = _state.value.copy(
-                        errorMsg = result.errorMsg
-                    )
-                    Log.e("TAG", "initData: ${result.errorMsg}")
-                }
+        when (val result = fetchStoriesByTopicUseCase(topic, state.value.lastPage)) {
+            is StoryResult.Success -> {
+                _state.value = _state.value.copy(
+                    stories = result.data
+                )
             }
-            _state.value = _state.value.copy(
-                loading = false
-            )
+            is StoryResult.Failed -> {
+                _state.value = _state.value.copy(
+                    errorMsg = result.errorMsg
+                )
+                Log.e("TAG", "initData: ${result.errorMsg}")
+            }
+            is StoryResult.UnknownError -> {
+                _state.value = _state.value.copy(
+                    errorMsg = result.errorMsg
+                )
+                Log.e("TAG", "initData: ${result.errorMsg}")
+            }
         }
+        _state.value = _state.value.copy(
+            loading = false,
+        )
     }
 
     fun toggleFollowing() {
         // todo: update following state to db
         _state.value = _state.value.copy(
             isFollowing = !_state.value.isFollowing
+        )
+    }
+
+    suspend fun refresh(topic: String) {
+        _state.value = _state.value.copy(
+            isRefreshing = true
+        )
+        initData(topic)
+        _state.value = _state.value.copy(
+            isRefreshing = false
         )
     }
 }

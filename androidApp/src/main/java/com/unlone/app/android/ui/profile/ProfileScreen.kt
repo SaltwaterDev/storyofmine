@@ -26,6 +26,7 @@ fun ProfileScreen(
     goToSavedStories: () -> Unit,
     goToSetting: () -> Unit,
     goToHelp: () -> Unit,
+    goToRules: () -> Unit,
 ) {
 
     LaunchedEffect(Unit){
@@ -58,6 +59,8 @@ fun ProfileScreen(
         ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
         ProfileScreenDivider()
         ListItem(Modifier.clickable { goToHelp() }) { Text(text = stringResource(resource = SharedRes.strings.profile__help), style = Typography.subtitle1) }
+        ProfileScreenDivider()
+        ListItem(Modifier.clickable { goToRules() }) { Text(text = stringResource(resource = SharedRes.strings.profile__rules), style = Typography.subtitle1) }
         ProfileScreenDivider()
         if (state.isUserLoggedIn) {
             ListItem(Modifier.clickable { showSignOutAlert = true }) { Text(text = stringResource(resource = SharedRes.strings.profile__sign_out), style = Typography.subtitle1) }

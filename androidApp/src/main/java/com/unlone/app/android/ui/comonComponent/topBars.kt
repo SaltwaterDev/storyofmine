@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.comonComponent
 
+import android.text.style.LineBackgroundSpan.Standard
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -232,3 +233,22 @@ fun TopicDetailTopBarPreview() {
     )
 }
 
+
+@Composable
+fun StandardTopBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    onBackPressed: (() -> Unit)? = null
+) {
+    TopAppBar(
+        modifier = modifier,
+        title = { Text(text = title) },
+        navigationIcon = {
+            onBackPressed?.let { onClicked ->
+                IconButton(onClick = onClicked) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
+                }
+            }
+        }
+    )
+}

@@ -6,6 +6,7 @@ import com.unlone.app.domain.entities.Story
 import com.unlone.app.domain.entities.StoryItem
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
+import io.ktor.utils.io.charsets.*
 
 interface StoryRepository {
     suspend fun fetchStoriesByPosts(
@@ -39,6 +40,9 @@ internal class StoryRepositoryImpl(
     private val authRepository: AuthRepository,
     private val storyApi: StoryApi
 ) : StoryRepository {
+
+    private val charset = Charsets.UTF_8
+
     override suspend fun fetchStoriesByPosts(
         postPerFetching: Int,
         itemsPerPage: Int,
@@ -64,11 +68,12 @@ internal class StoryRepositoryImpl(
         commentAllowed: Boolean,
         saveAllowed: Boolean,
     ): StoryResult<Unit> {
+        // encode the content to utf-8 to prevent 400 bad request (triggered when data is too large)
         return try {
             storyApi.postStory(
                 StoryRequest(
                     title = title,
-                    content = content,
+                    content = content.encodeToByteArray(),
                     topic, isPublished, commentAllowed, saveAllowed
                 ),
                 jwt = "Bearer $jwt",
@@ -87,6 +92,7 @@ internal class StoryRepositoryImpl(
                     id,
                     "Bearer $jwt"
                 )
+                // todo: decode the content of utf-8
                 StoryResult.Success(response.toStory())
             } ?: StoryResult.Failed("jwt not exists")
         } catch (e: RedirectResponseException) {
@@ -109,6 +115,7 @@ internal class StoryRepositoryImpl(
                 topic, pagingItems, page
             )
             StoryResult.Success(response.data.flatMap {
+                // todo: decode the content of utf-8
                 it.stories
             })
         } catch (e: RedirectResponseException) {

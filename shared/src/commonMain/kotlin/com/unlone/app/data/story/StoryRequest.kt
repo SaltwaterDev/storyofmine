@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StoryRequest(
     val title: String,
-    val content: String,
+    val content: ByteArray,
     val topic: String,
     val isPublished: Boolean,
     val commentAllowed: Boolean,

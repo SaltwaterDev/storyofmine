@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -24,7 +25,7 @@ import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun StoryDetail(
     storyId: String?,
@@ -123,7 +124,7 @@ fun StoryDetail(
 
         CommentInput(
             modifier = Modifier
-                .navigationBarsPadding()
+                .fillMaxWidth()
                 .imePadding()
                 .align(Alignment.BottomStart)
                 .onGloballyPositioned {

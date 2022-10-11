@@ -16,7 +16,8 @@ data class ReportUiState(
     val errorMsg: String? = null,
     val reportReasons: List<ReportReason> = listOf(),
     val otherReportReason: String = "",
-    val selectedReportReason: ReportReason? = null
+    val selectedReportReason: ReportReason? = null,
+    val selectedOtherReportReason: Boolean = false
 )
 
 
@@ -64,7 +65,8 @@ class ReportViewModel(
         when (result) {
             is StoryResult.Success -> _state.value = state.value.copy(reportSuccess = true)
             is StoryResult.Failed -> _state.value = state.value.copy(errorMsg = result.errorMsg)
-            is StoryResult.UnknownError -> _state.value = state.value.copy(errorMsg = result.errorMsg)
+            is StoryResult.UnknownError -> _state.value =
+                state.value.copy(errorMsg = result.errorMsg)
         }
         _state.value = state.value.copy(loading = false)
     }
@@ -74,7 +76,13 @@ class ReportViewModel(
     }
 
     fun onReportOptionSelected(reason: ReportReason) {
-        _state.value = state.value.copy(selectedReportReason = reason)
+        _state.value =
+            state.value.copy(selectedReportReason = reason, selectedOtherReportReason = false)
+    }
+
+    fun onOtherReportSelected() {
+        clearSelectedReason()
+        _state.value = state.value.copy(selectedOtherReportReason = true)
     }
 
     fun dismissError() {

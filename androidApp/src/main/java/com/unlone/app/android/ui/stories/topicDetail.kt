@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -18,6 +19,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.ui.comonComponent.TopicDetailTopBar
 import com.unlone.app.android.viewmodel.TopicDetailViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -28,6 +30,8 @@ fun TopicDetail(
     viewModel: TopicDetailViewModel
 ) {
     val uiState = viewModel.state.value
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         topic?.let { viewModel.initData(it) }
     }
@@ -42,8 +46,8 @@ fun TopicDetail(
             viewModel::toggleFollowing,
         )
     }) {
-        SwipeRefresh(state = rememberSwipeRefreshState(uiState.loading),
-            onRefresh = { topic?.let { it1 -> viewModel.initData(it1) } }) {
+        SwipeRefresh(state = rememberSwipeRefreshState(uiState.isRefreshing),
+            onRefresh = { topic?.let { it1 -> coroutineScope.launch { viewModel.refresh(it1) } } }) {
 
             LazyColumn {
                 uiState.stories?.let {

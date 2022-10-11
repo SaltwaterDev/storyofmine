@@ -46,6 +46,7 @@ object EditDraftHistory : UnloneDestination {
 }
 
 
+// stories
 object StoryDetail : UnloneDestination {
     override val route = "storyDetail"
     const val storyArg = "storyId"
@@ -74,6 +75,16 @@ object Report : UnloneDestination {
 enum class ReportType{
     story,
     comment
+}
+
+
+
+// profiles
+
+object Rules : UnloneDestination {
+    override val route = "rules"
+//    val routeWithArgs = "$route"
+//    val arguments = listOf()
 }
 
 

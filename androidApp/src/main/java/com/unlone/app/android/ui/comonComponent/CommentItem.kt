@@ -4,21 +4,24 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.unlone.app.android.ui.theme.UnloneTheme
 import com.unlone.app.domain.entities.Comment
 
 
@@ -93,7 +96,7 @@ fun CommentItem(comment: Comment) {
 }
 
 
-
+@ExperimentalComposeUiApi
 @Composable
 fun CommentInput(
     modifier: Modifier = Modifier,
@@ -101,15 +104,22 @@ fun CommentInput(
     setComment: (String) -> Unit,
     onCommentSent: () -> Unit
 ) {
-    Row(modifier) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Surface(modifier) {
         TextField(
             value = comment,
             onValueChange = setComment,
             placeholder = { Text(text = "_comment here") },
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.navigationBarsPadding(),
+            trailingIcon = {
+                TextButton(onClick = {
+                    onCommentSent()
+                    keyboardController?.hide()
+                }) {
+                    Text(text = "Send")
+                }
+            },
         )
-        Button(onClick = onCommentSent) {
-            Text(text = "Send")
-        }
     }
 }

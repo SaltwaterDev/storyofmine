@@ -11,6 +11,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.profile.ProfileScreen
+import com.unlone.app.android.ui.profile.RulesScreen
 import com.unlone.app.android.ui.stories.ReportScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.stories.StoryDetail
@@ -55,7 +56,15 @@ fun MainNavHost(
             UnloneBottomDestinations.Profile.route,
         ) {
             val viewModel = koinViewModel<ProfileViewModel>()
-            ProfileScreen(viewModel, {}, {}, {}, {}, {})
+            ProfileScreen(viewModel, {}, {}, {}, {}, {}, { navToRules(navController) })
+        }
+
+        composable(
+            Rules.route,
+        ) {
+            RulesScreen(){
+                navigateUp()
+            }
         }
         composable(
             StoryDetail.routeWithArgs,
@@ -139,4 +148,8 @@ fun navigateToTopicDetail(navController: NavHostController, topicId: String) {
 
 fun navToReport(navController: NavHostController, type: String, reported: String) {
     navController.navigate("${Report.route}/${type}/${reported}")
+}
+
+fun navToRules(navController: NavHostController) {
+    navController.navigate(Rules.route)
 }

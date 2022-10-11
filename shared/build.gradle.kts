@@ -146,7 +146,7 @@ buildkonfig {
     }
     // flavor is passed as a first argument of defaultConfigs
     defaultConfigs("staging") {
-        buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
+        buildConfigField(STRING, "baseUrl", "https://unlone-staging-dot-unlone.an.r.appspot.com/")
     }
 
     // flavor is passed as a first argument of defaultConfigs
