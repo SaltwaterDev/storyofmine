@@ -41,8 +41,6 @@ internal class StoryRepositoryImpl(
     private val storyApi: StoryApi
 ) : StoryRepository {
 
-    private val charset = Charsets.UTF_8
-
     override suspend fun fetchStoriesByPosts(
         postPerFetching: Int,
         itemsPerPage: Int,
@@ -73,7 +71,7 @@ internal class StoryRepositoryImpl(
             storyApi.postStory(
                 StoryRequest(
                     title = title,
-                    content = content.encodeToByteArray(),
+                    content = content,
                     topic, isPublished, commentAllowed, saveAllowed
                 ),
                 jwt = "Bearer $jwt",

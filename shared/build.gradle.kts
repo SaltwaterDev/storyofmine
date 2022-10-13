@@ -38,6 +38,7 @@ kotlin {
                     implementation(contentNegotiation)
                     implementation(clientCore)
                     implementation(serialization)
+                    implementation(encoding)
                 }
                 with(Koin) {
                     api(core)
@@ -153,5 +154,4 @@ buildkonfig {
     defaultConfigs("prod") {
         buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
     }
-
 }

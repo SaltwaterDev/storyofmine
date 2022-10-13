@@ -71,4 +71,5 @@ object Ktor{
     const val clientMock = "io.ktor:ktor-client-mock:${Versions.ktorVersion}"
     const val okHttp = "io.ktor:ktor-client-okhttp:${Versions.ktorVersion}"
     const val darwin = "io.ktor:ktor-client-darwin:${Versions.ktorVersion}"
+    const val encoding = "io.ktor:ktor-client-encoding:${Versions.ktorVersion}"
 }

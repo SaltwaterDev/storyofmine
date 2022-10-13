@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -216,10 +217,13 @@ fun WritingScreen(
 
 
         if (uiState.loading)
-            Surface(Modifier.align(Alignment.Center)) {
-                Row {
-                    Text(text = stringResource(resource = SharedRes.strings.writing__posting))
-                    CircularProgressIndicator()
+            Card(Modifier.align(Alignment.Center)) {
+                Row(Modifier.padding(8.dp)) {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.writing__posting),
+                        modifier = Modifier.align(CenterVertically)
+                    )
+                    CircularProgressIndicator(Modifier.padding(start = 4.dp))
                 }
             }
 

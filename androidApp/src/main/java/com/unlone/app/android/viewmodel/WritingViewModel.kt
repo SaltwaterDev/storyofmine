@@ -61,22 +61,22 @@ class WritingViewModel(
             getLastOpenedDraftUseCase()
                 ?.let { lastOpened ->
                     changedChannel.send(
-                        WritingUiState(
+                        state.value.copy(
                             currentDraftId = lastOpened.first,
                             title = lastOpened.second.title,
                             body = TextFieldValue(lastOpened.second.content),
-                            topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                            topicList = topicRepository.getAllTopic().map { topic -> topic.name }
                         )
                     )
                 }
         } else {
             queryDraftUseCase(draftId, version).collectLatest {
                 changedChannel.send(
-                    WritingUiState(
+                    state.value.copy(
                         currentDraftId = it.first,
                         title = it.second.title,
                         body = TextFieldValue(it.second.content),
-                        topicList = topicRepository.getAllTopic().map { topic -> topic.name },
+                        topicList = topicRepository.getAllTopic().map { topic -> topic.name }
                     )
                 )
             }
@@ -197,6 +197,7 @@ class WritingViewModel(
                 when (result) {
                     is StoryResult.Success -> {
                         createNewDraft()
+                        // todo: delete current draft
                         state.value.copy(
                             postSuccess = true,
                             loading = false,
@@ -252,7 +253,7 @@ class WritingViewModel(
         viewModelScope.launch {
             draftRepository.deleteDraft(id)
             // remove current content if deleting the current one
-            if (id == state.value.currentDraftId){
+            if (id == state.value.currentDraftId) {
                 changedChannel.send(
                     state.value.copy(title = "", body = TextFieldValue(""))
                 )
