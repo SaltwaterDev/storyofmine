@@ -115,12 +115,22 @@ class WritingViewModel(
 
     fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
         Log.d("TAG", "saveDraft: " + state.value.currentDraftId)
-        if (state.value.title.isNotBlank())
-            saveDraftUseCase(
+        if (state.value.title.isNotBlank()) {
+            val result = saveDraftUseCase(
                 state.value.currentDraftId,
                 state.value.title,
                 state.value.body.text
             )
+            when (result) {
+                is StoryResult.Success -> changedChannel.send(
+                    state.value.copy(currentDraftId = result.data)
+                )
+                is StoryResult.Failed -> changedChannel.send(
+                    state.value.copy(error = result.errorMsg)
+                )
+                else -> {}  // won't hit this case for now
+            }
+        }
     }
 
     fun createNewDraft() {

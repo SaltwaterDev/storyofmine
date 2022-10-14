@@ -63,6 +63,12 @@ fun WritingScreen(
         }
     }
 
+    // close preview when keyboard is shown
+    LaunchedEffect(isKeyboardVisible) {
+        if (isKeyboardVisible) {
+            scaffoldState.bottomSheetState.collapse()
+        }
+    }
 
 
     Box {
