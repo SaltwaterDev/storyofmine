@@ -138,14 +138,15 @@ fun StoryDetailTopBar(
             }
 
             Row(Modifier.align(Alignment.CenterEnd)) {
-                IconButton(onClick = save) {
-                    Icon(
-                        Icons.Rounded.Bookmark,
-                        contentDescription = "save"
-                    )
-                }
+//                todo
+//                IconButton(onClick = save) {
+//                    Icon(
+//                        Icons.Rounded.Bookmark,
+//                        contentDescription = "save"
+//                    )
+//                }
 
-                Box() {
+                Box {
                     IconButton(onClick = { expanded = true }) {
                         Icon(
                             Icons.Rounded.MoreVert,
