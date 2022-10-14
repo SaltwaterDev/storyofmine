@@ -52,12 +52,12 @@ fun ProfileScreen(
         if (state.isUserLoggedIn) {
             ProfileScreenDivider()
             ListItem(Modifier.clickable { goToMyStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__my_stories), style = Typography.subtitle1) }
-            ProfileScreenDivider()
-            ListItem(Modifier.clickable { goToSavedStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__saved), style = Typography.subtitle1) }
+//            ProfileScreenDivider()
+//            ListItem(Modifier.clickable { goToSavedStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__saved), style = Typography.subtitle1) }
         }
         ProfileScreenDivider()
-        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
-        ProfileScreenDivider()
+//        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
+//        ProfileScreenDivider()
         ListItem(Modifier.clickable { goToHelp() }) { Text(text = stringResource(resource = SharedRes.strings.profile__help), style = Typography.subtitle1) }
         ProfileScreenDivider()
         ListItem(Modifier.clickable { goToRules() }) { Text(text = stringResource(resource = SharedRes.strings.profile__rules), style = Typography.subtitle1) }
