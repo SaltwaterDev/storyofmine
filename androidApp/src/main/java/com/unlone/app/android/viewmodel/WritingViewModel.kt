@@ -13,8 +13,10 @@ import com.unlone.app.data.write.DraftRepository
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class WritingUiState(
     val currentDraftId: String? = null,
@@ -51,37 +53,40 @@ class WritingViewModel(
     val state: StateFlow<WritingUiState> = combine(
         stateChangedResult,
         getAllDraftsTitleUseCase(),
-    ) { changed, allDraftTitles ->
-        changed.copy(draftList = allDraftTitles)
+        getTopicList(),
+        getIsUserSignedIn()
+    ) { changed, allDraftTitles, topicList, isUserSignedIn ->
+        changed.copy(
+            draftList = allDraftTitles,
+            topicList = topicList,
+            isUserSignedIn = isUserSignedIn
+        )
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
-
-    suspend fun refreshData(draftId: String? = null, version: String? = null) {
-        if (draftId == null || version == null) {
-            getLastOpenedDraftUseCase()
-                ?.let { lastOpened ->
+    suspend fun refreshData(draftId: String? = null, version: String? = null) =
+        withContext(Dispatchers.Default) {
+            if (draftId == null || version == null) {
+                getLastOpenedDraftUseCase().let { lastOpened ->
                     changedChannel.send(
                         state.value.copy(
-                            currentDraftId = lastOpened.first,
-                            title = lastOpened.second.title,
-                            body = TextFieldValue(lastOpened.second.content),
-                            topicList = topicRepository.getAllTopic().map { topic -> topic.name }
+                            currentDraftId = lastOpened?.first,
+                            title = lastOpened?.second?.title ?: "",
+                            body = TextFieldValue(lastOpened?.second?.content ?: ""),
                         )
                     )
                 }
-        } else {
-            queryDraftUseCase(draftId, version).collectLatest {
-                changedChannel.send(
-                    state.value.copy(
-                        currentDraftId = it.first,
-                        title = it.second.title,
-                        body = TextFieldValue(it.second.content),
-                        topicList = topicRepository.getAllTopic().map { topic -> topic.name }
+            } else {
+                queryDraftUseCase(draftId, version).collectLatest {
+                    changedChannel.send(
+                        state.value.copy(
+                            currentDraftId = it.first,
+                            title = it.second.title,
+                            body = TextFieldValue(it.second.content),
+                        )
                     )
-                )
+                }
             }
         }
-    }
 
     fun setTitle(title: String) {
         viewModelScope.launch {
@@ -134,6 +139,8 @@ class WritingViewModel(
     }
 
     fun switchDraft(id: String) {
+        if (id == state.value.currentDraftId) return
+
         viewModelScope.launch {
             saveDraft().join()
             queryDraftUseCase(id).collect {
@@ -196,8 +203,7 @@ class WritingViewModel(
             changedChannel.send(
                 when (result) {
                     is StoryResult.Success -> {
-                        createNewDraft()
-                        // todo: delete current draft
+                        state.value.currentDraftId?.let { deleteDraft(it) } ?: createNewDraft()
                         state.value.copy(
                             postSuccess = true,
                             loading = false,
@@ -240,7 +246,7 @@ class WritingViewModel(
         }
     }
 
-    suspend fun getIsUserSignedIn() = isUserSignedInUseCase()
+    private fun getIsUserSignedIn() = flow { emit(isUserSignedInUseCase()) }
 
     fun addImageMD(uri: Uri?) {
         uri?.let {
@@ -258,6 +264,12 @@ class WritingViewModel(
                     state.value.copy(title = "", body = TextFieldValue(""))
                 )
             }
+        }
+    }
+
+    private fun getTopicList(): Flow<List<String>> {
+        return flow {
+            emit(topicRepository.getAllTopic().map { topic -> topic.name })
         }
     }
 }
