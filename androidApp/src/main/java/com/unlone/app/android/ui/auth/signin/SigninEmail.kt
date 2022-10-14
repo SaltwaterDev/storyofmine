@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.auth.signin
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
@@ -80,7 +82,12 @@ fun SignInEmailScreen(
                 enabled = uiState.emailBtnEnabled,
                 modifier = Modifier.align(End)
             ) {
-                Text(text = stringResource( SharedRes.strings.common__btn_next))
+                Row(verticalAlignment = CenterVertically){
+                    Text(text = stringResource( SharedRes.strings.common__btn_next))
+                    AnimatedVisibility(visible = uiState.loading, modifier = Modifier.padding(start = 4.dp)) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
         }
     }

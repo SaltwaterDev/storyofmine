@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.auth.signin
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -82,6 +83,7 @@ fun SignInPasswordScreen(
                 enabled = uiState.pwBtnEnabled,
                 modifier = Modifier.align(End)
             ) {
+
                 Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
             }
         }
@@ -100,10 +102,15 @@ fun SignInPasswordScreen(
             },
             confirmButton = {
                 Button(
-                    onClick = {
-                        viewModel.dismissMsg()
-                    }) {
-                    Text(stringResource(resource = SharedRes.strings.common__btn_confirm))
+                    onClick = { viewModel.dismissMsg() },
+                    enabled = !uiState.loading
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically){
+                        Text(stringResource(resource = SharedRes.strings.common__btn_confirm))
+                        AnimatedVisibility(visible = uiState.loading, modifier = Modifier.padding(start = 4.dp)) {
+                            CircularProgressIndicator()
+                        }
+                    }
                 }
             },
         )
