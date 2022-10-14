@@ -211,15 +211,15 @@ fun TopicDetailTopBar(
                 color = contentColorFor(backgroundColor = MaterialTheme.colors.primarySurface)
             )
         }
-        // follow button
-        if (isFollowing)
-            OutlinedButton(onClick = { toggleFollowing() }) {
-                Text(text = stringResource(resource = SharedRes.strings.common__btn_following))
-            }
-        else
-            Button(onClick = { toggleFollowing() }) {
-                Text(text = stringResource(resource = SharedRes.strings.common__btn_follow))
-            }
+        // todo: follow button
+//        if (isFollowing)
+//            OutlinedButton(onClick = { toggleFollowing() }) {
+//                Text(text = stringResource(resource = SharedRes.strings.common__btn_following))
+//            }
+//        else
+//            Button(onClick = { toggleFollowing() }) {
+//                Text(text = stringResource(resource = SharedRes.strings.common__btn_follow))
+//            }
     }
 }
 
