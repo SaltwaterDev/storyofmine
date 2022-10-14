@@ -8,7 +8,7 @@ interface DraftRepository {
     fun getAllDrafts(): Flow<List<Draft>>
     fun queryDraft(id: String): Flow<Draft>
     fun getLastOpenedDraft(): Flow<Draft?>
-    suspend fun saveDraft(id: String?, title: String, content: String): String?
+    suspend fun saveDraft(id: String?, title: String, content: String): String
     suspend fun updateLastOpenedTime(id: String)
     suspend fun deleteDraft(id: String)
 }

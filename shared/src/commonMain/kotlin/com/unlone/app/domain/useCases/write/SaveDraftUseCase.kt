@@ -6,9 +6,9 @@ import com.unlone.app.data.write.DraftRepository
 class SaveDraftUseCase(private val draftRepository: DraftRepository) {
     suspend operator fun invoke(id: String?, title: String, content: String): StoryResult<String?> {
         return if (title.isNotBlank()) {
-            draftRepository.saveDraft(id, title, content)?.let {
-                StoryResult.Success(data = it)
-            } ?: StoryResult.Failed(errorMsg = "Saving Draft Failed")
+            draftRepository.saveDraft(id, title, content).let { returningDraftId ->
+                StoryResult.Success(data = returningDraftId)
+            }
         } else {
             StoryResult.Failed(errorMsg = "title is blank")
         }

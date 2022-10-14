@@ -56,7 +56,7 @@ internal class DraftRepositoryImpl : DraftRepository {
         }
     }
 
-    override suspend fun saveDraft(id: String?, title: String, content: String): String? {
+    override suspend fun saveDraft(id: String?, title: String, content: String): String {
         val draftId = realm.write {
             val parentDraftRealmObject = ParentDraftRealmObject().apply {
                 id?.let { this.id = ObjectId.from(id) }
@@ -73,14 +73,11 @@ internal class DraftRepositoryImpl : DraftRepository {
                     .find()
             if (existingParentDraftRealmObject != null) {
                 if (existingParentDraftRealmObject.childDraftRealmObjects.all { it.title != title || it.content != content }) {
-                    // insert new Version
+                    // create new Version
                     parentDraftRealmObject.childDraftRealmObjects.forEach {
                         existingParentDraftRealmObject.childDraftRealmObjects.add(it)
                     }
                     existingParentDraftRealmObject.topics = parentDraftRealmObject.topics
-                } else {
-                    // abnormal case
-                    return@write null
                 }
             } else {
                 copyToRealm(parentDraftRealmObject)
