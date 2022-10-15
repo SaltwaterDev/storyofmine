@@ -10,6 +10,7 @@ import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.unlone.app.android.ui.findStartDestination
+import com.unlone.app.android.ui.profile.MyStoriesScreen
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.profile.RulesScreen
 import com.unlone.app.android.ui.stories.ReportScreen
@@ -56,13 +57,28 @@ fun MainNavHost(
             UnloneBottomDestinations.Profile.route,
         ) {
             val viewModel = koinViewModel<ProfileViewModel>()
-            ProfileScreen(viewModel, {}, {}, {}, {}, {}, { navToRules(navController) })
+            ProfileScreen(
+                viewModel,
+                {},
+                { navToMyStories(navController) },
+                {},
+                {},
+                {},
+                { navToRules(navController) })
+        }
+
+
+        composable(
+            MyStories.route,
+        ) {
+            val viewModel = koinViewModel<MyStoriesViewModel>()
+            MyStoriesScreen(viewModel, { navigateToStoryDetail(navController, it) }, navigateUp)
         }
 
         composable(
             Rules.route,
         ) {
-            RulesScreen(){
+            RulesScreen() {
                 navigateUp()
             }
         }
@@ -153,3 +169,8 @@ fun navToReport(navController: NavHostController, type: String, reported: String
 fun navToRules(navController: NavHostController) {
     navController.navigate(Rules.route)
 }
+
+fun navToMyStories(navController: NavHostController) {
+    navController.navigate(MyStories.route)
+}
+

@@ -39,6 +39,8 @@ interface StoryApi {
 
     suspend fun getComments(storyId: String, token: String): CommentResponse
     suspend fun postComment(commentRequest: CommentRequest, token: String): CommentResponse
+
+    suspend fun getMyStories(token: String): StoriesResponse
 }
 
 internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
@@ -148,6 +150,13 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             contentType(ContentType.Application.Json)
             header("Authorization", token)
             setBody(commentRequest)
+        }
+        return response.body()
+    }
+
+    override suspend fun getMyStories(token: String): StoriesResponse {
+        val response = client.get("$baseUrl/story/myStories") {
+            header("Authorization", token)
         }
         return response.body()
     }

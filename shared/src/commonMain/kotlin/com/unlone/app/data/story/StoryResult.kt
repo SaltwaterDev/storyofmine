@@ -9,6 +9,10 @@ sealed class StoryResult<T>(val data: T? = null, val errorMsg: String? = null) {
     class UnknownError<T>(errorMsg: String?) : StoryResult<T>(errorMsg = errorMsg)
 }
 
+@Serializable
+data class StoriesResponse(
+    val data: List<SimpleStory>
+)
 
 @Serializable
 data class StoryResponse(
@@ -36,6 +40,24 @@ data class StoryResponse(
             this.saveAllowed,
             null,
             this.createdDate,
+        )
+    }
+}
+
+
+@Serializable
+data class SimpleStory(
+    val id: String,
+    val title: String,
+    val content: String,
+    val topic: String,
+) {
+    companion object {
+        fun mock() = SimpleStory(
+            "_id",
+            "_title",
+            "_content",
+            "_topic",
         )
     }
 }

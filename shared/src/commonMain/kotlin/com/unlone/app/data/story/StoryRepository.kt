@@ -33,6 +33,8 @@ interface StoryRepository {
         pagingItems: Int,
         page: Int?,
     ): StoryResult<List<SimpleStory>>
+
+    suspend fun getMyStories(): StoryResult<List<SimpleStory>>
 }
 
 
@@ -90,7 +92,6 @@ internal class StoryRepositoryImpl(
                     id,
                     "Bearer $jwt"
                 )
-                // todo: decode the content of utf-8
                 StoryResult.Success(response.toStory())
             } ?: StoryResult.Failed("jwt not exists")
         } catch (e: RedirectResponseException) {
@@ -113,7 +114,6 @@ internal class StoryRepositoryImpl(
                 topic, pagingItems, page
             )
             StoryResult.Success(response.data.flatMap {
-                // todo: decode the content of utf-8
                 it.stories
             })
         } catch (e: RedirectResponseException) {
@@ -122,7 +122,25 @@ internal class StoryRepositoryImpl(
             StoryResult.Failed(errorMsg = e.response.body<String>())
         } catch (e: Exception) {
             Logger.e { e.toString() }
-            StoryResult.Failed(errorMsg = e.message)
+            StoryResult.UnknownError(errorMsg = e.message)
+        }
+    }
+
+    override suspend fun getMyStories(): StoryResult<List<SimpleStory>> {
+        return try {
+            authRepository.getJwt()?.let { jwt ->
+                val response = storyApi.getMyStories(
+                    "Bearer $jwt"
+                )
+                StoryResult.Success(response.data)
+            } ?: StoryResult.Failed("jwt not exists")
+        } catch (e: RedirectResponseException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: ClientRequestException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: Exception) {
+            Logger.e { e.toString() }
+            StoryResult.UnknownError(errorMsg = e.message)
         }
     }
 }

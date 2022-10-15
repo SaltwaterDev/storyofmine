@@ -8,8 +8,8 @@ import org.koin.dsl.module
 
 
 val androidModule = module {
-    viewModelOf(::WritingViewModel)
     viewModelOf(::EditHistoryViewModel)
+    viewModelOf(::MyStoriesViewModel)
     viewModelOf(::TopicDetailViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::ReportViewModel)
@@ -17,4 +17,5 @@ val androidModule = module {
     viewModelOf(::SignUpViewModel)
     viewModelOf(::SignInViewModel)
     viewModelOf(::StoryDetailViewModel)
+    viewModelOf(::WritingViewModel)
 }
