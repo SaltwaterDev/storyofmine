@@ -10,10 +10,11 @@ import SwiftUI
 import shared
 
 struct WritingScreen: View {
-    @ObservedObject private var writingViewModel = WritingViewModel()
+    @StateObject private var writingViewModel = WritingViewModel()
     @EnvironmentObject private var authSetting: AuthViewModel
     
     @State var showMenu = false
+    @State var menuItemList: [MenuItemView] = []
     
     var body: some View {
         
@@ -42,16 +43,23 @@ struct WritingScreen: View {
         
         MenuView(showMenu: $showMenu, mainView: {
             MainView
-        }, menuItems: writingViewModel.menuItemList.map({ title in
-            MenuItemView(showMenu: $showMenu, title: title, callback:{ writingViewModel.onMenuClicked(indentifier: title) })
-        }) + writingViewModel.draftList.map({ draft in
-            MenuItemView(showMenu: $showMenu, title: draft.value, callback:{ writingViewModel.onMenuClicked(id: draft.key) })
-        }))
+        }, menuItems: menuItemList)
         .onAppear {
             writingViewModel.getAllDraftsTitle()
+            menuItemList = writingViewModel.menuItemList.map({ title in
+                MenuItemView(showMenu: $showMenu, title: title, callback:{ writingViewModel.onMenuClicked(indentifier: title) })
+            }) + writingViewModel.draftList.map({ draft in
+                MenuItemView(showMenu: $showMenu, title: draft.value, callback:{ writingViewModel.onMenuClicked(id: draft.key) })
+            })
         }.onDisappear {
             writingViewModel.saveDraft()
-        }
+        }.onChange(of: writingViewModel.draftList, perform: { value in
+            menuItemList = writingViewModel.menuItemList.map({ title in
+                MenuItemView(showMenu: $showMenu, title: title, callback:{ writingViewModel.onMenuClicked(indentifier: title) })
+            }) + value.map({ draft in
+                MenuItemView(showMenu: $showMenu, title: draft.value, callback:{ writingViewModel.onMenuClicked(id: draft.key) })
+            })
+        })
     }
 }
 

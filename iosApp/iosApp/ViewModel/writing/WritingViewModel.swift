@@ -36,7 +36,6 @@ class WritingViewModel: ObservableObject {
     var menuItemList: [String] = ["Clear", "Edit History", "New Draft"]
     
     init() {
-        getAllDraftsTitle()
         refreshData()
     }
     
