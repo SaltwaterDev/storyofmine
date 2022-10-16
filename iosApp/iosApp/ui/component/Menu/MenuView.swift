@@ -8,23 +8,32 @@
 
 import SwiftUI
 
-struct MenuView: View {
+struct MenuView<Content: View>: View {
     @Binding var showMenu: Bool
-    var menuItems: [String]
-    var callback: (_ title: String) async -> Void
+    let mainView: () -> Content
     
-//    init(menuItems: [String], callback: @escaping (_ title: String) async -> Void) {
-//        self.menuItems = menuItems
-//        self.callback = callback
-//    }
-    
+    var menuItems: [MenuItemView]
     var body: some View {
-        VStack(alignment: .leading) {
+        
+        let drag = DragGesture()
+            .onEnded {
+                if $0.translation.width < -100 {
+                    withAnimation {
+                        showMenu = false
+                    }
+                } else {
+                    withAnimation {
+                        showMenu = true
+                    }
+                }
+            }
+        
+        let Menu = VStack(alignment: .leading) {
             ForEach(menuItems.indices) { index in
                 if index == 0 {
-                    MenuItemView(showMenu: $showMenu, title: menuItems[index], callback: callback).padding(.top, 100)
+                    menuItems[index].padding(.top, 100)
                 } else {
-                    MenuItemView(showMenu: $showMenu, title: menuItems[index], callback: callback)
+                    menuItems[index]
                 }
             }
             Spacer()
@@ -32,6 +41,19 @@ struct MenuView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(red: 32/255, green: 32/255, blue: 32/255))
             .edgesIgnoringSafeArea(.all)
+        
+        return GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                NavigationView {
+                    mainView()
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height).disabled(showMenu ? true : false)
+                    .offset(x: self.showMenu ? geometry.size.width/2 : 0)
+                if self.showMenu {
+                    Menu.frame(width: geometry.size.width/2).transition(.move(edge: .leading))
+                }
+            }.gesture(drag)
+        }
     }
 }
 

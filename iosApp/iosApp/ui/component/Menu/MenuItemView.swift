@@ -11,19 +11,19 @@ import SwiftUI
 struct MenuItemView: View {
     @Binding var showMenu: Bool
     var title = ""
-    var callback: (_ title: String) async -> Void
+    let callback: () -> ()
     
     var body: some View {
         HStack {
             Image(systemName: "person")
-                    .foregroundColor(.gray)
-                    .imageScale(.large)
+                .foregroundColor(.gray)
+                .imageScale(.large)
             Text(title)
-                    .foregroundColor(.gray)
-                    .font(.headline)
+                .foregroundColor(.gray)
+                .font(.headline)
         }.onTapGesture {
-            Task{
-                await callback(title)
+            Task {
+                callback()
                 showMenu = false
             }
         }

@@ -36,6 +36,7 @@ class WritingViewModel: ObservableObject {
     var menuItemList: [String] = ["Clear", "Edit History", "New Draft"]
     
     init() {
+        getAllDraftsTitle()
         refreshData()
     }
     
@@ -52,15 +53,19 @@ class WritingViewModel: ObservableObject {
         
     }
     
-    func onMenuClicked(indentifier: String) async {
+    func onMenuClicked(indentifier: String) {
         switch indentifier {
         case "Clear":
             clearDraft()
         case "Edit History": break
         case "New Draft":
-            await createNewDraft()
+            createNewDraft()
         default: break
         }
+    }
+    
+    func onMenuClicked(id: String) {
+        switchDraft(id: id)
     }
     
     func setTitle(title: String) {
@@ -97,7 +102,9 @@ class WritingViewModel: ObservableObject {
         Task {
             do {
                 try await getAllDraftsTitleUseCase.invoke().collect(collector: Collector<[String:String]> { response in
-                    self.draftList = response
+                    DispatchQueue.main.async {
+                        self.draftList = response
+                    }
                 })
             } catch {
                 print(error)
@@ -136,11 +143,13 @@ class WritingViewModel: ObservableObject {
         saveDraft()
         Task {
             do {
-                try await queryDraftUseCase.invoke(id: id).collect(collector: Collector<AnyObject> { draft in
+                try await queryDraftUseCase.invoke(id: id).collect(collector: Collector<KotlinPair<NSString, DraftVersion>> { draft in
                     print(draft)
-//                    self.currentDraftId = draft.first as? String ?? ""
-//                    self.title = draft.second.title as? String ?? ""
-//                    self.content = draft.second.content as? String ?? ""
+                    DispatchQueue.main.async {
+                        self.currentDraftId = draft.first as? String ?? ""
+                        self.title = draft.second?.title as? String ?? ""
+                        self.content = draft.second?.content as? String ?? ""
+                    }
                 })
             } catch {
                 print(error)
@@ -156,7 +165,7 @@ class WritingViewModel: ObservableObject {
             
             switch (result){
             case is StoryResultSuccess<AnyObject>:
-                await createNewDraft()
+                createNewDraft()
                 self.postSuccess = true
                 self.loading = false
                 break
