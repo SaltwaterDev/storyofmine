@@ -224,6 +224,7 @@ fun WritingScreen(
 //                            contentDescription = "input image"
 //                        )
 //                    }
+//                        todo: quiding questions
 //                }
 //            }
 //        }

@@ -29,7 +29,7 @@ class MyStoriesViewModel(
         viewModelScope.launch {
             when (val result = storyRepository.getMyStories()) {
                 is StoryResult.Success -> result.data?.let {
-                    uiState = uiState.copy(stories = it)
+                    uiState = uiState.copy(stories = it.sortedByDescending { s -> s.createdDate })
                 }
                 is StoryResult.Failed -> uiState = uiState.copy(error = result.errorMsg)
                 is StoryResult.UnknownError -> uiState = uiState.copy(error = result.errorMsg)
@@ -38,7 +38,7 @@ class MyStoriesViewModel(
         }
     }
 
-    fun dismissError(){
+    fun dismissError() {
         uiState = uiState.copy(error = null)
     }
 }

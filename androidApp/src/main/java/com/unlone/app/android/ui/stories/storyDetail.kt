@@ -62,19 +62,21 @@ fun StoryDetail(
                     back = back,
                     navToTopicDetail = { navToTopicDetail(state.topic) },
                     report = reportStory,
-                    save = { /*TODO*/ },
+                    save = storyId?.let { { viewModel.saveStory(it) } },
                     traceHistory = { /*TODO*/ },
                     edit = { /*TODO*/ },
                     topic = state.topic,
                     isSelfWritten = state.isSelfWritten,
                 )
             },
+            modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             Column(
                 Modifier
                     .padding(innerPadding)
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
+
             ) {
                 Column(
                     modifier = Modifier
@@ -132,7 +134,8 @@ fun StoryDetail(
                 },
             comment = state.commentText,
             setComment = viewModel::setCommentText,
-            onCommentSent = { storyId?.let { viewModel.postComment(storyId) } }
+            onCommentSent = { storyId?.let { viewModel.postComment(storyId) } },
+            sendEnabled = !state.postCommentLoading
         )
     }
 

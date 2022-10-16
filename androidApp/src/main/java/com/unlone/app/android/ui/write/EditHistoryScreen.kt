@@ -39,7 +39,7 @@ fun EditHistoryScreen(
         Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .systemBarsPadding()
+            .statusBarsPadding()
     ) {
 
         Row {

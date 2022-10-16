@@ -107,7 +107,7 @@ fun StoryDetailTopBar(
     back: () -> Unit,
     navToTopicDetail: () -> Unit,
     report: () -> Unit,
-    save: () -> Unit,
+    save: (() -> Unit)? = null,
     traceHistory: () -> Unit,
     edit: () -> Unit,
     topic: String,
@@ -213,7 +213,7 @@ fun TopicDetailTopBar(
         }
         // todo: follow button
 //        if (isFollowing)
-//            OutlinedButton(onClick = { toggleFollowing() }) {
+//            TextButton(onClick = { toggleFollowing() }) {
 //                Text(text = stringResource(resource = SharedRes.strings.common__btn_following))
 //            }
 //        else

@@ -10,6 +10,8 @@ import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.data.write.DraftRepository
+import com.unlone.app.data.write.GuidingQuestion
+import com.unlone.app.data.write.GuidingQuestionsRepository
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -32,6 +34,7 @@ data class WritingUiState(
     val postSuccess: Boolean = false,
     val loading: Boolean = false,
     val isUserSignedIn: Boolean = false,
+    val guidingQuestions: List<GuidingQuestion> = listOf(),
 )
 
 
@@ -44,7 +47,8 @@ class WritingViewModel(
     private val postStoryUseCase: PostStoryUseCase,
     private val topicRepository: TopicRepository,
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
-    private val draftRepository: DraftRepository
+    private val draftRepository: DraftRepository,
+    private val guidingQuestionsRepository: GuidingQuestionsRepository,
 ) : ViewModel() {
 
     private val changedChannel = Channel<WritingUiState>()
@@ -54,12 +58,14 @@ class WritingViewModel(
         stateChangedResult,
         getAllDraftsTitleUseCase(),
         getTopicList(),
-        getIsUserSignedIn()
-    ) { changed, allDraftTitles, topicList, isUserSignedIn ->
+        getIsUserSignedIn(),
+        getGuidingQuestion(),
+    ) { changed, allDraftTitles, topicList, isUserSignedIn, guidingQuestions ->
         changed.copy(
             draftList = allDraftTitles,
             topicList = topicList,
-            isUserSignedIn = isUserSignedIn
+            isUserSignedIn = isUserSignedIn,
+            guidingQuestions = guidingQuestions,
         )
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
@@ -280,6 +286,12 @@ class WritingViewModel(
     private fun getTopicList(): Flow<List<String>> {
         return flow {
             emit(topicRepository.getAllTopic().map { topic -> topic.name })
+        }
+    }
+
+    private fun getGuidingQuestion(): Flow<List<GuidingQuestion>> {
+        return flow {
+            emit(guidingQuestionsRepository.getGuidingQuestionList())
         }
     }
 }

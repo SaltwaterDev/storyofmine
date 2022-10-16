@@ -82,7 +82,7 @@ fun UnloneBottomBar(
                             )
                         },
                         label = { Text(screen.name) },
-                        selected = currentDestination?.hierarchy?.any { (it.route) == screen.name } == true,
+                        selected = currentDestination?.hierarchy?.any { (it.route) == screen.route } == true,
                         onClick = { appState.navigateToBottomBarRoute(screen.route) },
                     )
                 }

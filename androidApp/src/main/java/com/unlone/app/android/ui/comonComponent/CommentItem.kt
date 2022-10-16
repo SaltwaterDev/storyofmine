@@ -3,6 +3,7 @@ package com.unlone.app.android.ui.comonComponent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -35,7 +36,25 @@ fun CommentItem(comment: Comment) {
             it != DismissValue.DismissedToEnd
         }
     )
-    SwipeToDismiss(
+
+    Card(
+        elevation = animateDpAsState(
+            if (dismissState.dismissDirection != null) 4.dp else 0.dp
+        ).value,
+        modifier = Modifier.padding(vertical = 4.dp),
+    ) {
+        ListItem(
+            text = {
+                Text(
+                    comment.username,
+                    fontWeight = if (unread) FontWeight.Bold else null
+                )
+            },
+            secondaryText = { Text(comment.text) },
+            singleLineSecondaryText = false
+        )
+    }
+    /*SwipeToDismiss(
         state = dismissState,
         modifier = Modifier.padding(vertical = 4.dp),
         directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
@@ -92,7 +111,7 @@ fun CommentItem(comment: Comment) {
                 )
             }
         }
-    )
+    )*/
 }
 
 
@@ -101,25 +120,36 @@ fun CommentItem(comment: Comment) {
 fun CommentInput(
     modifier: Modifier = Modifier,
     comment: String,
+    sendEnabled: Boolean,
     setComment: (String) -> Unit,
     onCommentSent: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Surface(modifier) {
-        TextField(
-            value = comment,
-            onValueChange = setComment,
-            placeholder = { Text(text = "_comment here") },
-            modifier = Modifier.navigationBarsPadding(),
-            trailingIcon = {
-                TextButton(onClick = {
+        Row(
+            Modifier.navigationBarsPadding(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            BasicTextField(
+                value = comment,
+                onValueChange = setComment,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .weight(1f),
+                enabled = sendEnabled,
+            )
+
+            TextButton(
+                enabled = sendEnabled,
+                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                modifier = Modifier.padding(4.dp),
+                onClick = {
                     onCommentSent()
                     keyboardController?.hide()
                 }) {
-                    Text(text = "Send")
-                }
-            },
-        )
+                Text(text = "Comment")
+            }
+        }
     }
 }

@@ -104,4 +104,8 @@ class StoryDetailViewModel(
             state.value = state.value.copy(postCommentLoading = false)
         }
     }
+
+    fun saveStory(storyId: String){
+        // todo
+    }
 }

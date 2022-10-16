@@ -51,6 +51,7 @@ data class SimpleStory(
     val title: String,
     val content: String,
     val topic: String,
+    val createdDate: Long,
 ) {
     companion object {
         fun mock() = SimpleStory(
@@ -58,6 +59,7 @@ data class SimpleStory(
             "_title",
             "_content",
             "_topic",
+            0L,
         )
     }
 }

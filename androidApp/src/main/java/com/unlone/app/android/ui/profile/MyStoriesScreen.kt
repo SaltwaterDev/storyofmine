@@ -39,7 +39,7 @@ fun MyStoriesScreen(
     LazyColumn(
         Modifier
             .fillMaxSize()
-            .systemBarsPadding()
+            .statusBarsPadding()
     ) {
 
         item {
@@ -60,15 +60,15 @@ fun MyStoriesScreen(
 
 
         items(state.stories, { it.id }) {
-//            val datetime = Instant.fromEpochSeconds(it.timeStamp).toLocalDateTime(
-//                currentSystemDefault()
-//            )
+            val datetime = Instant.fromEpochMilliseconds(it.createdDate).toLocalDateTime(
+                currentSystemDefault()
+            )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-//                Text(
-//                    text = "${datetime.dayOfMonth}/${datetime.monthNumber}/${datetime.year}",
-//                    style = Typography.subtitle1
-//                )
-//                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "${datetime.dayOfMonth}/${datetime.monthNumber}/${datetime.year}",
+                    style = Typography.subtitle1
+                )
+                Spacer(modifier = Modifier.height(4.dp))
                 StoryCard(title = it.title,
                     content = it.content,
                     loading = state.loading,

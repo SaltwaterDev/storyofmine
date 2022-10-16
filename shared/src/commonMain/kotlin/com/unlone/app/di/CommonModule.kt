@@ -50,7 +50,8 @@ val commonModule = module {
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     singleOf(::CommentRepositoryImpl) { bind<CommentRepository>() }
     singleOf(::DraftRepositoryImpl) { bind<DraftRepository>() }
+    singleOf(::GuidingQuestionsRepositoryImpl) { bind<GuidingQuestionsRepository>() }
+    singleOf(::ReportRepositoryImpl) { bind<ReportRepository>() }
     singleOf(::StoryRepositoryImpl) { bind<StoryRepository>() }
     singleOf(::TopicRepositoryImpl) { bind<TopicRepository>() }
-    singleOf(::ReportRepositoryImpl) { bind<ReportRepository>() }
 }

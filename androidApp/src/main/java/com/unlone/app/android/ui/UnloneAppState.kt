@@ -52,7 +52,7 @@ class UnloneAppState(
     val shouldShowBottomBar: Boolean
         @Composable get() = !WindowInsets.isImeVisible &&
                 bottomBarTabs.any { batTab ->
-                    currentRoute?.let { it.startsWith(batTab.route) } ?: false
+                    currentRoute?.startsWith(batTab.route) ?: false
                 }
 
     // ----------------------------------------------------------
