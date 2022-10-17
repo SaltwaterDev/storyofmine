@@ -29,7 +29,7 @@ fun OptionsDrawer(
         Column(
             Modifier.verticalScroll(rememberScrollState())
         ) {
-            Text(text =  stringResource(resource = SharedRes.strings.writing__option_drawer_title), modifier = Modifier.padding(16.dp), style = Typography.h1)
+            Text(text = stringResource(resource = SharedRes.strings.writing__option_drawer_title), modifier = Modifier.padding(16.dp), style = Typography.h6)
             BlockWithIcon(R.drawable.ic_clear,  stringResource(resource = SharedRes.strings.writing__clear)) { clearAll() }
             Divider(Modifier.fillMaxWidth())
             BlockWithIcon(R.drawable.ic_history,  stringResource(resource = SharedRes.strings.writing__edit_history)) { editHistory() }
@@ -63,6 +63,6 @@ private fun BlockWithIcon(iconId: Int?, title: String, onClick: () -> Unit) {
                 modifier = Modifier.padding(16.dp)
             )
         }
-        Text(text = title, modifier = Modifier.padding(16.dp))
+        Text(text = title, modifier = Modifier.padding(16.dp), style = Typography.subtitle2)
     }
 }

@@ -31,17 +31,17 @@ fun PostingDialog(
     post: () -> Unit,
 ) {
     Dialog(onDismissRequest = onCancel) {
-        Column(
-            Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color.White)
-                .padding(10.dp)
-        ) {
-            TopicRow(topics, selectedTopic, onTopicSelected)
-            PublishToggleRow(publishState, switchPublish)
-            CommentSwitchRow(commentState, publishState, switchComment)
-            SavableToggleRow(savableState, publishState, switchSavable)
-            ButtonsRow(preview, post)
+        Card(shape = RoundedCornerShape(10.dp)) {
+            Column(
+                Modifier.padding(10.dp)
+            ) {
+                TopicRow(topics, selectedTopic, onTopicSelected)
+                PublishToggleRow(publishState, switchPublish)
+                CommentSwitchRow(commentState, publishState, switchComment)
+                SavableToggleRow(savableState, publishState, switchSavable)
+                ButtonsRow(preview, post)
+            }
+
         }
     }
 }
@@ -65,14 +65,15 @@ private fun TopicRow(
                 onTopicSelected(it)
                 expanded = true
             },
-            label = { Text( stringResource(resource = SharedRes.strings.writing__topic)) },
+            label = { Text(stringResource(resource = SharedRes.strings.writing__topic)) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded
                 )
             },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
 //            readOnly = expanded
         )
         // filter options based on text field value

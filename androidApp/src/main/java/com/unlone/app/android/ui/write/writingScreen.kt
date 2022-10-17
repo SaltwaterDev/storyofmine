@@ -14,15 +14,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
+import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.WritingViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
@@ -55,7 +55,7 @@ fun WritingScreen(
     }
 
 
-    DisposableEffect(key1 = context) {
+    DisposableEffect(key1 = Unit) {
         onDispose {
             viewModel.saveDraft()
         }
@@ -141,7 +141,8 @@ fun WritingScreen(
                         disabledIndicatorColor = Color.Transparent,
                     ),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                    placeholder = { Text(text = stringResource(resource = SharedRes.strings.writing__placeholder)) }
+                    placeholder = { Text(text = stringResource(resource = SharedRes.strings.writing__placeholder)) },
+                    textStyle = Typography.titleLarge
                 )
 
                 TextField(
@@ -149,16 +150,15 @@ fun WritingScreen(
                         .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) imeToolBarHeight.dp else 0.dp),
                     value = bodyTextFieldValueState,
-                    onValueChange = {
-                        viewModel.setBody(it.text)
-                    },
+                    onValueChange = { viewModel.setBody(it.text) },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         errorIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
-                    )
+                    ),
+                    textStyle = Typography.body1
                 )
             }
             if (showPostingDialog)

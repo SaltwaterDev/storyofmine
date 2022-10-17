@@ -14,6 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.R
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.ui.theme.titleLarge
 
 
 @Composable
@@ -35,7 +37,7 @@ fun PreviewBottomSheet(
                 modifier = Modifier.size(30.dp)
             )
         }
-        Text(text = title, modifier = Modifier.padding(horizontal = 16.dp))
+        Text(text = title, modifier = Modifier.padding(horizontal = 16.dp), style = Typography.titleLarge)
         Spacer(modifier = Modifier.height(34.dp))
 
         MarkdownText(

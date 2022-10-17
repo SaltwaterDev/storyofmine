@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,6 +32,8 @@ fun UnloneApp() {
     UnloneTheme {
         val appState = rememberUnloneAppState()
         val navController = appState.navController
+
+
         Scaffold(
             scaffoldState = appState.scaffoldState,
             modifier = Modifier.navigationBarsPadding(),
@@ -51,7 +54,9 @@ fun UnloneBottomBar(
     appState: UnloneAppState
 ) {
     val navController = appState.navController
-    BottomNavigation {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.surface
+    ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         appState.bottomBarTabs.forEach { screen ->
@@ -59,7 +64,7 @@ fun UnloneBottomBar(
                 icon = { Icon(painterResource(id = screen.icon), contentDescription = null) },
                 label = { Text(screen.name) },
                 selected = currentDestination?.hierarchy?.any { (it.route) == screen.name } == true,
-                onClick = { appState.navigateToBottomBarRoute(screen.route) }
+                onClick = { appState.navigateToBottomBarRoute(screen.route) },
             )
         }
     }

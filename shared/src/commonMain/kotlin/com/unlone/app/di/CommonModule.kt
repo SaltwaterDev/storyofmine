@@ -11,6 +11,7 @@ import com.unlone.app.data.story.TopicRepositoryImpl
 import com.unlone.app.data.write.*
 import com.unlone.app.domain.useCases.auth.ValidPasswordUseCase
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
+import com.unlone.app.domain.useCases.stories.FetchStoriesByTopicUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import com.unlone.app.httpClientEngine
@@ -32,22 +33,23 @@ val commonModule = module {
     single<StoryApi> { StoryApiService(get()) }
 
     // use cases
-    single { CreateNewDraftUseCase() }
-    single { FetchStoryItemsUseCase(get()) }
-    single { GetAllDraftsTitleUseCase(get()) }
-    single { GetDraftAllVersionsUseCase(get()) }
-    single { GetLatestDraftUseCase(get()) }
-    single { GetLastOpenedDraftUseCase(get()) }
-    single { PostStoryUseCase(get(), get()) }
-    single { QueryDraftUseCase(get()) }
-    single { SaveDraftUseCase(get()) }
-    single { ValidPasswordUseCase() }
-    single { IsUserSignedInUseCase(get()) }
+    singleOf(::CreateNewDraftUseCase)
+    singleOf(::FetchStoriesByTopicUseCase)
     singleOf(::FetchStoryDetailUseCase)
+    singleOf(::FetchStoryItemsUseCase)
+    singleOf(::GetAllDraftsTitleUseCase)
+    singleOf(::GetDraftAllVersionsUseCase)
+    singleOf(::GetLatestDraftUseCase)
+    singleOf(::GetLastOpenedDraftUseCase)
+    singleOf(::PostStoryUseCase)
+    singleOf(::QueryDraftUseCase)
+    singleOf(::SaveDraftUseCase)
+    singleOf(::ValidPasswordUseCase)
+    singleOf(::IsUserSignedInUseCase)
 
     // repositories
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
-    single<DraftRepository> { DraftRepositoryImpl() }
+    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
+    singleOf(::DraftRepositoryImpl) { bind<DraftRepository>() }
     singleOf(::StoryRepositoryImpl) { bind<StoryRepository>() }
-    single<TopicRepository> { TopicRepositoryImpl(get()) }
+    singleOf(::TopicRepositoryImpl) { bind<TopicRepository>() }
 }

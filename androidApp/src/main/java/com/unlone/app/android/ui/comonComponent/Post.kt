@@ -11,6 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.ui.theme.titleMedium
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -34,8 +36,7 @@ fun StoryCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(18.dp, 20.dp),
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
+                style = Typography.titleMedium,
                 maxLines = 2,
             )
             Text(
@@ -43,9 +44,8 @@ fun StoryCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(18.dp),
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
                 maxLines = 5,
+                style = Typography.body2
             )
             Spacer(modifier = Modifier.height(25.dp))
         }
