@@ -1,18 +1,31 @@
 package com.unlone.app.data.write
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 interface GuidingQuestionsRepository {
+    val guidingQuestionList: List<GuidingQuestion>
     suspend fun getGuidingQuestionList(): List<GuidingQuestion>
 }
 
 
 class GuidingQuestionsRepositoryImpl() : GuidingQuestionsRepository {
+    override var guidingQuestionList: List<GuidingQuestion> = listOf()
+        private set
 
+    init {
+        // todo: di the coroutine scope and context
+        CoroutineScope(Dispatchers.Default).launch {
+            guidingQuestionList = getGuidingQuestionList()
+        }
+    }
 
     override suspend fun getGuidingQuestionList(): List<GuidingQuestion> {
         return mockGuidingQsList
     }
 
-    companion object{
+    companion object {
         private val mockGuidingQsList = listOf(
             GuidingQuestion("Is there anything in the past that is related to the current issue?"),
             GuidingQuestion("Why do you think this is important to you?"),

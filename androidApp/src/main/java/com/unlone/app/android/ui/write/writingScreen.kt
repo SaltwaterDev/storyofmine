@@ -2,21 +2,30 @@ package com.unlone.app.android.ui.write
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Lightbulb
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
+import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.ui.theme.Typography
@@ -42,11 +51,13 @@ fun WritingScreen(
 ) {
     val uiState = viewModel.state.collectAsState().value
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    val density = LocalDensity.current
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
     var showPostingDialog by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
+    var toolbarHeight by remember { mutableStateOf(0.dp) }
     // launch for open gallery
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         viewModel.addImageMD(it)
@@ -71,65 +82,65 @@ fun WritingScreen(
     }
 
 
-    Box {
-        BottomSheetScaffold(
-            modifier = Modifier
-                .displayCutoutPadding()
-                .statusBarsPadding(),
-            scaffoldState = scaffoldState,
-            topBar = {
-                WriteScreenTopBar(
-                    Modifier.statusBarsPadding(),
-                    { scope.launch { scaffoldState.drawerState.open() } },
-                    {
-                        scope.launch {
-                            if (scaffoldState.bottomSheetState.isCollapsed) {
-                                scaffoldState.bottomSheetState.expand()
-                                keyboardController?.hide()
-                            } else scaffoldState.bottomSheetState.collapse()
-                        }
-                    },
-                    {
-                        if (uiState.isUserSignedIn)
-                            showPostingDialog = true
-                        else
-                            requireSignInDialog = true
-
+    BottomSheetScaffold(
+        modifier = Modifier
+            .displayCutoutPadding()
+            .statusBarsPadding(),
+        scaffoldState = scaffoldState,
+        topBar = {
+            WriteScreenTopBar(
+                Modifier.statusBarsPadding(),
+                { scope.launch { scaffoldState.drawerState.open() } },
+                {
+                    scope.launch {
+                        if (scaffoldState.bottomSheetState.isCollapsed) {
+                            scaffoldState.bottomSheetState.expand()
+                            keyboardController?.hide()
+                        } else scaffoldState.bottomSheetState.collapse()
                     }
-                )
-            },
-            sheetContent = {
-                PreviewBottomSheet(
-                    title = uiState.title,
-                    content = uiState.body.text,
-                    onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } }
-                )
-            },
-            sheetPeekHeight = 0.dp,
-            drawerContent = {
-                OptionsDrawer(
-                    uiState.draftList,
-                    clearAll = {
-                        viewModel.clearBody()
-                        scope.launch { scaffoldState.drawerState.close() }
-                    },
-                    newDraft = {
-                        viewModel.createNewDraft()
-                        scope.launch { scaffoldState.drawerState.close() }
-                    },
-                    editHistory = {
-                        uiState.currentDraftId?.let { navToEditHistory(it) }
-                        scope.launch { scaffoldState.drawerState.close() }
-                    },
-                    switchDraft = {
-                        viewModel.switchDraft(it)
-                        scope.launch { scaffoldState.drawerState.close() }
-                    },
-                    deleteDraft = viewModel::deleteDraft
-                )
-            },
-        ) { innerPadding ->
+                },
+                {
+                    if (uiState.isUserSignedIn)
+                        showPostingDialog = true
+                    else
+                        requireSignInDialog = true
 
+                }
+            )
+        },
+        sheetContent = {
+            PreviewBottomSheet(
+                title = uiState.title,
+                content = uiState.body.text,
+                onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } }
+            )
+        },
+        sheetPeekHeight = 0.dp,
+        drawerContent = {
+            OptionsDrawer(
+                uiState.draftList,
+                clearAll = {
+                    viewModel.clearBody()
+                    scope.launch { scaffoldState.drawerState.close() }
+                },
+                newDraft = {
+                    viewModel.createNewDraft()
+                    scope.launch { scaffoldState.drawerState.close() }
+                },
+                editHistory = {
+                    uiState.currentDraftId?.let { navToEditHistory(it) }
+                    scope.launch { scaffoldState.drawerState.close() }
+                },
+                switchDraft = {
+                    viewModel.switchDraft(it)
+                    scope.launch { scaffoldState.drawerState.close() }
+                },
+                deleteDraft = viewModel::deleteDraft
+            )
+        },
+    ) { innerPadding ->
+
+        Box() {
             Column(
                 Modifier
                     .padding(innerPadding)
@@ -170,6 +181,57 @@ fun WritingScreen(
                 )
             }
 
+
+
+            DisplayingQuestionBlock(
+                uiState.displayingGuidingQuestion?.text,
+                Modifier
+                    .imePadding()
+                    .align(Alignment.BottomStart)
+                    .padding(
+                        16.dp,
+                        toolbarHeight + 8.dp
+                    )
+            )
+
+
+            Crossfade(
+                targetState = isKeyboardVisible,
+                modifier = Modifier
+                    .imePadding()
+                    .align(Alignment.BottomStart)
+                    .onGloballyPositioned {
+                        val height = it.size.height
+                        toolbarHeight = with(density) { height.toDp() }
+                    },
+            ) {
+                if (isKeyboardVisible) {
+                    Row(
+                        Modifier
+                            .height(imeToolBarHeight.dp)
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Green)
+                    ) {
+                        IconButton(onClick = {
+                            launcher.launch("image/*")
+                        }) {
+                            Icon(
+                                painterResource(id = R.drawable.image),
+                                contentDescription = "input image"
+                            )
+                        }
+                        IconButton(onClick = {
+                            scope.launch { viewModel.getDisplayingQuestion() }
+                        }) {
+                            Icon(
+                                Icons.Rounded.Lightbulb,
+                                contentDescription = "get guiding question"
+                            )
+                        }
+                    }
+                }
+            }
+
             if (showPostingDialog)
                 PostingDialog(
                     uiState.topicList,
@@ -200,96 +262,87 @@ fun WritingScreen(
                         showPostingDialog = false
                     },
                 )
-        }
 
 
-//        Crossfade(
-//            targetState = isKeyboardVisible,
-//            modifier = Modifier
-//                .align(Alignment.BottomStart)
-//                .imePadding(),
-//        ) {
-//            if (isKeyboardVisible) {
-//                Row(
-//                    Modifier
-//                        .height(imeToolBarHeight.dp)
-//                        .fillMaxWidth()
-//                        .border(1.dp, Color.Green)
-//                ) {
-//                    IconButton(onClick = {
-//                        launcher.launch("image/*")
-//                    }) {
-//                        Icon(
-//                            painterResource(id = R.drawable.image),
-//                            contentDescription = "input image"
-//                        )
-//                    }
-//                        todo: quiding questions
-//                }
-//            }
-//        }
-
-
-        if (uiState.loading)
-            Card(Modifier.align(Alignment.Center)) {
-                Row(Modifier.padding(8.dp)) {
-                    Text(
-                        text = stringResource(resource = SharedRes.strings.writing__posting),
-                        modifier = Modifier.align(CenterVertically)
-                    )
-                    CircularProgressIndicator(Modifier.padding(start = 4.dp))
-                }
-            }
-
-        if (uiState.postSuccess)
-            Dialog(
-                onDismissRequest = viewModel::dismiss,
-            ) {
-                Card {
-                    Text(
-                        text = stringResource(resource = SharedRes.strings.writing__post_success),
-                        modifier = Modifier.padding(15.dp)
-                    )
-                }
-            }
-
-        uiState.error?.let {
-            AlertDialog(
-                onDismissRequest = viewModel::dismiss,
-                title = { Text(text = stringResource(resource = SharedRes.strings.common__error)) },
-                text = { Text(text = it) },
-                confirmButton = {
-                    Button(
-                        onClick = viewModel::dismiss
-                    ) {
-                        Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+            if (uiState.loading)
+                Card(Modifier.align(Alignment.Center)) {
+                    Row(Modifier.padding(8.dp)) {
+                        Text(
+                            text = stringResource(resource = SharedRes.strings.writing__posting),
+                            modifier = Modifier.align(CenterVertically)
+                        )
+                        CircularProgressIndicator(Modifier.padding(start = 4.dp))
                     }
                 }
-            )
-        }
 
-        if (requireSignInDialog) {
-            AlertDialog(
-                onDismissRequest = { requireSignInDialog = false },
-                title = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_title)) },
-                text = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_text)) },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            requireSignInDialog = false
-                            navToSignIn()
+            if (uiState.postSuccess)
+                Dialog(
+                    onDismissRequest = viewModel::dismiss,
+                ) {
+                    Card {
+                        Text(
+                            text = stringResource(resource = SharedRes.strings.writing__post_success),
+                            modifier = Modifier.padding(15.dp)
+                        )
+                    }
+                }
+
+            uiState.error?.let {
+                AlertDialog(
+                    onDismissRequest = viewModel::dismiss,
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__error)) },
+                    text = { Text(text = it) },
+                    confirmButton = {
+                        Button(
+                            onClick = viewModel::dismiss
+                        ) {
+                            Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                         }
-                    ) {
-                        Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
-
                     }
-                },
-                dismissButton = {
-                    Button(
-                        onClick = { requireSignInDialog = false }
-                    ) { Text(text = stringResource(resource = SharedRes.strings.common__btn_cancel)) }
-                },
-            )
+                )
+            }
+
+            if (requireSignInDialog) {
+                AlertDialog(
+                    onDismissRequest = { requireSignInDialog = false },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_title)) },
+                    text = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_text)) },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                requireSignInDialog = false
+                                navToSignIn()
+                            }
+                        ) {
+                            Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
+
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = { requireSignInDialog = false }
+                        ) { Text(text = stringResource(resource = SharedRes.strings.common__btn_cancel)) }
+                    },
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun DisplayingQuestionBlock(question: String?, modifier: Modifier = Modifier) {
+    Crossfade(
+        targetState = question != null,
+        modifier = modifier,
+    ) {
+        if (question != null) {
+            Surface(
+                color = MaterialTheme.colors.primary,
+                shape = RoundedCornerShape(16.dp, 16.dp, 16.dp, 0.dp)
+            ) {
+                Text(text = question, modifier = Modifier.padding(16.dp, 8.dp))
+            }
         }
     }
 }

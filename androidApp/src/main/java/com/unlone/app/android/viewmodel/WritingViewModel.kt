@@ -6,19 +6,16 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.data.write.DraftRepository
 import com.unlone.app.data.write.GuidingQuestion
 import com.unlone.app.data.write.GuidingQuestionsRepository
+import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.write.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 data class WritingUiState(
     val currentDraftId: String? = null,
@@ -34,8 +31,11 @@ data class WritingUiState(
     val postSuccess: Boolean = false,
     val loading: Boolean = false,
     val isUserSignedIn: Boolean = false,
-    val guidingQuestions: List<GuidingQuestion> = listOf(),
-)
+    val displayingGuidingQuestion: GuidingQuestion? = null,
+){
+    private var listOfGuidingQuestion = listOf<GuidingQuestion>()
+
+}
 
 
 class WritingViewModel(
@@ -54,18 +54,17 @@ class WritingViewModel(
     private val changedChannel = Channel<WritingUiState>()
     private val stateChangedResult = changedChannel.receiveAsFlow()
 
+
     val state: StateFlow<WritingUiState> = combine(
         stateChangedResult,
         getAllDraftsTitleUseCase(),
         getTopicList(),
         getIsUserSignedIn(),
-        getGuidingQuestion(),
-    ) { changed, allDraftTitles, topicList, isUserSignedIn, guidingQuestions ->
+    ) { changed, allDraftTitles, topicList, isUserSignedIn ->
         changed.copy(
             draftList = allDraftTitles,
             topicList = topicList,
             isUserSignedIn = isUserSignedIn,
-            guidingQuestions = guidingQuestions,
         )
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
@@ -283,15 +282,35 @@ class WritingViewModel(
         }
     }
 
+
+
+    private val guidingQuestionList = guidingQuestionsRepository.guidingQuestionList
+    private var guidingQuestionIterator = guidingQuestionList.listIterator()
+    private var dismissQuestionJob: Job? = null
+    suspend fun getDisplayingQuestion() {
+        if (!guidingQuestionIterator.hasNext()) {
+            // reset the iterator
+            guidingQuestionIterator = guidingQuestionList.listIterator()
+        }
+
+        dismissQuestionJob?.cancelAndJoin()
+        dismissQuestionJob = viewModelScope.launch {
+            // dismiss question after 10 sec
+            delay(10000L)
+            changedChannel.send(
+                state.value.copy(displayingGuidingQuestion = null)
+            )
+        }
+
+        changedChannel.send(
+            state.value.copy(displayingGuidingQuestion = guidingQuestionIterator.next())
+        )
+    }
+
     private fun getTopicList(): Flow<List<String>> {
         return flow {
             emit(topicRepository.getAllTopic().map { topic -> topic.name })
         }
     }
 
-    private fun getGuidingQuestion(): Flow<List<GuidingQuestion>> {
-        return flow {
-            emit(guidingQuestionsRepository.getGuidingQuestionList())
-        }
-    }
 }

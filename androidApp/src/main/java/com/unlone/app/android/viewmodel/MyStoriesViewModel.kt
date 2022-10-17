@@ -25,16 +25,13 @@ class MyStoriesViewModel(
     var uiState by mutableStateOf(MyStoriesUiState())
         private set
 
-    fun loadMyStories() {
-        viewModelScope.launch {
-            when (val result = storyRepository.getMyStories()) {
-                is StoryResult.Success -> result.data?.let {
-                    uiState = uiState.copy(stories = it.sortedByDescending { s -> s.createdDate })
-                }
-                is StoryResult.Failed -> uiState = uiState.copy(error = result.errorMsg)
-                is StoryResult.UnknownError -> uiState = uiState.copy(error = result.errorMsg)
+    fun loadMyStories() = viewModelScope.launch {
+        when (val result = storyRepository.getMyStories()) {
+            is StoryResult.Success -> result.data?.let {
+                uiState = uiState.copy(stories = it.sortedByDescending { s -> s.createdDate })
             }
-
+            is StoryResult.Failed -> uiState = uiState.copy(error = result.errorMsg)
+            is StoryResult.UnknownError -> uiState = uiState.copy(error = result.errorMsg)
         }
     }
 
