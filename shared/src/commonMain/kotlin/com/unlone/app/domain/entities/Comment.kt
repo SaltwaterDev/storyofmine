@@ -1,9 +1,8 @@
 package com.unlone.app.domain.entities
 
 data class Comment(
-    var cid: String? = null,
-    var uid: String? = null,
-    var username: String? = null,
-    var content: String? = null,
-    var timestamp: String? = null,
+    val cid: String,
+    val username: String,
+    val text: String,
+    val createdTime: String,
 )

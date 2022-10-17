@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
 sealed class StoryResult<T>(val data: T? = null, val errorMsg: String? = null) {
     class Success<T>(data: T? = null) : StoryResult<T>(data = data)
     class Failed<T>(errorMsg: String?) : StoryResult<T>(errorMsg = errorMsg)
+    class UnknownError<T>(errorMsg: String?) : StoryResult<T>(errorMsg = errorMsg)
 }
 
-
 @Serializable
-data class AllTopicResponse(
-    val data: List<Topic>,
+data class StoriesResponse(
+    val data: List<SimpleStory>
 )
 
 @Serializable
@@ -44,3 +44,22 @@ data class StoryResponse(
     }
 }
 
+
+@Serializable
+data class SimpleStory(
+    val id: String,
+    val title: String,
+    val content: String,
+    val topic: String,
+    val createdDate: Long,
+) {
+    companion object {
+        fun mock() = SimpleStory(
+            "_id",
+            "_title",
+            "_content",
+            "_topic",
+            0L,
+        )
+    }
+}

@@ -21,7 +21,6 @@ internal class AuthRepositoryImpl(
                     password = password,
                 )
             )
-//            signIn(email, password)
             AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
@@ -139,6 +138,7 @@ internal class AuthRepositoryImpl(
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
+            Logger.e{ e.toString() }
             AuthResult.UnknownError()
         }
     }

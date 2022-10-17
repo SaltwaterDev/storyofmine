@@ -20,6 +20,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.StoryCard
+import com.unlone.app.android.ui.theme.MontserratFontFamily
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.data.story.SimpleStory
@@ -35,7 +36,6 @@ fun StoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-
     if (!state.isUserLoggedIn)
         Box(Modifier.fillMaxSize()) {
             LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
@@ -45,7 +45,8 @@ fun StoriesScreen(
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SwipeRefresh(
                 state = rememberSwipeRefreshState(state.isRefreshing),
-                onRefresh = { viewModel.refreshData() }) {
+                onRefresh = { viewModel.refreshData() }
+            ) {
                 LazyColumn(
                     Modifier
                         .fillMaxSize()
@@ -65,26 +66,26 @@ fun StoriesScreen(
                                     highlight = PlaceholderHighlight.fade()
                                 ),
                             fontSize = 30.sp,
+                            fontFamily = MontserratFontFamily,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
 
-                state.storiesByTopics?.let { stories ->
-                    items(stories) {
-                        PostsByTopic(
-                            it.topic,
-                            state.loading,
-                            it.stories,
-                            { navToTopicPosts(it.topic) }
-                        ) { pid ->
-                            navToPostDetail(pid)
+                    state.storiesByTopics?.let { stories ->
+                        items(stories) {
+                            PostsByTopic(
+                                it.topic,
+                                state.loading,
+                                it.stories,
+                                { navToTopicPosts(it.topic) }
+                            ) { pid ->
+                                navToPostDetail(pid)
+                            }
+                            Spacer(modifier = Modifier.height(30.dp))
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
                     }
                 }
             }
-        }
-
         }
 
         state.errorMsg?.let {
@@ -121,7 +122,7 @@ fun PostsByTopic(
         ) {
             Text(
                 text = topic,
-                style = Typography.h5,
+                style = Typography.subtitle1,
                 modifier = Modifier
                     .weight(1f, false)
                     .placeholder(

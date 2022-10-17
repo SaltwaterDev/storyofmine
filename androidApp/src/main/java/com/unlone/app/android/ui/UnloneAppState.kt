@@ -1,41 +1,21 @@
 package com.unlone.app.android.ui
 
-import android.content.res.Resources
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.runtime.*
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.unlone.app.android.R
+import com.unlone.app.android.ui.navigation.UnloneBottomDestinations
 
-/**
- * Destinations used in the [UnloneApp].
- */
-enum class UnloneBottomDestinations(val icon: Int, val route: String) {
-    Write(icon = R.drawable.ic_write, route = "write"),
-    Stories(icon = R.drawable.ic_book, route = "stories"),
-    Profile(icon = R.drawable.ic_profile, route = "profiles");
-}
 
 /**
  * Remembers and creates an instance of [UnloneAppState]
@@ -70,11 +50,18 @@ class UnloneAppState(
     // Reading this attribute will cause recompositions when the bottom bar needs shown, or not.
     // Not all routes need to show the bottom bar.
     val shouldShowBottomBar: Boolean
-        @Composable get() = !WindowInsets.isImeVisible
+        @Composable get() = !WindowInsets.isImeVisible &&
+                bottomBarTabs.any { batTab ->
+                    currentRoute?.startsWith(batTab.route) ?: false
+                }
 
     // ----------------------------------------------------------
     // Navigation state source of truth
     // ----------------------------------------------------------
+
+    // Subscribe to navBackStackEntry, required to get current route
+    val navBackStackEntry: State<NavBackStackEntry?>
+        @Composable get() = navController.currentBackStackEntryAsState()
 
     val currentRoute: String?
         get() = navController.currentDestination?.route
@@ -86,13 +73,13 @@ class UnloneAppState(
     fun navigateToBottomBarRoute(route: String) {
         if (route != currentRoute) {
             navController.navigate(route) {
-                launchSingleTop = true
-                restoreState = false
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.
                 popUpTo(findStartDestination(navController.graph).id) {
-                    saveState = false
+                    saveState = true
                 }
+                launchSingleTop = true
+                restoreState = true
             }
         }
     }

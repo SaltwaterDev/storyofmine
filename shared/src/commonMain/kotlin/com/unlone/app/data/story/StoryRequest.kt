@@ -12,20 +12,3 @@ data class StoryRequest(
     val saveAllowed: Boolean,
 )
 
-
-@Serializable
-data class SimpleStory(
-    val id: String,
-    val title: String,
-    val content: String,
-    val topic: String,
-) {
-    companion object {
-        fun mock() = SimpleStory(
-            "_id",
-            "_title",
-            "_content",
-            "_topic",
-        )
-    }
-}

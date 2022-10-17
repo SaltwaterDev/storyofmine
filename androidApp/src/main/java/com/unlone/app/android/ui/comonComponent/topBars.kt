@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.comonComponent
 
+import android.text.style.LineBackgroundSpan.Standard
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,10 +9,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -109,12 +107,15 @@ fun StoryDetailTopBar(
     back: () -> Unit,
     navToTopicDetail: () -> Unit,
     report: () -> Unit,
-    save: () -> Unit,
+    save: (() -> Unit)? = null,
     traceHistory: () -> Unit,
     edit: () -> Unit,
     topic: String,
     isSelfWritten: Boolean,
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
+
     TopAppBar(
         Modifier.statusBarsPadding()
     ) {
@@ -137,21 +138,44 @@ fun StoryDetailTopBar(
             }
 
             Row(Modifier.align(Alignment.CenterEnd)) {
-                IconButton(onClick = save) {
-                    Icon(
-                        Icons.Rounded.Bookmark,
-                        contentDescription = "save"
-                    )
-                }
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Rounded.MoreVert,
-                        contentDescription = "more"
-                    )
+//                todo
+//                IconButton(onClick = save) {
+//                    Icon(
+//                        Icons.Rounded.Bookmark,
+//                        contentDescription = "save"
+//                    )
+//                }
+
+                Box {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(
+                            Icons.Rounded.MoreVert,
+                            contentDescription = "more"
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(onClick = report) {
+                            Text("Report")
+                        }
+                        /*DropdownMenuItem(onClick = { *//* Handle settings! *//* }) {
+                            Text("Settings")
+                        }
+                        Divider()
+                        DropdownMenuItem(onClick = { *//* Handle send feedback! *//* }) {
+                            Text("Send Feedback")
+                        }*/
+                    }
+
+
                 }
             }
         }
     }
+
 }
 
 @Preview
@@ -182,23 +206,26 @@ fun TopicDetailTopBar(
             IconButton(onClick = back) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
             }
-            Text(text = topicTitle)
+            Text(
+                text = topicTitle,
+                color = contentColorFor(backgroundColor = MaterialTheme.colors.primarySurface)
+            )
         }
-        // follow button
-        if (isFollowing)
-            OutlinedButton(onClick = { toggleFollowing() }) {
-                Text(text = "_Following")
-            }
-        else
-            Button(onClick = { toggleFollowing() }) {
-                Text(text = "_Follow")
-            }
+        // todo: follow button
+//        if (isFollowing)
+//            TextButton(onClick = { toggleFollowing() }) {
+//                Text(text = stringResource(resource = SharedRes.strings.common__btn_following))
+//            }
+//        else
+//            Button(onClick = { toggleFollowing() }) {
+//                Text(text = stringResource(resource = SharedRes.strings.common__btn_follow))
+//            }
     }
 }
 
 @Preview
 @Composable
-fun TopicDetailTopBarPreview(){
+fun TopicDetailTopBarPreview() {
     TopicDetailTopBar(
         {},
         "Apple",
@@ -207,3 +234,22 @@ fun TopicDetailTopBarPreview(){
     )
 }
 
+
+@Composable
+fun StandardTopBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    onBackPressed: (() -> Unit)? = null
+) {
+    TopAppBar(
+        modifier = modifier,
+        title = { Text(text = title) },
+        navigationIcon = {
+            onBackPressed?.let { onClicked ->
+                IconButton(onClick = onClicked) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
+                }
+            }
+        }
+    )
+}

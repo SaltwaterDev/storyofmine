@@ -9,6 +9,7 @@ import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -70,12 +71,14 @@ class SignInViewModel(
     }
 
     private fun signIn() {
+        uiState = uiState.copy(loading = true)
         viewModelScope.launch {
             val result = authRepository.signIn(
                 email = uiState.email,
                 password = uiState.password,
             )
             resultChannel.send(result)
+            uiState = uiState.copy(loading = false)
         }
     }
 }

@@ -1,3 +1,5 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -6,6 +8,7 @@ plugins {
     id("io.realm.kotlin")
     id("dev.icerock.mobile.multiplatform-resources")
     id("io.kotest.multiplatform") version Versions.kotest
+    id("com.codingfeline.buildkonfig")
 }
 
 version = "1.0"
@@ -35,6 +38,7 @@ kotlin {
                     implementation(contentNegotiation)
                     implementation(clientCore)
                     implementation(serialization)
+                    implementation(encoding)
                 }
                 with(Koin) {
                     api(core)
@@ -47,7 +51,7 @@ kotlin {
                 implementation(Ktx.Coroutine.core)
                 implementation("io.realm.kotlin:library-base:1.0.0")
                 // datetime
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
             }
         }
         val commonTest by getting {
@@ -57,7 +61,7 @@ kotlin {
                 implementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
                 implementation(Ktx.Coroutine.test)
                 implementation(Ktor.clientMock)
-                implementation("io.mockk:mockk:1.12.5")
+//                implementation("io.mockk:mockk:1.13.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             }
         }
@@ -105,11 +109,11 @@ kotlin {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = ConfigData.compileSdkVersion
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdk = 24
-        targetSdk = 32
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
     }
 }
 
@@ -120,7 +124,7 @@ dependencies {
     "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")
     "commonTestImplementation"("dev.icerock.moko:resources-test:0.20.1")
     // testing
-    "commonTestImplementation"("io.mockk:mockk-common:1.12.5")
+//    "commonTestImplementation"("io.mockk:mockk-common:1.13.1")
 //    "testImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 
@@ -131,4 +135,23 @@ multiplatformResources {
 //    multiplatformResourcesVisibility = dev.icerock.gradle.MRVisibility.Internal // optional, default Public
     iosBaseLocalizationRegion = "en" // optional, default "en"
 //    multiplatformResourcesSourceSet = "commonClientMain"  // optional, default "commonMain"
+}
+
+buildkonfig {
+    packageName = "com.unlone.app"
+     objectName = "UnloneConfig"
+//     exposeObjectWithName = "YourAwesomePublicConfig"
+
+    defaultConfigs {
+        buildConfigField(STRING, "baseUrl", "https://unlone-dev-dot-unlone.an.r.appspot.com")
+    }
+    // flavor is passed as a first argument of defaultConfigs
+    defaultConfigs("staging") {
+        buildConfigField(STRING, "baseUrl", "https://unlone-staging-dot-unlone.an.r.appspot.com/")
+    }
+
+    // flavor is passed as a first argument of defaultConfigs
+    defaultConfigs("prod") {
+        buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
+    }
 }

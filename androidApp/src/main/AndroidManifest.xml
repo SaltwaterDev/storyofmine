@@ -8,7 +8,9 @@
         android:name="com.unlone.app.android.MainApplication"
         android:usesCleartextTraffic="true"
         android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:label="Unlone"
         android:theme="@style/AppTheme">
         <activity
             android:name="com.unlone.app.android.MainActivity"

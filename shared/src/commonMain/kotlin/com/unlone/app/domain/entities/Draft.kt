@@ -1,6 +1,5 @@
 package com.unlone.app.domain.entities
 
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 
 // entities

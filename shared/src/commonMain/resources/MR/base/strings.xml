@@ -29,25 +29,30 @@
     <string name="writing__open_comment">Open comment</string>
     <string name="writing__savable">Savable</string>
     <string name="writing__btn_post">Post</string>
-    <string name="writing__sign_in_required_title">Sign in required</string>
-    <string name="writing__sign_in_required_text">Sign in to post your story</string>
+    <string name="writing__sign_in_required_title">Sign in to post story</string>
+    <string name="writing__sign_in_required_text">You can also read other people\'s stories!</string>
     <string name="writing__posting">Posting</string>
     <string name="writing__clear">Clear</string>
     <string name="writing__post_success">Posted!</string>
 
     <string name="stories_auth_required_title">Sign up to see other stories</string>
-    <string name="stories_header_greeting">Hello, %s</string>
-    <string name="stories_show_more">Show more</string>
+    <string name="stories_header_greeting">Hi %s</string>
+    <string name="stories_show_more">more</string>
 
     <string name="profile__my_stories">My Stories</string>
     <string name="profile__saved">Saved</string>
     <string name="profile__settings">Settings</string>
     <string name="profile__help">Help</string>
+    <string name="profile__rules">Rules</string>
     <string name="profile__sign_out">Sign out</string>
-    <string name="profile__sign_out_alert_title">Are you sure to log out?</string>
+    <string name="profile__sign_out_alert_title">Are you sure to sign out?</string>
     <string name="profile__btn_sign_out">Log out</string>
 
+    <string name="edit_history_title">Edit History</string>
 
+    <string name="rules_title">Rules</string>
+
+    <string name="my_stories_title">My Stories</string>
 
     <string name="common__email">Email</string>
     <string name="common__password">Password</string>
@@ -63,5 +68,7 @@
     <string name="common__btn_cancel">Cancel</string>
     <string name="common__btn_sign_in">Sign in</string>
     <string name="common__btn_sign_up">Sign up</string>
+    <string name="common__btn_follow">Following</string>
+    <string name="common__btn_following">Following</string>
 
 </resources>

@@ -11,17 +11,18 @@ import androidx.compose.ui.platform.LocalView
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColors(
-    primary = Purple80,
+    primary = Color(0xFFF8EDE3),
     secondary = PurpleGrey80,
 )
 
 private val LightColorScheme = lightColors(
-    primary = Color(0xFF494949),
+    primary = PrimaryGray,
     secondary = PurpleGrey40,
-    background = Color(0xFFCDB699),
-    surface = Color(0xFFCDB699),
+    background = Color(0xFFDFD3C3),
+    surface = Color(0xFFF8EDE3),
     onPrimary = Color.White,
     onSecondary = Color.White,
+    secondaryVariant = Color(0xFF6750A4),
 //    onTertiary = Color.White,
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
@@ -43,13 +44,18 @@ fun UnloneTheme(
 //            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
 //            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
             if (darkTheme) {
-                systemUiController.setSystemBarsColor(
-                    color = colorScheme.background
-                )
+//                systemUiController.setSystemBarsColor(
+//                    color = colorScheme.background
+//                )
+                systemUiController.setNavigationBarColor(color = Color.Transparent)
             } else {
                 systemUiController.setStatusBarColor(
                     color = Color.Transparent,
                     darkIcons = true,
+                )
+                systemUiController.setNavigationBarColor(
+                    color = Color.Transparent,
+//                    darkIcons = true,
                 )
             }
         }

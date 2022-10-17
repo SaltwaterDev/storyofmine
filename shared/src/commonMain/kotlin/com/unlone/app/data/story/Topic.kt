@@ -8,3 +8,9 @@ data class Topic(
     val id: String,
     val name: String,
 )
+
+
+@Serializable
+data class AllTopicResponse(
+    val data: List<Topic>,
+)
