@@ -142,7 +142,7 @@ class WritingViewModel: ObservableObject {
         saveDraft()
         Task {
             do {
-                try await queryDraftUseCase.invoke(id: id).collect(collector: Collector<KotlinPair<NSString, DraftVersion>> { draft in
+                try await queryDraftUseCase.invoke(id: id, version: nil).collect(collector: Collector<KotlinPair<NSString, DraftVersion>> { draft in
                     print(draft)
                     DispatchQueue.main.async {
                         self.currentDraftId = draft.first as? String ?? ""
@@ -163,7 +163,7 @@ class WritingViewModel: ObservableObject {
             let result = try await postStoryUseCase.invoke(title: self.title, content: self.content, topic: self.selectedTopic, isPublished: self.isPublished, commentAllowed: self.commentAllowed, saveAllowed: self.saveAllowed)
             
             switch (result){
-            case is StoryResultSuccess<AnyObject>:
+            case is StoryResultSuccess<KotlinUnit>:
                 createNewDraft()
                 self.postSuccess = true
                 self.loading = false
