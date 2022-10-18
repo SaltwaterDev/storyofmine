@@ -71,7 +71,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     override suspend fun postStory(request: StoryRequest, jwt: String) {
         client.post("$baseUrl/story/post") {
             contentType(ContentType.Application.Json)
-            header("Authorization", jwt)
+            header("Authorization", "Bearer $jwt")
             setBody(request)
         }
     }
@@ -98,7 +98,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
 
     override suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse {
         val response = client.get("$baseUrl/story/$pid") {
-            header("Authorization", token)
+            header("Authorization", "Bearer $token")
         }
         return response.body()
     }
@@ -129,7 +129,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     ) {
         client.post("$baseUrl/report/createReport") {
             contentType(ContentType.Application.Json)
-            header("Authorization", token)
+            header("Authorization", "Bearer $token")
             setBody(reportRequest)
         }
     }
@@ -148,7 +148,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     ): CommentResponse {
         val response = client.post("$baseUrl/comment/postComment") {
             contentType(ContentType.Application.Json)
-            header("Authorization", token)
+            header("Authorization", "Bearer $token")
             setBody(commentRequest)
         }
         return response.body()
@@ -156,7 +156,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
 
     override suspend fun getMyStories(token: String): StoriesResponse {
         val response = client.get("$baseUrl/story/myStories") {
-            header("Authorization", token)
+            header("Authorization", "Bearer $token")
         }
         return response.body()
     }

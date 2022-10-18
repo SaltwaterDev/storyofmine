@@ -71,7 +71,7 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
 
     override suspend fun authenticate(token: String) {
         client.get("$baseUrl/authenticate") {
-            header("Authorization", token)
+            header("Authorization", "Bearer $token")
         }
     }
 

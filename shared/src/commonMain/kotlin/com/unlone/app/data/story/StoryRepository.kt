@@ -76,7 +76,7 @@ internal class StoryRepositoryImpl(
                     content = content,
                     topic, isPublished, commentAllowed, saveAllowed
                 ),
-                jwt = "Bearer $jwt",
+                jwt = jwt,
             )
             StoryResult.Success()
         } catch (e: Exception) {
@@ -88,10 +88,7 @@ internal class StoryRepositoryImpl(
     override suspend fun fetchStoryDetail(id: String): StoryResult<Story> {
         return try {
             authRepository.getJwt()?.let { jwt ->
-                val response = storyApi.fetchStoryDetail(
-                    id,
-                    "Bearer $jwt"
-                )
+                val response = storyApi.fetchStoryDetail(id, jwt)
                 StoryResult.Success(response.toStory())
             } ?: StoryResult.Failed("jwt not exists")
         } catch (e: RedirectResponseException) {
@@ -129,9 +126,7 @@ internal class StoryRepositoryImpl(
     override suspend fun getMyStories(): StoryResult<List<SimpleStory>> {
         return try {
             authRepository.getJwt()?.let { jwt ->
-                val response = storyApi.getMyStories(
-                    "Bearer $jwt"
-                )
+                val response = storyApi.getMyStories(jwt)
                 StoryResult.Success(response.data)
             } ?: StoryResult.Failed("jwt not exists")
         } catch (e: RedirectResponseException) {

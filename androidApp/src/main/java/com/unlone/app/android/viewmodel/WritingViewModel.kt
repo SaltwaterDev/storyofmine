@@ -32,10 +32,7 @@ data class WritingUiState(
     val loading: Boolean = false,
     val isUserSignedIn: Boolean = false,
     val displayingGuidingQuestion: GuidingQuestion? = null,
-){
-    private var listOfGuidingQuestion = listOf<GuidingQuestion>()
-
-}
+)
 
 
 class WritingViewModel(

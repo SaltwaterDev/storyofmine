@@ -18,17 +18,18 @@ class CommentRepositoryImpl(
     override suspend fun getComments(sid: String): StoryResult<List<Comment>> {
         val jwt = authRepository.getJwt()
         return try {
-            val response = storyApi.getComments(sid, "Bearer $jwt")
-            StoryResult.Success(
-                response.data.map {
-                    Comment(
-                        it.id,
-                        it.author,
-                        it.text,
-                        it.createdTime
-                    )
-                }
-            )
+            jwt?.let { token -> val response = storyApi.getComments(sid, token)
+                StoryResult.Success(
+                    response.data.map {
+                        Comment(
+                            it.id,
+                            it.author,
+                            it.text,
+                            it.createdTime
+                        )
+                    }
+                )
+            }?: StoryResult.Failed("jwt is null")
         } catch (e: RedirectResponseException) {
             StoryResult.Failed(errorMsg = e.response.body<String>())
         } catch (e: ClientRequestException) {
@@ -43,9 +44,9 @@ class CommentRepositoryImpl(
         val jwt = authRepository.getJwt()
         return try {
             val request = CommentRequest(sid, text)
-            val response = storyApi.postComment(request, "Bearer $jwt")
+            val response = jwt?.let { storyApi.postComment(request, it) }
             StoryResult.Success(
-                response.data.map {
+                response?.data?.map {
                     Comment(
                         it.id,
                         it.author,

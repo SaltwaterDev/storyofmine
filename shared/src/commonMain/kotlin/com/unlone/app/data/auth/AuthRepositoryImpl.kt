@@ -124,7 +124,7 @@ internal class AuthRepositoryImpl(
         return try {
             val token = prefs.getString(JWT_SP_KEY)
                 ?: return AuthResult.Unauthorized(null)
-            api.authenticate("Bearer $token")
+            api.authenticate(token)
             AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
