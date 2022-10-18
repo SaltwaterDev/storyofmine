@@ -4,13 +4,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Lightbulb
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -20,12 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.unlone.app.android.R
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.ui.theme.Typography
@@ -181,8 +175,6 @@ fun WritingScreen(
                 )
             }
 
-
-
             DisplayingQuestionBlock(
                 uiState.displayingGuidingQuestion?.text,
                 Modifier
@@ -193,7 +185,6 @@ fun WritingScreen(
                         toolbarHeight + 8.dp
                     )
             )
-
 
             Crossfade(
                 targetState = isKeyboardVisible,
@@ -206,29 +197,10 @@ fun WritingScreen(
                     },
             ) {
                 if (isKeyboardVisible) {
-                    Row(
-                        Modifier
-                            .height(imeToolBarHeight.dp)
-                            .fillMaxWidth()
-                            .border(1.dp, Color.Green)
-                    ) {
-                        IconButton(onClick = {
-                            launcher.launch("image/*")
-                        }) {
-                            Icon(
-                                painterResource(id = R.drawable.image),
-                                contentDescription = "input image"
-                            )
-                        }
-                        IconButton(onClick = {
-                            scope.launch { viewModel.getDisplayingQuestion() }
-                        }) {
-                            Icon(
-                                Icons.Rounded.Lightbulb,
-                                contentDescription = "get guiding question"
-                            )
-                        }
-                    }
+                    WritingScreenToolBar(
+                        { launcher.launch("image/*") },
+                        { scope.launch { viewModel.getDisplayingQuestion() } }
+                    )
                 }
             }
 
@@ -246,15 +218,9 @@ fun WritingScreen(
                     viewModel::setSaveAllowed,
                     {
                         scope.launch {
-                            launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                            launch {
-                                showPostingDialog = false
-                            }
-                            launch {
-                                keyboardController?.hide()
-                            }
+                            launch { scaffoldState.bottomSheetState.expand() }
+                            launch { showPostingDialog = false }
+                            launch { keyboardController?.hide() }
                         }
                     },
                     {
@@ -303,45 +269,13 @@ fun WritingScreen(
             }
 
             if (requireSignInDialog) {
-                AlertDialog(
-                    onDismissRequest = { requireSignInDialog = false },
-                    title = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_title)) },
-                    text = { Text(text = stringResource(resource = SharedRes.strings.writing__sign_in_required_text)) },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                requireSignInDialog = false
-                                navToSignIn()
-                            }
-                        ) {
-                            Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
-
-                        }
-                    },
-                    dismissButton = {
-                        Button(
-                            onClick = { requireSignInDialog = false }
-                        ) { Text(text = stringResource(resource = SharedRes.strings.common__btn_cancel)) }
-                    },
+                RequireSignInDialog(
+                    { requireSignInDialog = false },
+                    {
+                        requireSignInDialog = false
+                        navToSignIn()
+                    }
                 )
-            }
-        }
-    }
-}
-
-
-@Composable
-fun DisplayingQuestionBlock(question: String?, modifier: Modifier = Modifier) {
-    Crossfade(
-        targetState = question != null,
-        modifier = modifier,
-    ) {
-        if (question != null) {
-            Surface(
-                color = MaterialTheme.colors.primary,
-                shape = RoundedCornerShape(16.dp, 16.dp, 16.dp, 0.dp)
-            ) {
-                Text(text = question, modifier = Modifier.padding(16.dp, 8.dp))
             }
         }
     }
