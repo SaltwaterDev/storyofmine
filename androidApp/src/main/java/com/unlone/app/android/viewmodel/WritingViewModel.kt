@@ -16,6 +16,7 @@ import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import kotlin.time.Duration.Companion.seconds
 
 data class WritingUiState(
     val currentDraftId: String? = null,
@@ -199,42 +200,40 @@ class WritingViewModel(
         }
     }
 
-    fun postStory() {
-        viewModelScope.launch {
-            changedChannel.send(
-                state.value.copy(loading = true)
-            )
-            val result = postStoryUseCase(
-                state.value.title,
-                state.value.body.text,
-                state.value.selectedTopic,
-                state.value.isPublished,
-                state.value.commentAllowed,
-                state.value.saveAllowed,
-            )
-            changedChannel.send(
-                when (result) {
-                    is StoryResult.Success -> {
-                        state.value.currentDraftId?.let { deleteDraft(it) } ?: createNewDraft()
-                        state.value.copy(
-                            postSuccess = true,
-                            loading = false,
-                        )
-                    }
-                    is StoryResult.Failed ->
-                        state.value.copy(
-                            error = result.errorMsg,
-                            loading = false,
-                        )
-                    is StoryResult.UnknownError ->
-                        state.value.copy(
-                            error = result.errorMsg,
-                            loading = false,
-                        )
+    fun postStory() = viewModelScope.launch {
+        changedChannel.send(
+            state.value.copy(loading = true)
+        )
+        val result = postStoryUseCase(
+            state.value.title,
+            state.value.body.text,
+            state.value.selectedTopic,
+            state.value.isPublished,
+            state.value.commentAllowed,
+            state.value.saveAllowed,
+        )
+        changedChannel.send(
+            when (result) {
+                is StoryResult.Success -> {
+                    state.value.currentDraftId?.let { deleteDraft(it) } ?: createNewDraft()
+                    state.value.copy(
+                        postSuccess = true,
+                        loading = false,
+                    )
                 }
-            )
-            Log.d("TAG", "postStory: $result")
-        }
+                is StoryResult.Failed ->
+                    state.value.copy(
+                        error = result.errorMsg,
+                        loading = false,
+                    )
+                is StoryResult.UnknownError ->
+                    state.value.copy(
+                        error = result.errorMsg,
+                        loading = false,
+                    )
+            }
+        )
+        Log.d("TAG", "postStory: $result")
     }
 
     fun setTopic(topic: String) {
@@ -280,7 +279,6 @@ class WritingViewModel(
     }
 
 
-
     private val guidingQuestionList = guidingQuestionsRepository.guidingQuestionList
     private var guidingQuestionIterator = guidingQuestionList.listIterator()
     private var dismissQuestionJob: Job? = null
@@ -292,8 +290,7 @@ class WritingViewModel(
 
         dismissQuestionJob?.cancelAndJoin()
         dismissQuestionJob = viewModelScope.launch {
-            // dismiss question after 10 sec
-            delay(10000L)
+            delay(10.seconds)
             changedChannel.send(
                 state.value.copy(displayingGuidingQuestion = null)
             )
