@@ -17,6 +17,9 @@ object Deps {
     val constraintLayout by lazy { "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}" }
     val junit by lazy { "junit:junit:${Versions.jUnit}" }
     val materialDesign by lazy { "com.google.android.material:material:${Versions.materialDesign}" }
+    const val multiplatformPaging = "io.github.kuuuurt:multiplatform-paging:${Versions.kmmPaging}"
+    const val realm = "io.realm.kotlin:library-base:${Versions.realm}"
+
 }
 
 object Ktx{
@@ -45,6 +48,8 @@ object Compose {
     const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.composeLifecycle}"
     const val preview = "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
     const val materialIcon = "androidx.compose.material:material-icons-extended:${Versions.compose}"
+    const val composePaging = "androidx.paging:paging-compose:${Versions.pagingCompose}"
+
 }
 
 object Koin {

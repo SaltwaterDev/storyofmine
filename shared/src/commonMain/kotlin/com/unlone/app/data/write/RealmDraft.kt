@@ -1,7 +1,7 @@
 package com.unlone.app.data.write
 
-import com.unlone.app.domain.entities.DraftVersion
 import com.unlone.app.domain.entities.Draft
+import com.unlone.app.domain.entities.DraftVersion
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.ObjectId
 import io.realm.kotlin.types.RealmInstant

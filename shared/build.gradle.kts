@@ -26,6 +26,7 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         framework {
             baseName = "shared"
+            export("io.github.kuuuurt:multiplatform-paging:${Versions.kmmPaging}")
         }
     }
 
@@ -49,9 +50,11 @@ kotlin {
                 implementation("co.touchlab:kermit:1.1.3")
                 // mongodb realm
                 implementation(Ktx.Coroutine.core)
-                implementation("io.realm.kotlin:library-base:1.0.0")
+                implementation(Deps.realm)
                 // datetime
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                // pagination
+                api(Deps.multiplatformPaging)
             }
         }
         val commonTest by getting {

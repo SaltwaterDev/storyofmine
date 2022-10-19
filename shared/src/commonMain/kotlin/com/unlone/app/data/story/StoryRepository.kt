@@ -1,15 +1,20 @@
 package com.unlone.app.data.story
 
 import co.touchlab.kermit.Logger
+import com.kuuurt.paging.multiplatform.Pager
+import com.kuuurt.paging.multiplatform.PagingConfig
+import com.kuuurt.paging.multiplatform.PagingResult
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.domain.entities.Story
 import com.unlone.app.domain.entities.StoryItem
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.utils.io.charsets.*
+import kotlinx.coroutines.MainScope
 
 interface StoryRepository {
     suspend fun fetchStoriesByPosts(
+        page: Int,
         postPerFetching: Int,
         itemsPerPage: Int,
     ): List<StoryItem.StoriesByTopic>
@@ -44,10 +49,10 @@ internal class StoryRepositoryImpl(
 ) : StoryRepository {
 
     override suspend fun fetchStoriesByPosts(
+        page: Int,
         postPerFetching: Int,
         itemsPerPage: Int,
     ): List<StoryItem.StoriesByTopic> {
-        val page = 0    // in far
         val response = storyApi.fetchStoriesPerPost(
             postPerFetching, itemsPerPage, page
         )
@@ -68,7 +73,6 @@ internal class StoryRepositoryImpl(
         commentAllowed: Boolean,
         saveAllowed: Boolean,
     ): StoryResult<Unit> {
-        // encode the content to utf-8 to prevent 400 bad request (triggered when data is too large)
         return try {
             storyApi.postStory(
                 StoryRequest(
@@ -138,4 +142,5 @@ internal class StoryRepositoryImpl(
             StoryResult.UnknownError(errorMsg = e.message)
         }
     }
+
 }

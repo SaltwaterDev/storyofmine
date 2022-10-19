@@ -5,10 +5,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
         classpath("com.android.tools.build:gradle:7.2.2")
-        classpath("com.google.gms:google-services:4.3.13")
-        classpath("io.realm.kotlin:gradle-plugin:1.0.0")
+        classpath("com.google.gms:google-services:4.3.14")
+        classpath("io.realm.kotlin:gradle-plugin:${Versions.realm}")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2")
         classpath("dev.icerock.moko:resources-generator:0.20.1")
         // build kconfig

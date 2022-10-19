@@ -51,6 +51,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.composeLifecycle}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.composeLifecycle}")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.2.1")
+    implementation ("androidx.startup:startup-runtime:1.1.1")
+
 
     with(Compose) {
         implementation(ui)
@@ -60,6 +62,7 @@ dependencies {
         implementation(navigation)
         implementation(viewModel)
         implementation(materialIcon)
+        implementation(composePaging)
     }
 
     with(Accompanist) {

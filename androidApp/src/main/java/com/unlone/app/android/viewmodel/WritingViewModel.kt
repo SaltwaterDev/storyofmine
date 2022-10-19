@@ -66,6 +66,12 @@ class WritingViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
+    init {
+        viewModelScope.launch {
+            refreshData()
+        }
+    }
+
     suspend fun refreshData(draftId: String? = null, version: String? = null) =
         withContext(Dispatchers.Default) {
             if (draftId == null || version == null) {

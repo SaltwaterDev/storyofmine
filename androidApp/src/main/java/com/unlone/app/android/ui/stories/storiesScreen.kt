@@ -26,6 +26,8 @@ import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.data.story.SimpleStory
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 
 @Composable
 fun StoriesScreen(
@@ -35,6 +37,7 @@ fun StoriesScreen(
     navToAuthGraph: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
+    val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
 
     if (!state.isUserLoggedIn)
         Box(Modifier.fillMaxSize()) {
@@ -71,19 +74,32 @@ fun StoriesScreen(
                         )
                     }
 
-                    state.storiesByTopics?.let { stories ->
-                        items(stories) {
-                            PostsByTopic(
-                                it.topic,
-                                state.loading,
-                                it.stories,
-                                { navToTopicPosts(it.topic) }
-                            ) { pid ->
-                                navToPostDetail(pid)
-                            }
-                            Spacer(modifier = Modifier.height(30.dp))
+                    items(storiesByTopics) {
+                        PostsByTopic(
+                            it!!.topic,
+                            state.loading,
+                            it.stories,
+                            { navToTopicPosts(it.topic) }
+                        ) { pid ->
+                            navToPostDetail(pid)
                         }
+                        Spacer(modifier = Modifier.height(30.dp))
                     }
+
+
+//                    state.storiesByTopics?.let { stories ->
+//                        items(stories) {
+//                            PostsByTopic(
+//                                it.topic,
+//                                state.loading,
+//                                it.stories,
+//                                { navToTopicPosts(it.topic) }
+//                            ) { pid ->
+//                                navToPostDetail(pid)
+//                            }
+//                            Spacer(modifier = Modifier.height(30.dp))
+//                        }
+//                    }
                 }
             }
         }

@@ -16,16 +16,10 @@ import kotlinx.datetime.Instant
 
 internal class DraftRepositoryImpl : DraftRepository {
 
-    private val config =
-        RealmConfiguration.Builder(
-            schema = setOf(
-                ParentDraftRealmObject::class,
-                ChildDraftRealmObject::class
-            )
-        ).build()
-    private val realm: Realm by lazy {
-        Realm.open(config)
-    }
+    // use the RealmConfiguration.Builder() for more options
+    private val configuration = RealmConfiguration.create(schema = setOf(ParentDraftRealmObject::class, ChildDraftRealmObject::class))
+    private val realm = Realm.open(configuration)
+
 
 
     override fun getAllDrafts(): Flow<List<Draft>> {
