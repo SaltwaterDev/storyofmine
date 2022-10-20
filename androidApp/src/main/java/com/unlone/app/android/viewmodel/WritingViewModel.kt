@@ -263,7 +263,7 @@ class WritingViewModel(
         }
     }
 
-    private fun getIsUserSignedIn() = flow { emit(isUserSignedInUseCase()) }
+    fun getIsUserSignedIn() = flow { emit(isUserSignedInUseCase()) }
 
     fun addImageMD(uri: Uri?) {
         uri?.let {

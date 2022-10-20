@@ -56,7 +56,7 @@ class StoriesViewModel(
         }
     }
 
-    private suspend fun initData() {
+    suspend fun initData() {
         _state.value = _state.value.copy(loading = true)
         if (authRepository.authenticate() is AuthResult.Authorized) {
             getUserName()

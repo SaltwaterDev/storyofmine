@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -39,11 +40,12 @@ fun StoriesScreen(
     val state by viewModel.state.collectAsState()
     val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
 
-    if (!state.isUserLoggedIn)
-        Box(Modifier.fillMaxSize()) {
-            LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
-        }
-    else {
+    LaunchedEffect(state.isUserLoggedIn){
+        viewModel.initData()
+    }
+
+
+    if (state.isUserLoggedIn) {
         viewModel.checkAuth()   // to ensure again user has authorized
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SwipeRefresh(
@@ -115,6 +117,13 @@ fun StoriesScreen(
                 }
             )
         }
+    }
+    else {
+        Box(Modifier.fillMaxSize()) {
+            LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
+        }
+
+
     }
 }
 

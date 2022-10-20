@@ -4,6 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
@@ -27,13 +29,20 @@ enum class AuthNav {
 @OptIn(InternalCoroutinesApi::class)
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
-    onSigninOrSignupFinished: () -> Unit,
+    onSigninOrSignupFinished: (String?) -> Unit,
 ) {
 
-    navigation(AuthNav.SignUp.name, route = "auth") {
+
+    navigation(
+        AuthNav.SignUp.name,
+        route = "auth/{lastRoute}",
+        arguments = listOf(navArgument("lastRoute") { type = NavType.StringType })
+    ) {
+
+        val lastRoute = "auth/{lastRoute}"
 
         composable(AuthNav.SignUp.name) {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
             val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SignUpScreen(
@@ -43,17 +52,17 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable(AuthNav.SignUp.name + "/setUsername") {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
             val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SetUsernameScreen(
                 viewModel = viewModel,
-                onSignUpSuccess = onSigninOrSignupFinished,
+                onSignUpSuccess = { onSigninOrSignupFinished(lastRoute) },
             )
         }
 
         composable(AuthNav.SignUp.name + "/emailVerification") {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
             val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             EmailVerificationScreen(
@@ -73,7 +82,7 @@ fun NavGraphBuilder.authGraph(
         composable(
             AuthNav.SignIn.name + "/email",
         ) {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
             val viewModel = koinViewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
                 navToSignInPw = { navigateToSignInPw(navController) },
@@ -84,10 +93,10 @@ fun NavGraphBuilder.authGraph(
         composable(
             AuthNav.SignIn.name + "/password",
         ) {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
             val viewModel = koinViewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInPasswordScreen(
-                onSignInSuccess = onSigninOrSignupFinished,
+                onSignInSuccess = { onSigninOrSignupFinished(lastRoute) },
                 back = { navController.popBackStack() },
                 viewModel = viewModel
             )
@@ -97,8 +106,9 @@ fun NavGraphBuilder.authGraph(
 
 fun navigateToAuth(
     navController: NavHostController,
+    lsatRoute: String
 ) {
-    navController.navigate("auth")
+    navController.navigate("auth/$lsatRoute")
 }
 
 fun navigateToSignUp(navController: NavHostController) {

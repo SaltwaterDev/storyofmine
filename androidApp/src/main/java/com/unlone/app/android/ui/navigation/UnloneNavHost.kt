@@ -50,7 +50,12 @@ fun MainNavHost(
                 viewModel = viewModel,
                 navToPostDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navigateToTopicDetail(navController, it) },
-                navToAuthGraph = { navigateToAuth(navController) }
+                navToAuthGraph = {
+                    navigateToAuth(
+                        navController,
+                        UnloneBottomDestinations.Stories.route,
+                    )
+                }
             )
         }
         composable(
@@ -131,10 +136,10 @@ fun MainNavHost(
 
         authGraph(
             navController,
-            onSigninOrSignupFinished = {
+            onSigninOrSignupFinished = { lastRoute ->
                 navController.popBackStack(
-                    destinationId = findStartDestination(navController.graph).id,
-                    inclusive = false,
+                    route = lastRoute!!,
+                    inclusive = true,
                     saveState = false
                 )
 //                navController.navigate(UnloneBottomDestinations.Stories.route) {
@@ -142,7 +147,6 @@ fun MainNavHost(
 //                }
             },
         )
-
 
         // todo: Add on-boarding Screens
     }
