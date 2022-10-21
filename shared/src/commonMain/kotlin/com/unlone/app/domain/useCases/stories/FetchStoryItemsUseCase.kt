@@ -29,11 +29,10 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
                 items = items,
                 currentKey = currentKey,
                 prevKey = { null }, // Key for previous page, null means don't load previous pages
-                nextKey = { currentKey + 1 }
+                nextKey = { if (size == itemsPerPage * 3) currentKey + 3 else currentKey + 1 }
             )
         }
     )
-
 
 
     operator fun invoke(): Flow<PagingData<StoryItem.StoriesByTopic>> {
@@ -45,21 +44,5 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
         private const val postsPerPage = 7
         private const val itemsPerPage = 5
         private val pagingConfig = PagingConfig(pageSize = itemsPerPage, enablePlaceholders = false)
-    }
-}
-
-
-fun <T> Flow<T>.asCommonFlow(): CommonFlow<T> = CommonFlow(this)
-
-class CommonFlow<T>(private val origin: Flow<T>) : Flow<T> by origin {
-    fun watch(block: (T) -> Unit): Closeable {
-        val job = Job()
-        onEach { block(it) }.launchIn(CoroutineScope(job + dispatcher()))
-
-        return object : Closeable {
-            override fun close() {
-                job.cancel()
-            }
-        }
     }
 }

@@ -40,7 +40,7 @@ fun StoriesScreen(
     val state by viewModel.state.collectAsState()
     val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
 
-    LaunchedEffect(state.isUserLoggedIn){
+    LaunchedEffect(state.isUserLoggedIn) {
         viewModel.initData()
     }
 
@@ -76,7 +76,7 @@ fun StoriesScreen(
                         )
                     }
 
-                    items(storiesByTopics) {
+                    items(storiesByTopics, key = { it.topic }) {
                         PostsByTopic(
                             it!!.topic,
                             state.loading,
@@ -87,21 +87,6 @@ fun StoriesScreen(
                         }
                         Spacer(modifier = Modifier.height(30.dp))
                     }
-
-
-//                    state.storiesByTopics?.let { stories ->
-//                        items(stories) {
-//                            PostsByTopic(
-//                                it.topic,
-//                                state.loading,
-//                                it.stories,
-//                                { navToTopicPosts(it.topic) }
-//                            ) { pid ->
-//                                navToPostDetail(pid)
-//                            }
-//                            Spacer(modifier = Modifier.height(30.dp))
-//                        }
-//                    }
                 }
             }
         }
@@ -117,8 +102,7 @@ fun StoriesScreen(
                 }
             )
         }
-    }
-    else {
+    } else {
         Box(Modifier.fillMaxSize()) {
             LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
         }
