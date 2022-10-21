@@ -136,7 +136,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
 
     override suspend fun getComments(storyId: String, token: String): CommentResponse {
         val response = client.get("$baseUrl/comment/getComments") {
-            header("Authorization", token)
+            header("Authorization", "Bearer $token")
             url { parameters.append("storyId", storyId) }
         }
         return response.body()

@@ -36,11 +36,6 @@ fun ProfileScreen(
     var showSignOutAlert by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize()) {
-        Button(onClick = {
-            throw RuntimeException("Test Crash") // Force a crash
-        }) {
-            Text(text = "Click me")
-        }
         if (state.isUserLoggedIn) {
             Text(
                 text = state.username,
