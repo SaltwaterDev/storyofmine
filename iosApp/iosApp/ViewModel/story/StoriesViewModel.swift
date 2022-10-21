@@ -8,12 +8,13 @@
 
 import Foundation
 import shared
+import KMPNativeCoroutinesAsync
 
 @MainActor
 class StoriesViewModel: ObservableObject {
     private let authRepo = AuthRepositoryHelper().authRepo()
     private let fetchStoryItemsUseCase = UseCasesHelper().fetchStoryItemsUseCase
-    
+    var hasNextPage: Bool = false
 
     var shouldReload: Bool = true
     @Published var loading: Bool = false
@@ -24,21 +25,30 @@ class StoriesViewModel: ObservableObject {
     
     func getStoriesItems() async{
         do{
-            let result = try await fetchStoryItemsUseCase.invoke()
-            print(result)
-            self.storiesByTopics = result.map{
-                StoriesComponent.TopicStories(
-                    topic: $0.topic,
-                    stories: $0.stories.map{ s in
-                        SimpleStory(
-                            id: s.id,
-                            title: s.title,
-                            bodyText: s.content
-                        )
-                    }
-                )
+            loading = true
+            let stream = asyncStream(for: fetchStoryItemsUseCase.pagingDataNative)
+            
+            for try await response in stream {
+                print(response)
+                self.storiesByTopics = response.map{
+                    StoriesComponent.TopicStories(
+                        topic: $0.topic,
+                        stories: $0.stories.map{ s in
+                            SimpleStory(
+                                id: s.id,
+                                title: s.title,
+                                bodyText: s.content
+                            )
+                        }
+                    )
+                }
+                self.hasNextPage = self.fetchStoryItemsUseCase.pager.hasNextPage
+                loading = false
             }
-        } catch{ print(error) }
+        } catch{
+            print(error)
+            loading = false
+        }
     }
 
     
@@ -60,5 +70,13 @@ class StoriesViewModel: ObservableObject {
 
     func dismissError() {
         errorMsg = nil
+    }
+    
+    func fetchNextData() {
+        fetchStoryItemsUseCase.pager.loadNext()
+    }
+    
+    public var shouldDisplayNextPage: Bool {
+        return hasNextPage
     }
 }

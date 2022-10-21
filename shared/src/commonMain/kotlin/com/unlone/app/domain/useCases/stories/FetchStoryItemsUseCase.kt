@@ -6,6 +6,7 @@ import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.helpers.dispatcher
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesIgnore
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.domain.entities.StoryItem
 import io.ktor.utils.io.core.*
@@ -19,7 +20,7 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
-    private val pager = Pager(
+    val pager = Pager(
         clientScope = coroutineScope,
         config = pagingConfig,
         initialKey = 0, // Key to use when initialized
@@ -34,7 +35,10 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
         }
     )
 
+    val pagingData: Flow<PagingData<StoryItem.StoriesByTopic>> = pager.pagingData.cachedIn(coroutineScope)
 
+
+    @NativeCoroutinesIgnore
     operator fun invoke(): Flow<PagingData<StoryItem.StoriesByTopic>> {
         return pager.pagingData
             .cachedIn(coroutineScope) // cachedIn from AndroidX Paging. on iOS, this is a no-op

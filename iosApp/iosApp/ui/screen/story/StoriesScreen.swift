@@ -41,6 +41,11 @@ struct StoriesScreen: View {
                             )
                         )
                     }
+                    
+                    if storiesViewModel.shouldDisplayNextPage {
+                        nextPageView
+                    }
+
                 }.redacted(reason: storiesViewModel.loading ? .placeholder : [])
                 .navigationBarHidden(true)
                 .frame(alignment: .leading)
@@ -86,6 +91,21 @@ struct StoriesScreen: View {
             })
         }
     }
+    
+    private var nextPageView: some View {
+        HStack {
+            Spacer()
+            VStack {
+                ProgressView()
+                Text("Loading next page...")
+            }
+            Spacer()
+        }
+        .onAppear(perform: {
+            storiesViewModel.fetchNextData()
+        })
+    }
+
 }
 
 extension StoriesScreen {

@@ -14,7 +14,6 @@ buildscript {
         // build kconfig
         classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.13.3")
         classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
-
     }
 }
 
