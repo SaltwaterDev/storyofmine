@@ -119,7 +119,7 @@ fun SignUpScreen(
                 value = uiState.confirmedPassword,
                 label = {
                     Text(
-                        text = stringResource(resource = SharedRes.strings.common__email),
+                        text = stringResource(resource = SharedRes.strings.common__confirm_password),
                         fontSize = 14.sp
                     )
                 },

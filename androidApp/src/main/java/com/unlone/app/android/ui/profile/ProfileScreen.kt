@@ -29,13 +29,18 @@ fun ProfileScreen(
     goToRules: () -> Unit,
 ) {
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.getUserName()
     }
     val state = viewModel.state.collectAsState().value
     var showSignOutAlert by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize()) {
+        Button(onClick = {
+            throw RuntimeException("Test Crash") // Force a crash
+        }) {
+            Text(text = "Click me")
+        }
         if (state.isUserLoggedIn) {
             Text(
                 text = state.username,
@@ -51,19 +56,40 @@ fun ProfileScreen(
 
         if (state.isUserLoggedIn) {
             ProfileScreenDivider()
-            ListItem(Modifier.clickable { goToMyStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__my_stories), style = Typography.subtitle1) }
+            ListItem(Modifier.clickable { goToMyStories() }) {
+                Text(
+                    text = stringResource(resource = SharedRes.strings.profile__my_stories),
+                    style = Typography.subtitle1
+                )
+            }
 //            ProfileScreenDivider()
 //            ListItem(Modifier.clickable { goToSavedStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__saved), style = Typography.subtitle1) }
         }
         ProfileScreenDivider()
 //        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
 //        ProfileScreenDivider()
-        ListItem(Modifier.clickable { goToHelp() }) { Text(text = stringResource(resource = SharedRes.strings.profile__help), style = Typography.subtitle1) }
+        ListItem(Modifier.clickable { goToHelp() }) {
+            Text(
+                text = stringResource(resource = SharedRes.strings.profile__help),
+                style = Typography.subtitle1
+            )
+        }
         ProfileScreenDivider()
-        ListItem(Modifier.clickable { goToRules() }) { Text(text = stringResource(resource = SharedRes.strings.profile__rules), style = Typography.subtitle1) }
+        ListItem(Modifier.clickable { goToRules() }) {
+            Text(
+                text = stringResource(resource = SharedRes.strings.profile__rules),
+                style = Typography.subtitle1
+            )
+        }
         ProfileScreenDivider()
         if (state.isUserLoggedIn) {
-            ListItem(Modifier.clickable { showSignOutAlert = true }) { Text(text = stringResource(resource = SharedRes.strings.profile__sign_out), style = Typography.subtitle1) }
+            ListItem(Modifier.clickable { showSignOutAlert = true }) {
+                Text(
+                    text = stringResource(
+                        resource = SharedRes.strings.profile__sign_out
+                    ), style = Typography.subtitle1
+                )
+            }
             ProfileScreenDivider()
         }
     }
@@ -90,6 +116,6 @@ fun ProfileScreen(
 }
 
 @Composable
-fun ProfileScreenDivider(){
+fun ProfileScreenDivider() {
     Divider(Modifier.fillMaxWidth(), color = MaterialTheme.colors.onSurface)
 }
