@@ -20,6 +20,7 @@ import com.unlone.app.android.ui.comonComponent.CommentInput
 import com.unlone.app.android.ui.comonComponent.CommentItem
 import com.unlone.app.android.ui.comonComponent.StoryDetailTopBar
 import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.ui.theme.storyText
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import dev.icerock.moko.resources.compose.stringResource
@@ -103,7 +104,7 @@ fun StoryDetail(
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
-                        text = state.content, style = Typography.body1,
+                        text = state.content, style = Typography.storyText,
                         modifier = Modifier.placeholder(
                             visible = state.loading,
                             highlight = PlaceholderHighlight.fade()

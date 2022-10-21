@@ -62,7 +62,6 @@ val Typography = Typography(
         fontSize = 16.sp,
         letterSpacing = 2.4.sp,
         fontFamily = NotoSansHKFontFamily,
-        lineHeight = 32.sp,
     ),
     subtitle1 = TextStyle(
         fontFamily = MontserratFontFamily,
@@ -104,4 +103,10 @@ val Typography.titleMedium: TextStyle
         fontSize = 20.sp,
         lineHeight = 27.sp,
         letterSpacing = 0.1.sp
+    )
+
+
+val Typography.storyText: TextStyle
+    get() = this.body1.copy(
+        lineHeight = 32.sp,
     )

@@ -86,8 +86,9 @@ fun SignUpScreen(
             )
             if (uiState.emailError)
                 Text(
-                    "This email has been used",
+                    stringResource(resource = SharedRes.strings.sign_up__email_already_used),
                     modifier = Modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colors.error
                 )
             Spacer(Modifier.height(14.dp))
 
@@ -109,7 +110,7 @@ fun SignUpScreen(
             Text(
                 stringResource(resource = SharedRes.strings.sign_up__pw_tips),
                 modifier = Modifier.padding(horizontal = 16.dp),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
             Spacer(Modifier.height(14.dp))
 
@@ -133,7 +134,8 @@ fun SignUpScreen(
                 Text(
                     stringResource(resource = SharedRes.strings.sign_up__pw_and_confirm_pw_not_same),
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colors.error
                 )
 
             Spacer(Modifier.height(15.dp))
