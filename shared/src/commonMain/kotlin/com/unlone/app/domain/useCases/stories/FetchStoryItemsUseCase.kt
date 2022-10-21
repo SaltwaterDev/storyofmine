@@ -29,7 +29,7 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
                 items = items,
                 currentKey = currentKey,
                 prevKey = { null }, // Key for previous page, null means don't load previous pages
-                nextKey = { if (size == itemsPerPage * 3) currentKey + 3 else currentKey + 1 }
+                nextKey = { currentKey + (size / itemsPerPage) }
             )
         }
     )
