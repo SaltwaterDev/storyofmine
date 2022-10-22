@@ -6,10 +6,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.profile.MyStoriesScreen
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.profile.RulesScreen
@@ -33,7 +32,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit
 ) {
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = UnloneBottomDestinations.Write.route,
         modifier = modifier,

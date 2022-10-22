@@ -6,9 +6,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.google.accompanist.navigation.animation.composable
 import com.unlone.app.android.ui.write.EditHistoryScreen
 import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.EditHistoryViewModel

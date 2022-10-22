@@ -62,7 +62,6 @@ class StoriesViewModel(
             getUserName()
             _state.value = _state.value.copy(
                 isUserLoggedIn = true,
-//                storiesByTopics = fetchStoryItemsUseCase(),       // fetch stories
             )
         }
         _state.value = _state.value.copy(loading = false)

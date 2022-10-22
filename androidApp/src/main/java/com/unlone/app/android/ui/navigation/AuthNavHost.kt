@@ -5,9 +5,9 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.navigation
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
 import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
 import com.unlone.app.android.ui.auth.signup.EmailVerificationScreen
