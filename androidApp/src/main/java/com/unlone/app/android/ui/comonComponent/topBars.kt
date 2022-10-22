@@ -108,6 +108,7 @@ fun StoryDetailTopBar(
     navToTopicDetail: () -> Unit,
     report: () -> Unit,
     save: (() -> Unit)? = null,
+    saveEnabled: Boolean,
     traceHistory: () -> Unit,
     edit: () -> Unit,
     topic: String,
@@ -139,11 +140,13 @@ fun StoryDetailTopBar(
 
             Row(Modifier.align(Alignment.CenterEnd)) {
 //                todo
-//                IconButton(onClick = save) {
-//                    Icon(
-//                        Icons.Rounded.Bookmark,
-//                        contentDescription = "save"
-//                    )
+//                save?.let {
+//                    IconButton(onClick = it, enabled = saveEnabled) {
+//                        Icon(
+//                            Icons.Rounded.Bookmark,
+//                            contentDescription = "save"
+//                        )
+//                    }
 //                }
 
                 Box {
@@ -186,6 +189,7 @@ fun StoryDetailTopBarPreview() {
         navToTopicDetail = { /*TODO*/ },
         report = { /*TODO*/ },
         save = { /*TODO*/ },
+        saveEnabled = true,
         traceHistory = { /*TODO*/ },
         edit = { /*TODO*/ },
         topic = "Topic",

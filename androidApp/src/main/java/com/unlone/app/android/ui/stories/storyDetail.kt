@@ -64,6 +64,7 @@ fun StoryDetail(
                     navToTopicDetail = { navToTopicDetail(state.topic) },
                     report = reportStory,
                     save = storyId?.let { { viewModel.saveStory(it) } },
+                    saveEnabled = state.allowSave,
                     traceHistory = { /*TODO*/ },
                     edit = { /*TODO*/ },
                     topic = state.topic,
@@ -125,19 +126,20 @@ fun StoryDetail(
             }
         }
 
-        CommentInput(
-            modifier = Modifier
-                .fillMaxWidth()
-                .imePadding()
-                .align(Alignment.BottomStart)
-                .onGloballyPositioned {
-                    commentInputHeight = it.size.height
-                },
-            comment = state.commentText,
-            setComment = viewModel::setCommentText,
-            onCommentSent = { storyId?.let { viewModel.postComment(storyId) } },
-            sendEnabled = !state.postCommentLoading
-        )
+        if (state.allowComment)
+            CommentInput(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .align(Alignment.BottomStart)
+                    .onGloballyPositioned {
+                        commentInputHeight = it.size.height
+                    },
+                comment = state.commentText,
+                setComment = viewModel::setCommentText,
+                onCommentSent = { storyId?.let { viewModel.postComment(storyId) } },
+                sendEnabled = !state.postCommentLoading
+            )
     }
 
     state.errorMsg?.let {
