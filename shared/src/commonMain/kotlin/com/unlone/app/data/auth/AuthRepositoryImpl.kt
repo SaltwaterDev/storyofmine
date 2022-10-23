@@ -1,6 +1,7 @@
 package com.unlone.app.data.auth
 
 import co.touchlab.kermit.Logger
+import com.unlone.app.data.api.AuthApi
 import com.unlone.app.utils.KMMPreference
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*

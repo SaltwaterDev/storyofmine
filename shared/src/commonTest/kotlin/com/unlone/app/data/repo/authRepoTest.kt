@@ -1,6 +1,6 @@
 package com.unlone.app.data.repo
 
-import com.unlone.app.data.auth.AuthApi
+import com.unlone.app.data.api.AuthApi
 import com.unlone.app.data.auth.AuthRepositoryImpl
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.utils.KMMPreference

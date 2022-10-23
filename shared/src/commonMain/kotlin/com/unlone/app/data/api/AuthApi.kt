@@ -1,6 +1,7 @@
-package com.unlone.app.data.auth
+package com.unlone.app.data.api
 
 import com.unlone.app.UnloneConfig
+import com.unlone.app.data.auth.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*

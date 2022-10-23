@@ -11,6 +11,7 @@ import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.data.write.DraftRepository
 import com.unlone.app.data.write.GuidingQuestion
 import com.unlone.app.data.write.GuidingQuestionsRepository
+import com.unlone.app.data.write.StaticResourceResult
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*
@@ -32,6 +33,7 @@ data class WritingUiState(
     val postSuccess: Boolean = false,
     val loading: Boolean = false,
     val isUserSignedIn: Boolean = false,
+    internal val guidingQuestion: List<GuidingQuestion> = listOf(),
     val displayingGuidingQuestion: GuidingQuestion? = null,
 )
 
@@ -58,11 +60,13 @@ class WritingViewModel(
         getAllDraftsTitleUseCase(),
         getTopicList(),
         getIsUserSignedIn(),
-    ) { changed, allDraftTitles, topicList, isUserSignedIn ->
+        loadGuidingQuestionsFlow(),
+    ) { changed, allDraftTitles, topicList, isUserSignedIn, guidingQuestions ->
         changed.copy(
             draftList = allDraftTitles,
             topicList = topicList,
             isUserSignedIn = isUserSignedIn,
+            guidingQuestion = guidingQuestions ?: listOf()
         )
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
@@ -97,6 +101,19 @@ class WritingViewModel(
             }
         }
 
+    fun dismiss() {
+        viewModelScope.launch {
+            changedChannel.send(
+                state.value.copy(
+                    error = null,
+                    postSuccess = false
+                )
+            )
+        }
+    }
+
+    fun getIsUserSignedIn() = flow { emit(isUserSignedInUseCase()) }
+
     fun setTitle(title: String) {
         viewModelScope.launch {
             changedChannel.send(state.value.copy(title = title))
@@ -113,12 +130,6 @@ class WritingViewModel(
                     )
                 )
             )
-        }
-    }
-
-    fun clearBody() {
-        viewModelScope.launch {
-            changedChannel.send(state.value.copy(body = TextFieldValue(text = "")))
         }
     }
 
@@ -139,6 +150,20 @@ class WritingViewModel(
                 )
                 else -> {}  // won't hit this case for now
             }
+        }
+    }
+
+    fun addImageMD(uri: Uri?) {
+        uri?.let {
+            val imageMD = "![image]($it)"
+            setBody(state.value.body.text + imageMD)
+        }
+    }
+
+    // region option menu feature
+    fun clearBody() {
+        viewModelScope.launch {
+            changedChannel.send(state.value.copy(body = TextFieldValue(text = "")))
         }
     }
 
@@ -173,7 +198,21 @@ class WritingViewModel(
             }
         }
     }
+    fun deleteDraft(id: String) {
+        viewModelScope.launch {
+            draftRepository.deleteDraft(id)
+            // remove current content if deleting the current one
+            if (id == state.value.currentDraftId) {
+                changedChannel.send(
+                    state.value.copy(title = "", body = TextFieldValue(""))
+                )
+            }
+        }
+    }
 
+    // endregion
+
+    // region set posting config
     fun setPublished(isPublished: Boolean) {
         viewModelScope.launch {
             changedChannel.send(
@@ -252,46 +291,37 @@ class WritingViewModel(
         }
     }
 
-    fun dismiss() {
-        viewModelScope.launch {
-            changedChannel.send(
-                state.value.copy(
-                    error = null,
-                    postSuccess = false
-                )
-            )
+    private fun getTopicList(): Flow<List<String>> {
+        return flow {
+            emit(topicRepository.getAllTopic().map { topic -> topic.name })
         }
     }
+    // endregion
 
-    fun getIsUserSignedIn() = flow { emit(isUserSignedInUseCase()) }
-
-    fun addImageMD(uri: Uri?) {
-        uri?.let {
-            val imageMD = "![image]($it)"
-            setBody(state.value.body.text + imageMD)
-        }
-    }
-
-    fun deleteDraft(id: String) {
-        viewModelScope.launch {
-            draftRepository.deleteDraft(id)
-            // remove current content if deleting the current one
-            if (id == state.value.currentDraftId) {
+    // region guiding question
+    private fun loadGuidingQuestionsFlow() = flow {
+        when (val result = guidingQuestionsRepository.getGuidingQuestionList()) {
+            is StaticResourceResult.Success -> emit(result.data)
+            is StaticResourceResult.Failed -> {
                 changedChannel.send(
-                    state.value.copy(title = "", body = TextFieldValue(""))
+                    state.value.copy(error = result.errorMsg)
+                )
+            }
+            is StaticResourceResult.UnknownError -> {
+                changedChannel.send(
+                    state.value.copy(error = result.errorMsg)
                 )
             }
         }
     }
 
 
-    private val guidingQuestionList = guidingQuestionsRepository.guidingQuestionList
-    private var guidingQuestionIterator = guidingQuestionList.listIterator()
+    private var guidingQuestionIterator = state.value.guidingQuestion.listIterator()
     private var dismissQuestionJob: Job? = null
     suspend fun getDisplayingQuestion() {
         if (!guidingQuestionIterator.hasNext()) {
             // reset the iterator
-            guidingQuestionIterator = guidingQuestionList.listIterator()
+            guidingQuestionIterator = state.value.guidingQuestion.listIterator()
         }
 
         dismissQuestionJob?.cancelAndJoin()
@@ -306,11 +336,5 @@ class WritingViewModel(
             state.value.copy(displayingGuidingQuestion = guidingQuestionIterator.next())
         )
     }
-
-    private fun getTopicList(): Flow<List<String>> {
-        return flow {
-            emit(topicRepository.getAllTopic().map { topic -> topic.name })
-        }
-    }
-
+    // endregion
 }

@@ -1,6 +1,7 @@
-package com.unlone.app.data.story
+package com.unlone.app.data.api
 
 import com.unlone.app.UnloneConfig
+import com.unlone.app.data.story.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -10,9 +11,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.utils.io.charsets.*
 import io.ktor.utils.io.charsets.Charsets
-import org.koin.test.mock.MockProvider.register
 
 
 interface StoryApi {

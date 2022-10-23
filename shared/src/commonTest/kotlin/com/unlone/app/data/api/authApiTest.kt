@@ -1,10 +1,8 @@
 package com.unlone.app.data.api
 
-import com.unlone.app.data.auth.AuthApiService
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import io.ktor.utils.io.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 

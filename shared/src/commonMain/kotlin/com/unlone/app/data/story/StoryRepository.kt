@@ -1,16 +1,12 @@
 package com.unlone.app.data.story
 
 import co.touchlab.kermit.Logger
-import com.kuuurt.paging.multiplatform.Pager
-import com.kuuurt.paging.multiplatform.PagingConfig
-import com.kuuurt.paging.multiplatform.PagingResult
+import com.unlone.app.data.api.StoryApi
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.domain.entities.Story
 import com.unlone.app.domain.entities.StoryItem
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
-import io.ktor.utils.io.charsets.*
-import kotlinx.coroutines.MainScope
 
 interface StoryRepository {
     suspend fun fetchStoriesByPosts(

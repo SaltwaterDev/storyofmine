@@ -1,11 +1,12 @@
 package com.unlone.app.di
 
 import com.unlone.app.Greeting
-import com.unlone.app.data.auth.*
+import com.unlone.app.data.api.*
+import com.unlone.app.data.api.AuthApiService
+import com.unlone.app.data.api.StoryApiService
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthRepositoryImpl
 import com.unlone.app.data.story.*
-import com.unlone.app.data.story.StoryApiService
 import com.unlone.app.data.story.StoryRepositoryImpl
 import com.unlone.app.data.write.*
 import com.unlone.app.domain.useCases.auth.ValidPasswordUseCase
@@ -30,6 +31,7 @@ val commonModule = module {
     single { httpClientEngine }
     single<AuthApi> { AuthApiService(get()) }
     single<StoryApi> { StoryApiService(get()) }
+    single<StaticResourcesApi> { StaticResourcesApiService(get()) }
 
     // use cases
     singleOf(::CreateNewDraftUseCase)

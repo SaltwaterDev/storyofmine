@@ -1,6 +1,7 @@
 package com.unlone.app.data.story
 
 import kotlinx.serialization.Serializable
+import kotlin.random.Random
 
 
 @Serializable
@@ -20,5 +21,5 @@ fun ReportReasonSerializable.deserialize(): ReportReason = ReportReason(id, cont
 
 data class ReportReason(
     val id: String,
-    val text: String
+    val text: String,
 )

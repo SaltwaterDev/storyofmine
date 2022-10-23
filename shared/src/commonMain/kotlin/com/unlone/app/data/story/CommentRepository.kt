@@ -1,6 +1,7 @@
 package com.unlone.app.data.story
 
 import co.touchlab.kermit.Logger
+import com.unlone.app.data.api.StoryApi
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.domain.entities.Comment
 import io.ktor.client.call.*
