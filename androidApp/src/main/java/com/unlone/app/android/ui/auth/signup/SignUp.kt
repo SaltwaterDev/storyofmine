@@ -6,6 +6,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -23,6 +25,7 @@ import org.example.library.SharedRes
 
 @Composable
 fun SignUpScreen(
+    back: () -> Unit,
     navToSendEmailOtp: () -> Unit,
     navToSignIn: () -> Unit,
     viewModel: SignUpViewModel,
@@ -50,20 +53,22 @@ fun SignUpScreen(
         }
     }
 
-    Box {
+    Column(Modifier.statusBarsPadding()) {
+        IconButton(onClick = { back() }) {
+            Icon(Icons.Rounded.ArrowBack, contentDescription = "back")
+        }
         Column(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 30.dp),
-            verticalArrangement = Arrangement.Center
+//            verticalArrangement = Arrangement.Center
         ) {
-
             Text(
                 text = stringResource(resource = SharedRes.strings.sign_up__title),
-                fontSize = 36.sp
+                fontSize = 36.sp,
+                modifier = Modifier.padding(vertical = 35.dp)
             )
-            Spacer(modifier = Modifier.height(35.dp))
 
             TextField(
                 modifier = Modifier

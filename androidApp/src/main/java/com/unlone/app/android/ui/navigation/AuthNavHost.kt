@@ -46,6 +46,7 @@ fun NavGraphBuilder.authGraph(
             val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SignUpScreen(
+                back = {navController.popBackStack() },
                 viewModel = viewModel,
                 navToSendEmailOtp = { navigateToEmailVerification(navController) },
                 navToSignIn = { navigateToSignInEmail(navController) }

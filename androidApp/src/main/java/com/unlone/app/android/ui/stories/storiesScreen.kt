@@ -106,8 +106,6 @@ fun StoriesScreen(
         Box(Modifier.fillMaxSize()) {
             LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
         }
-
-
     }
 }
 
@@ -178,7 +176,7 @@ fun LoginInPrompt(modifier: Modifier, navToAuth: () -> Unit) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = stringResource(resource = SharedRes.strings.stories_auth_required_title))
         Button(onClick = navToAuth, modifier = Modifier.padding(26.dp)) {
-            Text(text = "SignUp")
+            Text(text = stringResource(resource = SharedRes.strings.common__btn_sign_up))
         }
     }
 }
