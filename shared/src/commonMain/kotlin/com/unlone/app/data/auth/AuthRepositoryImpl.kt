@@ -5,11 +5,26 @@ import com.unlone.app.data.api.AuthApi
 import com.unlone.app.utils.KMMPreference
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 internal class AuthRepositoryImpl(
     private val api: AuthApi,
     private val prefs: KMMPreference,
 ) : AuthRepository {
+
+    init {
+        // todo: di coroutine
+        CoroutineScope(Dispatchers.Default).launch {
+            authenticate()
+        }
+    }
+
+    override var isUserSignedIn = MutableStateFlow(false)
+        private set
 
     override suspend fun signUp(
         email: String,
@@ -124,22 +139,31 @@ internal class AuthRepositoryImpl(
     override suspend fun authenticate(): AuthResult<Unit> {
         return try {
             val token = prefs.getString(JWT_SP_KEY)
-                ?: return AuthResult.Unauthorized(null)
-            api.authenticate(token)
-            AuthResult.Authorized()
+            if (token == null) {
+                isUserSignedIn.value = false
+                AuthResult.Unauthorized<Unit>(null)
+            } else {
+                api.authenticate(token)
+                isUserSignedIn.value = true
+                AuthResult.Authorized()
+            }
         } catch (e: RedirectResponseException) {
+            isUserSignedIn.value = false
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: ClientRequestException) {
             prefs.remove(JWT_SP_KEY)
+            isUserSignedIn.value = false
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: ServerResponseException) {
             prefs.remove(JWT_SP_KEY)
+            isUserSignedIn.value = false
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
         } catch (e: Exception) {
-            Logger.e{ e.toString() }
+            isUserSignedIn.value = false
+            Logger.e { e.toString() }
             AuthResult.UnknownError()
         }
     }
@@ -190,9 +214,9 @@ internal class AuthRepositoryImpl(
         }
     }
 
-
-    override fun signOut() {
+    override suspend fun signOut() {
         prefs.remove(JWT_SP_KEY)
+        authenticate()
     }
 
     override fun getJwt(): String? {

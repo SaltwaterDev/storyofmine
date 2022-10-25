@@ -59,7 +59,7 @@ fun WritingScreen(
 
     LaunchedEffect(draftId) {
         viewModel.refreshData(draftId, draftVersionId)
-        viewModel.getIsUserSignedIn()
+//        viewModel.getIsUserSignedIn()
     }
 
     DisposableEffect(key1 = Unit) {

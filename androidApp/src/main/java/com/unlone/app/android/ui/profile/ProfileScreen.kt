@@ -29,9 +29,6 @@ fun ProfileScreen(
     goToRules: () -> Unit,
 ) {
 
-    LaunchedEffect(Unit) {
-        viewModel.getUserName()
-    }
     val state = viewModel.state.collectAsState().value
     var showSignOutAlert by remember { mutableStateOf(false) }
 

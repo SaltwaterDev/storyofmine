@@ -58,7 +58,7 @@ class WritingViewModel(
         stateChangedResult,
         getAllDraftsTitleUseCase(),
         getTopicList(),
-        getIsUserSignedIn(),
+        isUserSignedInUseCase(),
         loadGuidingQuestionsFlow(),
     ) { changed, allDraftTitles, topicList, isUserSignedIn, guidingQuestions ->
         changed.copy(
@@ -111,7 +111,6 @@ class WritingViewModel(
         }
     }
 
-    fun getIsUserSignedIn() = flow { emit(isUserSignedInUseCase()) }
 
     fun setTitle(title: String) {
         viewModelScope.launch {

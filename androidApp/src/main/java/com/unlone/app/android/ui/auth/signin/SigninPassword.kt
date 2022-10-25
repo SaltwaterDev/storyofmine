@@ -61,7 +61,7 @@ fun SignInPasswordScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize().statusBarsPadding()) {
         IconButton(onClick = { back() }) {
             Icon(Icons.Rounded.ArrowBack, contentDescription = "back")
         }

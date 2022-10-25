@@ -27,14 +27,14 @@ fun WritingScreenToolBar(
             .fillMaxWidth()
             .border(1.dp, Color.Green)
     ) {
-        IconButton(onClick = {
-            inputImage()
-        }) {
-            Icon(
-                painterResource(id = R.drawable.image),
-                contentDescription = "input image"
-            )
-        }
+//        IconButton(onClick = {
+//            inputImage()
+//        }) {
+//            Icon(
+//                painterResource(id = R.drawable.image),
+//                contentDescription = "input image"
+//            )
+//        }
         IconButton(onClick = { fetGuidingQuestion() }) {
             Icon(
                 Icons.Rounded.Lightbulb,

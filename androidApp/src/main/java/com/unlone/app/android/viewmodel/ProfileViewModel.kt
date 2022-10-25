@@ -4,63 +4,44 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 
 data class ProfileUiState(
     val isUserLoggedIn: Boolean = false,
     val errorMsg: String? = null,
-    val loading: Boolean = true,
+    val loading: Boolean = false,
     val username: String = ""
 )
 
 
 class ProfileViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val isUserSignedInUseCase: IsUserSignedInUseCase,
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(ProfileUiState())
-    val state = _state.asStateFlow()
-
-    private fun authenticate() {
-        _state.value = _state.value.copy(loading = true)
-        viewModelScope.launch {
-            when (authRepository.authenticate()) {
-                is AuthResult.Authorized -> {
-                    getUserName()
-                    _state.value = _state.value.copy(isUserLoggedIn = true)
-                }
-                is AuthResult.Unauthorized -> {
-                    _state.value = ProfileUiState()
-                }
-                is AuthResult.UnknownError -> {
-                    _state.value = ProfileUiState()
-                    _state.value = _state.value.copy(errorMsg = "An unknown error occurred")
-                }
+    var state = isUserSignedInUseCase().map {
+        var username = ""
+        var error: String? = null
+        when (val getUsernameResponse = authRepository.getUsername()) {
+            is AuthResult.Authorized -> getUsernameResponse.data?.let { name ->
+                username = name
             }
-            _state.value = _state.value.copy(loading = false)
+            else -> error = getUsernameResponse.errorMsg
         }
-    }
 
-    fun getUserName() {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(loading = true)
-            when (val getUsernameResponse = authRepository.getUsername()) {
-                is AuthResult.Authorized -> getUsernameResponse.data?.let {
-                    _state.value = _state.value.copy(username = it, isUserLoggedIn = true)
-                }
-                else -> _state.value =
-                    _state.value.copy(errorMsg = getUsernameResponse.errorMsg)
-            }
-            _state.value = _state.value.copy(loading = false)
-        }
-    }
+        ProfileUiState(
+            isUserLoggedIn = it,
+            username = username,
+            errorMsg = error
+        )
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, ProfileUiState())
 
 
-    fun signOut() {
+    fun signOut() = viewModelScope.launch(Dispatchers.Default) {
         authRepository.signOut()
-        authenticate()
     }
 }
