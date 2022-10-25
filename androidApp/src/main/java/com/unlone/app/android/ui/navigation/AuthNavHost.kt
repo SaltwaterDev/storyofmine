@@ -85,6 +85,7 @@ fun NavGraphBuilder.authGraph(
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
             val viewModel = koinViewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
+                back = { navController.popBackStack() },
                 navToSignInPw = { navigateToSignInPw(navController) },
                 navToSignUp = { navigateToSignUp(navController) },
                 viewModel = viewModel

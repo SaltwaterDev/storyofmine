@@ -4,7 +4,11 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -30,6 +34,7 @@ import org.example.library.SharedRes
 @InternalCoroutinesApi
 @Composable
 fun SignInEmailScreen(
+    back: () -> Unit,
     navToSignInPw: () -> Unit,
     navToSignUp: () -> Unit,
     viewModel: SignInViewModel,
@@ -58,7 +63,14 @@ fun SignInEmailScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .statusBarsPadding()) {
+        IconButton(onClick = { back() }) {
+            Icon(Icons.Rounded.ArrowBack, contentDescription = "back")
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -66,14 +78,23 @@ fun SignInEmailScreen(
         ) {
 
             Spacer(modifier = Modifier.height(60.dp))
-            Text(text =  stringResource(SharedRes.strings.sign_in__title), fontSize = 36.sp)
+            Text(text = stringResource(SharedRes.strings.sign_in__title), fontSize = 36.sp)
             Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 value = uiState.email,
-                label = { Text(text =  stringResource( SharedRes.strings.common__email), fontSize = 14.sp) },
+                label = {
+                    Text(
+                        text = stringResource(SharedRes.strings.common__email),
+                        fontSize = 14.sp
+                    )
+                },
                 onValueChange = { viewModel.onEvent(SignInUiEvent.SignInEmailChanged(it)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                keyboardActions = KeyboardActions(
+                    onDone = { viewModel.onEvent(SignInUiEvent.SignInEmail) }
+                )
+
             )
             Spacer(Modifier.height(30.dp))
             Button(
@@ -82,9 +103,12 @@ fun SignInEmailScreen(
                 enabled = uiState.emailBtnEnabled,
                 modifier = Modifier.align(End)
             ) {
-                Row(verticalAlignment = CenterVertically){
-                    Text(text = stringResource( SharedRes.strings.common__btn_next))
-                    AnimatedVisibility(visible = uiState.loading, modifier = Modifier.padding(start = 4.dp)) {
+                Row(verticalAlignment = CenterVertically) {
+                    Text(text = stringResource(SharedRes.strings.common__btn_next))
+                    AnimatedVisibility(
+                        visible = uiState.loading,
+                        modifier = Modifier.padding(start = 4.dp)
+                    ) {
                         CircularProgressIndicator()
                     }
                 }

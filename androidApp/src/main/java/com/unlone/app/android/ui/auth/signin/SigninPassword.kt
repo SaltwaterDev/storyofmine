@@ -5,8 +5,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -59,6 +62,9 @@ fun SignInPasswordScreen(
     }
 
     Box(Modifier.fillMaxSize()) {
+        IconButton(onClick = { back() }) {
+            Icon(Icons.Rounded.ArrowBack, contentDescription = "back")
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,7 +80,10 @@ fun SignInPasswordScreen(
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                keyboardActions = KeyboardActions(
+                    onDone = { viewModel.onEvent(SignInUiEvent.SignInPw) }
+                )
             )
             Spacer(Modifier.height(30.dp))
             Button(
