@@ -23,6 +23,10 @@ class PostStoryUseCase(
             return StoryResult.Failed("Title and content should not be empty.")
         }
 
+        if (topic.isEmpty()){
+            return StoryResult.Failed("Topic should not be empty")
+        }
+
         return when (authRepository.authenticate()) {
             is AuthResult.Authorized -> storyRepository.postStory(
                 authRepository.getJwt()!!,

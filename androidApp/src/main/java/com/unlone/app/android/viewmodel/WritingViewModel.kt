@@ -54,7 +54,6 @@ class WritingViewModel(
     private val changedChannel = Channel<WritingUiState>()
     private val stateChangedResult = changedChannel.receiveAsFlow()
 
-
     val state: StateFlow<WritingUiState> = combine(
         stateChangedResult,
         getAllDraftsTitleUseCase(),

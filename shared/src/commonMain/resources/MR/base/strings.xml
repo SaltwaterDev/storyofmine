@@ -57,6 +57,7 @@
     <string name="common__email">Email</string>
     <string name="common__confirm_password">Confirm Password</string>
     <string name="common__password">Password</string>
+    <string name="common__attention">Attention</string>
     <string name="common__error">Error</string>
     <string name="common__warning">Warning</string>
     <string name="common__unknown_error">An unknown error occurred</string>

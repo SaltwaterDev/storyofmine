@@ -257,7 +257,7 @@ fun WritingScreen(
             uiState.error?.let {
                 AlertDialog(
                     onDismissRequest = viewModel::dismiss,
-                    title = { Text(text = stringResource(resource = SharedRes.strings.common__error)) },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
                     text = { Text(text = it) },
                     confirmButton = {
                         Button(
