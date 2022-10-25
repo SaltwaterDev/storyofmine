@@ -40,8 +40,10 @@ class AuthViewModel: ObservableObject {
     }
 
     func signOut() {
-        authRepo.signOut()
-        self.authenticate()
+        Task{
+            try await authRepo.signOut()
+            self.authenticate()
+        }
     }
     
     func getUserName() async {
