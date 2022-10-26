@@ -49,10 +49,10 @@ fun UnloneTheme(
 //                )
                 systemUiController.setNavigationBarColor(color = Color.Transparent)
             } else {
-                systemUiController.setStatusBarColor(
-                    color = Color.Transparent,
-                    darkIcons = true,
-                )
+//                systemUiController.setStatusBarColor(
+//                    color = Color.Transparent,
+//                    darkIcons = true,
+//                )
                 systemUiController.setNavigationBarColor(
                     color = Color.Transparent,
 //                    darkIcons = true,
