@@ -1,16 +1,14 @@
 package com.unlone.app.android.ui.write
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
@@ -181,7 +179,10 @@ private fun ButtonsRow(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            Text(text = stringResource(resource = SharedRes.strings.writing__btn_post))
+            Text(
+                text = stringResource(resource = SharedRes.strings.writing__btn_post),
+                fontSize = 12.sp
+            )
         }
     }
 }
