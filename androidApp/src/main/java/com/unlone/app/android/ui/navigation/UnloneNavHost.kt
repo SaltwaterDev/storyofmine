@@ -82,7 +82,8 @@ fun MainNavHost(
         composable(
             Rules.route,
         ) {
-            RulesScreen() {
+            val viewModel = koinViewModel<RulesViewModel>()
+            RulesScreen(viewModel) {
                 navigateUp()
             }
         }

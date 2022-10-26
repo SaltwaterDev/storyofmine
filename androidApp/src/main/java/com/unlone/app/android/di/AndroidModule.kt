@@ -13,6 +13,7 @@ val androidModule = module {
     viewModelOf(::TopicDetailViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::ReportViewModel)
+    viewModelOf(::RulesViewModel)
     viewModelOf(::StoriesViewModel)
     viewModelOf(::SignUpViewModel)
     viewModelOf(::SignInViewModel)

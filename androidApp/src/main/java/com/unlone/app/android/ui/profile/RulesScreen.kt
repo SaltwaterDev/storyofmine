@@ -6,17 +6,24 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.ui.comonComponent.StandardTopBar
 import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.viewmodel.RulesViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
 @Composable
 fun RulesScreen(
+    viewModel: RulesViewModel,
     back: () -> Unit
 ) {
+
+    val state = viewModel.uiState.collectAsState().value
+
     Scaffold(
         topBar = {
             StandardTopBar(title = stringResource(SharedRes.strings.rules_title)) {
@@ -32,9 +39,8 @@ fun RulesScreen(
                 .padding(16.dp, 30.dp)
         ) {
 
-            repeat(10) {
-                Text(text = "You are on 9", style = Typography.h4)
-                Text(text = "Why you are on 9", style = Typography.body1)
+            state.rules.forEachIndexed { index, s ->
+                Text(text = "${index + 1}. $s", fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(30.dp))
             }
         }
