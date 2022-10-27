@@ -136,13 +136,10 @@ fun WritingScreen(
         },
     ) { innerPadding ->
 
-        Box() {
+        Box(Modifier.fillMaxHeight()) {
             Column(
                 Modifier
                     .padding(innerPadding)
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-//                    .imePadding()
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -163,9 +160,7 @@ fun WritingScreen(
                 TextField(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp)
-//                        .background(Color.Red)
-                    ,
+                        .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp),
                     value = uiState.body,
                     onValueChange = { viewModel.setBody(it.text) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -183,7 +178,6 @@ fun WritingScreen(
                 uiState.displayingGuidingQuestion?.text,
                 Modifier
                     .align(Alignment.BottomStart)
-                    .imePadding()
                     .padding(
                         start = 16.dp,
                         end = 16.dp,
@@ -194,10 +188,7 @@ fun WritingScreen(
 
             Crossfade(
                 targetState = isKeyboardVisible,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-//                    .background(Color.Red)
-                ,
+                modifier = Modifier.align(Alignment.BottomStart),
                 animationSpec = snap()
             ) {
                 if (isKeyboardVisible) {
