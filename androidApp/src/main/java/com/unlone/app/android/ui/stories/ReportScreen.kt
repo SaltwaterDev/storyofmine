@@ -92,6 +92,11 @@ fun ReportScreen(
         Row(
             Modifier
                 .fillMaxWidth()
+                .selectable(
+                    selected = state.selectedOtherReportReason,
+                    onClick = viewModel::onOtherReportSelected,
+                    role = Role.RadioButton
+                )
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

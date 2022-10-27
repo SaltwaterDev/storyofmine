@@ -3,7 +3,9 @@ package com.unlone.app.android.ui.write
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -59,7 +61,6 @@ fun WritingScreen(
 
     LaunchedEffect(draftId) {
         viewModel.refreshData(draftId, draftVersionId)
-//        viewModel.getIsUserSignedIn()
     }
 
     DisposableEffect(key1 = Unit) {
@@ -162,7 +163,7 @@ fun WritingScreen(
                 TextField(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = if (isKeyboardVisible) imeToolBarHeight.dp else 0.dp),
+                        .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp),
                     value = uiState.body,
                     onValueChange = { viewModel.setBody(it.text) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -187,23 +188,29 @@ fun WritingScreen(
                     )
             )
 
+
             Crossfade(
                 targetState = isKeyboardVisible,
                 modifier = Modifier
-                    .imePadding()
                     .align(Alignment.BottomStart)
-                    .onGloballyPositioned {
-                        val height = it.size.height
-                        toolbarHeight = with(density) { height.toDp() }
-                    },
+//                    .background(Color.Red)
+                    .imePadding(),
+                animationSpec = snap()
             ) {
                 if (isKeyboardVisible) {
                     WritingScreenToolBar(
+                        Modifier
+                            .onGloballyPositioned {
+                                val height = it.size.height
+                                toolbarHeight = with(density) { height.toDp() }
+                            },
                         { launcher.launch("image/*") },
                         { scope.launch { viewModel.getDisplayingQuestion() } }
                     )
                 }
             }
+
+
 
             if (showPostingDialog)
                 PostingDialog(
@@ -282,5 +289,3 @@ fun WritingScreen(
     }
 }
 
-
-const val imeToolBarHeight = 50
