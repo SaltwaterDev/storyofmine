@@ -17,9 +17,9 @@ fun WritingScreenToolBar(
     inputImage: () -> Unit,
     getGuidingQuestion: () -> Unit,
 ) {
-    Surface(modifier) {
+    Surface(Modifier) {
         Row(
-            Modifier.fillMaxWidth()
+            modifier.fillMaxWidth()
         ) {
 //        IconButton(onClick = {
 //            inputImage()

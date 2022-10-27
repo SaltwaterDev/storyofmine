@@ -196,6 +196,7 @@ class WritingViewModel(
             }
         }
     }
+
     fun deleteDraft(id: String) {
         viewModelScope.launch {
             draftRepository.deleteDraft(id)
@@ -330,9 +331,10 @@ class WritingViewModel(
             )
         }
 
-        changedChannel.send(
-            state.value.copy(displayingGuidingQuestion = guidingQuestionIterator.next())
-        )
+        if (guidingQuestionIterator.hasNext())
+            changedChannel.send(
+                state.value.copy(displayingGuidingQuestion = guidingQuestionIterator.next())
+            )
     }
     // endregion
 }

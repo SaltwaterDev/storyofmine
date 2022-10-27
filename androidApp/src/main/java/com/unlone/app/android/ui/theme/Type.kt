@@ -57,11 +57,11 @@ val Typography = Typography(
         fontFamily = NotoSansHKFontFamily,
     ),
     body1 = TextStyle(
-//        color = Black95,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         letterSpacing = 2.4.sp,
         fontFamily = NotoSansHKFontFamily,
+        lineHeight = 32.sp,
     ),
     subtitle1 = TextStyle(
         fontFamily = MontserratFontFamily,

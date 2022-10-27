@@ -142,7 +142,7 @@ fun WritingScreen(
                     .padding(innerPadding)
                     .statusBarsPadding()
                     .navigationBarsPadding()
-                    .imePadding()
+//                    .imePadding()
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -163,7 +163,9 @@ fun WritingScreen(
                 TextField(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp),
+                        .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp)
+//                        .background(Color.Red)
+                    ,
                     value = uiState.body,
                     onValueChange = { viewModel.setBody(it.text) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -180,11 +182,12 @@ fun WritingScreen(
             DisplayingQuestionBlock(
                 uiState.displayingGuidingQuestion?.text,
                 Modifier
-                    .imePadding()
                     .align(Alignment.BottomStart)
+                    .imePadding()
                     .padding(
-                        16.dp,
-                        toolbarHeight + 8.dp
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = toolbarHeight + 8.dp
                     )
             )
 
@@ -194,7 +197,7 @@ fun WritingScreen(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
 //                    .background(Color.Red)
-                    .imePadding(),
+                ,
                 animationSpec = snap()
             ) {
                 if (isKeyboardVisible) {
@@ -203,7 +206,8 @@ fun WritingScreen(
                             .onGloballyPositioned {
                                 val height = it.size.height
                                 toolbarHeight = with(density) { height.toDp() }
-                            },
+                            }
+                            .imePadding(),
                         { launcher.launch("image/*") },
                         { scope.launch { viewModel.getDisplayingQuestion() } }
                     )
@@ -239,7 +243,10 @@ fun WritingScreen(
 
 
             if (uiState.loading)
-                Card(Modifier.align(Alignment.Center)) {
+                Card(
+                    Modifier.align(Alignment.Center),
+                    shape = MaterialTheme.shapes.medium,
+                ) {
                     Row(Modifier.padding(8.dp)) {
                         Text(
                             text = stringResource(resource = SharedRes.strings.writing__posting),
