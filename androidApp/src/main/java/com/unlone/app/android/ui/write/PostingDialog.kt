@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.unlone.app.android.ui.theme.Typography
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
@@ -63,7 +64,12 @@ private fun TopicRow(
                 onTopicSelected(it)
                 expanded = true
             },
-            label = { Text(stringResource(resource = SharedRes.strings.writing__topic)) },
+            label = {
+                Text(
+                    stringResource(resource = SharedRes.strings.writing__set_topic_label),
+                    style = Typography.body1
+                )
+            },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded
@@ -71,8 +77,7 @@ private fun TopicRow(
             },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-//            readOnly = expanded
+            singleLine = true,
         )
         // filter options based on text field value
         val filteringOptions =

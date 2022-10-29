@@ -29,7 +29,7 @@
     <string name="writing__open_comment">Open comment</string>
     <string name="writing__savable">Savable</string>
     <string name="writing__btn_post">Post</string>
-    <string name="writing__set_topic_placeholder">Select or create a new topic</string>
+    <string name="writing__set_topic_label">Pick/Create new topic</string>
     <string name="writing__sign_in_required_title">Sign in to post story</string>
     <string name="writing__sign_in_required_text">You can also read other people\'s stories!</string>
     <string name="writing__posting">Posting</string>

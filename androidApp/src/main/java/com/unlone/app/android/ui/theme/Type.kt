@@ -59,7 +59,7 @@ val Typography = Typography(
     body1 = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        letterSpacing = 2.4.sp,
+        letterSpacing = 1.2.sp,
         fontFamily = NotoSansHKFontFamily,
         lineHeight = 32.sp,
     ),

@@ -28,7 +28,7 @@
     <string name="writing__open_comment">Open comment</string>
     <string name="writing__savable">Savable</string>
     <string name="writing__btn_post">Post</string>
-    <string name="writing__set_topic_placeholder">Select or create a new topic</string>
+    <string name="writing__set_topic_label">Select or create a new topic</string>
     <string name="writing__sign_in_required_title">Sign in required</string>
     <string name="writing__sign_in_required_text">Sign in to post your story</string>
     <string name="writing__posting">Posting</string>

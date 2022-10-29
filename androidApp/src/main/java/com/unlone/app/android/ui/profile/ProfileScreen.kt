@@ -34,6 +34,7 @@ fun ProfileScreen(
 
     Column(Modifier.fillMaxSize()) {
         if (state.isUserLoggedIn) {
+            Spacer(modifier = Modifier.height(30.dp))
             Text(
                 text = state.username,
                 fontSize = 31.sp,

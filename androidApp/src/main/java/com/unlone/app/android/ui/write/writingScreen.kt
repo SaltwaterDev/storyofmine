@@ -161,8 +161,8 @@ fun WritingScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp),
-                    value = uiState.body,
-                    onValueChange = { viewModel.setBody(it.text) },
+                    value = uiState.body.text,
+                    onValueChange = { viewModel.setBody(it) },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,

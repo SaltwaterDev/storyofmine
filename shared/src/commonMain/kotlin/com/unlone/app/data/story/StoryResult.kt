@@ -56,9 +56,9 @@ data class SimpleStory(
     companion object {
         fun mock() = SimpleStory(
             "_id",
-            "_title",
-            "_content",
-            "_topic",
+            "",
+            "",
+            "",
             0L,
         )
     }

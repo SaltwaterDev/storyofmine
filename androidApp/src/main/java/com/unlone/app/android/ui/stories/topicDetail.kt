@@ -36,16 +36,18 @@ fun TopicDetail(
         topic?.let { viewModel.initData(it) }
     }
 
-    Scaffold(modifier = Modifier
-        .displayCutoutPadding()
-        .statusBarsPadding(), topBar = {
-        TopicDetailTopBar(
-            back,
-            uiState.topic ?: "",
-            true,
-            viewModel::toggleFollowing,
-        )
-    }) {
+    Scaffold(
+        modifier = Modifier
+            .displayCutoutPadding()
+            .statusBarsPadding(),
+        topBar = {
+            TopicDetailTopBar(
+                back,
+                uiState.topic ?: "",
+                true,
+                viewModel::toggleFollowing,
+            )
+        }) {
         SwipeRefresh(state = rememberSwipeRefreshState(uiState.isRefreshing),
             onRefresh = { topic?.let { it1 -> coroutineScope.launch { viewModel.refresh(it1) } } }) {
 

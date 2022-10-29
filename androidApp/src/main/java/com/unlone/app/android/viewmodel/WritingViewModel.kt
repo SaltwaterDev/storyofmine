@@ -118,13 +118,13 @@ class WritingViewModel(
         }
     }
 
-    fun setBody(content: String) {
+    fun setBody(text: String) {
         viewModelScope.launch {
             changedChannel.send(
                 state.value.copy(
                     body = state.value.body.copy(
-                        text = content,
-                        selection = TextRange(content.length)
+                        text = text,
+                        selection = TextRange(text.length)
                     )
                 )
             )

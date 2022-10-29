@@ -59,6 +59,7 @@ fun StoriesScreen(
                 ) {
 
                     item {
+                        Spacer(modifier = Modifier.height(30.dp))
                         Text(
                             text = stringResource(
                                 resource = SharedRes.strings.stories_header_greeting,

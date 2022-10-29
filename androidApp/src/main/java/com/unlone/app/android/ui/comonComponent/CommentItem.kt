@@ -1,28 +1,21 @@
 package com.unlone.app.android.ui.comonComponent
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.unlone.app.android.ui.theme.UnloneTheme
+import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.domain.entities.Comment
 
 
@@ -30,12 +23,10 @@ import com.unlone.app.domain.entities.Comment
 @Composable
 fun CommentItem(comment: Comment) {
     var unread by remember { mutableStateOf(false) }
-    val dismissState = rememberDismissState(
-        confirmStateChange = {
-            if (it == DismissValue.DismissedToEnd) unread = !unread
-            it != DismissValue.DismissedToEnd
-        }
-    )
+    val dismissState = rememberDismissState(confirmStateChange = {
+        if (it == DismissValue.DismissedToEnd) unread = !unread
+        it != DismissValue.DismissedToEnd
+    })
 
     Card(
         elevation = animateDpAsState(
@@ -43,15 +34,11 @@ fun CommentItem(comment: Comment) {
         ).value,
         modifier = Modifier.padding(vertical = 4.dp),
     ) {
-        ListItem(
-            text = {
-                Text(
-                    comment.username,
-                    fontWeight = if (unread) FontWeight.Bold else null
-                )
-            },
-            secondaryText = { Text(comment.text) },
-            singleLineSecondaryText = false
+        ListItem(text = {
+            Text(
+                comment.username, fontWeight = if (unread) FontWeight.Bold else null
+            )
+        }, secondaryText = { Text(comment.text) }, singleLineSecondaryText = false
         )
     }
     /*SwipeToDismiss(
@@ -125,31 +112,36 @@ fun CommentInput(
     onCommentSent: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val enabled by remember { mutableStateOf(sendEnabled && comment.isNotBlank()) }
 
     Surface(modifier) {
         Row(
-            Modifier.navigationBarsPadding(),
-            verticalAlignment = Alignment.CenterVertically
+            Modifier.navigationBarsPadding(), verticalAlignment = Alignment.CenterVertically
         ) {
-            BasicTextField(
-                value = comment,
-                onValueChange = setComment,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .weight(1f),
-                enabled = sendEnabled,
-            )
-
-            TextButton(
-                enabled = sendEnabled,
-                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                modifier = Modifier.padding(4.dp),
-                onClick = {
+            TextField(value = comment, onValueChange = setComment, modifier = Modifier
+//                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                .weight(1f), enabled = sendEnabled, colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Unspecified,
+                focusedIndicatorColor = Color.Unspecified,
+                unfocusedIndicatorColor = Color.Unspecified,
+            ), trailingIcon = {
+                TextButton(enabled = sendEnabled && comment.isNotBlank(), border = BorderStroke(
+                    1.dp, MaterialTheme.colors.primary.copy(
+                        alpha = if (enabled) 1f else 0.38f
+                    )
+                ), modifier = Modifier.padding(4.dp), onClick = {
                     onCommentSent()
                     keyboardController?.hide()
                 }) {
-                Text(text = "Comment")
-            }
+                    Text(text = "Send")
+                }
+            }, textStyle = Typography.body1, placeholder = {
+                Text(
+                    text = "Reply...",
+                    modifier = Modifier.align(CenterVertically),
+                    style = Typography.body1,
+                )
+            })
         }
     }
 }
