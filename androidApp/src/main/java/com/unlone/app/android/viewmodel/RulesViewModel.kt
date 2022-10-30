@@ -26,7 +26,7 @@ class RulesViewModel(
 
 
     private fun getRules() = viewModelScope.launch(Dispatchers.Default) {
-
+        uiState.value = uiState.value.copy(loading = true)
         when (val result = rulesRepository.getRules()) {
             is StaticResourceResult.Success -> {
                 result.data?.let {
@@ -40,6 +40,7 @@ class RulesViewModel(
                 uiState.value = uiState.value.copy(error = result.errorMsg)
             }
         }
+        uiState.value = uiState.value.copy(loading = false)
     }
 
 }

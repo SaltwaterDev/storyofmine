@@ -3,10 +3,12 @@ package com.unlone.app.android.ui.profile
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,16 +33,23 @@ fun RulesScreen(
         },
         modifier = Modifier.statusBarsPadding()
     ) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp, 30.dp)
-        ) {
-            state.rules.forEachIndexed { index, s ->
-                Text(text = "${index + 1}. $s", fontWeight = FontWeight.SemiBold)
-                Spacer(modifier = Modifier.height(30.dp))
+        Box(Modifier.fillMaxSize()) {
+            if (state.loading) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
+            } else {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp, 30.dp)
+                ) {
+                    state.rules.forEachIndexed { index, s ->
+                        Text(text = "${index + 1}. $s", fontWeight = FontWeight.SemiBold)
+                        Spacer(modifier = Modifier.height(30.dp))
+                    }
+                }
             }
+
         }
     }
 }
