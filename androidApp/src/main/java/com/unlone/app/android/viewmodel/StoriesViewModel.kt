@@ -2,20 +2,13 @@ package com.unlone.app.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.domain.entities.StoryItem
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 data class StoriesScreenUiState(
     val loading: Boolean = true,
@@ -45,16 +38,6 @@ class StoriesViewModel(
     init {
         viewModelScope.launch {
             initData()
-        }
-    }
-
-    fun refreshData() {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(isRefreshing = true)
-//            withContext(Dispatchers.Default) { initData() }
-//            fetchStoryItemsUseCase
-            _state.value = _state.value.copy(isRefreshing = false)
-
         }
     }
 

@@ -34,7 +34,8 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
         }
     )
 
-    val pagingData: Flow<PagingData<StoryItem.StoriesByTopic>> = pager.pagingData.cachedIn(coroutineScope)
+    val pagingData: Flow<PagingData<StoryItem.StoriesByTopic>> =
+        pager.pagingData.cachedIn(coroutineScope)
 
     @NativeCoroutinesIgnore
     operator fun invoke(): Flow<PagingData<StoryItem.StoriesByTopic>> {
@@ -42,9 +43,10 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
             .cachedIn(coroutineScope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
     }
 
+
     companion object {
         private const val postsPerTopic = 5
-        private const val itemsPerPage = 1
+        private const val itemsPerPage = 5
         private val pagingConfig = PagingConfig(pageSize = itemsPerPage, enablePlaceholders = false)
     }
 }

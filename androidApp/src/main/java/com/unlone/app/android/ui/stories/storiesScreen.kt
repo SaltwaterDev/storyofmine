@@ -50,7 +50,9 @@ fun StoriesScreen(
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SwipeRefresh(
                 state = rememberSwipeRefreshState(state.isRefreshing),
-                onRefresh = { viewModel.refreshData() }
+                onRefresh = {
+                    storiesByTopics.refresh()
+                }
             ) {
                 LazyColumn(
                     Modifier
