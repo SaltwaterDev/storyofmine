@@ -11,7 +11,7 @@ import io.ktor.client.plugins.*
 interface StoryRepository {
     suspend fun fetchStoriesByPosts(
         page: Int,
-        postPerFetching: Int,
+        postPerTopic: Int,
         itemsPerPage: Int,
     ): List<StoryItem.StoriesByTopic>
 
@@ -46,11 +46,11 @@ internal class StoryRepositoryImpl(
 
     override suspend fun fetchStoriesByPosts(
         page: Int,
-        postPerFetching: Int,
+        postPerTopic: Int,
         itemsPerPage: Int,
     ): List<StoryItem.StoriesByTopic> {
         val response = storyApi.fetchStoriesPerPost(
-            postPerFetching, itemsPerPage, page
+            postPerTopic, itemsPerPage, page
         )
         return response.data.map {
             StoryItem.StoriesByTopic(

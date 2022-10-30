@@ -8,6 +8,7 @@ import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.domain.entities.StoryItem
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +51,8 @@ class StoriesViewModel(
     fun refreshData() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isRefreshing = true)
-            withContext(Dispatchers.Default) { initData() }
+//            withContext(Dispatchers.Default) { initData() }
+//            fetchStoryItemsUseCase
             _state.value = _state.value.copy(isRefreshing = false)
 
         }

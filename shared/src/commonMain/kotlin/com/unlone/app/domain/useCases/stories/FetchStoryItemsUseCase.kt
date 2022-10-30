@@ -5,15 +5,14 @@ import com.kuuurt.paging.multiplatform.PagingConfig
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
-import com.kuuurt.paging.multiplatform.helpers.dispatcher
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesIgnore
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.domain.entities.StoryItem
-import io.ktor.utils.io.core.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
@@ -25,7 +24,7 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
         config = pagingConfig,
         initialKey = 0, // Key to use when initialized
         getItems = { currentKey, size ->
-            val items = storyRepository.fetchStoriesByPosts(currentKey, postsPerPage, size)
+            val items = storyRepository.fetchStoriesByPosts(currentKey, postsPerTopic, size)
             PagingResult(
                 items = items,
                 currentKey = currentKey,
@@ -37,7 +36,6 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
 
     val pagingData: Flow<PagingData<StoryItem.StoriesByTopic>> = pager.pagingData.cachedIn(coroutineScope)
 
-
     @NativeCoroutinesIgnore
     operator fun invoke(): Flow<PagingData<StoryItem.StoriesByTopic>> {
         return pager.pagingData
@@ -45,8 +43,8 @@ class FetchStoryItemsUseCase(private val storyRepository: StoryRepository) {
     }
 
     companion object {
-        private const val postsPerPage = 7
-        private const val itemsPerPage = 5
+        private const val postsPerTopic = 5
+        private const val itemsPerPage = 1
         private val pagingConfig = PagingConfig(pageSize = itemsPerPage, enablePlaceholders = false)
     }
 }
