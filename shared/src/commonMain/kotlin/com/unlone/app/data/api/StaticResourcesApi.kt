@@ -15,7 +15,7 @@ import io.ktor.utils.io.charsets.Charsets
 
 
 interface StaticResourcesApi {
-    suspend fun getGuidingQuestions(): GuidingQuestionListResponse
+    suspend fun getGuidingQuestions(lang: String? = null): GuidingQuestionListResponse
 }
 
 internal class StaticResourcesApiService(httpClientEngine: HttpClientEngine) : StaticResourcesApi {
@@ -42,8 +42,10 @@ internal class StaticResourcesApiService(httpClientEngine: HttpClientEngine) : S
     private val baseUrl = serverUrl
 
 
-    override suspend fun getGuidingQuestions(): GuidingQuestionListResponse {
-        val response = client.get("$baseUrl/guidingQuestions")
+    override suspend fun getGuidingQuestions(lang: String?): GuidingQuestionListResponse {
+        val response = client.get("$baseUrl/guidingQuestions/${lang}"){
+            parameter("lang", lang)
+        }
         return response.body()
     }
 

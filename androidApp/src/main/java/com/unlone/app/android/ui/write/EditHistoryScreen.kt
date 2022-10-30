@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.ui.comonComponent.StoryCard
+import com.unlone.app.android.ui.comonComponent.TransparentTopBar
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.EditHistoryViewModel
@@ -42,16 +43,10 @@ fun EditHistoryScreen(
             .statusBarsPadding()
     ) {
 
-        Row {
-            IconButton(onClick = back) {
-                Icon(Icons.Rounded.ArrowBack, "back")
-            }
-
-            Text(
-                text = stringResource(resource = SharedRes.strings.edit_history_title),
-                style = Typography.titleLarge,
-                modifier = Modifier.align(CenterVertically)
-            )
+        TransparentTopBar(
+            stringResource(resource = SharedRes.strings.edit_history_title),
+        ) {
+            back()
         }
 
         Spacer(modifier = Modifier.height(30.dp))

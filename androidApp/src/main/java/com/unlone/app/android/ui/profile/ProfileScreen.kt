@@ -14,6 +14,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import dev.icerock.moko.resources.compose.stringResource
+import dev.icerock.moko.resources.desc.StringDesc
 import org.example.library.SharedRes
 
 

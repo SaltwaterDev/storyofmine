@@ -3,6 +3,7 @@ package com.unlone.app.data.story
 import co.touchlab.kermit.Logger
 import com.unlone.app.data.api.StoryApi
 import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.userPreference.UserPreferenceRepository
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 
@@ -18,11 +19,12 @@ interface ReportRepository {
 
 internal class ReportRepositoryImpl(
     private val storyApi: StoryApi,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userPreferenceRepository: UserPreferenceRepository
 ) : ReportRepository {
     override suspend fun getReportReasons(): StoryResult<List<ReportReason>> {
         return try {
-            val response = storyApi.getReportReasons()
+            val response = storyApi.getReportReasons(userPreferenceRepository.getLocale())
             StoryResult.Success(response.data.map { it.deserialize() })
         } catch (e: RedirectResponseException) {
             StoryResult.Failed(errorMsg = e.response.body<String>())

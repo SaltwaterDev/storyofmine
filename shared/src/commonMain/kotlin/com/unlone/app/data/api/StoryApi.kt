@@ -30,7 +30,7 @@ interface StoryApi {
         page: Int?
     ): StoriesPerTopicsResponse
 
-    suspend fun getReportReasons(): ReportReasonResponse
+    suspend fun getReportReasons(lang: String?): ReportReasonResponse
     suspend fun postReport(
         reportRequest: ReportRequest,
         token: String
@@ -117,8 +117,8 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
-    override suspend fun getReportReasons(): ReportReasonResponse {
-        val response = client.get("$baseUrl/report/allReportReasons")
+    override suspend fun getReportReasons(lang: String?): ReportReasonResponse {
+        val response = client.get("$baseUrl/report/allReportReasons/${lang}")
         return response.body()
     }
 

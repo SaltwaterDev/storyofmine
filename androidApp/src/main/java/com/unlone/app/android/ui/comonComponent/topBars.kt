@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
@@ -20,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.R
+import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.ui.theme.titleLarge
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
@@ -256,4 +259,29 @@ fun StandardTopBar(
             }
         }
     )
+}
+
+
+@Composable
+fun TransparentTopBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    onBackPressed: (() -> Unit),
+) {
+    Row(
+        modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackPressed) {
+            Icon(Icons.Rounded.ArrowBack, "back")
+        }
+
+        Text(
+            text = title,
+            style = Typography.titleLarge,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(vertical = 16.dp)
+        )
+    }
 }

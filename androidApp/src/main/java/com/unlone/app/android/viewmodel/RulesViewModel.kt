@@ -13,6 +13,7 @@ class RulesViewModel() : ViewModel() {
     val uiState = MutableStateFlow(RulesUiState())
 
     init {
+
         uiState.value = uiState.value.copy(rules = getRules())
     }
 

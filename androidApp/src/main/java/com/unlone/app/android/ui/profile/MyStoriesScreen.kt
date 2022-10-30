@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import com.unlone.app.android.ui.comonComponent.StandardTopBar
 import com.unlone.app.android.ui.comonComponent.StoryCard
+import com.unlone.app.android.ui.comonComponent.TransparentTopBar
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.EditHistoryViewModel
@@ -43,17 +45,27 @@ fun MyStoriesScreen(
     ) {
 
         item {
-            Row {
-                IconButton(onClick = back) {
-                    Icon(Icons.Rounded.ArrowBack, "back")
-                }
 
-                Text(
-                    text = stringResource(resource = SharedRes.strings.my_stories_title),
-                    style = Typography.titleLarge,
-                    modifier = Modifier.align(CenterVertically)
-                )
+            TransparentTopBar(
+                stringResource(resource = SharedRes.strings.my_stories_title),
+            ) {
+                back()
             }
+
+//            StandardTopBar(title = stringResource(resource = SharedRes.strings.my_stories_title)){
+//                back()
+//            }
+//            Row {
+//                IconButton(onClick = back) {
+//                    Icon(Icons.Rounded.ArrowBack, "back")
+//                }
+//
+//                Text(
+//                    text = stringResource(resource = SharedRes.strings.my_stories_title),
+//                    style = Typography.titleLarge,
+//                    modifier = Modifier.align(CenterVertically)
+//                )
+//            }
         }
 
         item { Spacer(modifier = Modifier.height(30.dp)) }

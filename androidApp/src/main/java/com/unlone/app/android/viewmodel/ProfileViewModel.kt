@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
+import com.unlone.app.data.userPreference.UserPreferenceRepository
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

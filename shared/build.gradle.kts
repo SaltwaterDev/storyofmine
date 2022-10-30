@@ -134,7 +134,7 @@ dependencies {
 
 
 multiplatformResources {
-    multiplatformResourcesPackage = "org.example.library" // requiredcommonClientMain
+    multiplatformResourcesPackage = "org.example.library" // requiredcommonClientMainViperphD
     multiplatformResourcesClassName = "SharedRes" // optional, default MR
 //    multiplatformResourcesVisibility = dev.icerock.gradle.MRVisibility.Internal // optional, default Public
     iosBaseLocalizationRegion = "en" // optional, default "en"

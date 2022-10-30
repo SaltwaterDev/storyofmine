@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.ui.comonComponent.StandardTopBar
-import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.RulesViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
@@ -38,7 +37,6 @@ fun RulesScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp, 30.dp)
         ) {
-
             state.rules.forEachIndexed { index, s ->
                 Text(text = "${index + 1}. $s", fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(30.dp))

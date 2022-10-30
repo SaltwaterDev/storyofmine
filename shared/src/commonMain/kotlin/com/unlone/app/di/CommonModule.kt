@@ -8,6 +8,8 @@ import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthRepositoryImpl
 import com.unlone.app.data.story.*
 import com.unlone.app.data.story.StoryRepositoryImpl
+import com.unlone.app.data.userPreference.UserPreferenceRepository
+import com.unlone.app.data.userPreference.UserPreferenceRepositoryImpl
 import com.unlone.app.data.write.*
 import com.unlone.app.domain.useCases.auth.ValidPasswordUseCase
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
@@ -56,4 +58,5 @@ val commonModule = module {
     singleOf(::ReportRepositoryImpl) { bind<ReportRepository>() }
     singleOf(::StoryRepositoryImpl) { bind<StoryRepository>() }
     singleOf(::TopicRepositoryImpl) { bind<TopicRepository>() }
+    singleOf(::UserPreferenceRepositoryImpl) { bind<UserPreferenceRepository>() }
 }
