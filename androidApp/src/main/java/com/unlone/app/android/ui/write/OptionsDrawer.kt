@@ -10,18 +10,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
-import com.unlone.app.domain.entities.Draft
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
@@ -33,6 +32,7 @@ fun OptionsDrawer(
     listOfDraft: Map<String, String>,
     clearAll: () -> Unit,
     editHistory: () -> Unit,
+    editHistoryEnabled: Boolean,
     newDraft: () -> Unit,
     switchDraft: (String) -> Unit,
     deleteDraft: (String) -> Unit,
@@ -57,7 +57,8 @@ fun OptionsDrawer(
         item {
             BlockWithIcon(
                 R.drawable.ic_history,
-                stringResource(resource = SharedRes.strings.writing__edit_history)
+                stringResource(resource = SharedRes.strings.writing__edit_history),
+                editHistoryEnabled,
             ) { editHistory() }
             Divider(Modifier.fillMaxWidth())
         }
@@ -98,20 +99,33 @@ fun OptionsDrawer(
 }
 
 @Composable
-private fun BlockWithIcon(iconId: Int?, title: String, onClick: () -> Unit) {
+private fun BlockWithIcon(
+    iconId: Int?,
+    title: String,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .clickable(enabled) { onClick() }
     ) {
         iconId?.let {
             Icon(
                 painterResource(id = it),
                 contentDescription = null,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .alpha(if (enabled) 1f else 0.38f)
             )
         }
-        Text(text = title, modifier = Modifier.padding(16.dp), style = Typography.subtitle2)
+        Text(
+            text = title,
+            modifier = Modifier
+                .padding(16.dp)
+                .alpha(if (enabled) 1f else 0.38f),
+            style = Typography.subtitle2
+        )
     }
 }
 

@@ -5,7 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.snap
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -127,6 +126,7 @@ fun WritingScreen(
                     uiState.currentDraftId?.let { navToEditHistory(it) }
                     scope.launch { scaffoldState.drawerState.close() }
                 },
+                editHistoryEnabled = uiState.currentDraftId != null,
                 switchDraft = {
                     viewModel.switchDraft(it)
                     scope.launch { scaffoldState.drawerState.close() }

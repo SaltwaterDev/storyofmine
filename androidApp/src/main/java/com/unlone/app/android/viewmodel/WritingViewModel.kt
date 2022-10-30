@@ -203,7 +203,7 @@ class WritingViewModel(
             // remove current content if deleting the current one
             if (id == state.value.currentDraftId) {
                 changedChannel.send(
-                    state.value.copy(title = "", body = TextFieldValue(""))
+                    state.value.copy(title = "", body = TextFieldValue(""), currentDraftId = null)
                 )
             }
         }
