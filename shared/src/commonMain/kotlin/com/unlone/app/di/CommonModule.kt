@@ -6,6 +6,8 @@ import com.unlone.app.data.api.AuthApiService
 import com.unlone.app.data.api.StoryApiService
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthRepositoryImpl
+import com.unlone.app.data.rules.RulesRepository
+import com.unlone.app.data.rules.RulesRepositoryImpl
 import com.unlone.app.data.story.*
 import com.unlone.app.data.story.StoryRepositoryImpl
 import com.unlone.app.data.userPreference.UserPreferenceRepository
@@ -56,6 +58,7 @@ val commonModule = module {
     singleOf(::DraftRepositoryImpl) { bind<DraftRepository>() }
     singleOf(::GuidingQuestionsRepositoryImpl) { bind<GuidingQuestionsRepository>() }
     singleOf(::ReportRepositoryImpl) { bind<ReportRepository>() }
+    singleOf(::RulesRepositoryImpl) { bind<RulesRepository>() }
     singleOf(::StoryRepositoryImpl) { bind<StoryRepository>() }
     singleOf(::TopicRepositoryImpl) { bind<TopicRepository>() }
     singleOf(::UserPreferenceRepositoryImpl) { bind<UserPreferenceRepository>() }

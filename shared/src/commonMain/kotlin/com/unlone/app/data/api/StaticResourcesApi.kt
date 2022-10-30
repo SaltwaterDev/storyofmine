@@ -1,7 +1,7 @@
 package com.unlone.app.data.api
 
 import com.unlone.app.UnloneConfig
-import com.unlone.app.data.story.*
+import com.unlone.app.data.rules.RulesResponse
 import com.unlone.app.data.write.GuidingQuestionListResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -16,6 +16,8 @@ import io.ktor.utils.io.charsets.Charsets
 
 interface StaticResourcesApi {
     suspend fun getGuidingQuestions(lang: String? = null): GuidingQuestionListResponse
+    suspend fun getRules(lang: String? = null): RulesResponse
+
 }
 
 internal class StaticResourcesApiService(httpClientEngine: HttpClientEngine) : StaticResourcesApi {
@@ -43,9 +45,12 @@ internal class StaticResourcesApiService(httpClientEngine: HttpClientEngine) : S
 
 
     override suspend fun getGuidingQuestions(lang: String?): GuidingQuestionListResponse {
-        val response = client.get("$baseUrl/guidingQuestions/${lang}"){
-            parameter("lang", lang)
-        }
+        val response = client.get("$baseUrl/guidingQuestions/${lang}")
+        return response.body()
+    }
+
+    override suspend fun getRules(lang: String?): RulesResponse {
+        val response = client.get("$baseUrl/rules/${lang}")
         return response.body()
     }
 
