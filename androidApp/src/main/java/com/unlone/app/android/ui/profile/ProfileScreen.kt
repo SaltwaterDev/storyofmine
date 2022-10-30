@@ -62,13 +62,13 @@ fun ProfileScreen(
         ProfileScreenDivider()
 //        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
 //        ProfileScreenDivider()
-        ListItem(Modifier.clickable { goToHelp() }) {
-            Text(
-                text = stringResource(resource = SharedRes.strings.profile__help),
-                style = Typography.subtitle1
-            )
-        }
-        ProfileScreenDivider()
+//        ListItem(Modifier.clickable { goToHelp() }) {
+//            Text(
+//                text = stringResource(resource = SharedRes.strings.profile__help),
+//                style = Typography.subtitle1
+//            )
+//        }
+//        ProfileScreenDivider()
         ListItem(Modifier.clickable { goToRules() }) {
             Text(
                 text = stringResource(resource = SharedRes.strings.profile__rules),
