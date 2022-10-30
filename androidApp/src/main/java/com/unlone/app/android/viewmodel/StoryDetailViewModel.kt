@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 
 data class StoryDetailUiState(
     val pid: String = "",
-    val title: String = "Title",
-    val content: String = "Content",
+    val title: String = "\b".repeat(5),
+    val content: String = "\b".repeat(10),
     val authorId: String = "",
-    val topic: String = "Topic",
+    val topic: String = "\b".repeat(5),
     val createdDate: String = "",
     val comments: List<Comment> = listOf(),
     val isSelfWritten: Boolean = false,
