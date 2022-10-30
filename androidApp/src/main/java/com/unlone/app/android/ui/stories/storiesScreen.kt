@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
@@ -39,6 +40,8 @@ fun StoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
+    val refreshState =
+        rememberSwipeRefreshState(storiesByTopics.loadState.refresh is LoadState.Loading)
 
     LaunchedEffect(state.isUserLoggedIn) {
         viewModel.initData()
@@ -49,7 +52,7 @@ fun StoriesScreen(
         viewModel.checkAuth()   // to ensure again user has authorized
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SwipeRefresh(
-                state = rememberSwipeRefreshState(state.isRefreshing),
+                state = refreshState,
                 onRefresh = {
                     storiesByTopics.refresh()
                 }

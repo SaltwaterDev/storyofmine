@@ -262,20 +262,20 @@ class WritingViewModel(
                     state.value.currentDraftId?.let { deleteDraft(it) } ?: createNewDraft()
                     state.value.copy(
                         postSuccess = true,
-                        loading = false,
                     )
                 }
                 is StoryResult.Failed ->
                     state.value.copy(
                         error = result.errorMsg,
-                        loading = false,
                     )
                 is StoryResult.UnknownError ->
                     state.value.copy(
                         error = result.errorMsg,
-                        loading = false,
                     )
             }
+        )
+        changedChannel.send(
+            state.value.copy(loading = false)
         )
         Log.d("TAG", "postStory: $result")
     }
