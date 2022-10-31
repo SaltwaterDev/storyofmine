@@ -55,10 +55,14 @@
 
     <string name="my_stories_title">我的故事</string>
 
+    <string name="report__title">請列明舉報原因</string>
+    <string name="report__no_reason_warning">你仍未選擇舉報原因</string>
+
+    <string name="common__attention">注意</string>
     <string name="common__email">電郵</string>
     <string name="common__confirm_password">確認密碼</string>
     <string name="common__password">密碼</string>
-    <string name="common__attention">注意</string>
+    <string name="common__report">舉報</string>
     <string name="common__error">錯誤</string>
     <string name="common__warning">警告</string>
     <string name="common__unknown_error">未知錯誤</string>
@@ -71,8 +75,8 @@
     <string name="common__btn_cancel">取消</string>
     <string name="common__btn_sign_in">登入</string>
     <string name="common__btn_sign_up">註冊</string>
+    <string name="common__btn_submit">提交</string>
     <string name="common__btn_follow">追蹤</string>
     <string name="common__btn_following">追蹤中</string>
 
 </resources>
-

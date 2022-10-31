@@ -48,13 +48,13 @@ fun ReportScreen(
     ) {
 
         StandardTopBar(
-            "Report",
+            stringResource(resource = SharedRes.strings.common__report),
             Modifier,
             back,
         )
 
         Text(
-            text = "Please state your report reason",
+            text = stringResource(resource = SharedRes.strings.report__title),
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
             style = Typography.h5
         )
@@ -126,10 +126,11 @@ fun ReportScreen(
                 if (state.selectedReportReason != null || state.otherReportReason.isNotBlank()) {
                     showConfirmDialog = true
                 } else {
-                    errorDialogShow.value = "You didn't select the report reason"
+                    // fixme
+//                    errorDialogShow.value = stringResource(resource = SharedRes.strings.report__no_reason_warning)
                 }
             }) {
-            Text("Submit")
+            Text(stringResource(resource = SharedRes.strings.common__btn_submit))
         }
     }
 

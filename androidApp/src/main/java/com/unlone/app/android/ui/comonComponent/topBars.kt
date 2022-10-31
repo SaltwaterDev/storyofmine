@@ -165,7 +165,7 @@ fun StoryDetailTopBar(
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(onClick = report) {
-                            Text("Report")
+                            Text(stringResource(resource = SharedRes.strings.common__report))
                         }
                         /*DropdownMenuItem(onClick = { *//* Handle settings! *//* }) {
                             Text("Settings")

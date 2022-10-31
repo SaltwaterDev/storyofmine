@@ -56,9 +56,13 @@
 
     <string name="my_stories_title">My Stories</string>
 
+    <string name="report__title">Please state your report reason</string>
+    <string name="report__no_reason_warning">You didn\'t select the report reason</string>
+
     <string name="common__email">Email</string>
     <string name="common__confirm_password">Confirm Password</string>
     <string name="common__password">Password</string>
+    <string name="common__report">Report</string>
     <string name="common__attention">Attention</string>
     <string name="common__error">Error</string>
     <string name="common__warning">Warning</string>
@@ -72,6 +76,7 @@
     <string name="common__btn_cancel">Cancel</string>
     <string name="common__btn_sign_in">Sign in</string>
     <string name="common__btn_sign_up">Sign up</string>
+    <string name="common__btn_submit">Submit</string>
     <string name="common__btn_follow">Following</string>
     <string name="common__btn_following">Following</string>
 
