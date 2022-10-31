@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.domain.entities.Comment
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 
 @ExperimentalMaterialApi
@@ -133,11 +135,12 @@ fun CommentInput(
                     onCommentSent()
                     keyboardController?.hide()
                 }) {
-                    Text(text = "Send")
+                    Text(text = stringResource(resource = SharedRes.strings.story_detail__send_reply))
                 }
             }, textStyle = Typography.body1, placeholder = {
+
                 Text(
-                    text = "Reply...",
+                    text = stringResource(resource = SharedRes.strings.story_detail__reply),
                     modifier = Modifier.align(CenterVertically),
                     style = Typography.body1,
                 )

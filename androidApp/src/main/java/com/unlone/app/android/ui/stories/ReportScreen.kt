@@ -159,7 +159,14 @@ fun ReportScreen(
 
     if (showConfirmDialog) {
         AlertDialog(
-            text = { Text(text = "You are going to report with reason '${state.selectedReportReason?.text ?: state.otherReportReason}'.") },
+            text = {
+                Text(
+                    text = stringResource(
+                        resource = SharedRes.strings.report__confirm_title,
+                        state.selectedReportReason?.text ?: state.otherReportReason
+                    )
+                )
+            },
             onDismissRequest = { showConfirmDialog = false },
             confirmButton = {
                 Button(onClick = { viewModel.sendReport(type!!, reported!!) }) {

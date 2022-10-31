@@ -40,6 +40,9 @@
     <string name="stories_header_greeting">你好 %s</string>
     <string name="stories_show_more">更多</string>
 
+    <string name="story_detail__reply">回覆...</string>
+    <string name="story_detail__send_reply">傳送</string>
+
     <string name="profile__my_stories">我的故事</string>
     <string name="profile__saved">收藏</string>
     <string name="profile__settings">設定</string>
@@ -57,6 +60,7 @@
 
     <string name="report__title">請列明舉報原因</string>
     <string name="report__no_reason_warning">你仍未選擇舉報原因</string>
+    <string name="report__confirm_title">你將以 \'%s\' 舉報</string>
 
     <string name="common__attention">注意</string>
     <string name="common__email">電郵</string>

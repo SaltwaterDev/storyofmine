@@ -41,6 +41,9 @@
     <string name="stories_header_greeting">Hi %s</string>
     <string name="stories_show_more">more</string>
 
+    <string name="story_detail__reply">Reply...</string>
+    <string name="story_detail__send_reply">Send</string>
+
     <string name="profile__my_stories">My Stories</string>
     <string name="profile__saved">Saved</string>
     <string name="profile__settings">Settings</string>
@@ -58,6 +61,7 @@
 
     <string name="report__title">Please state your report reason</string>
     <string name="report__no_reason_warning">You didn\'t select the report reason</string>
+    <string name="report__confirm_title">You are going to report with \'%s\'</string>
 
     <string name="common__email">Email</string>
     <string name="common__confirm_password">Confirm Password</string>
