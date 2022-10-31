@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -14,7 +13,6 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import dev.icerock.moko.resources.compose.stringResource
-import dev.icerock.moko.resources.desc.StringDesc
 import org.example.library.SharedRes
 
 
@@ -74,6 +72,15 @@ fun ProfileScreen(
                 text = stringResource(resource = SharedRes.strings.profile__rules),
                 style = Typography.subtitle1
             )
+        }
+        ProfileScreenDivider()
+        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = viewModel::switchLocaleZh) {
+                Text(text = "change to zh")
+            }
+            Button(onClick = viewModel::switchLocaleEn) {
+                Text(text = "change to en")
+            }
         }
         ProfileScreenDivider()
         if (state.isUserLoggedIn) {

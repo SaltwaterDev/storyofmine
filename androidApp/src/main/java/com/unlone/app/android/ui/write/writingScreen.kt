@@ -21,6 +21,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
 import com.unlone.app.android.ui.theme.Typography
@@ -142,7 +145,12 @@ fun WritingScreen(
                     .padding(innerPadding)
             ) {
                 TextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .placeholder(
+                            visible = uiState.loading,
+                            highlight = PlaceholderHighlight.fade()
+                        ),
                     value = uiState.title,
                     onValueChange = { viewModel.setTitle(it) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -153,14 +161,21 @@ fun WritingScreen(
                         disabledIndicatorColor = Color.Transparent,
                     ),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                    placeholder = { Text(text = stringResource(resource = SharedRes.strings.writing__placeholder)) },
-                    textStyle = Typography.titleLarge
+                    placeholder = {
+                        Text(text = stringResource(resource = SharedRes.strings.writing__placeholder))
+                    },
+                    textStyle = Typography.titleLarge,
+                    readOnly = uiState.loading,
                 )
 
                 TextField(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp),
+                        .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp)
+                        .placeholder(
+                            visible = uiState.loading,
+                            highlight = PlaceholderHighlight.fade()
+                        ),
                     value = uiState.body.text,
                     onValueChange = { viewModel.setBody(it) },
                     colors = TextFieldDefaults.textFieldColors(
@@ -170,7 +185,8 @@ fun WritingScreen(
                         errorIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
                     ),
-                    textStyle = Typography.body1
+                    textStyle = Typography.body1,
+                    readOnly = uiState.loading,
                 )
             }
 
@@ -233,7 +249,7 @@ fun WritingScreen(
                 )
 
 
-            if (uiState.loading)
+            if (uiState.storyPosting)
                 Card(
                     Modifier.align(Alignment.Center),
                     shape = MaterialTheme.shapes.medium,

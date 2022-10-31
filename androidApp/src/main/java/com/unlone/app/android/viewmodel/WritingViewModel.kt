@@ -31,7 +31,8 @@ data class WritingUiState(
     val saveAllowed: Boolean = false,
     val error: String? = null,
     val postSuccess: Boolean = false,
-    val loading: Boolean = false,
+    val storyPosting: Boolean = false,
+    val loading: Boolean = true,
     val isUserSignedIn: Boolean = false,
     internal val guidingQuestion: List<GuidingQuestion> = listOf(),
     val displayingGuidingQuestion: GuidingQuestion? = null,
@@ -59,13 +60,11 @@ class WritingViewModel(
         getAllDraftsTitleUseCase(),
         getTopicList(),
         isUserSignedInUseCase(),
-        loadGuidingQuestionsFlow(),
-    ) { changed, allDraftTitles, topicList, isUserSignedIn, guidingQuestions ->
+    ) { changed, allDraftTitles, topicList, isUserSignedIn ->
         changed.copy(
             draftList = allDraftTitles,
             topicList = topicList,
             isUserSignedIn = isUserSignedIn,
-            guidingQuestion = guidingQuestions ?: listOf()
         )
     }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
 
@@ -77,6 +76,9 @@ class WritingViewModel(
 
     suspend fun refreshData(draftId: String? = null, version: String? = null) =
         withContext(Dispatchers.Default) {
+            changedChannel.send(state.value.copy(loading = true, guidingQuestion = listOf()))
+            guidingQuestionIterator = null
+
             if (draftId == null || version == null) {
                 getLastOpenedDraftUseCase().let { lastOpened ->
                     changedChannel.send(
@@ -84,6 +86,8 @@ class WritingViewModel(
                             currentDraftId = lastOpened?.first,
                             title = lastOpened?.second?.title ?: "",
                             body = TextFieldValue(lastOpened?.second?.content ?: ""),
+                            loading = false,
+                            guidingQuestion = loadGuidingQuestions() ?: listOf()
                         )
                     )
                 }
@@ -94,6 +98,8 @@ class WritingViewModel(
                             currentDraftId = it.first,
                             title = it.second.title,
                             body = TextFieldValue(it.second.content),
+                            loading = false,
+                            guidingQuestion = loadGuidingQuestions() ?: listOf()
                         )
                     )
                 }
@@ -184,10 +190,12 @@ class WritingViewModel(
         if (id == state.value.currentDraftId) return
 
         viewModelScope.launch {
+            changedChannel.send(state.value.copy(loading = true))
             saveDraft().join()
             queryDraftUseCase(id).collect {
                 changedChannel.send(
                     state.value.copy(
+                        loading = false,
                         currentDraftId = it.first,
                         title = it.second.title,
                         body = TextFieldValue(text = it.second.content),
@@ -246,7 +254,7 @@ class WritingViewModel(
 
     fun postStory() = viewModelScope.launch {
         changedChannel.send(
-            state.value.copy(loading = true)
+            state.value.copy(storyPosting = true)
         )
         val result = postStoryUseCase(
             state.value.title,
@@ -275,7 +283,7 @@ class WritingViewModel(
             }
         )
         changedChannel.send(
-            state.value.copy(loading = false)
+            state.value.copy(storyPosting = false)
         )
         Log.d("TAG", "postStory: $result")
     }
@@ -298,27 +306,30 @@ class WritingViewModel(
     // endregion
 
     // region guiding question
-    private fun loadGuidingQuestionsFlow() = flow {
-        when (val result = guidingQuestionsRepository.getGuidingQuestionList()) {
-            is StaticResourceResult.Success -> emit(result.data)
+    private suspend fun loadGuidingQuestions(): List<GuidingQuestion>? {
+        return when (val result = guidingQuestionsRepository.getGuidingQuestionList()) {
+            is StaticResourceResult.Success -> result.data
             is StaticResourceResult.Failed -> {
                 changedChannel.send(
                     state.value.copy(error = result.errorMsg)
                 )
+                null
             }
             is StaticResourceResult.UnknownError -> {
                 changedChannel.send(
                     state.value.copy(error = result.errorMsg)
                 )
+                null
             }
         }
     }
 
 
-    private var guidingQuestionIterator = state.value.guidingQuestion.listIterator()
+    private var guidingQuestionIterator: ListIterator<GuidingQuestion>? =
+        state.value.guidingQuestion.listIterator()
     private var dismissQuestionJob: Job? = null
     suspend fun getDisplayingQuestion() {
-        if (!guidingQuestionIterator.hasNext()) {
+        if  (guidingQuestionIterator?.hasNext() != true) {
             // reset the iterator
             guidingQuestionIterator = state.value.guidingQuestion.listIterator()
         }
@@ -331,9 +342,9 @@ class WritingViewModel(
             )
         }
 
-        if (guidingQuestionIterator.hasNext())
+        if (guidingQuestionIterator?.hasNext() == true)
             changedChannel.send(
-                state.value.copy(displayingGuidingQuestion = guidingQuestionIterator.next())
+                state.value.copy(displayingGuidingQuestion = guidingQuestionIterator!!.next())
             )
     }
     // endregion
