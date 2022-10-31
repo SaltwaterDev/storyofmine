@@ -18,6 +18,7 @@
     <string name="set_username__title">你已成功驗證！請輸入你的用戶名稱</string>
 
     <string name="writing__option_drawer_title">選項</string>
+    <string name="writing__option_drawer_draft_title">草稿</string>
     <string name="writing__edit_history">修改歷史</string>
     <string name="writing__placeholder">無標題</string>
     <string name="writing__new_draft">新草稿</string>

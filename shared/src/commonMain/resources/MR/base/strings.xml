@@ -19,6 +19,7 @@
     <string name="set_username__title">You are verified! Please enter your username</string>
 
     <string name="writing__option_drawer_title">Options</string>
+    <string name="writing__option_drawer_draft_title">Drafts</string>
     <string name="writing__edit_history">Edit History</string>
     <string name="writing__placeholder">Untitled</string>
     <string name="writing__new_draft">New Draft</string>
