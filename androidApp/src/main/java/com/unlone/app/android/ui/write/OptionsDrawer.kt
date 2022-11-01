@@ -78,13 +78,14 @@ fun OptionsDrawer(
         val getDraftKey =
             { title: String -> listOfDraft.entries.find { entry -> entry.value == title }!!.key }
 
-        item {
-            Text(
-                text = stringResource(resource = SharedRes.strings.writing__option_drawer_draft_title),
-                modifier = Modifier.padding(16.dp),
-                style = Typography.h6
-            )
-        }
+        if (listOfDraft.values.isNotEmpty())
+            item {
+                Text(
+                    text = stringResource(resource = SharedRes.strings.writing__option_drawer_draft_title),
+                    modifier = Modifier.padding(16.dp),
+                    style = Typography.h6
+                )
+            }
         items(
             listOfDraft.values.toList(),
             key = getDraftKey

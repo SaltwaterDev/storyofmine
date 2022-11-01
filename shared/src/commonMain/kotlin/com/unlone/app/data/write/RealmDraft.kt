@@ -37,15 +37,15 @@ internal fun ParentDraftRealmObject.toParentDraft() =
 
 internal class ChildDraftRealmObject : RealmObject {
     var id: ObjectId = ObjectId.create()
-    var title: String = ""
-    var content: String = ""
+    var title: String? = ""
+    var content: String? = ""
     var timeStamp: RealmInstant = RealmInstant.from(Clock.System.now().epochSeconds, 1000)
 }
 
 internal fun ChildDraftRealmObject.toChildDraft() =
     DraftVersion(
         this.id.toString(),
-        this.title,
-        this.content,
+        this.title ?: "",
+        this.content ?: "",
         this.timeStamp.epochSeconds,
     )

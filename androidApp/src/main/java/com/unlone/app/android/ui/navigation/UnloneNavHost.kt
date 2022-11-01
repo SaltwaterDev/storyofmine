@@ -49,10 +49,16 @@ fun MainNavHost(
                 viewModel = viewModel,
                 navToPostDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navigateToTopicDetail(navController, it) },
-                navToAuthGraph = {
-                    navigateToAuth(
+                navToSignIn = {
+                    navigateToSignInEmail(
                         navController,
-                        UnloneBottomDestinations.Stories.route,
+//                        UnloneBottomDestinations.Stories.route,
+                    )
+                },
+                navToSignUp = {
+                    navigateToSignUp(
+                        navController,
+//                        UnloneBottomDestinations.Stories.route,
                     )
                 }
             )
@@ -138,13 +144,10 @@ fun MainNavHost(
             navController,
             onSigninOrSignupFinished = { lastRoute ->
                 navController.popBackStack(
-                    route = lastRoute!!,
+                    route = lastRoute,
                     inclusive = true,
                     saveState = false
                 )
-//                navController.navigate(UnloneBottomDestinations.Stories.route) {
-//                    popUpTo(navController.graph.findStartDestination().id)
-//                }
             },
         )
 
@@ -152,10 +155,6 @@ fun MainNavHost(
     }
 }
 
-
-fun navToStories() {
-    /*TODO("Not yet implemented")*/
-}
 
 
 fun navigateToStoryDetail(navController: NavHostController, pid: String) {

@@ -36,7 +36,8 @@ fun StoriesScreen(
     viewModel: StoriesViewModel,
     navToPostDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
-    navToAuthGraph: () -> Unit = {},
+    navToSignIn: () -> Unit = {},
+    navToSignUp: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
     val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
@@ -110,7 +111,7 @@ fun StoriesScreen(
         }
     } else {
         Box(Modifier.fillMaxSize()) {
-            LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
+            LoginInPrompt(Modifier.align(Alignment.Center), navToSignIn, navToSignUp)
         }
     }
 }
@@ -178,11 +179,14 @@ fun PostsByTopic(
 
 
 @Composable
-fun LoginInPrompt(modifier: Modifier, navToAuth: () -> Unit) {
+fun LoginInPrompt(modifier: Modifier, navToSignIn: () -> Unit, navToSignUp: () -> Unit) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = stringResource(resource = SharedRes.strings.stories_auth_required_title))
-        Button(onClick = navToAuth, modifier = Modifier.padding(26.dp)) {
+        Button(onClick = navToSignUp, modifier = Modifier.padding(top = 26.dp)) {
             Text(text = stringResource(resource = SharedRes.strings.common__btn_sign_up))
+        }
+        OutlinedButton(onClick = navToSignIn, modifier = Modifier) {
+            Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in_instead))
         }
     }
 }

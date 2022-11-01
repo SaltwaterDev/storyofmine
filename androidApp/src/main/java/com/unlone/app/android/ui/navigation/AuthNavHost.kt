@@ -29,20 +29,20 @@ enum class AuthNav {
 @OptIn(InternalCoroutinesApi::class)
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
-    onSigninOrSignupFinished: (String?) -> Unit,
+    onSigninOrSignupFinished: (String) -> Unit,
 ) {
 
 
     navigation(
-        AuthNav.SignUp.name,
-        route = "auth/{lastRoute}",
+        startDestination = AuthNav.SignUp.name,
+        route = "auth",
         arguments = listOf(navArgument("lastRoute") { type = NavType.StringType })
     ) {
 
-        val lastRoute = "auth/{lastRoute}"
+        val lastRoute = "auth"
 
         composable(AuthNav.SignUp.name) {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SignUpScreen(
@@ -53,7 +53,7 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable(AuthNav.SignUp.name + "/setUsername") {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             SetUsernameScreen(
@@ -63,7 +63,7 @@ fun NavGraphBuilder.authGraph(
         }
 
         composable(AuthNav.SignUp.name + "/emailVerification") {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel = koinViewModel<SignUpViewModel>(owner = viewModelStoreOwner)
 
             EmailVerificationScreen(
@@ -83,7 +83,7 @@ fun NavGraphBuilder.authGraph(
         composable(
             AuthNav.SignIn.name + "/email",
         ) {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel = koinViewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInEmailScreen(
                 back = { navController.popBackStack() },
@@ -95,7 +95,7 @@ fun NavGraphBuilder.authGraph(
         composable(
             AuthNav.SignIn.name + "/password",
         ) {
-            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth/{lastRoute}") }
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
             val viewModel = koinViewModel<SignInViewModel>(owner = viewModelStoreOwner)
             SignInPasswordScreen(
                 onSignInSuccess = { onSigninOrSignupFinished(lastRoute) },
