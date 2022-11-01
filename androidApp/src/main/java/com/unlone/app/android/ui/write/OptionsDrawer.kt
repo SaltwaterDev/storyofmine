@@ -7,6 +7,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -76,7 +77,9 @@ fun OptionsDrawer(
         }
 
         val getDraftKey =
-            { title: String -> listOfDraft.entries.find { entry -> entry.value == title }!!.key }
+            { title: String ->
+                listOfDraft.entries.find { entry -> entry.value == title }?.key ?: "-1"
+            }
 
         if (listOfDraft.values.isNotEmpty())
             item {
@@ -86,23 +89,23 @@ fun OptionsDrawer(
                     style = Typography.h6
                 )
             }
+
         items(
-            listOfDraft.values.toList(),
-            key = getDraftKey
+            items = listOfDraft.toList(),
+            key = { it.first },
         ) {
             DismissableBlockWithIcon(
                 iconId = R.drawable.ic_write,
-                title = it,
+                title = it.second.ifEmpty { "(Untitled)" },
                 modifier = Modifier.animateItemPlacement(),
-                onClick = { switchDraft(getDraftKey(it)) },
+                onClick = { switchDraft(it.first) },
                 onDismiss = {
                     Log.d("TAG", "OptionsDrawer: delete")
-                    deleteDraft(getDraftKey(it))
+                    deleteDraft(it.first)
                 },
             )
             Divider(Modifier.fillMaxWidth())
         }
-
     }
 }
 
@@ -182,7 +185,7 @@ private fun DismissableBlockWithIcon(
                 )
             }
         }) {
-        Surface {
+        Surface(Modifier.offset(x = (10).dp)) {
             Row(
                 Modifier
                     .fillMaxWidth()

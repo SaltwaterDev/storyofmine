@@ -139,21 +139,19 @@ class WritingViewModel(
 
     fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
         Log.d("TAG", "saveDraft: " + state.value.currentDraftId)
-        if (state.value.title.isNotBlank()) {
-            val result = saveDraftUseCase(
-                state.value.currentDraftId,
-                state.value.title,
-                state.value.body.text
+        val result = saveDraftUseCase(
+            state.value.currentDraftId,
+            state.value.title,
+            state.value.body.text
+        )
+        when (result) {
+            is StoryResult.Success -> changedChannel.send(
+                state.value.copy(currentDraftId = result.data)
             )
-            when (result) {
-                is StoryResult.Success -> changedChannel.send(
-                    state.value.copy(currentDraftId = result.data)
-                )
-                is StoryResult.Failed -> changedChannel.send(
-                    state.value.copy(error = result.errorMsg)
-                )
-                else -> {}  // won't hit this case for now
-            }
+            is StoryResult.Failed -> changedChannel.send(
+                state.value.copy(error = result.errorMsg)
+            )
+            else -> {}  // won't hit this case for now
         }
     }
 
@@ -329,7 +327,7 @@ class WritingViewModel(
         state.value.guidingQuestion.listIterator()
     private var dismissQuestionJob: Job? = null
     suspend fun getDisplayingQuestion() {
-        if  (guidingQuestionIterator?.hasNext() != true) {
+        if (guidingQuestionIterator?.hasNext() != true) {
             // reset the iterator
             guidingQuestionIterator = state.value.guidingQuestion.listIterator()
         }

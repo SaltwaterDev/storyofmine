@@ -5,12 +5,12 @@ import com.unlone.app.data.write.DraftRepository
 
 class SaveDraftUseCase(private val draftRepository: DraftRepository) {
     suspend operator fun invoke(id: String?, title: String, content: String): StoryResult<String?> {
-        return if (title.isNotBlank()) {
+        return if (title.isNotBlank() || content.isNotBlank()) {
             draftRepository.saveDraft(id, title, content).let { returningDraftId ->
                 StoryResult.Success(data = returningDraftId)
             }
         } else {
-            StoryResult.Failed(errorMsg = "title is blank")
+            StoryResult.Failed(errorMsg = "title or content is blank")
         }
     }
 }
