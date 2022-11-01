@@ -138,21 +138,24 @@ class WritingViewModel(
     }
 
     fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
-        Log.d("TAG", "saveDraft: " + state.value.currentDraftId)
-        val result = saveDraftUseCase(
-            state.value.currentDraftId,
-            state.value.title,
-            state.value.body.text
-        )
-        when (result) {
-            is StoryResult.Success -> changedChannel.send(
-                state.value.copy(currentDraftId = result.data)
+        if (state.value.title.isNotBlank() || state.value.body.text.isNotBlank()) {
+            Log.d("TAG", "saveDraft: " + state.value.currentDraftId)
+            val result = saveDraftUseCase(
+                state.value.currentDraftId,
+                state.value.title,
+                state.value.body.text
             )
-            is StoryResult.Failed -> changedChannel.send(
-                state.value.copy(error = result.errorMsg)
-            )
-            else -> {}  // won't hit this case for now
+            when (result) {
+                is StoryResult.Success -> changedChannel.send(
+                    state.value.copy(currentDraftId = result.data)
+                )
+                is StoryResult.Failed -> changedChannel.send(
+                    state.value.copy(error = result.errorMsg)
+                )
+                else -> {}  // won't hit this case for now
+            }
         }
+
     }
 
     fun addImageMD(uri: Uri?) {
