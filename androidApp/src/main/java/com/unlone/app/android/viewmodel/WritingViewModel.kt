@@ -170,8 +170,8 @@ class WritingViewModel(
     }
 
     fun createNewDraft() {
-        saveDraft()
         viewModelScope.launch {
+            saveDraft().join()
             val newDraftMap = createNewDraftUseCase()
             changedChannel.send(
                 state.value.copy(
