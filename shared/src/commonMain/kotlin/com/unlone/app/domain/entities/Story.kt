@@ -12,5 +12,6 @@ data class Story(
     val saveAllowed: Boolean,
     val comment: Comment?,
     val createdDate: String,
+    val isSaved: Boolean,
 )
 

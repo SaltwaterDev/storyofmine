@@ -23,6 +23,7 @@ data class StoryResponse(
     val author: String,
     val isPublished: Boolean,
     val isSelfWritten: Boolean,
+    val isSaved: Boolean,
     val commentAllowed: Boolean,
     val saveAllowed: Boolean,
     val createdDate: String,
@@ -40,6 +41,7 @@ data class StoryResponse(
             this.saveAllowed,
             null,
             this.createdDate,
+            this.isSaved
         )
     }
 }

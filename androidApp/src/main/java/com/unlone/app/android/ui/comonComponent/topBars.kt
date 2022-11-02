@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.AddBox
+import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.Menu
@@ -112,6 +115,7 @@ fun StoryDetailTopBar(
     report: () -> Unit,
     save: (() -> Unit)? = null,
     saveEnabled: Boolean,
+    isSaved: Boolean,
     traceHistory: () -> Unit,
     edit: () -> Unit,
     topic: String,
@@ -142,15 +146,23 @@ fun StoryDetailTopBar(
             }
 
             Row(Modifier.align(Alignment.CenterEnd)) {
-//                todo
-//                save?.let {
-//                    IconButton(onClick = it, enabled = saveEnabled) {
-//                        Icon(
-//                            Icons.Rounded.Bookmark,
-//                            contentDescription = "save"
-//                        )
-//                    }
-//                }
+                save?.let {
+                    if (isSaved) {
+                        IconButton(onClick = it, enabled = saveEnabled) {
+                            Icon(
+                                Icons.Rounded.Bookmark,
+                                contentDescription = "unsave"
+                            )
+                        }
+                    } else {
+                        IconButton(onClick = it, enabled = saveEnabled) {
+                            Icon(
+                                Icons.Outlined.BookmarkBorder,
+                                contentDescription = "save"
+                            )
+                        }
+                    }
+                }
 
                 Box {
                     IconButton(onClick = { expanded = true }) {
@@ -197,6 +209,7 @@ fun StoryDetailTopBarPreview() {
         edit = { /*TODO*/ },
         topic = "Topic",
         isSelfWritten = false,
+        isSaved = true,
     )
 }
 

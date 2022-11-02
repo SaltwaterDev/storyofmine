@@ -3,7 +3,7 @@ package com.unlone.app.data.story
 import kotlinx.serialization.Serializable
 
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class CommentResponse(
     val data: List<SingleCommentResponse>
 ){

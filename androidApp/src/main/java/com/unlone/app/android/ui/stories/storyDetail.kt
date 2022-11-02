@@ -65,6 +65,7 @@ fun StoryDetail(
                     report = reportStory,
                     save = storyId?.let { { viewModel.saveStory(it) } },
                     saveEnabled = state.allowSave,
+                    isSaved = state.isSaved,
                     traceHistory = { /*TODO*/ },
                     edit = { /*TODO*/ },
                     topic = state.topic,

@@ -40,7 +40,10 @@ interface StoryApi {
     suspend fun postComment(commentRequest: CommentRequest, token: String): CommentResponse
 
     suspend fun getMyStories(token: String): StoriesResponse
+
+    suspend fun saveStory(token: String, saveRequest: SaveRequest)
 }
+
 
 internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     private val client = HttpClient(httpClientEngine) {
@@ -49,7 +52,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         install(ContentNegotiation) {
             json()
         }
-        install(ContentEncoding){
+        install(ContentEncoding) {
             gzip()
         }
         Charsets {
@@ -61,6 +64,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     }
 
     private val serverUrl = UnloneConfig.baseUrl
+
     // use when running the local backend server
     private val localBaseUrlForEmulator = "http://10.0.2.2:8080"
     private val localBaseUrl = "http://192.168.8.154:8080"
@@ -158,5 +162,16 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             header("Authorization", "Bearer $token")
         }
         return response.body()
+    }
+
+    override suspend fun saveStory(
+        token: String,
+        saveRequest: SaveRequest
+    ) {
+        client.post("$baseUrl/story/save") {
+            contentType(ContentType.Application.Json)
+            header("Authorization", "Bearer $token")
+            setBody(saveRequest)
+        }
     }
 }

@@ -31,7 +31,8 @@ class FetchStoryDetailUseCase(private val storyRepository: StoryRepository) {
                     it.commentAllowed,
                     it.saveAllowed,
                     it.comment,
-                    createdDate
+                    createdDate,
+                    it.isSaved,
                 )
             }
             story?.let { StoryResult.Success(it) } ?: result

@@ -3,6 +3,7 @@ package com.unlone.app.android.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.story.CommentRepository
+import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.entities.Comment
 import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
@@ -19,6 +20,7 @@ data class StoryDetailUiState(
     val createdDate: String = "",
     val comments: List<Comment> = listOf(),
     val isSelfWritten: Boolean = false,
+    val isSaved: Boolean = false,
     val allowComment: Boolean = false,
     val allowSave: Boolean = false,
     val errorMsg: String? = null,
@@ -29,7 +31,8 @@ data class StoryDetailUiState(
 
 class StoryDetailViewModel(
     private val fetchStoryDetailUseCase: FetchStoryDetailUseCase,
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val storyRepository: StoryRepository,
 ) : ViewModel() {
 
     var state = MutableStateFlow(StoryDetailUiState())
@@ -53,6 +56,7 @@ class StoryDetailViewModel(
                                 allowComment = story.commentAllowed,
                                 allowSave = story.saveAllowed,
                                 isSelfWritten = story.isSelfWritten,
+                                isSaved = story.isSaved,
                             )
                         }
                     }
@@ -69,7 +73,7 @@ class StoryDetailViewModel(
         state.value = state.value.copy(errorMsg = null)
     }
 
-    fun getComments(sid: String) {
+    private fun getComments(sid: String) {
         viewModelScope.launch(Dispatchers.Default) {
             state.value = state.value.copy(loading = true)
             when (val result = commentRepository.getComments(sid)) {
@@ -105,7 +109,25 @@ class StoryDetailViewModel(
         }
     }
 
-    fun saveStory(storyId: String){
-        // todo
+    fun saveStory(storyId: String) = viewModelScope.launch(Dispatchers.Default) {
+        val newState = !state.value.isSaved
+        state.value = state.value.copy(
+            isSaved = newState
+        )
+        when (val result = storyRepository.saveStory(storyId, newState)) {
+            is StoryResult.Success -> {}
+            is StoryResult.Failed -> {
+                state.value = state.value.copy(
+                    isSaved = !newState,
+                    errorMsg = result.errorMsg
+                )
+            }
+            is StoryResult.UnknownError -> {
+                state.value = state.value.copy(
+                    isSaved = !newState,
+                    errorMsg = "Unknown error: ${result.errorMsg}"
+                )
+            }
+        }
     }
 }
