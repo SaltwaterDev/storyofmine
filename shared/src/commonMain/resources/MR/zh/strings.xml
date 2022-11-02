@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="my_string">DLLMCH</string>
+
     <string name="sign_in__title">登入</string>
     <string name="sign_in__btn_sign_in">登入</string>
     <string name="sign_in__btn_sign_in_instead">我想登入</string>
@@ -35,6 +36,8 @@
     <string name="writing__posting">發佈中</string>
     <string name="writing__clear">清除</string>
     <string name="writing__post_success">已發佈！</string>
+
+    <string name="saved_stories_title">收藏</string>
 
     <string name="stories_auth_required_title">註冊以觀閱更多故事</string>
     <string name="stories_header_greeting">你好 %s</string>

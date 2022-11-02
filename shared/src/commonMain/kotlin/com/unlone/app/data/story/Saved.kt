@@ -5,3 +5,4 @@ data class SaveRequest(
     val storyId: String,
     val isSaving: Boolean
 )
+

@@ -1,29 +1,19 @@
 package com.unlone.app.android.ui.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.navArgument
-import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
-import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
-import com.unlone.app.android.ui.auth.signup.EmailVerificationScreen
-import com.unlone.app.android.ui.auth.signup.SetUsernameScreen
-import com.unlone.app.android.ui.auth.signup.SignUpScreen
-import com.unlone.app.android.ui.profile.MyStoriesScreen
-import com.unlone.app.android.ui.profile.ProfileScreen
-import com.unlone.app.android.ui.profile.RulesScreen
 import com.unlone.app.android.ui.stories.ReportScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.stories.StoryDetail
 import com.unlone.app.android.ui.stories.TopicDetail
-import com.unlone.app.android.viewmodel.*
-import kotlinx.coroutines.InternalCoroutinesApi
+import com.unlone.app.android.viewmodel.ReportViewModel
+import com.unlone.app.android.viewmodel.StoriesViewModel
+import com.unlone.app.android.viewmodel.StoryDetailViewModel
+import com.unlone.app.android.viewmodel.TopicDetailViewModel
 import org.koin.androidx.compose.koinViewModel
-
 
 
 @ExperimentalAnimationApi

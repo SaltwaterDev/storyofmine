@@ -11,23 +11,23 @@ import com.unlone.app.data.story.StoryResult
 import kotlinx.coroutines.launch
 
 
-data class MyStoriesUiState(
+data class SavedStoriesUiState(
     val stories: List<SimpleStory> = List(3) { SimpleStory.mock() },
     val loading: Boolean = false,
     val error: String? = null,
 )
 
 
-class MyStoriesViewModel(
+class SavedStoriesViewModel(
     private val storyRepository: StoryRepository
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(MyStoriesUiState())
+    var uiState by mutableStateOf(SavedStoriesUiState())
         private set
 
-    fun loadMyStories() = viewModelScope.launch {
+    fun loadStories() = viewModelScope.launch {
         uiState = uiState.copy(loading = true)
-        when (val result = storyRepository.getMyStories()) {
+        when (val result = storyRepository.getSavedStories()) {
             is StoryResult.Success -> result.data?.let {
                 uiState = uiState.copy(stories = it.sortedByDescending { s -> s.createdDate })
             }

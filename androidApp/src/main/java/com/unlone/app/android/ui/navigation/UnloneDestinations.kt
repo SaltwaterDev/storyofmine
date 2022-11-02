@@ -95,3 +95,10 @@ object MyStories : UnloneDestination {
 }
 
 
+object SavedStories : UnloneDestination {
+    override val route = "saved"
+//    val routeWithArgs = "$route"
+//    val arguments = listOf()
+}
+
+

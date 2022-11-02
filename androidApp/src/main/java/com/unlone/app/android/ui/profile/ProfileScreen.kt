@@ -54,8 +54,14 @@ fun ProfileScreen(
                     style = Typography.subtitle1
                 )
             }
-//            ProfileScreenDivider()
-//            ListItem(Modifier.clickable { goToSavedStories() }) { Text(text = stringResource(resource = SharedRes.strings.profile__saved), style = Typography.subtitle1) }
+            ProfileScreenDivider()
+            ListItem(Modifier.clickable { goToSavedStories() }) {
+                Text(
+                    text = stringResource(
+                        resource = SharedRes.strings.profile__saved
+                    ), style = Typography.subtitle1
+                )
+            }
         }
         ProfileScreenDivider()
 //        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }

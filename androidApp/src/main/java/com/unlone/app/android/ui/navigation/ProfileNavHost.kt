@@ -1,25 +1,19 @@
 package com.unlone.app.android.ui.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.navArgument
-import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
-import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
-import com.unlone.app.android.ui.auth.signup.EmailVerificationScreen
-import com.unlone.app.android.ui.auth.signup.SetUsernameScreen
-import com.unlone.app.android.ui.auth.signup.SignUpScreen
 import com.unlone.app.android.ui.profile.MyStoriesScreen
 import com.unlone.app.android.ui.profile.ProfileScreen
 import com.unlone.app.android.ui.profile.RulesScreen
-import com.unlone.app.android.viewmodel.*
-import kotlinx.coroutines.InternalCoroutinesApi
+import com.unlone.app.android.ui.profile.SavedStoriesScreen
+import com.unlone.app.android.viewmodel.MyStoriesViewModel
+import com.unlone.app.android.viewmodel.ProfileViewModel
+import com.unlone.app.android.viewmodel.RulesViewModel
+import com.unlone.app.android.viewmodel.SavedStoriesViewModel
 import org.koin.androidx.compose.koinViewModel
-
 
 
 @ExperimentalAnimationApi
@@ -42,7 +36,7 @@ fun NavGraphBuilder.profileGraph(
                 viewModel,
                 {},
                 { navToMyStories(navController) },
-                {},
+                { navToSavedStories(navController) },
                 {},
                 {},
                 { navToRules(navController) })
@@ -54,6 +48,13 @@ fun NavGraphBuilder.profileGraph(
         ) {
             val viewModel = koinViewModel<MyStoriesViewModel>()
             MyStoriesScreen(viewModel, { navigateToStoryDetail(navController, it) }, navigateUp)
+        }
+
+        composable(
+            SavedStories.route,
+        ) {
+            val viewModel = koinViewModel<SavedStoriesViewModel>()
+            SavedStoriesScreen(viewModel, { navigateToStoryDetail(navController, it) }, navigateUp)
         }
 
         composable(
@@ -81,5 +82,9 @@ fun navToRules(navController: NavHostController) {
 
 fun navToMyStories(navController: NavHostController) {
     navController.navigate(MyStories.route)
+}
+
+fun navToSavedStories(navController: NavHostController) {
+    navController.navigate(SavedStories.route)
 }
 

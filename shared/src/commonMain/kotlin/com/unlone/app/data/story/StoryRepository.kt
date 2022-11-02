@@ -36,6 +36,7 @@ interface StoryRepository {
     ): StoryResult<List<SimpleStory>>
 
     suspend fun getMyStories(): StoryResult<List<SimpleStory>>
+    suspend fun getSavedStories(): StoryResult<List<SimpleStory>>
 
     suspend fun saveStory(storyId: String, save: Boolean): StoryResult<Unit>
 }
@@ -129,6 +130,22 @@ internal class StoryRepositoryImpl(
         return try {
             authRepository.getJwt()?.let { jwt ->
                 val response = storyApi.getMyStories(jwt)
+                StoryResult.Success(response.data)
+            } ?: StoryResult.Failed("jwt not exists")
+        } catch (e: RedirectResponseException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: ClientRequestException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: Exception) {
+            Logger.e { e.toString() }
+            StoryResult.UnknownError(errorMsg = e.message)
+        }
+    }
+
+    override suspend fun getSavedStories(): StoryResult<List<SimpleStory>> {
+        return try {
+            authRepository.getJwt()?.let { jwt ->
+                val response = storyApi.getSavedStories(jwt)
                 StoryResult.Success(response.data)
             } ?: StoryResult.Failed("jwt not exists")
         } catch (e: RedirectResponseException) {

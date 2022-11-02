@@ -2,6 +2,7 @@ package com.unlone.app.data.story
 
 import com.unlone.app.domain.entities.Story
 import kotlinx.serialization.Serializable
+import kotlin.random.Random
 
 sealed class StoryResult<T>(val data: T? = null, val errorMsg: String? = null) {
     class Success<T>(data: T? = null) : StoryResult<T>(data = data)
@@ -53,15 +54,15 @@ data class SimpleStory(
     val title: String,
     val content: String,
     val topic: String,
-    val createdDate: Long,
+    val createdDate: Long?,
 ) {
     companion object {
         fun mock() = SimpleStory(
-            "_id",
+            Random.nextLong(0, 10000).toString(),
             "",
             "",
             "",
-            0L,
+            null,
         )
     }
 }

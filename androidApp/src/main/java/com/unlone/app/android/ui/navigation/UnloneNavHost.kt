@@ -7,17 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.unlone.app.android.ui.profile.MyStoriesScreen
-import com.unlone.app.android.ui.profile.ProfileScreen
-import com.unlone.app.android.ui.profile.RulesScreen
-import com.unlone.app.android.ui.stories.ReportScreen
-import com.unlone.app.android.ui.stories.StoriesScreen
-import com.unlone.app.android.ui.stories.StoryDetail
-import com.unlone.app.android.ui.stories.TopicDetail
 import com.unlone.app.android.viewmodel.*
-import org.koin.androidx.compose.koinViewModel
 
 
 @ExperimentalAnimationApi

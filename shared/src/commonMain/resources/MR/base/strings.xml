@@ -37,6 +37,8 @@
     <string name="writing__clear">Clear</string>
     <string name="writing__post_success">Posted!</string>
 
+    <string name="saved_stories_title">Saved</string>
+
     <string name="stories_auth_required_title">Sign up to see other stories</string>
     <string name="stories_header_greeting">Hi %s</string>
     <string name="stories_show_more">more</string>

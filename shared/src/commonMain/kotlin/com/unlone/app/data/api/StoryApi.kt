@@ -40,6 +40,7 @@ interface StoryApi {
     suspend fun postComment(commentRequest: CommentRequest, token: String): CommentResponse
 
     suspend fun getMyStories(token: String): StoriesResponse
+    suspend fun getSavedStories(token: String): StoriesResponse
 
     suspend fun saveStory(token: String, saveRequest: SaveRequest)
 }
@@ -159,6 +160,14 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
 
     override suspend fun getMyStories(token: String): StoriesResponse {
         val response = client.get("$baseUrl/story/myStories") {
+            header("Authorization", "Bearer $token")
+        }
+        return response.body()
+    }
+
+    override suspend fun getSavedStories(token: String): StoriesResponse {
+//        return StoriesResponse(listOf())
+        val response = client.get("$baseUrl/story/saved") {
             header("Authorization", "Bearer $token")
         }
         return response.body()

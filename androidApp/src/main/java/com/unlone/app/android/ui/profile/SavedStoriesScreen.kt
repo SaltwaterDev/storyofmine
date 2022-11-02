@@ -16,7 +16,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.ui.comonComponent.TransparentTopBar
 import com.unlone.app.android.ui.theme.Typography
-import com.unlone.app.android.viewmodel.MyStoriesViewModel
+import com.unlone.app.android.viewmodel.SavedStoriesViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone.Companion.currentSystemDefault
@@ -24,14 +24,14 @@ import kotlinx.datetime.toLocalDateTime
 import org.example.library.SharedRes
 
 @Composable
-fun MyStoriesScreen(
-    viewModel: MyStoriesViewModel,
+fun SavedStoriesScreen(
+    viewModel: SavedStoriesViewModel,
     openStory: (String) -> Unit,
     back: () -> Unit,
 ) {
     val state = viewModel.uiState
     LaunchedEffect(Unit) {
-        viewModel.loadMyStories()
+        viewModel.loadStories()
     }
     LazyColumn(
         Modifier
@@ -41,7 +41,7 @@ fun MyStoriesScreen(
 
         item {
             TransparentTopBar(
-                stringResource(resource = SharedRes.strings.my_stories_title),
+                stringResource(resource = SharedRes.strings.saved_stories_title),
             ) { back() }
         }
 
