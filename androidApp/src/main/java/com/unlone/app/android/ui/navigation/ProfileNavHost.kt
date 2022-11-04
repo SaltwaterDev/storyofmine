@@ -5,14 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.unlone.app.android.ui.profile.MyStoriesScreen
-import com.unlone.app.android.ui.profile.ProfileScreen
-import com.unlone.app.android.ui.profile.RulesScreen
-import com.unlone.app.android.ui.profile.SavedStoriesScreen
-import com.unlone.app.android.viewmodel.MyStoriesViewModel
-import com.unlone.app.android.viewmodel.ProfileViewModel
-import com.unlone.app.android.viewmodel.RulesViewModel
-import com.unlone.app.android.viewmodel.SavedStoriesViewModel
+import com.unlone.app.android.ui.profile.*
+import com.unlone.app.android.viewmodel.*
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -37,7 +31,7 @@ fun NavGraphBuilder.profileGraph(
                 {},
                 { navToMyStories(navController) },
                 { navToSavedStories(navController) },
-                {},
+                { navToSetting(navController)} ,
                 {},
                 { navToRules(navController) })
         }
@@ -65,6 +59,15 @@ fun NavGraphBuilder.profileGraph(
                 navigateUp()
             }
         }
+
+        composable(
+            Settings.route,
+        ) {
+            val viewModel = koinViewModel<SettingsViewModel>()
+            SettingsScreen(viewModel) {
+                navigateUp()
+            }
+        }
     }
 }
 
@@ -77,6 +80,10 @@ fun navigateToProfile(
 
 fun navToRules(navController: NavHostController) {
     navController.navigate(Rules.route)
+}
+
+fun navToSetting(navController: NavHostController) {
+    navController.navigate(Settings.route)
 }
 
 

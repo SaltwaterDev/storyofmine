@@ -88,6 +88,13 @@ object Rules : UnloneDestination {
 }
 
 
+object Settings : UnloneDestination {
+    override val route = "settings"
+//    val routeWithArgs = "$route"
+//    val arguments = listOf()
+}
+
+
 object MyStories : UnloneDestination {
     override val route = "myStories"
 //    val routeWithArgs = "$route"

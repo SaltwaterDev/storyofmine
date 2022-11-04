@@ -64,8 +64,8 @@ fun ProfileScreen(
             }
         }
         ProfileScreenDivider()
-//        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
-//        ProfileScreenDivider()
+        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
+        ProfileScreenDivider()
 //        ListItem(Modifier.clickable { goToHelp() }) {
 //            Text(
 //                text = stringResource(resource = SharedRes.strings.profile__help),
@@ -78,15 +78,6 @@ fun ProfileScreen(
                 text = stringResource(resource = SharedRes.strings.profile__rules),
                 style = Typography.subtitle1
             )
-        }
-        ProfileScreenDivider()
-        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = viewModel::switchLocaleZh) {
-                Text(text = "change to zh")
-            }
-            Button(onClick = viewModel::switchLocaleEn) {
-                Text(text = "change to en")
-            }
         }
         ProfileScreenDivider()
         if (state.isUserLoggedIn) {

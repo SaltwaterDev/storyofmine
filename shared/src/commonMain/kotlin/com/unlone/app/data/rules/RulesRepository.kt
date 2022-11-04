@@ -15,9 +15,9 @@ class RulesRepositoryImpl(
     private val staticResourcesApi: StaticResourcesApi,
     private val userPreferenceRepository: UserPreferenceRepository
 ) : RulesRepository {
-    override suspend fun getRules(): StaticResourceResult<List<Rules>? > {
+    override suspend fun getRules(): StaticResourceResult<List<Rules>?> {
         return try {
-            val response = staticResourcesApi.getRules(userPreferenceRepository.getLocale())
+            val response = staticResourcesApi.getRules(userPreferenceRepository.getLocale().name)
             StaticResourceResult.Success(response.data)
         } catch (e: RedirectResponseException) {
             StaticResourceResult.Failed(errorMsg = e.response.body<String>())

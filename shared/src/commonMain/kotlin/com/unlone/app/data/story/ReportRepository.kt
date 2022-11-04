@@ -24,7 +24,7 @@ internal class ReportRepositoryImpl(
 ) : ReportRepository {
     override suspend fun getReportReasons(): StoryResult<List<ReportReason>> {
         return try {
-            val response = storyApi.getReportReasons(userPreferenceRepository.getLocale())
+            val response = storyApi.getReportReasons(userPreferenceRepository.getLocale().name)
             StoryResult.Success(response.data.map { it.deserialize() })
         } catch (e: RedirectResponseException) {
             StoryResult.Failed(errorMsg = e.response.body<String>())

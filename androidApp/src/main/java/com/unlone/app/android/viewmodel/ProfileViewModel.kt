@@ -22,7 +22,6 @@ data class ProfileUiState(
 class ProfileViewModel(
     private val authRepository: AuthRepository,
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
-    private val userPreferenceRepository: UserPreferenceRepository
 ) : ViewModel() {
 
     var state = isUserSignedInUseCase().map {
@@ -45,12 +44,5 @@ class ProfileViewModel(
 
     fun signOut() = viewModelScope.launch(Dispatchers.Default) {
         authRepository.signOut()
-    }
-
-    fun switchLocaleZh() {
-        userPreferenceRepository.setLocale("zh")
-    }
-    fun switchLocaleEn() {
-        userPreferenceRepository.setLocale()
     }
 }
