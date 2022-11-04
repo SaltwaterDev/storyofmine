@@ -12,6 +12,8 @@ import com.unlone.app.data.write.DraftRepository
 import com.unlone.app.data.write.GuidingQuestion
 import com.unlone.app.data.write.GuidingQuestionsRepository
 import com.unlone.app.data.write.StaticResourceResult
+import com.unlone.app.domain.entities.NetworkState
+import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*
@@ -36,6 +38,7 @@ data class WritingUiState(
     val isUserSignedIn: Boolean = false,
     internal val guidingQuestion: List<GuidingQuestion> = listOf(),
     val displayingGuidingQuestion: GuidingQuestion? = null,
+    val networkState: NetworkState = NetworkState.Ok,
 )
 
 
@@ -50,6 +53,7 @@ class WritingViewModel(
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
     private val draftRepository: DraftRepository,
     private val guidingQuestionsRepository: GuidingQuestionsRepository,
+    private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
 ) : ViewModel() {
 
     private val changedChannel = Channel<WritingUiState>()
@@ -76,6 +80,10 @@ class WritingViewModel(
 
     suspend fun refreshData(draftId: String? = null, version: String? = null) =
         withContext(Dispatchers.Default) {
+
+            // check network state. Proceed if ok
+            checkNetworkState()
+
             changedChannel.send(state.value.copy(loading = true, guidingQuestion = listOf()))
             guidingQuestionIterator = null
 
@@ -349,4 +357,11 @@ class WritingViewModel(
             )
     }
     // endregion
+
+    private suspend fun checkNetworkState() = checkNetworkStateUseCase().apply {
+        changedChannel.send(state.value.copy(networkState = this))
+        if (this is NetworkState.UnknownError) {
+            changedChannel.send(state.value.copy(error = this.message))
+        }
+    }
 }

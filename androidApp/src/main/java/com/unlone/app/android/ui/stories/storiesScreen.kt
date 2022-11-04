@@ -50,7 +50,7 @@ fun StoriesScreen(
 
 
     if (state.isUserLoggedIn) {
-        viewModel.checkAuth()   // to ensure again user has authorized
+        viewModel.checkAuth()   // to ensure again user has authorized // why ?
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SwipeRefresh(
                 state = refreshState,
