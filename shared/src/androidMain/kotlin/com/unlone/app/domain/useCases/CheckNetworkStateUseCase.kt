@@ -8,13 +8,14 @@ actual class CheckNetworkStateUseCase {
 
     actual operator fun invoke(): NetworkState {
         return try {
-            val ipAddr = InetAddress.getByName(UnloneConfig.baseUrl);
-            //You can replace it with your name
-            if (!ipAddr.equals("")){
-                NetworkState.Ok
-            } else{
-                NetworkState.Unavailable
-            }
+            NetworkState.Ok
+//            val ipAddr = InetAddress.getByName(UnloneConfig.baseUrl);
+//            //You can replace it with your name
+//            if (!ipAddr.equals("")){
+//                NetworkState.Ok
+//            } else{
+//                NetworkState.Unavailable
+//            }
 
         } catch (e: Exception) {
             NetworkState.UnknownError(e.message)

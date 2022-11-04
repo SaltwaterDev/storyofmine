@@ -4,11 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
+import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
+import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class StoriesScreenUiState(
     val loading: Boolean = true,
@@ -21,11 +26,13 @@ data class StoriesScreenUiState(
     val errorMsg: String? = null,
     val lastItemId: String? = null,
     val username: String? = null,
+    val networkState: NetworkState = NetworkState.Ok,
 )
 
 
 class StoriesViewModel(
     private val authRepository: AuthRepository,
+    private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
     private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
 ) : ViewModel() {
 
@@ -41,14 +48,31 @@ class StoriesViewModel(
         }
     }
 
-    suspend fun initData() {
+    suspend fun initData() = withContext(Dispatchers.Default) {
         _state.value = _state.value.copy(loading = true)
-        if (authRepository.authenticate() is AuthResult.Authorized) {
-            getUserName()
-            _state.value = _state.value.copy(
-                isUserLoggedIn = true,
-            )
+        // check network state. Proceed if ok
+        checkNetworkStateUseCase().apply {
+            _state.value = _state.value.copy(networkState = this)
+            when (this) {
+                is NetworkState.Ok -> {
+                    if (authRepository.authenticate() is AuthResult.Authorized) {
+                        getUserName()
+                        _state.value = _state.value.copy(
+                            isUserLoggedIn = true,
+                        )
+                    }
+                }
+                is NetworkState.UnknownError -> {
+                    _state.value = _state.value.copy(
+                        errorMsg = this.message
+                    )
+                }
+                is NetworkState.Unavailable -> {
+                    /*do nothing, as already update the state*/
+                }
+            }
         }
+
         _state.value = _state.value.copy(loading = false)
     }
 

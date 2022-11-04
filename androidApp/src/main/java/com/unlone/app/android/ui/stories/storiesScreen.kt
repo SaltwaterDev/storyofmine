@@ -6,30 +6,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.unlone.app.android.ui.comonComponent.NoNetworkScreen
 import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.ui.theme.MontserratFontFamily
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.data.story.SimpleStory
+import com.unlone.app.domain.entities.NetworkState
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
 import org.example.library.SharedRes
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 
 @Composable
 fun StoriesScreen(
@@ -41,6 +41,7 @@ fun StoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
+    val coroutineScope = rememberCoroutineScope()
     val refreshState =
         rememberSwipeRefreshState(storiesByTopics.loadState.refresh is LoadState.Loading)
 
@@ -48,9 +49,17 @@ fun StoriesScreen(
         viewModel.initData()
     }
 
+    if (state.networkState !is NetworkState.Ok) {
+        NoNetworkScreen {
+            coroutineScope.launch {
+                viewModel.initData()
+            }
+        }
+        return
+    }
 
     if (state.isUserLoggedIn) {
-        viewModel.checkAuth()   // to ensure again user has authorized // why ?
+//        viewModel.checkAuth()   // to ensure again user has authorized (why ?)
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SwipeRefresh(
                 state = refreshState,

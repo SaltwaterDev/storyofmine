@@ -13,7 +13,6 @@ import com.unlone.app.data.write.GuidingQuestion
 import com.unlone.app.data.write.GuidingQuestionsRepository
 import com.unlone.app.data.write.StaticResourceResult
 import com.unlone.app.domain.entities.NetworkState
-import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*

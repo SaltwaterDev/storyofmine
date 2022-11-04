@@ -22,16 +22,13 @@ class SettingsViewModel(
     val state = _state.asStateFlow()
 
     fun refreshData() {
-        _state.value = _state.value.copy(loading = true)
+//        _state.value = _state.value.copy(loading = true)
         _state.value = _state.value.copy(currentLocale = userPreferenceRepository.getLocale())
-        _state.value = _state.value.copy(loading = false)
+//        _state.value = _state.value.copy(loading = false)
     }
 
-    fun switchLocaleZh() {
-        userPreferenceRepository.setLocale(UnloneLocale.Zh)
-    }
-
-    fun switchLocaleEn() {
-        userPreferenceRepository.setLocale(UnloneLocale.En)
+    fun switchLocale(locale: UnloneLocale) {
+        userPreferenceRepository.setLocale(locale)
+        refreshData()
     }
 }

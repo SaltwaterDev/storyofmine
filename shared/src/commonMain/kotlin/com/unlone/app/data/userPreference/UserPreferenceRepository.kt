@@ -14,8 +14,8 @@ internal class UserPreferenceRepositoryImpl(
 ) : UserPreferenceRepository {
     override fun setLocale(locale: UnloneLocale?) {
         if (locale != null) {
-            StringDesc.localeType = StringDesc.LocaleType.Custom(locale.name)
-            prefs.put("locale", locale.name)
+            StringDesc.localeType = StringDesc.LocaleType.Custom(locale.localeName)
+            prefs.put("locale", locale.localeName)
         } else {
             StringDesc.localeType = StringDesc.LocaleType.System
             prefs.remove("locale")
@@ -23,11 +23,13 @@ internal class UserPreferenceRepositoryImpl(
     }
 
     override fun getLocale(): UnloneLocale {
-        return when (prefs.getString("locale")) {
-            "zh" -> UnloneLocale.Zh
-            "en" -> UnloneLocale.En
-            else -> UnloneLocale.En
+        val localeString = prefs.getString("locale")
+        UnloneLocale.values().forEach {
+            if (localeString == it.localeName) {
+                return it
+            }
         }
+        return UnloneLocale.En
     }
 
     init {
@@ -37,7 +39,7 @@ internal class UserPreferenceRepositoryImpl(
     }
 }
 
-sealed class UnloneLocale(val name: String) {
-    object Zh : UnloneLocale(name = "zh")
-    object En : UnloneLocale(name = "en")
+enum class UnloneLocale(val localeName: String) {
+    Zh(localeName = "zh"),
+    En(localeName = "en")
 }

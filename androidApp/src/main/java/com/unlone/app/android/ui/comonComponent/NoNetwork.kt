@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.comonComponent
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -16,7 +17,9 @@ import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
 @Composable
-fun NoNetworkScreen() {
+fun NoNetworkScreen(
+    onRetry: () -> Unit,
+) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -33,6 +36,10 @@ fun NoNetworkScreen() {
                 fontSize = 18.sp,
                 modifier = Modifier.padding(vertical = 20.dp)
             )
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) {
+                Text(text = "_Retry")
+            }
         }
     }
 }
@@ -41,5 +48,5 @@ fun NoNetworkScreen() {
 @Preview
 @Composable
 fun NoNetworkScreenPreview() {
-    NoNetworkScreen()
+    NoNetworkScreen{}
 }
