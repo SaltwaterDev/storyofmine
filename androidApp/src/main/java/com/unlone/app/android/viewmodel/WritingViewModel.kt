@@ -305,7 +305,13 @@ class WritingViewModel(
 
     private fun getTopicList(): Flow<List<String>> {
         return flow {
-            emit(topicRepository.getAllTopic().map { topic -> topic.name })
+            when (val result = topicRepository.getAllTopic()) {
+                is StoryResult.Success -> {
+                    result.data?.map { topic -> topic.name }?.let { emit(it) }
+                }
+                is StoryResult.Failed -> { /*todo*/ }
+                is StoryResult.UnknownError -> {/*todo*/ }
+            }
         }
     }
     // endregion
