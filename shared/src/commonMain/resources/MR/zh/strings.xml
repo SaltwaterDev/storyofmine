@@ -70,6 +70,7 @@
     <string name="common__confirm_password">確認密碼</string>
     <string name="common__password">密碼</string>
     <string name="common__report">舉報</string>
+    <string name="common__network_unavailable_warning">無法連線\n請查看你的網絡狀態</string>
     <string name="common__error">錯誤</string>
     <string name="common__warning">警告</string>
     <string name="common__unknown_error">未知錯誤</string>

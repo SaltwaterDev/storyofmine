@@ -12,6 +12,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
 
 @Composable
 fun NoNetworkScreen() {
@@ -26,8 +28,7 @@ fun NoNetworkScreen() {
                 modifier = Modifier.requiredSize(180.dp)
             )
             Text(
-                text = "Network unavailable\n" +
-                        "Please check your network state",
+                text = stringResource(resource = SharedRes.strings.common__network_unavailable_warning),
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 modifier = Modifier.padding(vertical = 20.dp)

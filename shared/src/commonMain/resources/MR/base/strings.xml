@@ -71,6 +71,7 @@
     <string name="common__report">Report</string>
     <string name="common__attention">Attention</string>
     <string name="common__error">Error</string>
+    <string name="common__network_unavailable_warning">Network unavailable\nPlease check your network state</string>
     <string name="common__warning">Warning</string>
     <string name="common__unknown_error">An unknown error occurred</string>
     <string name="common__back">Back</string>
