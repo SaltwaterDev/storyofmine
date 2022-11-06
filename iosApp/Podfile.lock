@@ -1,16 +1,23 @@
 PODS:
+  - ExytePopupView (1.2.1)
   - shared (1.0)
 
 DEPENDENCIES:
+  - ExytePopupView
   - shared (from `../shared`)
+
+SPEC REPOS:
+  trunk:
+    - ExytePopupView
 
 EXTERNAL SOURCES:
   shared:
     :path: "../shared"
 
 SPEC CHECKSUMS:
+  ExytePopupView: e0554c9713665a386a54b356c596858811e84621
   shared: 2d3b24a8fe27b7d9e65b8d075a9672fbc6a1aa10
 
-PODFILE CHECKSUM: f282da88f39e69507b0a255187c8a6b644477756
+PODFILE CHECKSUM: dacf2138af209ccbcd5b9af6e04522b97b46b5aa
 
 COCOAPODS: 1.11.3
