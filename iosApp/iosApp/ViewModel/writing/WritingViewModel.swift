@@ -30,6 +30,7 @@ class WritingViewModel: ObservableObject {
     @Published var saveAllowed: Bool = false
     @Published var error: String? = nil
     @Published var postSuccess: Bool = false
+    @Published var showPostPopup: Bool = false
     @Published var loading: Bool = false
     @Published var isUserSignedIn: Bool = false
     
@@ -156,24 +157,28 @@ class WritingViewModel: ObservableObject {
         }
     }
     
-    func postDraft() async{
-        do{
-            self.loading = true
-            
-            let result = try await postStoryUseCase.invoke(title: self.title, content: self.content, topic: self.selectedTopic, isPublished: self.isPublished, commentAllowed: self.commentAllowed, saveAllowed: self.saveAllowed)
-            
-            switch (result){
-            case is StoryResultSuccess<KotlinUnit>:
-                createNewDraft()
-                self.postSuccess = true
-                self.loading = false
-                break
-            default:
-                self.error = result.errorMsg
-                self.loading = false
-                break
-            }
-        }catch{ print(error) }
+    func postDraft() {
+        Task {
+            do{
+                self.showPostPopup = false
+                self.loading = true
+                
+                let result = try await postStoryUseCase.invoke(title: self.title, content: self.content, topic: self.selectedTopic, isPublished: self.isPublished, commentAllowed: self.commentAllowed, saveAllowed: self.saveAllowed)
+                
+                switch (result) {
+                case is StoryResultSuccess<KotlinUnit>:
+                    createNewDraft()
+                    self.loading = false
+                    self.postSuccess = true
+                    break
+                default:
+                    self.error = result.errorMsg
+                    self.loading = false
+                    self.postSuccess = false
+                    break
+                }
+            } catch { print(error) }
+        }
     }
     
     func dismiss() {
