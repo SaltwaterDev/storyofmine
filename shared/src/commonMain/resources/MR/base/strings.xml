@@ -2,6 +2,10 @@
 <resources>
     <string name="my_string">My default localization string</string>
 
+    <string name="bottom_nav_bar_label__write">Write</string>
+    <string name="bottom_nav_bar_label__stories">Stories</string>
+    <string name="bottom_nav_bar_label__profile">Profile</string>
+
     <string name="sign_in__title">Sign in</string>
     <string name="sign_in__btn_sign_in">Sign in</string>
     <string name="sign_in__btn_sign_in_instead">Sign in instead</string>

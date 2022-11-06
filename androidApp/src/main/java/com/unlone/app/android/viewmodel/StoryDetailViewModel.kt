@@ -32,6 +32,7 @@ data class StoryDetailUiState(
     val postCommentLoading: Boolean = false,
     val commentText: String = "",
     val networkState: NetworkState = NetworkState.Ok,
+    val postCommentSucceed: Boolean = false,
 )
 
 class StoryDetailViewModel(
@@ -126,7 +127,11 @@ class StoryDetailViewModel(
             when (val result = commentRepository.postComment(sid, state.value.commentText)) {
                 is StoryResult.Success -> result.data?.let {
                     state.value =
-                        state.value.copy(comments = state.value.comments + it, commentText = "")
+                        state.value.copy(
+                            comments = state.value.comments + it,
+                            commentText = "",
+                            postCommentSucceed = true
+                        )
                 }
                 is StoryResult.Failed -> state.value = state.value.copy(errorMsg = result.errorMsg)
                 is StoryResult.UnknownError -> state.value =
@@ -156,5 +161,11 @@ class StoryDetailViewModel(
                 )
             }
         }
+    }
+
+    val dismissPostCommentSucceed = {
+        state.value = state.value.copy(
+            postCommentSucceed = false
+        )
     }
 }

@@ -26,7 +26,7 @@ class GuidingQuestionsRepositoryImpl(
     override suspend fun getGuidingQuestionList(): StaticResourceResult<List<GuidingQuestion>> {
         return try {
             val response = api.getGuidingQuestions(
-                userPreferenceRepository.getLocale().name
+                userPreferenceRepository.getLocale().localeName
             )
             StaticResourceResult.Success(response.data)
         } catch (e: RedirectResponseException) {

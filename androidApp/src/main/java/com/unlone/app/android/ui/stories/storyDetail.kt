@@ -37,7 +37,7 @@ fun StoryDetail(
 ) {
     val systemUiController = rememberSystemUiController()
     val lightTheme = MaterialTheme.colors.isLight
-    DisposableEffect(Unit) {
+    /*DisposableEffect(Unit) {
         if (lightTheme) {
             systemUiController.setStatusBarColor(
                 color = Color.DarkGray,
@@ -45,7 +45,7 @@ fun StoryDetail(
             )
         }
         onDispose {}
-    }
+    }*/
     LaunchedEffect(Unit) {
         if (storyId != null) {
             viewModel.getStoryDetail(storyId)
@@ -55,6 +55,14 @@ fun StoryDetail(
 
     val state by viewModel.state.collectAsState()
     var commentInputHeight by remember { mutableStateOf(0) }
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(state.postCommentSucceed) {
+        if (state.postCommentSucceed) {
+            scrollState.animateScrollTo(scrollState.maxValue)
+            viewModel.dismissPostCommentSucceed()
+        }
+    }
 
     Box {
         Scaffold(

@@ -8,10 +8,10 @@ import com.unlone.app.android.ui.UnloneApp
 /**
  * Destinations used in the [UnloneApp].
  */
-enum class UnloneBottomDestinations(val icon: Int, val route: String) {
-    Write(icon = R.drawable.ic_write, route = "write"),
-    Stories(icon = R.drawable.ic_book, route = "stories"),
-    Profile(icon = R.drawable.ic_profile, route = "profiles");
+enum class UnloneBottomDestinations(val icon: Int, val route: String, val label: String?) {
+    Write(icon = R.drawable.ic_write, route = "write", label = null),
+    Stories(icon = R.drawable.ic_book, route = "stories", label = null),
+    Profile(icon = R.drawable.ic_profile, route = "profiles", label = null);
 }
 
 interface UnloneDestination {
@@ -72,11 +72,10 @@ object Report : UnloneDestination {
     )
 }
 
-enum class ReportType{
+enum class ReportType {
     story,
     comment
 }
-
 
 
 // profiles

@@ -2,6 +2,10 @@
 <resources>
     <string name="my_string">DLLMCH</string>
 
+    <string name="bottom_nav_bar_label__write">寫東西</string>
+    <string name="bottom_nav_bar_label__stories">故事</string>
+    <string name="bottom_nav_bar_label__profile">Profile</string>
+
     <string name="sign_in__title">登入</string>
     <string name="sign_in__btn_sign_in">登入</string>
     <string name="sign_in__btn_sign_in_instead">我想登入</string>

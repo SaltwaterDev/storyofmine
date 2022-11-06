@@ -10,6 +10,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -67,9 +68,10 @@ fun UnloneBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .height(56.dp)
+                .height(48.dp)
                 .selectableGroup(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             content = {
                 // tune system bar color
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -81,7 +83,7 @@ fun UnloneBottomBar(
                                 painterResource(id = screen.icon), contentDescription = null
                             )
                         },
-                        label = { Text(screen.name) },
+//                        label = { screen.label?.let { Text(it) } },
                         selected = currentDestination?.hierarchy?.any { (it.route) == screen.route } == true,
                         onClick = { appState.navigateToBottomBarRoute(screen.route) },
                     )
