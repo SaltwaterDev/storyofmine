@@ -17,25 +17,43 @@ struct TopicStoriesView: View {
                 .padding(.leading)
                 .font(.title)
             
-            TabView{
-                ForEach(topicStories.stories) {story in
-                    VStack{
-                        NavigationLink{
-                            StoryDetailScreen(storyId: story.id)
-                        } label: {
-                            StoryCardView(
-                                title: story.title, bodyText: story.bodyText
-                            )
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(topicStories.stories) {story in
+                        VStack{
+                            NavigationLink{
+                                StoryDetailScreen(storyId: story.id)
+                            } label: {
+                                StoryCardView(
+                                    title: story.title, bodyText: story.bodyText
+                                )
+                            }
+                            Spacer()
                         }
-                        Spacer()
+                        .padding(.all, 10)
+                        .frame(alignment: .topLeading)
                     }
                 }
-                .padding(.all, 10)
-                .frame(alignment: .topLeading)
-                    
             }
             .frame(height: 200)
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+//            TabView{
+//                ForEach(topicStories.stories) {story in
+//                    VStack{
+//                        NavigationLink{
+//                            StoryDetailScreen(storyId: story.id)
+//                        } label: {
+//                            StoryCardView(
+//                                title: story.title, bodyText: story.bodyText
+//                            )
+//                        }
+//                        Spacer()
+//                    }
+//                }
+//                .padding(.all, 10)
+//                .frame(alignment: .topLeading)
+//            }
+//            .frame(height: 200)
+//            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         }
     }
 }

@@ -30,6 +30,7 @@ class WritingViewModel: ObservableObject {
     @Published var saveAllowed: Bool = false
     @Published var error: String? = nil
     @Published var postSuccess: Bool = false
+    @Published var showPostPopup: Bool = false
     @Published var loading: Bool = false
     @Published var isUserSignedIn: Bool = false
     
@@ -126,65 +127,69 @@ class WritingViewModel: ObservableObject {
             self.loading = false
         }
     }
-        
-        func saveDraft() {
-            Task {
-                do {
-                    guard !self.title.isEmpty else { return }
-                    try await saveDraftUseCase.invoke(id: self.currentDraftId, title: self.title, content: self.content)
-                } catch{ print(error) }
-            }
+    
+    func saveDraft() {
+        Task {
+            do {
+                guard !self.title.isEmpty else { return }
+                try await saveDraftUseCase.invoke(id: self.currentDraftId, title: self.title, content: self.content)
+            } catch{ print(error) }
         }
-        
-        func createNewDraft() {
-            saveDraft()
-            let result = createNewDraftUseCase.invoke()
-            // Get data from result
-            self.currentDraftId = result["id"] as? String
-            self.title = result["title"] as! String
-            self.selectedTopic = result["selectedTopic"] as! String
-            self.content = result["content"] as! String
-            
-        }
-        
-        func switchDraft(id: String) {
-            saveDraft()
-            Task {
-                do {
-                    try await queryDraftUseCase.invoke(id: id, version: nil).collect(collector: Collector<KotlinPair<NSString, DraftVersion>> { draft in
-                        print(draft)
-                        DispatchQueue.main.async {
-                            self.currentDraftId = draft.first as? String ?? ""
-                            self.title = draft.second?.title as? String ?? ""
-                            self.content = draft.second?.content as? String ?? ""
-                        }
-                    })
-                } catch {
-                    print(error)
-                }
-            }
-        }
-        
-    func postDraft() async{
-        do{
-            self.loading = true
-            
-            let result = try await postStoryUseCase.invoke(title: self.title, content: self.content, topic: self.selectedTopic, isPublished: self.isPublished, commentAllowed: self.commentAllowed, saveAllowed: self.saveAllowed)
-            
-            switch (result){
-            case is StoryResultSuccess<KotlinUnit>:
-                createNewDraft()
-                self.postSuccess = true
-                self.loading = false
-                break
-            default:
-                self.error = result.errorMsg
-                self.loading = false
-                break
-            }
-        }catch{ print(error) }
     }
+    
+    func createNewDraft() {
+        saveDraft()
+        let result = createNewDraftUseCase.invoke()
+        // Get data from result
+        self.currentDraftId = result["id"] as? String
+        self.title = result["title"] as! String
+        self.selectedTopic = result["selectedTopic"] as! String
+        self.content = result["content"] as! String
         
+    }
+    
+    func switchDraft(id: String) {
+        saveDraft()
+        Task {
+            do {
+                try await queryDraftUseCase.invoke(id: id, version: nil).collect(collector: Collector<KotlinPair<NSString, DraftVersion>> { draft in
+                    print(draft)
+                    DispatchQueue.main.async {
+                        self.currentDraftId = draft.first as? String ?? ""
+                        self.title = draft.second?.title as? String ?? ""
+                        self.content = draft.second?.content as? String ?? ""
+                    }
+                })
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func postDraft() {
+        Task {
+            do{
+                self.showPostPopup = false
+                self.loading = true
+
+                let result = try await postStoryUseCase.invoke(title: self.title, content: self.content, topic: self.selectedTopic, isPublished: self.isPublished, commentAllowed: self.commentAllowed, saveAllowed: self.saveAllowed)
+
+                switch (result) {
+                case is StoryResultSuccess<KotlinUnit>:
+                    createNewDraft()
+                    self.loading = false
+                    self.postSuccess = true
+                    break
+                default:
+                    self.error = result.errorMsg
+                    self.loading = false
+                    self.postSuccess = false
+                    break
+                }
+            } catch { print(error) }
+        }
+    }
+    
     func dismiss() {
         self.error = nil
         self.postSuccess = false

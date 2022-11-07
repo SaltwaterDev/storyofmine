@@ -20,18 +20,19 @@ struct StoryCardView: View {
                 .font(.headline)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: UIScreen.screenWidth - 60, alignment: .leading)
             
             Text(bodyText)
                 .font(.body)
                 .lineLimit(4)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: UIScreen.screenWidth - 60, alignment: .leading)
         }
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .opacity(0)
+                .fill(Color.init(red: 255, green: 245, blue: 158))
+                .opacity(1)
                 .shadow(radius: 8)
         )
         

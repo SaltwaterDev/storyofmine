@@ -37,6 +37,9 @@
 		F572174D28689CCF002F1669 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F572174C28689CCF002F1669 /* LoginScreen.swift */; };
 		F5AAE8242882AC1300B8A2BB /* StoriesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AAE8232882AC1300B8A2BB /* StoriesViewModel.swift */; };
 		F5F6B03C2856628700756A0D /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F6B03B2856628600756A0D /* SignUpViewModel.swift */; };
+		FE12C3A829166DD200E17971 /* UIScreen+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C3A729166DD200E17971 /* UIScreen+Extentions.swift */; };
+		FE12C3AB2917A8F600E17971 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C3AA2917A8F600E17971 /* CustomButton.swift */; };
+		FE12C3AD2917ABDA00E17971 /* DropdownPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C3AC2917ABDA00E17971 /* DropdownPicker.swift */; };
 		FE33C34E28C4EFE90075E875 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE33C34D28C4EFE90075E875 /* MenuView.swift */; };
 		FE71DD9228E9E02500A68883 /* Collector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71DD9128E9E02500A68883 /* Collector.swift */; };
 		FE71DD9D28EA0CBD00A68883 /* WritingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71DD9C28EA0CBD00A68883 /* WritingViewModel.swift */; };
@@ -74,6 +77,9 @@
 		F572174C28689CCF002F1669 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		F5AAE8232882AC1300B8A2BB /* StoriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesViewModel.swift; sourceTree = "<group>"; };
 		F5F6B03B2856628600756A0D /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
+		FE12C3A729166DD200E17971 /* UIScreen+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extentions.swift"; sourceTree = "<group>"; };
+		FE12C3AA2917A8F600E17971 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		FE12C3AC2917ABDA00E17971 /* DropdownPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownPicker.swift; sourceTree = "<group>"; };
 		FE33C34D28C4EFE90075E875 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		FE71DD9128E9E02500A68883 /* Collector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collector.swift; sourceTree = "<group>"; };
 		FE71DD9C28EA0CBD00A68883 /* WritingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WritingViewModel.swift; sourceTree = "<group>"; };
@@ -107,6 +113,7 @@
 		2B425AF928AE76A200906522 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				FE12C3A92917A8DC00E17971 /* Common */,
 				2B425AFA28AE76BF00906522 /* StoryCardView.swift */,
 				2B425AFC28AE7CFC00906522 /* TopicStoriesView.swift */,
 				FE33C34F28C4F4210075E875 /* Menu */,
@@ -183,6 +190,7 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				FE12C3A629166DB200E17971 /* Extensions */,
 				2B425AFE28AE865E00906522 /* Model */,
 				F50AD2132856200900CD4CBC /* ViewModel */,
 				F507A104284CA87F00CA7936 /* ui */,
@@ -247,6 +255,23 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		FE12C3A629166DB200E17971 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FE12C3A729166DD200E17971 /* UIScreen+Extentions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		FE12C3A92917A8DC00E17971 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				FE12C3AA2917A8F600E17971 /* CustomButton.swift */,
+				FE12C3AC2917ABDA00E17971 /* DropdownPicker.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		FE33C34A28C1264B0075E875 /* writing */ = {
 			isa = PBXGroup;
 			children = (
@@ -284,6 +309,7 @@
 				7555FF79242A565900829871 /* Resources */,
 				B9D7D8C410381396E9AC3FF1 /* Frameworks */,
 				2B425AEE289E232700906522 /* ShellScript */,
+				DBA608BF9FE172244770D75A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -388,6 +414,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		DBA608BF9FE172244770D75A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -399,6 +442,8 @@
 				2B425B0B28B0798200906522 /* OtpViewModel.swift in Sources */,
 				FE71DD9D28EA0CBD00A68883 /* WritingViewModel.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				FE12C3AD2917ABDA00E17971 /* DropdownPicker.swift in Sources */,
+				FE12C3AB2917A8F600E17971 /* CustomButton.swift in Sources */,
 				F50AD2152856203200CD4CBC /* SignInViewModel.swift in Sources */,
 				2B425B0928AF709300906522 /* StoryDetailScreen.swift in Sources */,
 				F5AAE8242882AC1300B8A2BB /* StoriesViewModel.swift in Sources */,
@@ -409,6 +454,7 @@
 				2B425AFB28AE76BF00906522 /* StoryCardView.swift in Sources */,
 				2B425AF028A695EF00906522 /* OtpEmailConfirmScreen.swift in Sources */,
 				2B425AF828A9320800906522 /* UsernameScreen.swift in Sources */,
+				FE12C3A829166DD200E17971 /* UIScreen+Extentions.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				F54301D6287ABFD00015D14D /* SignUpScreen.swift in Sources */,
 				2B425AFD28AE7CFC00906522 /* TopicStoriesView.swift in Sources */,
