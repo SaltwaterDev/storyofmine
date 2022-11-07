@@ -57,7 +57,7 @@ class StoriesViewModel: ObservableObject {
             let getUsernameResponse = try await authRepo.getUsername()
             switch (getUsernameResponse){
                 case is AuthResultAuthorized<NSString>:
-                    if( getUsernameResponse.data != nil){
+                    if(getUsernameResponse.data != nil){
                         username = getUsernameResponse.data as String?
                     }
                 default:

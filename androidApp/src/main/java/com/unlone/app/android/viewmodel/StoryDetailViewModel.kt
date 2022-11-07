@@ -1,6 +1,5 @@
 package com.unlone.app.android.viewmodel
 
-import android.net.Network
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.story.CommentRepository

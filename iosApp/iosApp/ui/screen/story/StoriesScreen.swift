@@ -111,8 +111,8 @@ struct StoriesScreen: View {
 extension StoriesScreen {
     func initData() async {
         storiesViewModel.loading = true
-        await self.storiesViewModel.getStoriesItems()
         await self.storiesViewModel.getUserName()
+        await self.storiesViewModel.getStoriesItems()
         storiesViewModel.loading = false
     }
 }

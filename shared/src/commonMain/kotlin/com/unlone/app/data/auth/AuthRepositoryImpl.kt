@@ -18,7 +18,7 @@ internal class AuthRepositoryImpl(
 
     init {
         // todo: di coroutine
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             authenticate()
         }
     }
