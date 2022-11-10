@@ -25,7 +25,8 @@ interface StoryApi {
     suspend fun getAllTopics(): AllTopicResponse
     suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse
     suspend fun fetchStoriesByTopic(
-        topic: String,
+        topic: String? = null,
+        requestedStory: String? = null,
         pagingSize: Int,
         page: Int?
     ): StoriesPerTopicsResponse
@@ -108,13 +109,15 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     }
 
     override suspend fun fetchStoriesByTopic(
-        topic: String,
+        topic: String?,
+        requestedStory: String?,
         pagingSize: Int,
         page: Int?
     ): StoriesPerTopicsResponse {
         val response = client.get("$baseUrl/story/allStoriesFromTopic") {
             url {
-                parameters.append("topic", topic)
+                topic?.let { it1 -> parameters.append("topic", it1) }
+                requestedStory?.let { it1 -> parameters.append("requestedStory", it1) }
                 parameters.append("pagingSize", pagingSize.toString())
                 page?.let { parameters.append("page", page.toString()) }
             }

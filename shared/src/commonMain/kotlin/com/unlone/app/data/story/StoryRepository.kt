@@ -30,7 +30,8 @@ interface StoryRepository {
     ): StoryResult<Story>
 
     suspend fun fetchStoriesByTopic(
-        topic: String,
+        topic: String?,
+        requestedStory: String?,
         pagingItems: Int,
         page: Int?,
     ): StoryResult<List<SimpleStory>>
@@ -105,13 +106,14 @@ internal class StoryRepositoryImpl(
     }
 
     override suspend fun fetchStoriesByTopic(
-        topic: String,
+        topic: String?,
+        requestedStory: String?,
         pagingItems: Int,
         page: Int?
     ): StoryResult<List<SimpleStory>> {
         return try {
             val response = storyApi.fetchStoriesByTopic(
-                topic, pagingItems, page
+                topic, requestedStory, pagingItems, page
             )
             StoryResult.Success(response.data.flatMap {
                 it.stories
