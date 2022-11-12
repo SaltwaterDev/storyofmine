@@ -15,7 +15,7 @@ import io.ktor.utils.io.charsets.Charsets
 
 
 interface StoryApi {
-    suspend fun postStory(request: StoryRequest, jwt: String)
+    suspend fun postStory(request: StoryRequest, jwt: String): String
     suspend fun fetchStoriesPerPost(
         postsPerTopic: Int,
         pagingItems: Int,
@@ -73,12 +73,13 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     private val baseUrl = serverUrl
 
 
-    override suspend fun postStory(request: StoryRequest, jwt: String) {
-        client.post("$baseUrl/story/post") {
+    override suspend fun postStory(request: StoryRequest, jwt: String): String {
+        val response = client.post("$baseUrl/story/post") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Bearer $jwt")
             setBody(request)
         }
+        return response.body()
     }
 
     override suspend fun fetchStoriesPerPost(

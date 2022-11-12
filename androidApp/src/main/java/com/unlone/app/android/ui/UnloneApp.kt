@@ -83,7 +83,7 @@ fun UnloneBottomBar(
                                 painterResource(id = screen.icon), contentDescription = null
                             )
                         },
-//                        label = { screen.label?.let { Text(it) } },
+                        label = { screen.label?.let { Text(it) } },
                         selected = currentDestination?.hierarchy?.any { (it.route) == screen.route } == true,
                         onClick = { appState.navigateToBottomBarRoute(screen.route) },
                     )

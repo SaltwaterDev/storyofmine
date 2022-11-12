@@ -15,10 +15,7 @@ import com.unlone.app.data.write.GuidingQuestionsRepository
 import com.unlone.app.data.write.GuidingQuestionsRepositoryImpl
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.auth.ValidPasswordUseCase
-import com.unlone.app.domain.useCases.stories.FetchStoriesByTopicUseCase
-import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
-import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
-import com.unlone.app.domain.useCases.stories.FetchTopicStoriesItemWithRequestedStoryUseCase
+import com.unlone.app.domain.useCases.stories.*
 import com.unlone.app.domain.useCases.write.*
 import com.unlone.app.httpClientEngine
 import com.unlone.app.utils.KMMPreference
@@ -40,8 +37,9 @@ val commonModule = module {
 
     // use cases
     singleOf(::CreateNewDraftUseCase)
+    singleOf(::FetchTopicStoryUseCase)
     singleOf(::FetchStoriesByTopicUseCase)
-    singleOf(::FetchTopicStoriesItemWithRequestedStoryUseCase)
+    singleOf(::GetTopicStoriesForRequestedStoryUseCase)
     singleOf(::FetchStoryDetailUseCase)
     singleOf(::FetchStoryItemsUseCase)
     singleOf(::GetAllDraftsTitleUseCase)

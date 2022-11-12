@@ -17,7 +17,7 @@ class PostStoryUseCase(
         isPublished: Boolean,
         commentAllowed: Boolean,
         saveAllowed: Boolean,
-    ): StoryResult<Unit> {
+    ): StoryResult<String> {
         // check if title and content are not empty
         if (title.isEmpty() || content.isEmpty()){
             return StoryResult.Failed("Title and content should not be empty.")

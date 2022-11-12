@@ -72,8 +72,10 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(Ktor.okHttp)
+                implementation("androidx.startup:startup-runtime:1.1.1")
                 // security
                 implementation("androidx.security:security-crypto:1.0.0")
+
             }
         }
         val androidTest by getting {

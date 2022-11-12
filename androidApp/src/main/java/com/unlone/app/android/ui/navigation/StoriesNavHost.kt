@@ -3,8 +3,11 @@ package com.unlone.app.android.ui.navigation
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
+import com.unlone.app.android.ui.findStartDestination
 import com.unlone.app.android.ui.stories.ReportScreen
 import com.unlone.app.android.ui.stories.StoriesScreen
 import com.unlone.app.android.ui.stories.StoryDetail
@@ -28,11 +31,18 @@ fun NavGraphBuilder.storiesGraph(
     ) {
 
         composable(
-            UnloneBottomDestinations.Stories.route,
+            UnloneBottomDestinations.Stories.route + "?requestedStoryId={requestedStoryId}",
+            arguments = listOf(navArgument("requestedStoryId") {
+                type = NavType.StringType
+                nullable = true
+            }),
         ) {
+            val requestedStoryId: String? = it.arguments?.getString("requestedStoryId")
+
             val viewModel = koinViewModel<StoriesViewModel>()
             StoriesScreen(
                 viewModel = viewModel,
+                requestedStoryId = requestedStoryId,
                 navToPostDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navigateToTopicDetail(navController, it) },
                 navToSignIn = { navigateToSignInEmail(navController) },
@@ -90,9 +100,20 @@ fun NavGraphBuilder.storiesGraph(
 }
 
 
+fun navigateToStoriesScreen(navController: NavHostController, sid: String) {
+    navController.navigate(UnloneBottomDestinations.Stories.route + "?requestedStoryId=$sid}") {
+        // Pop up backstack to the first destination and save state. This makes going back
+        // to the start destination when pressing back in any other bottom tab.
+        popUpTo(findStartDestination(navController.graph).id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
 
-fun navigateToStoryDetail(navController: NavHostController, pid: String) {
-    navController.navigate("${StoryDetail.route}/$pid")
+fun navigateToStoryDetail(navController: NavHostController, sid: String) {
+    navController.navigate("${StoryDetail.route}/$sid")
 }
 
 fun navigateToTopicDetail(navController: NavHostController, topicId: String) {

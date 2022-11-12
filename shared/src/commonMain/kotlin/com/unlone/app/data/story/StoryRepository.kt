@@ -23,7 +23,7 @@ interface StoryRepository {
         isPublished: Boolean,
         commentAllowed: Boolean,
         saveAllowed: Boolean,
-    ): StoryResult<Unit>
+    ): StoryResult<String>
 
     suspend fun fetchStoryDetail(
         id: String
@@ -72,9 +72,9 @@ internal class StoryRepositoryImpl(
         isPublished: Boolean,
         commentAllowed: Boolean,
         saveAllowed: Boolean,
-    ): StoryResult<Unit> {
+    ): StoryResult<String> {
         return try {
-            storyApi.postStory(
+            val response = storyApi.postStory(
                 StoryRequest(
                     title = title,
                     content = content,
@@ -82,7 +82,7 @@ internal class StoryRepositoryImpl(
                 ),
                 jwt = jwt,
             )
-            StoryResult.Success()
+            StoryResult.Success(response)
         } catch (e: Exception) {
             Logger.e { e.toString() }
             StoryResult.Failed(errorMsg = e.message)

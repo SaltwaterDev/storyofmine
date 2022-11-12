@@ -46,6 +46,7 @@ fun WritingScreen(
     draftVersionId: String?,
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
+    onPostSucceed: (String) -> Unit,
 ) {
     val uiState = viewModel.state.collectAsState().value
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
@@ -79,6 +80,10 @@ fun WritingScreen(
         }
     }
 
+    LaunchedEffect(uiState.postSuccess) {
+        if (uiState.postSuccess)
+            uiState.postSucceedStory?.let { onPostSucceed(it) }
+    }
 
     BottomSheetScaffold(
         modifier = Modifier
@@ -260,18 +265,6 @@ fun WritingScreen(
                             modifier = Modifier.align(CenterVertically)
                         )
                         CircularProgressIndicator(Modifier.padding(start = 4.dp))
-                    }
-                }
-
-            if (uiState.postSuccess)
-                Dialog(
-                    onDismissRequest = viewModel::dismiss,
-                ) {
-                    Card {
-                        Text(
-                            text = stringResource(resource = SharedRes.strings.writing__post_success),
-                            modifier = Modifier.padding(15.dp)
-                        )
                     }
                 }
 

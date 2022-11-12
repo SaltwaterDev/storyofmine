@@ -34,6 +34,7 @@ import org.example.library.SharedRes
 @Composable
 fun StoriesScreen(
     viewModel: StoriesViewModel,
+    requestedStoryId: String? = null,
     navToPostDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
     navToSignIn: () -> Unit = {},
@@ -47,6 +48,10 @@ fun StoriesScreen(
 
     LaunchedEffect(state.isUserLoggedIn) {
         viewModel.initData()
+    }
+    
+    LaunchedEffect(requestedStoryId){
+
     }
 
     if (state.networkState !is NetworkState.Ok) {

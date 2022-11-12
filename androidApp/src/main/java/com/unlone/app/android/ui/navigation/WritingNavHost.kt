@@ -43,7 +43,18 @@ fun NavGraphBuilder.writeGraph(
                 draftId,
                 version,
                 navToEditHistory = { id -> navToEditHistory(navController, id) },
-                navToSignIn = { navigateToAuth(navController, UnloneBottomDestinations.Write.route) },
+                navToSignIn = {
+                    navigateToAuth(
+                        navController,
+                        UnloneBottomDestinations.Write.route
+                    )
+                },
+                onPostSucceed = { succeedStory ->
+                    navigateToStoriesScreen(
+                        navController,
+                        succeedStory
+                    )
+                }
             )
         }
 

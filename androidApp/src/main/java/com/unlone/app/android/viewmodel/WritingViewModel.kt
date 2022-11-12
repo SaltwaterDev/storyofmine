@@ -38,6 +38,7 @@ data class WritingUiState(
     internal val guidingQuestion: List<GuidingQuestion> = listOf(),
     val displayingGuidingQuestion: GuidingQuestion? = null,
     val networkState: NetworkState = NetworkState.Ok,
+    val postSucceedStory: String? = null,
 )
 
 
@@ -273,6 +274,7 @@ class WritingViewModel(
                 is StoryResult.Success -> {
                     state.value.currentDraftId?.let { deleteDraft(it) } ?: createNewDraft()
                     state.value.copy(
+                        postSucceedStory = result.data,
                         postSuccess = true,
                     )
                 }

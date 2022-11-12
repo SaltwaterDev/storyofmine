@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
+import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
 import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
+import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ class StoriesViewModel(
     private val authRepository: AuthRepository,
     private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
     private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
+    private val getTopicStoriesForRequestedStoryUseCase: GetTopicStoriesForRequestedStoryUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<StoriesScreenUiState> =
@@ -41,6 +43,9 @@ class StoriesViewModel(
     val state = _state.asStateFlow()
 
     val storiesByTopics = fetchStoryItemsUseCase()
+    var storiesFromRequest = MutableStateFlow(StoryItem.StoriesByTopic())
+        private set
+
 
     init {
         viewModelScope.launch {
@@ -103,6 +108,18 @@ class StoriesViewModel(
                 is AuthResult.UnknownError -> _state.value.copy(
                     errorMsg = "Unknown error: " + authResult.errorMsg
                 )
+            }
+        }
+    }
+
+    fun loadStoriesFromRequest(requestStory: String) {
+        viewModelScope.launch {
+            when(val result = getTopicStoriesForRequestedStoryUseCase(requestStory)){
+                is StoryResult.Success -> {
+                     result.data?.let { storiesFromRequest.value = it }
+                }
+                is StoryResult.Failed -> { /*todo*/ }
+                is StoryResult.UnknownError -> { /*todo*/ }
             }
         }
     }

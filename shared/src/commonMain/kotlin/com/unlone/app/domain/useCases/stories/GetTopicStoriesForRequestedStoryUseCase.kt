@@ -3,8 +3,10 @@ package com.unlone.app.domain.useCases.stories
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.entities.StoryItem
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-class FetchTopicStoriesItemWithRequestedStoryUseCase(private val storyRepository: StoryRepository) {
+class GetTopicStoriesForRequestedStoryUseCase(private val storyRepository: StoryRepository) {
     suspend operator fun invoke(
         requestStory: String,
         lastItemId: Int? = null
@@ -17,13 +19,15 @@ class FetchTopicStoriesItemWithRequestedStoryUseCase(private val storyRepository
                 pagingItems,
                 lastItemId
             )) {
-            is StoryResult.Success -> StoryResult.Success(
-                result.data?.first()?.topic?.let {
-                    StoryItem.StoriesByTopic(
-                        it,
-                        result.data,
-                    )
-                })
+            is StoryResult.Success ->
+                StoryResult.Success(
+                    result.data?.first()?.topic?.let {
+                        StoryItem.StoriesByTopic(
+                            it,
+                            result.data,
+                        )
+                    })
+
             is StoryResult.Failed -> StoryResult.Failed(result.errorMsg)
             is StoryResult.UnknownError -> StoryResult.UnknownError(result.errorMsg)
         }
