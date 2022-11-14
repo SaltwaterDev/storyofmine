@@ -13,6 +13,7 @@ import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -43,7 +44,7 @@ class StoriesViewModel(
     val state = _state.asStateFlow()
 
     val storiesByTopics = fetchStoryItemsUseCase()
-    var storiesFromRequest = MutableStateFlow(StoryItem.StoriesByTopic())
+    var storiesFromRequest = MutableStateFlow<StoryItem.StoriesByTopic?>(null)
         private set
 
 
@@ -114,12 +115,16 @@ class StoriesViewModel(
 
     fun loadStoriesFromRequest(requestStory: String) {
         viewModelScope.launch {
-            when(val result = getTopicStoriesForRequestedStoryUseCase(requestStory)){
+            when (val result = getTopicStoriesForRequestedStoryUseCase(requestStory)) {
                 is StoryResult.Success -> {
-                     result.data?.let { storiesFromRequest.value = it }
+                    result.data?.let { storiesFromRequest.value = it }
                 }
-                is StoryResult.Failed -> { /*todo*/ }
-                is StoryResult.UnknownError -> { /*todo*/ }
+                is StoryResult.Failed -> {
+                    _state.value = _state.value.copy(errorMsg = result.errorMsg)
+                }
+                is StoryResult.UnknownError -> {
+                    _state.value = _state.value.copy(errorMsg = result.errorMsg)
+                }
             }
         }
     }

@@ -24,6 +24,7 @@ import org.koin.androidx.compose.koinViewModel
 )
 fun NavGraphBuilder.writeGraph(
     navController: NavHostController,
+    navToStories: (String) -> Unit,
 ) {
 
     navigation(
@@ -50,10 +51,7 @@ fun NavGraphBuilder.writeGraph(
                     )
                 },
                 onPostSucceed = { succeedStory ->
-                    navigateToStoriesScreen(
-                        navController,
-                        succeedStory
-                    )
+                    navToStories(succeedStory)
                 }
             )
         }

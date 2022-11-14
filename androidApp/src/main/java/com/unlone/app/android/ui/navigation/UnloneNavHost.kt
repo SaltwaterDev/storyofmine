@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
+import com.unlone.app.android.ui.UnloneAppState
 import com.unlone.app.android.viewmodel.*
 
 
@@ -19,9 +20,11 @@ import com.unlone.app.android.viewmodel.*
 )
 @Composable
 fun MainNavHost(
+    appState: UnloneAppState,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+
 ) {
     NavHost(
         navController = navController,
@@ -41,7 +44,9 @@ fun MainNavHost(
             },
         )
 
-        writeGraph(navController)
+        writeGraph(navController, navToStories = {
+            appState.navigateToBottomBarRoute(UnloneBottomDestinations.Stories.route + "?requestedStoryId=$it")
+        })
         storiesGraph(navController, navigateUp)
         profileGraph(navController, navigateUp)
 

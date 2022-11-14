@@ -42,7 +42,7 @@ fun UnloneApp() {
                 exit = slideOutVertically(targetOffsetY = { it }),
                 content = { UnloneBottomBar(appState) })
         }) { contentPadding ->
-            MainNavHost(navController, Modifier.padding(contentPadding), appState::upPress)
+            MainNavHost(appState, navController, Modifier.padding(contentPadding), appState::upPress)
         }
     }
 }
@@ -68,7 +68,7 @@ fun UnloneBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .height(48.dp)
+                .height(56.dp)
                 .selectableGroup(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -84,8 +84,8 @@ fun UnloneBottomBar(
                             )
                         },
                         label = { screen.label?.let { Text(it) } },
-                        selected = currentDestination?.hierarchy?.any { (it.route) == screen.route } == true,
-                        onClick = { appState.navigateToBottomBarRoute(screen.route) },
+                        selected = currentDestination?.hierarchy?.any { (it.route) == screen.routeWithArgs } == true,
+                        onClick = { appState.navigateToBottomBarRoute(screen.routeWithArgs) },
                     )
                 }
             }

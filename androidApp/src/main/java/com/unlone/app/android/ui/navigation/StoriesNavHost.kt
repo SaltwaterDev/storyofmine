@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,6 +18,7 @@ import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import com.unlone.app.android.viewmodel.TopicDetailViewModel
 import org.koin.androidx.compose.koinViewModel
+import com.unlone.app.android.ui.rememberUnloneAppState as rememberUnloneAppState1
 
 
 @ExperimentalAnimationApi
@@ -31,11 +33,8 @@ fun NavGraphBuilder.storiesGraph(
     ) {
 
         composable(
-            UnloneBottomDestinations.Stories.route + "?requestedStoryId={requestedStoryId}",
-            arguments = listOf(navArgument("requestedStoryId") {
-                type = NavType.StringType
-                nullable = true
-            }),
+            UnloneBottomDestinations.Stories.routeWithArgs,
+            arguments = UnloneBottomDestinations.Stories.arguments,
         ) {
             val requestedStoryId: String? = it.arguments?.getString("requestedStoryId")
 
@@ -43,7 +42,7 @@ fun NavGraphBuilder.storiesGraph(
             StoriesScreen(
                 viewModel = viewModel,
                 requestedStoryId = requestedStoryId,
-                navToPostDetail = { navigateToStoryDetail(navController, it) },
+                navToStoryDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navigateToTopicDetail(navController, it) },
                 navToSignIn = { navigateToSignInEmail(navController) },
                 navToSignUp = { navigateToSignUp(navController) }
@@ -96,19 +95,6 @@ fun NavGraphBuilder.storiesGraph(
                 reported = reported,
                 back = { navController.popBackStack() })
         }
-    }
-}
-
-
-fun navigateToStoriesScreen(navController: NavHostController, sid: String) {
-    navController.navigate(UnloneBottomDestinations.Stories.route + "?requestedStoryId=$sid}") {
-        // Pop up backstack to the first destination and save state. This makes going back
-        // to the start destination when pressing back in any other bottom tab.
-        popUpTo(findStartDestination(navController.graph).id) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
     }
 }
 

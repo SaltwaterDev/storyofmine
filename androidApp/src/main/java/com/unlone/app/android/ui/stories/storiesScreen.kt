@@ -35,13 +35,15 @@ import org.example.library.SharedRes
 fun StoriesScreen(
     viewModel: StoriesViewModel,
     requestedStoryId: String? = null,
-    navToPostDetail: (String) -> Unit = {},
+    navToStoryDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
     navToSignIn: () -> Unit = {},
     navToSignUp: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
     val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
+    val storiesFromRequest = viewModel.storiesFromRequest.collectAsState().value
+
     val coroutineScope = rememberCoroutineScope()
     val refreshState =
         rememberSwipeRefreshState(storiesByTopics.loadState.refresh is LoadState.Loading)
@@ -49,9 +51,9 @@ fun StoriesScreen(
     LaunchedEffect(state.isUserLoggedIn) {
         viewModel.initData()
     }
-    
-    LaunchedEffect(requestedStoryId){
 
+    LaunchedEffect(requestedStoryId) {
+        requestedStoryId?.let { viewModel.loadStoriesFromRequest(it) }
     }
 
     if (state.networkState !is NetworkState.Ok) {
@@ -97,15 +99,26 @@ fun StoriesScreen(
                         )
                     }
 
-                    items(storiesByTopics, key = { it.topic }) {
-                        PostsByTopic(
-                            it!!.topic,
-                            state.loading,
-                            it.stories,
-                            { navToTopicPosts(it.topic) }
-                        ) { pid ->
-                            navToPostDetail(pid)
+                    storiesFromRequest?.let {
+                        item {
+                            PostsByTopic(
+                                topic = it.topic,
+                                loading = state.loading,
+                                stories = it.stories,
+                                viewMorePost = { navToTopicPosts(it.topic) },
+                                navToPostDetail = { sid -> navToStoryDetail(sid) }
+                            )
+                            Spacer(modifier = Modifier.height(30.dp))
                         }
+                    }
+                    items(storiesByTopics, key = { it.topic }) {
+                        if (storiesFromRequest?.topic != it!!.topic)
+                            PostsByTopic(
+                                it.topic,
+                                state.loading,
+                                it.stories,
+                                { navToTopicPosts(it.topic) }
+                            ) { sid -> navToStoryDetail(sid) }
                         Spacer(modifier = Modifier.height(30.dp))
                     }
                 }
