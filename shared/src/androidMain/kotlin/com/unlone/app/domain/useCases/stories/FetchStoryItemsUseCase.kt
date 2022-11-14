@@ -5,14 +5,14 @@ import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesIgnore
 import com.unlone.app.domain.entities.StoryItem
 import kotlinx.coroutines.flow.Flow
 
-expect class FetchStoryItemsUseCase
-//    private val fetchTopicStoryUseCase: FetchTopicStoryUseCase,
-//) {
-//    @NativeCoroutinesIgnore
-//    operator fun invoke(): Flow<PagingData<StoryItem.StoriesByTopic>> {
-//        return fetchTopicStoryUseCase()
-//
-//    }
+actual class FetchStoryItemsUseCase(
+    private val fetchTopicStoryUseCase: FetchTopicStoryUseCase,
+) {
+    @NativeCoroutinesIgnore
+    operator fun invoke(): Flow<PagingData<StoryItem.StoriesByTopic>> {
+        return fetchTopicStoryUseCase()
+
+    }
 
     // region: for ios use
 //    val pagingData: Flow<PagingData<StoryItem.StoriesByTopic>> =
@@ -23,4 +23,4 @@ expect class FetchStoryItemsUseCase
 //    }
     // endregion
 
-//}
+}

@@ -13,7 +13,6 @@ import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -35,7 +34,7 @@ data class StoriesScreenUiState(
 class StoriesViewModel(
     private val authRepository: AuthRepository,
     private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
-    private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
+    fetchStoryItemsUseCase: FetchStoryItemsUseCase,
     private val getTopicStoriesForRequestedStoryUseCase: GetTopicStoriesForRequestedStoryUseCase,
 ) : ViewModel() {
 

@@ -17,7 +17,7 @@ enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneD
     },
     Stories(icon = R.drawable.ic_book, label = "stories") {
         override val route: String = "stories"
-        val optionalRequestedStoryIdArg = "requestedStoryId"
+        private val optionalRequestedStoryIdArg = "requestedStoryId"
         private val typeArg =
             "?${optionalRequestedStoryIdArg}={${optionalRequestedStoryIdArg}}"
 

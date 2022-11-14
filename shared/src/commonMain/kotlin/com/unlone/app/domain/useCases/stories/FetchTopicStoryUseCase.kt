@@ -23,7 +23,7 @@ class FetchTopicStoryUseCase(
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
-    private val pager = Pager(
+    val pager = Pager(
         clientScope = coroutineScope,
         config = pagingConfig,
         initialKey = 0, // Key to use when initialized

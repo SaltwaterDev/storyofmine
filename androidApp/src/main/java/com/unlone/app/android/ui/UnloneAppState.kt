@@ -74,14 +74,11 @@ class UnloneAppState(
     fun navigateToBottomBarRoute(route: String) {
         if (route != currentRoute) {
             Log.d("TAG", "navigateToBottomBarRoute: $currentRoute, $route")
-            Log.d("TAG", "navigateToBottomBarRoute: ${findStartDestination(navController.graph).route}")
             navController.navigate(route) {
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.
-                findStartDestination(navController.graph).route?.let {
-                    popUpTo(it) {
-                        saveState = true
-                    }
+                popUpTo(findStartDestination(navController.graph).id) {
+                    saveState = true
                 }
                 launchSingleTop = true
                 restoreState = true
