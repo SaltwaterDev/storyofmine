@@ -169,6 +169,12 @@ class WritingViewModel(
         }
     }
 
+    suspend fun dismissSucceed() {
+        changedChannel.send(
+            state.value.copy(postSuccess = false)
+        )
+    }
+
     // region option menu feature
     fun clearBody() {
         viewModelScope.launch {
@@ -359,6 +365,8 @@ class WritingViewModel(
                 state.value.copy(displayingGuidingQuestion = guidingQuestionIterator!!.next())
             )
     }
+
     // endregion
+
 
 }

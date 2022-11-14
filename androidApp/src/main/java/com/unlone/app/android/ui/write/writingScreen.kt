@@ -81,8 +81,10 @@ fun WritingScreen(
     }
 
     LaunchedEffect(uiState.postSuccess) {
-        if (uiState.postSuccess)
+        if (uiState.postSuccess) {
             uiState.postSucceedStory?.let { onPostSucceed(it) }
+            viewModel.dismissSucceed()
+        }
     }
 
     BottomSheetScaffold(

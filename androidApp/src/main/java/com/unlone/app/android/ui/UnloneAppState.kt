@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
@@ -72,11 +73,15 @@ class UnloneAppState(
 
     fun navigateToBottomBarRoute(route: String) {
         if (route != currentRoute) {
+            Log.d("TAG", "navigateToBottomBarRoute: $currentRoute, $route")
+            Log.d("TAG", "navigateToBottomBarRoute: ${findStartDestination(navController.graph).route}")
             navController.navigate(route) {
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.
-                popUpTo(findStartDestination(navController.graph).id) {
-                    saveState = true
+                findStartDestination(navController.graph).route?.let {
+                    popUpTo(it) {
+                        saveState = true
+                    }
                 }
                 launchSingleTop = true
                 restoreState = true

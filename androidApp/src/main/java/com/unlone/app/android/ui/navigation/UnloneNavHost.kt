@@ -25,7 +25,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
 
-) {
+    ) {
     NavHost(
         navController = navController,
         startDestination = UnloneBottomDestinations.Write.route,

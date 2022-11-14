@@ -17,7 +17,7 @@ enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneD
     },
     Stories(icon = R.drawable.ic_book, label = "stories") {
         override val route: String = "stories"
-        private val optionalRequestedStoryIdArg = "requestedStoryId"
+        val optionalRequestedStoryIdArg = "requestedStoryId"
         private val typeArg =
             "?${optionalRequestedStoryIdArg}={${optionalRequestedStoryIdArg}}"
 
@@ -26,6 +26,7 @@ enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneD
             type = NavType.StringType
             nullable = true
         })
+
     },
     Profile(icon = R.drawable.ic_profile, label = "profiles") {
         override val route: String = "profiles"
