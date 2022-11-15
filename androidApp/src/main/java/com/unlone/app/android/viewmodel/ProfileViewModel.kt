@@ -39,7 +39,7 @@ class ProfileViewModel(
             username = username,
             errorMsg = error
         )
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, ProfileUiState())
+    }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileUiState())
 
 
     fun signOut() = viewModelScope.launch(Dispatchers.Default) {

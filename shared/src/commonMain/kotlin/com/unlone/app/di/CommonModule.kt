@@ -37,7 +37,6 @@ val commonModule = module {
 
     // use cases
     singleOf(::CreateNewDraftUseCase)
-    singleOf(::FetchTopicStoryUseCase)
     singleOf(::FetchStoriesByTopicUseCase)
     singleOf(::GetTopicStoriesForRequestedStoryUseCase)
     singleOf(::FetchStoryDetailUseCase)
