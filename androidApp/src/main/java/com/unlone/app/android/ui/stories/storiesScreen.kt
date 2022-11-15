@@ -22,11 +22,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.NoNetworkScreen
 import com.unlone.app.android.ui.comonComponent.StoryCard
+import com.unlone.app.android.ui.comonComponent.TopicTable
 import com.unlone.app.android.ui.theme.MontserratFontFamily
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.data.story.SimpleStory
 import com.unlone.app.domain.entities.NetworkState
+import com.unlone.app.domain.entities.StoryItem
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
@@ -114,15 +116,37 @@ fun StoriesScreen(
                             Spacer(modifier = Modifier.height(30.dp))
                         }
                     }
-                    items(storiesByTopics, key = { it.topic }) {
-                        if (storiesFromRequest?.topic != it!!.topic)
-                            PostsByTopic(
-                                it.topic,
-                                state.loading,
-                                it.stories,
-                                { navToTopicPosts(it.topic) }
-                            ) { sid -> navToStoryDetail(sid) }
-                        Spacer(modifier = Modifier.height(30.dp))
+                    items(storiesByTopics, key = {
+                        if (it is StoryItem.TopicTable) it.topics else it.hashCode()
+                    }) {
+                        when (it) {
+                            is StoryItem.TopicTable -> {
+                                TopicTable(
+                                    modifier = Modifier.padding(16.dp),
+                                    topics = it.topics,
+                                    onTopicClick = navToTopicPosts
+                                ) {
+                                    // todo: nav to all topics screen
+                                }
+                            }
+                            is StoryItem.StoriesByTopic -> {
+                                if (storiesFromRequest?.topic != it.topic)
+                                    PostsByTopic(
+                                        it.topic,
+                                        state.loading,
+                                        it.stories,
+                                        { navToTopicPosts(it.topic) }
+                                    ) { sid -> navToStoryDetail(sid) }
+                                Spacer(modifier = Modifier.height(30.dp))
+                            }
+                            is StoryItem.UnknownError -> {
+//                                todo: make use of its error Msg
+                            }
+                            null -> {
+//                                todo: maybe do nothing?
+                            }
+                        }
+
                     }
                 }
             }
@@ -181,7 +205,7 @@ fun PostsByTopic(
                     modifier = Modifier
                         .clickable { viewMorePost() }
                         .padding(start = 8.dp, top = 8.dp, end = 8.dp),
-                    fontSize = 10.sp,
+                    fontSize = 13.sp,
                 )
         }
         Spacer(modifier = Modifier.height(7.dp))

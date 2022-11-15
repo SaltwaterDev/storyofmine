@@ -1,15 +1,17 @@
 package com.unlone.app.domain.entities
 
 import com.unlone.app.data.story.SimpleStory
+import com.unlone.app.data.story.Topic
 
-sealed class StoryItem {
-    data class StoriesByTopic(
-        val topic: String = "Topic",
-        val stories: List<SimpleStory> = listOf(
-            SimpleStory.mock()
-        )
-    )
-    data class TopicTable(
-        val topics: List<String>
-    )
+sealed interface StoryItem {
+    class StoriesByTopic(
+        val topic: String = "Topic", val stories: List<SimpleStory> = List(3) { SimpleStory.mock() }
+
+    ) : StoryItem
+
+    class TopicTable(
+        val topics: List<Topic>
+    ) : StoryItem
+
+    class UnknownError(errorMsg: String?) : StoryItem
 }

@@ -80,6 +80,7 @@
     <string name="common__unknown_error">未知錯誤</string>
     <string name="common__back">返回</string>
     <string name="common__warning">警告</string>
+    <string name="common__topic">主題</string>
     <string name="common__username">用戶名稱</string>
     <string name="common__btn_next">下一步</string>
     <string name="common__btn_confirm">確認</string>

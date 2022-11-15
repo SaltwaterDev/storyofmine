@@ -1,0 +1,76 @@
+package com.unlone.app.android.ui.comonComponent
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.ui.theme.topicTableElement
+import com.unlone.app.data.story.Topic
+import dev.icerock.moko.resources.compose.stringResource
+import org.example.library.SharedRes
+
+@Composable
+fun TopicTable(
+    modifier: Modifier,
+    topics: List<Topic>,
+    onTopicClick: (String) -> Unit,
+    viewMoreTopic: () -> Unit
+) {
+    Column(modifier) {
+        Row {
+            Text(
+                text = stringResource(resource = SharedRes.strings.common__topic),
+                modifier = Modifier.weight(1f),
+                style = Typography.subtitle1
+            )
+            Text(
+                text = stringResource(resource = SharedRes.strings.stories_show_more),
+                modifier = Modifier
+                    .clickable { viewMoreTopic() }
+                    .padding(start = 8.dp, top = 8.dp, end = 8.dp),
+                fontSize = 13.sp,
+            )
+        }
+        Divider()
+        Spacer(modifier = Modifier.height(3.dp))
+        topics.forEach { TopicItemRow(topic = it.name, onTopicClick = { onTopicClick(it.name) }) }
+    }
+}
+
+@Composable
+fun TopicItemRow(topic: String, onTopicClick: () -> Unit) {
+    Row(Modifier.clickable { onTopicClick() }) {
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(
+            Modifier
+                .weight(1f)
+                .padding(horizontal = 10.dp)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = topic, style = Typography.topicTableElement)
+            Divider(Modifier.alpha(0.5f))
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun TopicTablePreview() {
+    TopicTable(
+        Modifier,
+        List(4) {
+            Topic(
+                id = "123f",
+                name = "abc"
+            )
+        },
+        {}, {})
+}

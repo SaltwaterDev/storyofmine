@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.StoryResult
+import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
 import com.unlone.app.domain.useCases.CheckNetworkStateUseCase

@@ -88,7 +88,6 @@ val Typography = Typography(
 
 val Typography.titleLarge: TextStyle
     get() = TextStyle(
-//        color = Color.Black,
         fontFamily = NotoSansHKFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 29.sp,
@@ -109,4 +108,12 @@ val Typography.titleMedium: TextStyle
 val Typography.storyText: TextStyle
     get() = this.body1.copy(
         lineHeight = 32.sp,
+    )
+
+val Typography.topicTableElement: TextStyle
+    get() = TextStyle(
+        fontFamily = NotoSansHKFontFamily,
+        fontWeight = FontWeight.Light,
+        fontSize = 15.sp,
+//        letterSpacing = 0.1.sp
     )

@@ -7,6 +7,7 @@ import io.ktor.client.plugins.*
 
 interface TopicRepository {
     suspend fun getAllTopic(): StoryResult<List<Topic>>
+    suspend fun getRandomTopic(amount: Int): List<Topic>
 }
 
 
@@ -27,5 +28,12 @@ class TopicRepositoryImpl(
             Logger.e { e.toString() }
             StoryResult.UnknownError(errorMsg = e.message)
         }
+    }
+
+    override suspend fun getRandomTopic(amount: Int): List<Topic> {
+
+        val response = storyApi.getRandomTopics(amount.toString())
+        Logger.d { response.data.toString() }
+        return response.data
     }
 }
