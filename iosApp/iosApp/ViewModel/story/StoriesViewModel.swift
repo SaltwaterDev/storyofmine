@@ -20,7 +20,7 @@ class StoriesViewModel: ObservableObject {
     @Published var loading: Bool = false
     @Published private(set) var errorMsg: String? = nil
     @Published private(set) var username: String? = nil
-    @Published private(set) var storiesByTopics: [StoriesComponent.TopicStories] = []
+    @Published private(set) var storyItems: [StoriesComponent.TopicStories] = []
     
     
     func getStoriesItems() async{
@@ -30,20 +30,23 @@ class StoriesViewModel: ObservableObject {
             
             for try await response in stream {
                 print(response)
-                self.storiesByTopics = response.map{
-                    StoriesComponent.TopicStories(
-                        topic: $0.topic,
-                        stories: $0.stories.map{ s in
-                            SimpleStory(
-                                id: s.id,
-                                title: s.title,
-                                bodyText: s.content
-                            )
-                        }
-                    )
+                self.storyItems = response.compactMap{
+                    if let topicStories = $0 as? StoryItemStoriesByTopic{
+                        return StoriesComponent.TopicStories(
+                            topic: topicStories.topic,
+                            stories: topicStories.stories.map{ s in
+                                SimpleStory(
+                                    id: s.id,
+                                    title: s.title,
+                                    bodyText: s.content
+                                )
+                            }
+                        )
+                    }
+                    return nil
                 }
-                self.hasNextPage = self.fetchStoryItemsUseCase.pager.hasNextPage
-                loading = false
+            self.hasNextPage = self.fetchStoryItemsUseCase.pager.hasNextPage
+            loading = false
             }
         } catch{
             print(error)

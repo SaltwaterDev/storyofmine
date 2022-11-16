@@ -3,6 +3,8 @@ package com.unlone.app.android.ui.stories
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material.Scaffold
@@ -30,7 +32,7 @@ fun FullTopicScreen(
                 onBackPressed = back
             )
         }) {
-        Column {
+        Column(Modifier.verticalScroll(rememberScrollState())) {
             uiState.topics.forEach {
                 ListItem(Modifier.clickable {
                     navToTopicDetail(it.name)

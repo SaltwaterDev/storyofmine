@@ -33,7 +33,7 @@ struct StoriesScreen: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.all)
                     
-                    ForEach(storiesViewModel.storiesByTopics){
+                    ForEach(storiesViewModel.storyItems){
                         TopicStoriesView(
                             topicStories: StoriesComponent.TopicStories(
                                 topic: $0.topic,
