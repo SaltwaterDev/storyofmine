@@ -95,6 +95,14 @@ object Report : UnloneDestination {
     )
 }
 
+object FullTopic : UnloneDestination {
+    override val route = "fullTopic"
+    val reportTypeArg = null
+    val reportIdArg = null
+    override val routeWithArgs = "$route/{$reportTypeArg}/{$reportIdArg}"
+    override val arguments = emptyList<NamedNavArgument>()
+}
+
 enum class ReportType {
     story,
     comment

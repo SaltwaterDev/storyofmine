@@ -69,7 +69,7 @@ fun TopicTablePreview() {
         List(4) {
             Topic(
                 id = "123f",
-                name = "abc"
+                name = "Topic $it"
             )
         },
         {}, {})

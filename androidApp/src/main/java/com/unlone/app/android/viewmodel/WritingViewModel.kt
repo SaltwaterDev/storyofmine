@@ -288,10 +288,11 @@ class WritingViewModel(
                     state.value.copy(
                         error = result.errorMsg,
                     )
-                is StoryResult.UnknownError ->
+                is StoryResult.UnknownError -> {
                     state.value.copy(
-                        error = result.errorMsg,
+//                        error = result.errorMsg,
                     )
+                }
             }
         )
         changedChannel.send(
@@ -335,7 +336,9 @@ class WritingViewModel(
             }
             is StaticResourceResult.UnknownError -> {
                 changedChannel.send(
-                    state.value.copy(error = result.errorMsg)
+                    state.value.copy(
+//                        error = result.errorMsg
+                    )
                 )
                 null
             }
@@ -354,7 +357,7 @@ class WritingViewModel(
 
         dismissQuestionJob?.cancelAndJoin()
         dismissQuestionJob = viewModelScope.launch {
-            delay(10.seconds)
+            delay(6.seconds)
             changedChannel.send(
                 state.value.copy(displayingGuidingQuestion = null)
             )

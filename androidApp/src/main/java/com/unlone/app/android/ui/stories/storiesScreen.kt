@@ -39,6 +39,7 @@ fun StoriesScreen(
     requestedStoryId: String? = null,
     navToStoryDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
+    navToFullTopic: () -> Unit = {},
     navToSignIn: () -> Unit = {},
     navToSignUp: () -> Unit = {},
 ) {
@@ -124,10 +125,9 @@ fun StoriesScreen(
                                 TopicTable(
                                     modifier = Modifier.padding(16.dp),
                                     topics = it.topics,
-                                    onTopicClick = navToTopicPosts
-                                ) {
-                                    // todo: nav to all topics screen
-                                }
+                                    onTopicClick = navToTopicPosts,
+                                    viewMoreTopic = navToFullTopic,
+                                )
                             }
                             is StoryItem.StoriesByTopic -> {
                                 if (storiesFromRequest?.topic != it.topic)
