@@ -28,8 +28,8 @@ enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneD
         })
 
     },
-    Profile(icon = R.drawable.ic_profile, label = "profiles") {
-        override val route: String = "profiles"
+    Profile(icon = R.drawable.ic_profile, label = "profile") {
+        override val route: String = "profile"
         override val routeWithArgs: String = route
         override val arguments: List<NamedNavArgument> = emptyList()
     };

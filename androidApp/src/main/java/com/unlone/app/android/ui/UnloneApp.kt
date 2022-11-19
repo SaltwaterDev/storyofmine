@@ -20,7 +20,9 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.unlone.app.android.ui.navigation.MainNavHost
 import com.unlone.app.android.ui.theme.UnloneTheme
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.InternalCoroutinesApi
+import org.example.library.SharedRes
 
 
 @ExperimentalAnimationApi
@@ -42,7 +44,12 @@ fun UnloneApp() {
                 exit = slideOutVertically(targetOffsetY = { it }),
                 content = { UnloneBottomBar(appState) })
         }) { contentPadding ->
-            MainNavHost(appState, navController, Modifier.padding(contentPadding), appState::upPress)
+            MainNavHost(
+                appState,
+                navController,
+                Modifier.padding(contentPadding),
+                appState::upPress
+            )
         }
     }
 }
@@ -80,15 +87,26 @@ fun UnloneBottomBar(
                     BottomNavigationItem(
                         icon = {
                             Icon(
-                                painterResource(id = screen.icon), contentDescription = null
+                                painterResource(id = screen.icon),
+                                contentDescription = null
                             )
                         },
-                        label = { screen.label?.let { Text(it) } },
+                        label = { screen.label?.let { Text(getBottomBarItemLabel(it)) } },
                         selected = currentDestination?.hierarchy?.any { (it.route) == screen.routeWithArgs } == true,
                         onClick = { appState.navigateToBottomBarRoute(screen.routeWithArgs) },
                     )
                 }
             }
         )
+    }
+}
+
+@Composable
+fun getBottomBarItemLabel(label: String): String {
+    return when (label) {
+        "write" -> stringResource(resource = SharedRes.strings.bottom_nav_bar_label__write)
+        "stories" -> stringResource(resource = SharedRes.strings.bottom_nav_bar_label__stories)
+        "profile" -> stringResource(resource = SharedRes.strings.bottom_nav_bar_label__profile)
+        else -> stringResource(resource = SharedRes.strings.common__error)
     }
 }
