@@ -27,7 +27,7 @@ fun RulesScreen(
 
     Scaffold(
         topBar = {
-            StandardTopBar(title = stringResource(SharedRes.strings.rules_title)) {
+            StandardTopBar(title = stringResource(SharedRes.strings.rules__title)) {
                 back()
             }
         },

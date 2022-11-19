@@ -61,7 +61,12 @@
 
     <string name="edit_history_title">修改歷史</string>
 
-    <string name="rules_title">用戶守則</string>
+    <string name="rules__title">用戶守則</string>
+
+    <string name="settings_title">設定</string>
+    <string name="settings_language">語言</string>
+    <string name="settings_lang_zh">中文</string>
+    <string name="settings_lang_en">English</string>
 
     <string name="my_stories_title">我的故事</string>
 

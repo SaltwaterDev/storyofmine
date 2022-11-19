@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.ui.comonComponent.StandardTopBar
+import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.RulesViewModel
 import com.unlone.app.android.viewmodel.SettingsViewModel
 import com.unlone.app.data.userPreference.UnloneLocale
@@ -28,13 +29,13 @@ fun SettingsScreen(
 
     val state = viewModel.state.collectAsState().value
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.refreshData()
     }
 
     Scaffold(
         topBar = {
-            StandardTopBar(title = stringResource(SharedRes.strings.rules_title)) {
+            StandardTopBar(title = stringResource(SharedRes.strings.settings_title)) {
                 back()
             }
         },
@@ -44,7 +45,11 @@ fun SettingsScreen(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "_Language")
+                Text(
+                    text = stringResource(resource = SharedRes.strings.settings_language),
+                    style = Typography.subtitle1,
+                    modifier = Modifier.padding(16.dp)
+                )
                 UnloneLocale.values().forEach { locale ->
                     Row(
                         Modifier
@@ -61,7 +66,7 @@ fun SettingsScreen(
                             onClick = { viewModel.switchLocale(locale) }
                         )
                         Text(
-                            text = locale.localeName,
+                            text = getLocaleNameString(locale.localeName),
                             style = MaterialTheme.typography.body1.merge(),
                             modifier = Modifier.padding(start = 16.dp)
                         )
@@ -69,6 +74,15 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun getLocaleNameString(localeName: String): String {
+    return when (localeName) {
+        "zh" -> stringResource(resource = SharedRes.strings.settings_lang_zh)
+        "en" -> stringResource(resource = SharedRes.strings.settings_lang_en)
+        else -> stringResource(resource = SharedRes.strings.settings_lang_en)
     }
 }
 
