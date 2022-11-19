@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,7 @@ fun TopicDetail(
     navToStoryDetail: (String) -> Unit,
     viewModel: TopicDetailViewModel
 ) {
-    val uiState = viewModel.state.value
+    val uiState = viewModel.state.collectAsState().value
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {

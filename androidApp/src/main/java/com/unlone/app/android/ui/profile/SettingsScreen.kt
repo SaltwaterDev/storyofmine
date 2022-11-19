@@ -78,7 +78,7 @@ fun SettingsScreen(
 }
 
 @Composable
-fun getLocaleNameString(localeName: String): String {
+private fun getLocaleNameString(localeName: String): String {
     return when (localeName) {
         "zh" -> stringResource(resource = SharedRes.strings.settings_lang_zh)
         "en" -> stringResource(resource = SharedRes.strings.settings_lang_en)
