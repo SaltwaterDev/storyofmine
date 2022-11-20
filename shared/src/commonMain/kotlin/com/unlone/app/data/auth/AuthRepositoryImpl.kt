@@ -20,11 +20,20 @@ internal class AuthRepositoryImpl(
         // todo: di coroutine
         CoroutineScope(Dispatchers.Main).launch {
             authenticate()
+            // get username
+            if (isUserSignedIn.value) {
+                val result = getUsername()
+                if (result is AuthResult.Authorized) {
+                    username.value = result.data
+                }
+            }
         }
     }
 
     override var isUserSignedIn = MutableStateFlow(false)
         private set
+
+    override var username: MutableStateFlow<String?> = MutableStateFlow(null)
 
     override suspend fun signUp(
         email: String,
@@ -245,7 +254,7 @@ internal class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun getUsername(): AuthResult<String> {
+    private suspend fun getUsername(): AuthResult<String> {
         return try {
             prefs.getString(JWT_SP_KEY)?.let {
                 val username = api.getUserName(it)

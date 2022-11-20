@@ -82,14 +82,12 @@ class StoriesViewModel(
         _state.value = _state.value.copy(loading = false)
     }
 
-    private suspend fun getUserName() {
-        when (val getUsernameResponse = authRepository.getUsername()) {
-            // getUsername
-            is AuthResult.Authorized -> getUsernameResponse.data?.let {
-                _state.value = _state.value.copy(username = it)
-            }
-            else -> _state.value =
-                _state.value.copy(errorMsg = getUsernameResponse.errorMsg)
+    private fun getUserName() {
+        val username = authRepository.username.value
+        if (username != null){
+            _state.value = _state.value.copy(username = username)
+        } else{
+            _state.value = _state.value.copy(errorMsg = "username is null")
         }
     }
 
