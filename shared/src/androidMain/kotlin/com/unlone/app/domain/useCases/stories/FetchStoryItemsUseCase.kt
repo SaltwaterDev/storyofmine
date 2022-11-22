@@ -11,21 +11,18 @@ import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.Topic
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.StoryItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 
 actual class FetchStoryItemsUseCase(
     private val storyRepository: StoryRepository,
     private val topicRepository: TopicRepository,
 ) {
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+    private val scope = MainScope()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    private val pager = Pager(
-        clientScope = coroutineScope,
+    val pager = Pager(
+        clientScope = scope,
         config = pagingConfig,
         initialKey = 0, // Key to use when initialized
         getItems = { currentKey, size ->
@@ -81,7 +78,6 @@ actual class FetchStoryItemsUseCase(
     @NativeCoroutinesIgnore
     operator fun invoke(): Flow<PagingData<StoryItem>> {
         return pager.pagingData
-            .cachedIn(coroutineScope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
     }
 
     companion object {

@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
@@ -32,6 +31,7 @@ import com.unlone.app.android.viewmodel.WritingViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -41,9 +41,7 @@ import org.example.library.SharedRes
 @ExperimentalMaterialApi
 @Composable
 fun WritingScreen(
-    viewModel: WritingViewModel,
-    draftId: String?,
-    draftVersionId: String?,
+    viewModel: WritingViewModel = koinViewModel(),
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
     onPostSucceed: (String) -> Unit,
@@ -62,16 +60,9 @@ fun WritingScreen(
         viewModel.addImageMD(it)
     }
 
-    LaunchedEffect(draftId) {
-        viewModel.refreshData(draftId, draftVersionId)
-    }
-
-    DisposableEffect(key1 = Unit) {
-        onDispose {
-            viewModel.saveDraft()
-            scope.launch { viewModel.refreshData() }
-        }
-    }
+//    LaunchedEffect(draftId) {
+//        viewModel.refreshData(draftId, draftVersionId)
+//    }
 
     // close preview when keyboard is shown
     LaunchedEffect(isKeyboardVisible) {
@@ -159,7 +150,9 @@ fun WritingScreen(
                             highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.title,
-                    onValueChange = { viewModel.setTitle(it) },
+                    onValueChange = {
+                        viewModel.setTitle(it)
+                                    },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -184,7 +177,9 @@ fun WritingScreen(
                             highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.body.text,
-                    onValueChange = { viewModel.setBody(it) },
+                    onValueChange = {
+                        viewModel.setBody(it)
+                                    },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -229,7 +224,6 @@ fun WritingScreen(
             }
 
 
-
             if (showPostingDialog)
                 PostingDialog(
                     uiState.topicList,
@@ -254,7 +248,6 @@ fun WritingScreen(
                         showPostingDialog = false
                     },
                 )
-
 
             if (uiState.storyPosting)
                 Card(

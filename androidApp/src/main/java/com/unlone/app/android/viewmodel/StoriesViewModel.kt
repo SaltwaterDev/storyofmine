@@ -1,7 +1,9 @@
 package com.unlone.app.android.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.StoryResult
@@ -12,8 +14,7 @@ import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -37,13 +38,16 @@ class StoriesViewModel(
     private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
     fetchStoryItemsUseCase: FetchStoryItemsUseCase,
     private val getTopicStoriesForRequestedStoryUseCase: GetTopicStoriesForRequestedStoryUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<StoriesScreenUiState> =
         MutableStateFlow(StoriesScreenUiState())
-    val state = _state.asStateFlow()
+    val state = _state.combine(authRepository.username) { state, username ->
+        state.copy(username = username)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, StoriesScreenUiState())
 
-    val storiesByTopics = fetchStoryItemsUseCase()
+    val storiesByTopics = fetchStoryItemsUseCase().cachedIn(viewModelScope)
     var storiesFromRequest = MutableStateFlow<StoryItem.StoriesByTopic?>(null)
         private set
 
@@ -62,7 +66,6 @@ class StoriesViewModel(
             when (this) {
                 is NetworkState.Ok -> {
                     if (authRepository.authenticate() is AuthResult.Authorized) {
-                        getUserName()
                         _state.value = _state.value.copy(
                             isUserLoggedIn = true,
                         )
@@ -82,14 +85,6 @@ class StoriesViewModel(
         _state.value = _state.value.copy(loading = false)
     }
 
-    private fun getUserName() {
-        val username = authRepository.username.value
-        if (username != null){
-            _state.value = _state.value.copy(username = username)
-        } else{
-            _state.value = _state.value.copy(errorMsg = "username is null")
-        }
-    }
 
     fun dismissError() {
         _state.value = _state.value.copy(errorMsg = null)

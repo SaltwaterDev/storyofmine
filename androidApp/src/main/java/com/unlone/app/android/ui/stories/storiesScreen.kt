@@ -2,9 +2,7 @@ package com.unlone.app.android.ui.stories
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,7 +42,10 @@ fun StoriesScreen(
     navToSignUp: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
+
+    val listState: LazyListState = rememberLazyListState()
     val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
+    // used when displaying the required story at first sight
     val storiesFromRequest = viewModel.storiesFromRequest.collectAsState().value
 
     val coroutineScope = rememberCoroutineScope()
@@ -76,14 +77,13 @@ fun StoriesScreen(
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SwipeRefresh(
                 state = refreshState,
-                onRefresh = {
-                    storiesByTopics.refresh()
-                }
+                onRefresh = storiesByTopics::refresh
             ) {
                 LazyColumn(
                     Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .padding(innerPadding),
+                    state = listState
                 ) {
 
                     item {

@@ -9,11 +9,31 @@ import com.unlone.app.android.ui.UnloneApp
 /**
  * Destinations used in the [UnloneApp].
  */
+
+
+const val optionalDraftArg = "draftId"
+const val optionalVersionArg = "version"
+
 enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneDestination {
     Write(icon = R.drawable.ic_write, label = "write") {
-        override val route: String = "write"
-        override val routeWithArgs: String = route
-        override val arguments: List<NamedNavArgument> = emptyList()
+        override val route: String = "writeRoute"
+
+        private val optionalDraftArg = "draftId"
+        private val optionalVersionArg = "version"
+        private val typeArg =
+            "?$optionalDraftArg={$optionalDraftArg}&$optionalVersionArg={$optionalVersionArg}"
+        override val routeWithArgs = "$route$typeArg"
+
+        override val arguments: List<NamedNavArgument> = listOf(
+            navArgument(optionalDraftArg) {
+                type = NavType.StringType
+                nullable = true
+            },
+            navArgument(optionalVersionArg) {
+                type = NavType.StringType
+                nullable = true
+            }
+        )
     },
     Stories(icon = R.drawable.ic_book, label = "stories") {
         override val route: String = "stories"
@@ -39,26 +59,6 @@ interface UnloneDestination {
     val route: String
     val routeWithArgs: String
     val arguments: List<NamedNavArgument>
-}
-
-
-object Drafting : UnloneDestination {
-    override val route = "${UnloneBottomDestinations.Write.route}/draft"
-    const val optionalDraftArg = "draftId"
-    const val optionalVersionArg = "version"
-    private const val typeArg =
-        "?$optionalDraftArg={$optionalDraftArg}&$optionalVersionArg={$optionalVersionArg}"
-    override val routeWithArgs = "$route$typeArg"
-    override val arguments = listOf(
-        navArgument(optionalDraftArg) {
-            type = NavType.StringType
-            nullable = true
-        },
-        navArgument(optionalVersionArg) {
-            type = NavType.StringType
-            nullable = true
-        }
-    )
 }
 
 object EditDraftHistory : UnloneDestination {

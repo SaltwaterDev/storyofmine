@@ -16,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.unlone.app.android.ui.navigation.UnloneBottomDestinations
+import timber.log.Timber
 
 
 /**
@@ -73,7 +74,7 @@ class UnloneAppState(
 
     fun navigateToBottomBarRoute(route: String) {
         if (route != currentRoute) {
-            Log.d("TAG", "navigateToBottomBarRoute: $currentRoute, $route")
+            Timber.d("navigateToBottomBarRoute: $currentRoute, $route")
             navController.navigate(route) {
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.

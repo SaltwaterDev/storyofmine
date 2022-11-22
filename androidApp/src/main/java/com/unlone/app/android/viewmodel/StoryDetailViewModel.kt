@@ -1,5 +1,6 @@
 package com.unlone.app.android.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.story.CommentRepository
@@ -39,6 +40,7 @@ class StoryDetailViewModel(
     private val commentRepository: CommentRepository,
     private val storyRepository: StoryRepository,
     private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     var state = MutableStateFlow(StoryDetailUiState())

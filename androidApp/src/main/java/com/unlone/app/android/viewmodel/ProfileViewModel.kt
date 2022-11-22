@@ -1,6 +1,7 @@
 package com.unlone.app.android.viewmodel
 
 import android.os.Parcelable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.auth.AuthRepository
@@ -23,25 +24,18 @@ data class ProfileUiState(
 
 class ProfileViewModel(
     private val authRepository: AuthRepository,
-    private val isUserSignedInUseCase: IsUserSignedInUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    var state = isUserSignedInUseCase().combine(authRepository.username) { isSignIn, username ->
+    var state =
+        authRepository.isUserSignedIn.combine(authRepository.username) { isSignIn, username ->
 
-//        var error: String? = null
-        /*when (val getUsernameResponse = authRepository.username) {
-            is AuthResult.Authorized -> getUsernameResponse.data?.let { name ->
-                username =  authRepository.username
-            }
-            else -> error = getUsernameResponse.errorMsg
-        }*/
-
-        ProfileUiState(
-            isUserLoggedIn = isSignIn,
-            username = username ?: "",
-            errorMsg = if (username == null) "username is null" else null
-        )
-    }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileUiState())
+            ProfileUiState(
+                isUserLoggedIn = isSignIn,
+                username = username ?: "",
+                errorMsg = if (username == null) "username is null" else null
+            )
+        }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileUiState())
 
 
     fun signOut() = viewModelScope.launch(Dispatchers.Default) {

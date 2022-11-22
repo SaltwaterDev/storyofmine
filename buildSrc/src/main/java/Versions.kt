@@ -15,7 +15,7 @@ object Versions {
     const val ktorVersion = "2.0.2"
     const val ktxCoroutine = "1.6.4"
     const val materialDesign = "1.6.1"
-    const val navCompose = "2.5.2"
+    const val navCompose = "2.5.3"
     const val timber = "5.0.1"
     const val realm = "1.4.0"
     const val kotest = "5.4.2"

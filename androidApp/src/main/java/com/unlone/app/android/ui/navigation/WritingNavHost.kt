@@ -12,15 +12,13 @@ import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.ui.write.EditHistoryScreen
 import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.EditHistoryViewModel
-import com.unlone.app.android.viewmodel.WritingViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
 @ExperimentalAnimatedInsets
 @ExperimentalAnimationApi
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
-    ExperimentalMaterialApi::class
+    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class, ExperimentalMaterialApi::class
 )
 fun NavGraphBuilder.writeGraph(
     navController: NavHostController,
@@ -28,32 +26,21 @@ fun NavGraphBuilder.writeGraph(
 ) {
 
     navigation(
-        route = UnloneBottomDestinations.Write.route,
-        startDestination = Drafting.routeWithArgs,
+        route = UnloneBottomDestinations.Write.name,
+        startDestination = UnloneBottomDestinations.Write.routeWithArgs,
     ) {
-        composable(
-            Drafting.routeWithArgs,
-            arguments = Drafting.arguments
-        ) {
-            val draftId = it.arguments?.getString(Drafting.optionalDraftArg)
-            val version = it.arguments?.getString(Drafting.optionalVersionArg)
-            val viewModel = koinViewModel<WritingViewModel>()
 
-            WritingScreen(
-                viewModel,
-                draftId,
-                version,
-                navToEditHistory = { id -> navToEditHistory(navController, id) },
+        composable(
+            route = UnloneBottomDestinations.Write.routeWithArgs,
+            arguments = UnloneBottomDestinations.Write.arguments
+        ) {
+            WritingScreen(navToEditHistory = { id -> navToEditHistory(navController, id) },
                 navToSignIn = {
                     navigateToAuth(
-                        navController,
-                        UnloneBottomDestinations.Write.route
+                        navController, UnloneBottomDestinations.Write.route
                     )
                 },
-                onPostSucceed = { succeedStory ->
-                    navToStories(succeedStory)
-                }
-            )
+                onPostSucceed = { succeedStory -> navToStories(succeedStory) })
         }
 
         composable(
@@ -62,12 +49,10 @@ fun NavGraphBuilder.writeGraph(
         ) {
             val draftId = it.arguments?.getString(EditDraftHistory.draftArg)
             val viewModel = koinViewModel<EditHistoryViewModel>()
-            EditHistoryScreen(
-                draftId,
+            EditHistoryScreen(draftId,
                 viewModel,
-                { version -> navToSWrite(navController, draftId, version) },
-                { navController.popBackStack() }
-            )
+                { version -> navToWrite(navController, draftId, version) },
+                { navController.popBackStack() })
         }
     }
 }
@@ -76,12 +61,11 @@ fun navToEditHistory(navController: NavHostController, id: String) {
     navController.navigate("${EditDraftHistory.route}/$id")
 }
 
-fun navToSWrite(
+fun navToWrite(
     navController: NavHostController,
     draftId: String? = null,
     version: String? = null,
 ) {
-    if (draftId != null && version != null)
-        navController.navigate("${Drafting.route}?${Drafting.optionalDraftArg}=${draftId}&${Drafting.optionalVersionArg}=${version}")
-    else navController.navigate(Drafting.route)
+    if (draftId != null && version != null) navController.navigate("${UnloneBottomDestinations.Write.route}?${optionalDraftArg}=${draftId}&${optionalVersionArg}=${version}")
+    else navController.navigate(UnloneBottomDestinations.Write.route)
 }

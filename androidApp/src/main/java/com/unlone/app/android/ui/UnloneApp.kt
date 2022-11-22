@@ -23,6 +23,7 @@ import com.unlone.app.android.ui.theme.UnloneTheme
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.example.library.SharedRes
+import timber.log.Timber
 
 
 @ExperimentalAnimationApi
@@ -37,8 +38,8 @@ fun UnloneApp() {
         val navController = appState.navController
 
         Scaffold(scaffoldState = appState.scaffoldState, bottomBar = {
-            Log.d("TAG", "UnloneApp: ${appState.navBackStackEntry.value?.destination}")
-            Log.d("TAG", "UnloneApp: ${appState.shouldShowBottomBar}")
+            Timber.d("UnloneApp: " + appState.navBackStackEntry.value?.destination)
+            Timber.d("UnloneApp: " + appState.shouldShowBottomBar)
             AnimatedVisibility(visible = appState.shouldShowBottomBar,
                 enter = slideInVertically(initialOffsetY = { it }),
                 exit = slideOutVertically(targetOffsetY = { it }),

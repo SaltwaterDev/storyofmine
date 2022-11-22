@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
+import com.unlone.app.android.ui.SplashScreen
 import com.unlone.app.android.ui.UnloneAppState
 import com.unlone.app.android.viewmodel.*
 
@@ -28,10 +30,17 @@ fun MainNavHost(
     ) {
     NavHost(
         navController = navController,
-        startDestination = UnloneBottomDestinations.Write.route,
+        startDestination = "splash",
         modifier = modifier,
         route = "main",
     ) {
+
+        composable("splash"){
+            SplashScreen {
+                navController.navigate(UnloneBottomDestinations.Write.routeWithArgs)
+            }
+        }
+
 
         authGraph(
             navController,
