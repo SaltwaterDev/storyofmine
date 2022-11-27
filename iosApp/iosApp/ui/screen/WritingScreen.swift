@@ -93,6 +93,17 @@ struct WritingScreen: View {
         .popup(isPresented: $writingViewModel.postSuccess, view: {
             Text("Posted!")
                 .padding(20)
+                .frame(width: UIScreen.screenWidth - 40, alignment: .center)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color(red: 0.85, green: 0.8, blue: 0.95))
+                        .opacity(1)
+                )
+        })
+        .popup(isPresented: $writingViewModel.loading, view: {
+            ProgressView()
+                .padding(20)
+                .frame(width: UIScreen.screenWidth - 40, alignment: .center)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color(red: 0.85, green: 0.8, blue: 0.95))
@@ -102,8 +113,8 @@ struct WritingScreen: View {
     }
 }
 
-struct WritingScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        WritingScreen()
-    }
-}
+//struct WritingScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        WritingScreen()
+//    }
+//}
