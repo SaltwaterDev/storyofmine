@@ -6,6 +6,7 @@ import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.di.appModule
 import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
+import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUseCase
 import com.unlone.app.domain.useCases.write.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -48,6 +49,7 @@ class UseCasesHelper : KoinComponent {
     val queryDraftUseCase: QueryDraftUseCase by inject()
     val postStoryUseCase: PostStoryUseCase by inject()
 
+    val getTopicStoriesForRequestedStoryUseCase: GetTopicStoriesForRequestedStoryUseCase by inject()
 }
 
 

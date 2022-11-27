@@ -29,6 +29,7 @@ class WritingViewModel: ObservableObject {
     @Published var commentAllowed: Bool = false
     @Published var saveAllowed: Bool = false
     @Published var error: String? = nil
+    @Published var postSuccessStoryId: String? = nil
     @Published var postSuccess: Bool = false
     @Published var showPostPopup: Bool = false
     @Published var loading: Bool = false
@@ -177,6 +178,7 @@ class WritingViewModel: ObservableObject {
                 switch (result) {
                 case is StoryResultSuccess<KotlinUnit>:
                     createNewDraft()
+                    self.postSuccessStoryId = result.data as String?
                     self.loading = false
                     self.postSuccess = true
                     break

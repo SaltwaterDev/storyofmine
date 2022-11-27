@@ -15,6 +15,7 @@ struct StoriesScreen: View {
     
     @State private var showLogin = false
     @State private var showSignup = false
+    @Binding var postSuccessStory: String?
     
     var body: some View {
         if (authSetting.isUserLoggedIn){
@@ -32,7 +33,14 @@ struct StoriesScreen: View {
                         .font(.largeTitle)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.all)
-                    
+                    if let topicFromRequest = storiesViewModel.topicFromRequest {
+                        TopicStoriesView(
+                            topicStories: StoriesComponent.TopicStories(
+                                topic: topicFromRequest.topic,
+                                stories: topicFromRequest.stories
+                            )
+                        )
+                    }
                     ForEach(storiesViewModel.storyItems){
                         TopicStoriesView(
                             topicStories: StoriesComponent.TopicStories(
@@ -54,6 +62,9 @@ struct StoriesScreen: View {
                     await self.initData()
                 }
             }.task {
+                if let postSuccessStory = postSuccessStory {
+                    await self.storiesViewModel.loadStoriesFromRequest(storyId: postSuccessStory)
+                }
                 if(storiesViewModel.shouldReload){
                     await self.initData()
                     storiesViewModel.shouldReload = false

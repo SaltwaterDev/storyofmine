@@ -13,6 +13,8 @@ import ExytePopupView
 struct WritingScreen: View {
     @StateObject private var writingViewModel = WritingViewModel()
     @EnvironmentObject private var authSetting: AuthViewModel
+    @Binding var tabSelection: Int
+    @Binding var postSuccessStory: String?
     
     @State var showMenu = false
     @State var menuItemList: [MenuItemView] = []
@@ -90,7 +92,10 @@ struct WritingScreen: View {
         }).popup(isPresented: $writingViewModel.showPostPopup, closeOnTap: false, closeOnTapOutside: true, view: {
             PostingDialog
         })
-        .popup(isPresented: $writingViewModel.postSuccess, view: {
+        .popup(isPresented: $writingViewModel.postSuccess, dismissCallback: {
+            tabSelection = 2
+            postSuccessStory = writingViewModel.postSuccessStoryId
+        }, view: {
             Text("Posted!")
                 .padding(20)
                 .frame(width: UIScreen.screenWidth - 40, alignment: .center)
