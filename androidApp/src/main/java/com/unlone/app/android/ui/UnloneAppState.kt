@@ -9,10 +9,8 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination
-import androidx.navigation.NavGraph
-import androidx.navigation.NavHostController
+import androidx.navigation.*
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.unlone.app.android.ui.navigation.UnloneBottomDestinations
@@ -73,12 +71,12 @@ class UnloneAppState(
     }
 
     fun navigateToBottomBarRoute(route: String) {
-        if (route != currentRoute) {
+        navController.navigate(route) {
             Timber.d("navigateToBottomBarRoute: $currentRoute, $route")
             navController.navigate(route) {
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.
-                popUpTo(findStartDestination(navController.graph).id) {
+                popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }
                 launchSingleTop = true
@@ -103,18 +101,3 @@ class UnloneAppState(
  */
 private fun NavBackStackEntry.lifecycleIsResumed() =
     this.lifecycle.currentState == Lifecycle.State.RESUMED
-
-private val NavGraph.startDestination: NavDestination?
-    get() = findNode(startDestinationId)
-
-/**
- * Copied from similar function in NavigationUI.kt
- *
- * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:navigation/navigation-ui/src/main/java/androidx/navigation/ui/NavigationUI.kt
- */
-/*private*/ tailrec fun findStartDestination(graph: NavDestination): NavDestination {
-    return if (graph is NavGraph) findStartDestination(graph.startDestination!!) else graph
-}
-
-
-

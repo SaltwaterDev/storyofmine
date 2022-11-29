@@ -1,11 +1,13 @@
 package com.unlone.app.android.viewmodel
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlone.app.android.ui.navigation.optionalDraftArg
+import com.unlone.app.android.ui.navigation.optionalVersionArg
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.data.write.DraftRepository
@@ -18,6 +20,7 @@ import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
 data class WritingUiState(
@@ -43,7 +46,8 @@ data class WritingUiState(
 
 
 class WritingViewModel(
-    getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
+    private val savedStateHandle: SavedStateHandle,
+    private val getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
     private val getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
@@ -58,6 +62,15 @@ class WritingViewModel(
     private val changedChannel = Channel<WritingUiState>()
     private val stateChangedResult = changedChannel.receiveAsFlow()
 
+    init {
+        viewModelScope.launch(Dispatchers.Default) {
+            val draftId = savedStateHandle.get<String>(optionalDraftArg)
+            val version = savedStateHandle.get<String>(optionalVersionArg)
+            refreshData(draftId, version)
+        }
+    }
+
+
     val state: StateFlow<WritingUiState> = combine(
         stateChangedResult,
         getAllDraftsTitleUseCase(),
@@ -69,21 +82,16 @@ class WritingViewModel(
             topicList = topicList,
             isUserSignedIn = isUserSignedIn,
         )
-    }.stateIn(viewModelScope, SharingStarted.Lazily, WritingUiState())
+    }.catch { e ->
+        stateChangedResult.map { it.copy(error = e.message) }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, WritingUiState())
 
-    init {
-        viewModelScope.launch {
-            refreshData()
-        }
-    }
-
-    suspend fun refreshData(draftId: String? = null, version: String? = null) =
-        withContext(Dispatchers.Default) {
-
+    private suspend fun refreshData(draftId: String?, version: String?) =
+        withContext(Dispatchers.Main) {
             changedChannel.send(state.value.copy(loading = true, guidingQuestion = listOf()))
             guidingQuestionIterator = null
 
-            if (draftId == null || version == null) {
+            if (draftId.isNullOrBlank() || version.isNullOrBlank()) {
                 getLastOpenedDraftUseCase().let { lastOpened ->
                     changedChannel.send(
                         state.value.copy(
@@ -141,9 +149,9 @@ class WritingViewModel(
         }
     }
 
-    fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
+    private fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
         if (state.value.title.isNotBlank() || state.value.body.text.isNotBlank()) {
-            Log.d("TAG", "saveDraft: " + state.value.currentDraftId)
+            Timber.d(state.value.currentDraftId)
             val result = saveDraftUseCase(
                 state.value.currentDraftId,
                 state.value.title,
@@ -243,6 +251,11 @@ class WritingViewModel(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        saveDraft()
+    }
+
     fun setCommentAllowed(commentAllowed: Boolean) {
         viewModelScope.launch {
             changedChannel.send(
@@ -290,7 +303,7 @@ class WritingViewModel(
                     )
                 is StoryResult.UnknownError -> {
                     state.value.copy(
-//                        error = result.errorMsg,
+                        error = result.errorMsg,
                     )
                 }
             }
@@ -298,7 +311,7 @@ class WritingViewModel(
         changedChannel.send(
             state.value.copy(storyPosting = false)
         )
-        Log.d("TAG", "postStory: $result")
+        Timber.d(result.data)
     }
 
     fun setTopic(topic: String) {
@@ -317,8 +330,10 @@ class WritingViewModel(
                 is StoryResult.Success -> {
                     result.data?.map { topic -> topic.name }?.let { emit(it) }
                 }
-                is StoryResult.Failed -> { /*todo*/ }
-                is StoryResult.UnknownError -> {/*todo*/ }
+                is StoryResult.Failed -> { /*todo*/
+                }
+                is StoryResult.UnknownError -> {/*todo*/
+                }
             }
         }
     }

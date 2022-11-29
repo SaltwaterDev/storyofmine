@@ -1,8 +1,11 @@
 package com.unlone.app.android.ui.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -28,8 +31,9 @@ fun NavGraphBuilder.storiesGraph(
             arguments = UnloneBottomDestinations.Stories.arguments,
         ) {
             val requestedStoryId: String? = it.arguments?.getString("requestedStoryId")
-
-            val viewModel = koinViewModel<StoriesViewModel>()
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
+            val viewModel =
+                koinViewModel<StoriesViewModel>(viewModelStoreOwner = viewModelStoreOwner)
             StoriesScreen(viewModel = viewModel,
                 requestedStoryId = requestedStoryId,
                 navToStoryDetail = { navigateToStoryDetail(navController, it) },

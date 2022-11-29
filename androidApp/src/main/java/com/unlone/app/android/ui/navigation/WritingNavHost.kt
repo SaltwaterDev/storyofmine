@@ -3,6 +3,7 @@ package com.unlone.app.android.ui.navigation
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -12,6 +13,7 @@ import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.ui.write.EditHistoryScreen
 import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.EditHistoryViewModel
+import com.unlone.app.android.viewmodel.WritingViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -34,7 +36,12 @@ fun NavGraphBuilder.writeGraph(
             route = UnloneBottomDestinations.Write.routeWithArgs,
             arguments = UnloneBottomDestinations.Write.arguments
         ) {
-            WritingScreen(navToEditHistory = { id -> navToEditHistory(navController, id) },
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
+            val viewModel =
+                koinViewModel<WritingViewModel>(viewModelStoreOwner = viewModelStoreOwner)
+            WritingScreen(
+                viewModel = viewModel,
+                navToEditHistory = { id -> navToEditHistory(navController, id) },
                 navToSignIn = {
                     navigateToAuth(
                         navController, UnloneBottomDestinations.Write.route

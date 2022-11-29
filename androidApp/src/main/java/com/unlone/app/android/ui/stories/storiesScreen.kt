@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -43,8 +44,10 @@ fun StoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    val storiesByTopics =
+        viewModel.storiesByTopics.collectAsLazyPagingItems()
+//    val listState: LazyListState = storiesByTopics.rememberLazyListState()
     val listState: LazyListState = rememberLazyListState()
-    val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
     // used when displaying the required story at first sight
     val storiesFromRequest = viewModel.storiesFromRequest.collectAsState().value
 
@@ -56,18 +59,24 @@ fun StoriesScreen(
         viewModel.checkAuth()
     }
 
-    LaunchedEffect(state.isUserLoggedIn) {
-        viewModel.initData()
-    }
-
     LaunchedEffect(requestedStoryId) {
         requestedStoryId?.let { viewModel.loadStoriesFromRequest(it) }
+    }
+
+    LaunchedEffect(state.scrollPosition){
+        listState.animateScrollToItem(state.scrollPosition)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.rememberScrollPosition(listState.firstVisibleItemIndex)
+        }
     }
 
     if (state.networkState !is NetworkState.Ok) {
         NoNetworkScreen {
             coroutineScope.launch {
-                viewModel.initData()
+                viewModel.initState()
             }
         }
         return
@@ -75,10 +84,7 @@ fun StoriesScreen(
 
     if (state.isUserLoggedIn) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            SwipeRefresh(
-                state = refreshState,
-                onRefresh = storiesByTopics::refresh
-            ) {
+            SwipeRefresh(state = refreshState, onRefresh = storiesByTopics::refresh) {
                 LazyColumn(
                     Modifier
                         .fillMaxSize()
@@ -242,5 +248,19 @@ fun LoginInPrompt(modifier: Modifier, navToSignIn: () -> Unit, navToSignUp: () -
         OutlinedButton(onClick = navToSignIn, modifier = Modifier) {
             Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in_instead))
         }
+    }
+}
+
+
+@Composable
+private fun <T : Any> LazyPagingItems<T>.rememberLazyListState(): LazyListState {
+    // After recreation, LazyPagingItems first return 0 items, then the cached items.
+    // This behavior/issue is resetting the LazyListState scroll position.
+    // Below is a workaround. More info: https://issuetracker.google.com/issues/177245496.
+    return when (itemCount) {
+        // Return a different LazyListState instance.
+        0 -> remember(this) { LazyListState(0, 0) }
+        // Return rememberLazyListState (normal case).
+        else -> androidx.compose.foundation.lazy.rememberLazyListState()
     }
 }

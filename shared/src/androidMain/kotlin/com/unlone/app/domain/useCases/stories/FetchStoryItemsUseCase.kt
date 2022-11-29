@@ -77,7 +77,7 @@ actual class FetchStoryItemsUseCase(
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     @NativeCoroutinesIgnore
     operator fun invoke(): Flow<PagingData<StoryItem>> {
-        return pager.pagingData
+        return pager.pagingData.cachedIn(scope)
     }
 
     companion object {

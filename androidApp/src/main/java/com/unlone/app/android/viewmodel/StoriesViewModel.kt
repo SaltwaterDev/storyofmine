@@ -7,14 +7,16 @@ import androidx.paging.cachedIn
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.StoryResult
-import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
 import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,6 +32,7 @@ data class StoriesScreenUiState(
     val lastItemId: String? = null,
     val username: String? = null,
     val networkState: NetworkState = NetworkState.Ok,
+    val scrollPosition: Int = 0,
 )
 
 
@@ -47,33 +50,35 @@ class StoriesViewModel(
         state.copy(username = username)
     }.stateIn(viewModelScope, SharingStarted.Lazily, StoriesScreenUiState())
 
-    val storiesByTopics = fetchStoryItemsUseCase().cachedIn(viewModelScope)
+    val storiesByTopics = fetchStoryItemsUseCase()
+        .cachedIn(viewModelScope)
     var storiesFromRequest = MutableStateFlow<StoryItem.StoriesByTopic?>(null)
         private set
 
 
     init {
-        viewModelScope.launch {
-            initData()
-        }
+        viewModelScope.launch { initState() }
     }
 
-    suspend fun initData() = withContext(Dispatchers.Default) {
+    suspend fun initState() = withContext(Dispatchers.Default) {
         _state.value = _state.value.copy(loading = true)
         // check network state. Proceed if ok
         checkNetworkStateUseCase().apply {
             _state.value = _state.value.copy(networkState = this)
+            val scrollPosition: Int? = savedStateHandle["scrollPosition"]
             when (this) {
                 is NetworkState.Ok -> {
                     if (authRepository.authenticate() is AuthResult.Authorized) {
                         _state.value = _state.value.copy(
                             isUserLoggedIn = true,
+                            scrollPosition = scrollPosition ?:0
                         )
                     }
                 }
                 is NetworkState.UnknownError -> {
                     _state.value = _state.value.copy(
-                        errorMsg = this.message
+                        errorMsg = this.message,
+                        scrollPosition = scrollPosition ?: 0,
                     )
                 }
                 is NetworkState.Unavailable -> {
@@ -81,7 +86,6 @@ class StoriesViewModel(
                 }
             }
         }
-
         _state.value = _state.value.copy(loading = false)
     }
 
@@ -93,9 +97,12 @@ class StoriesViewModel(
     fun checkAuth() {
         viewModelScope.launch {
             _state.value = when (val authResult = authRepository.authenticate()) {
-                is AuthResult.Authorized -> _state.value.copy(
-                    isUserLoggedIn = true,
-                )
+                is AuthResult.Authorized -> {
+                    initState()
+                    _state.value.copy(
+                        isUserLoggedIn = true,
+                    )
+                }
                 is AuthResult.Unauthorized -> _state.value.copy(
                     isUserLoggedIn = false,
                 )
@@ -120,5 +127,9 @@ class StoriesViewModel(
                 }
             }
         }
+    }
+
+    fun rememberScrollPosition(position: Int){
+        savedStateHandle["scrollPosition"] = position
     }
 }

@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.write
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
@@ -34,6 +35,7 @@ import org.example.library.SharedRes
 import org.koin.androidx.compose.koinViewModel
 
 
+@SuppressLint("UnusedCrossfadeTargetStateParameter")
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalComposeUiApi
 @ExperimentalAnimatedInsets
@@ -41,7 +43,7 @@ import org.koin.androidx.compose.koinViewModel
 @ExperimentalMaterialApi
 @Composable
 fun WritingScreen(
-    viewModel: WritingViewModel = koinViewModel(),
+    viewModel: WritingViewModel,
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
     onPostSucceed: (String) -> Unit,
