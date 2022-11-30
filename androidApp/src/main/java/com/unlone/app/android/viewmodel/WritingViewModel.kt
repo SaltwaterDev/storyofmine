@@ -149,7 +149,7 @@ class WritingViewModel(
         }
     }
 
-    private fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
+    fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
         if (state.value.title.isNotBlank() || state.value.body.text.isNotBlank()) {
             Timber.d(state.value.currentDraftId)
             val result = saveDraftUseCase(
@@ -211,16 +211,17 @@ class WritingViewModel(
         viewModelScope.launch {
             changedChannel.send(state.value.copy(loading = true))
             saveDraft().join()
-            queryDraftUseCase(id).collect {
-                changedChannel.send(
-                    state.value.copy(
-                        loading = false,
-                        currentDraftId = it.first,
-                        title = it.second.title,
-                        body = TextFieldValue(text = it.second.content),
-                    )
+
+            val result = queryDraftUseCase(id).first()
+            changedChannel.send(
+                state.value.copy(
+                    loading = false,
+                    currentDraftId = result.first,
+                    title = result.second.title,
+                    body = TextFieldValue(text = result.second.content),
                 )
-            }
+            )
+
         }
     }
 
@@ -251,10 +252,6 @@ class WritingViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        saveDraft()
-    }
 
     fun setCommentAllowed(commentAllowed: Boolean) {
         viewModelScope.launch {

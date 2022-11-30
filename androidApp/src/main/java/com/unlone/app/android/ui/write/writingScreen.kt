@@ -62,6 +62,10 @@ fun WritingScreen(
         viewModel.addImageMD(it)
     }
 
+    DisposableEffect(Unit){
+        onDispose { viewModel.saveDraft() }
+    }
+
 //    LaunchedEffect(draftId) {
 //        viewModel.refreshData(draftId, draftVersionId)
 //    }

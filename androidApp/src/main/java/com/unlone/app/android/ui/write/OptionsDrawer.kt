@@ -1,13 +1,11 @@
 package com.unlone.app.android.ui.write
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -24,6 +22,7 @@ import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
+import timber.log.Timber
 
 
 @ExperimentalFoundationApi
@@ -100,7 +99,7 @@ fun OptionsDrawer(
                 modifier = Modifier.animateItemPlacement(),
                 onClick = { switchDraft(it.first) },
                 onDismiss = {
-                    Log.d("TAG", "OptionsDrawer: delete")
+                    Timber.d("OptionsDrawer: delete")
                     deleteDraft(it.first)
                 },
             )
