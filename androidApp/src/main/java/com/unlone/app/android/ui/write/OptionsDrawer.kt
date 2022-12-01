@@ -29,12 +29,12 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun OptionsDrawer(
-    listOfDraft: Map<String, String>,
+    listOfDraft: Map<String?, String>,
     clearAll: () -> Unit,
     editHistory: () -> Unit,
     editHistoryEnabled: Boolean,
     newDraft: () -> Unit,
-    switchDraft: (String) -> Unit,
+    switchDraft: (String?) -> Unit,
     deleteDraft: (String) -> Unit,
 ) {
     LazyColumn {
@@ -75,11 +75,6 @@ fun OptionsDrawer(
             Spacer(modifier = Modifier.height(60.dp))
         }
 
-        val getDraftKey =
-            { title: String ->
-                listOfDraft.entries.find { entry -> entry.value == title }?.key ?: "-1"
-            }
-
         if (listOfDraft.values.isNotEmpty())
             item {
                 Text(
@@ -91,7 +86,7 @@ fun OptionsDrawer(
 
         items(
             items = listOfDraft.toList(),
-            key = { it.first },
+            key = { it.first ?: -1 },
         ) {
             DismissableBlockWithIcon(
                 iconId = R.drawable.ic_write,
@@ -99,8 +94,9 @@ fun OptionsDrawer(
                 modifier = Modifier.animateItemPlacement(),
                 onClick = { switchDraft(it.first) },
                 onDismiss = {
-                    Timber.d("OptionsDrawer: delete")
-                    deleteDraft(it.first)
+                    it.first?.let { it1 ->
+                        deleteDraft(it1)
+                    } ?: clearAll()
                 },
             )
             Divider(Modifier.fillMaxWidth())

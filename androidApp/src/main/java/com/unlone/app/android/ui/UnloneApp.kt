@@ -1,6 +1,5 @@
 package com.unlone.app.android.ui
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
@@ -39,7 +38,6 @@ fun UnloneApp() {
 
         Scaffold(scaffoldState = appState.scaffoldState, bottomBar = {
             Timber.d("UnloneApp: " + appState.navBackStackEntry.value?.destination)
-            Timber.d("UnloneApp: " + appState.shouldShowBottomBar)
             AnimatedVisibility(visible = appState.shouldShowBottomBar,
                 enter = slideInVertically(initialOffsetY = { it }),
                 exit = slideOutVertically(targetOffsetY = { it }),

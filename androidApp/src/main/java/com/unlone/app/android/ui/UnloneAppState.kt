@@ -1,10 +1,11 @@
 package com.unlone.app.android.ui
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
@@ -26,9 +27,10 @@ import timber.log.Timber
 fun rememberUnloneAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberAnimatedNavController(),
+    storiesScreenListState: LazyListState = rememberLazyListState(),
 ) =
-    remember(scaffoldState, navController) {
-        UnloneAppState(scaffoldState, navController)
+    remember(scaffoldState, navController, storiesScreenListState) {
+        UnloneAppState(scaffoldState, navController, storiesScreenListState)
     }
 
 /**
@@ -39,6 +41,7 @@ fun rememberUnloneAppState(
 class UnloneAppState(
     val scaffoldState: ScaffoldState,
     val navController: NavHostController,
+    val storiesScreenListState: LazyListState,
 ) {
 
     // ----------------------------------------------------------
@@ -92,6 +95,7 @@ class UnloneAppState(
             navController.navigate("${UnloneBottomDestinations.Stories}/$pid")
         }
     }
+
 }
 
 /**

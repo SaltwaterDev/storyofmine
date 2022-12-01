@@ -32,7 +32,6 @@ import com.unlone.app.android.viewmodel.WritingViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
-import org.koin.androidx.compose.koinViewModel
 
 
 @SuppressLint("UnusedCrossfadeTargetStateParameter")
@@ -58,17 +57,14 @@ fun WritingScreen(
     var requireSignInDialog by remember { mutableStateOf(false) }
     var toolbarHeight by remember { mutableStateOf(0.dp) }
     // launch for open gallery
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        viewModel.addImageMD(it)
-    }
+    val loadGalleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+            viewModel.addImageMD(it)
+        }
 
-    DisposableEffect(Unit){
+    DisposableEffect(Unit) {
         onDispose { viewModel.saveDraft() }
     }
-
-//    LaunchedEffect(draftId) {
-//        viewModel.refreshData(draftId, draftVersionId)
-//    }
 
     // close preview when keyboard is shown
     LaunchedEffect(isKeyboardVisible) {
@@ -84,14 +80,19 @@ fun WritingScreen(
         }
     }
 
+    val uiDraftList: Map<String?, String> =
+        if (uiState.currentDraftId == null && uiState.title.isNotEmpty()) mapOf(
+            uiState.currentDraftId to uiState.title
+        ) + uiState.draftList
+        else (uiState.draftList as Map<String?, String>)
+
     BottomSheetScaffold(
         modifier = Modifier
             .displayCutoutPadding()
             .statusBarsPadding(),
         scaffoldState = scaffoldState,
         topBar = {
-            WriteScreenTopBar(
-                Modifier.statusBarsPadding(),
+            WriteScreenTopBar(Modifier.statusBarsPadding(),
                 { scope.launch { scaffoldState.drawerState.open() } },
                 {
                     scope.launch {
@@ -102,63 +103,59 @@ fun WritingScreen(
                     }
                 },
                 {
-                    if (uiState.isUserSignedIn)
-                        showPostingDialog = true
-                    else
-                        requireSignInDialog = true
+                    if (uiState.isUserSignedIn) showPostingDialog = true
+                    else requireSignInDialog = true
 
-                }
-            )
+                })
         },
         sheetContent = {
-            PreviewBottomSheet(
-                title = uiState.title,
+            PreviewBottomSheet(title = uiState.title,
                 content = uiState.body.text,
-                onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } }
-            )
+                onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } })
         },
         sheetPeekHeight = 0.dp,
         drawerContent = {
             OptionsDrawer(
-                uiState.draftList,
+                uiDraftList,
                 clearAll = {
                     viewModel.clearBody()
                     scope.launch { scaffoldState.drawerState.close() }
-                },
-                newDraft = {
+                }, newDraft = {
                     viewModel.createNewDraft()
                     scope.launch { scaffoldState.drawerState.close() }
-                },
-                editHistory = {
+                }, editHistory = {
                     uiState.currentDraftId?.let { navToEditHistory(it) }
                     scope.launch { scaffoldState.drawerState.close() }
-                },
-                editHistoryEnabled = uiState.currentDraftId != null,
+                }, editHistoryEnabled = uiState.currentDraftId != null,
                 switchDraft = {
-                    viewModel.switchDraft(it)
-                    scope.launch { scaffoldState.drawerState.close() }
-                },
-                deleteDraft = viewModel::deleteDraft
+                    scope.launch {
+                        launch { it?.let { it1 -> viewModel.switchDraft(it1) } }
+                        launch { scaffoldState.drawerState.close() }
+                    }
+                }, deleteDraft = {
+                    if (it == uiState.currentDraftId){
+                        scope.launch { scaffoldState.drawerState.close() }
+                    }
+                    viewModel.deleteDraft(it)
+                }
             )
         },
     ) { innerPadding ->
 
         Box(Modifier.fillMaxHeight()) {
             Column(
-                Modifier
-                    .padding(innerPadding)
+                Modifier.padding(innerPadding)
             ) {
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .placeholder(
-                            visible = uiState.loading,
-                            highlight = PlaceholderHighlight.fade()
+                            visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.title,
                     onValueChange = {
                         viewModel.setTitle(it)
-                                    },
+                    },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -179,13 +176,12 @@ fun WritingScreen(
                         .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp)
                         .placeholder(
-                            visible = uiState.loading,
-                            highlight = PlaceholderHighlight.fade()
+                            visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.body.text,
                     onValueChange = {
                         viewModel.setBody(it)
-                                    },
+                    },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -203,9 +199,7 @@ fun WritingScreen(
                 Modifier
                     .align(Alignment.BottomStart)
                     .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = toolbarHeight + 8.dp
+                        start = 16.dp, end = 16.dp, bottom = toolbarHeight + 8.dp
                     )
             )
 
@@ -223,55 +217,51 @@ fun WritingScreen(
                                 toolbarHeight = with(density) { height.toDp() }
                             }
                             .imePadding(),
-                        { launcher.launch("image/*") },
-                        { scope.launch { viewModel.getDisplayingQuestion() } }
-                    )
+                        { loadGalleryLauncher.launch("image/*") },
+                        { scope.launch { viewModel.getDisplayingQuestion() } })
                 }
             }
 
 
-            if (showPostingDialog)
-                PostingDialog(
-                    uiState.topicList,
-                    uiState.selectedTopic,
-                    viewModel::setTopic,
-                    { showPostingDialog = false },
-                    uiState.isPublished,
-                    uiState.commentAllowed,
-                    uiState.saveAllowed,
-                    viewModel::setPublished,
-                    viewModel::setCommentAllowed,
-                    viewModel::setSaveAllowed,
-                    {
-                        scope.launch {
-                            launch { scaffoldState.bottomSheetState.expand() }
-                            launch { showPostingDialog = false }
-                            launch { keyboardController?.hide() }
-                        }
-                    },
-                    {
-                        viewModel.postStory()
-                        showPostingDialog = false
-                    },
-                )
-
-            if (uiState.storyPosting)
-                Card(
-                    Modifier.align(Alignment.Center),
-                    shape = MaterialTheme.shapes.medium,
-                ) {
-                    Row(Modifier.padding(8.dp)) {
-                        Text(
-                            text = stringResource(resource = SharedRes.strings.writing__posting),
-                            modifier = Modifier.align(CenterVertically)
-                        )
-                        CircularProgressIndicator(Modifier.padding(start = 4.dp))
+            if (showPostingDialog) PostingDialog(
+                uiState.topicList,
+                uiState.selectedTopic,
+                viewModel::setTopic,
+                { showPostingDialog = false },
+                uiState.isPublished,
+                uiState.commentAllowed,
+                uiState.saveAllowed,
+                viewModel::setPublished,
+                viewModel::setCommentAllowed,
+                viewModel::setSaveAllowed,
+                {
+                    scope.launch {
+                        launch { scaffoldState.bottomSheetState.expand() }
+                        launch { showPostingDialog = false }
+                        launch { keyboardController?.hide() }
                     }
+                },
+                {
+                    viewModel.postStory()
+                    showPostingDialog = false
+                },
+            )
+
+            if (uiState.storyPosting) Card(
+                Modifier.align(Alignment.Center),
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Row(Modifier.padding(8.dp)) {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.writing__posting),
+                        modifier = Modifier.align(CenterVertically)
+                    )
+                    CircularProgressIndicator(Modifier.padding(start = 4.dp))
                 }
+            }
 
             uiState.error?.let {
-                AlertDialog(
-                    onDismissRequest = viewModel::dismiss,
+                AlertDialog(onDismissRequest = viewModel::dismiss,
                     title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
                     text = { Text(text = it) },
                     confirmButton = {
@@ -280,18 +270,14 @@ fun WritingScreen(
                         ) {
                             Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                         }
-                    }
-                )
+                    })
             }
 
             if (requireSignInDialog) {
-                RequireSignInDialog(
-                    { requireSignInDialog = false },
-                    {
-                        requireSignInDialog = false
-                        navToSignIn()
-                    }
-                )
+                RequireSignInDialog({ requireSignInDialog = false }, {
+                    requireSignInDialog = false
+                    navToSignIn()
+                })
             }
         }
     }

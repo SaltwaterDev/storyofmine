@@ -36,6 +36,7 @@ import org.example.library.SharedRes
 fun StoriesScreen(
     viewModel: StoriesViewModel,
     requestedStoryId: String? = null,
+    listState: LazyListState,
     navToStoryDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
     navToFullTopic: () -> Unit = {},
@@ -44,10 +45,7 @@ fun StoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    val storiesByTopics =
-        viewModel.storiesByTopics.collectAsLazyPagingItems()
-//    val listState: LazyListState = storiesByTopics.rememberLazyListState()
-    val listState: LazyListState = rememberLazyListState()
+    val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
     // used when displaying the required story at first sight
     val storiesFromRequest = viewModel.storiesFromRequest.collectAsState().value
 
@@ -63,15 +61,6 @@ fun StoriesScreen(
         requestedStoryId?.let { viewModel.loadStoriesFromRequest(it) }
     }
 
-    LaunchedEffect(state.scrollPosition){
-        listState.animateScrollToItem(state.scrollPosition)
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            viewModel.rememberScrollPosition(listState.firstVisibleItemIndex)
-        }
-    }
 
     if (state.networkState !is NetworkState.Ok) {
         NoNetworkScreen {

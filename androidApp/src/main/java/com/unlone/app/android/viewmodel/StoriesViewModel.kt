@@ -32,7 +32,6 @@ data class StoriesScreenUiState(
     val lastItemId: String? = null,
     val username: String? = null,
     val networkState: NetworkState = NetworkState.Ok,
-    val scrollPosition: Int = 0,
 )
 
 
@@ -65,20 +64,17 @@ class StoriesViewModel(
         // check network state. Proceed if ok
         checkNetworkStateUseCase().apply {
             _state.value = _state.value.copy(networkState = this)
-            val scrollPosition: Int? = savedStateHandle["scrollPosition"]
             when (this) {
                 is NetworkState.Ok -> {
                     if (authRepository.authenticate() is AuthResult.Authorized) {
                         _state.value = _state.value.copy(
                             isUserLoggedIn = true,
-                            scrollPosition = scrollPosition ?:0
                         )
                     }
                 }
                 is NetworkState.UnknownError -> {
                     _state.value = _state.value.copy(
                         errorMsg = this.message,
-                        scrollPosition = scrollPosition ?: 0,
                     )
                 }
                 is NetworkState.Unavailable -> {
@@ -127,9 +123,5 @@ class StoriesViewModel(
                 }
             }
         }
-    }
-
-    fun rememberScrollPosition(position: Int){
-        savedStateHandle["scrollPosition"] = position
     }
 }
