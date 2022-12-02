@@ -19,17 +19,15 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @SuppressLint("UnrememberedGetBackStackEntry")
-@OptIn(ExperimentalLayoutApi::class)
 @ExperimentalAnimationApi
 fun NavGraphBuilder.storiesGraph(
     navController: NavHostController,
-    appState: UnloneAppState,
     navigateUp: () -> Unit,
 ) {
 
     navigation(
-        startDestination = UnloneBottomDestinations.Stories.route,
-        route = "story",
+        startDestination = UnloneBottomDestinations.Stories.routeWithArgs,
+        route = UnloneBottomDestinations.Stories.route,
     ) {
 
         composable(
@@ -41,7 +39,7 @@ fun NavGraphBuilder.storiesGraph(
             val viewModel =
                 koinViewModel<StoriesViewModel>(viewModelStoreOwner = viewModelStoreOwner)
             StoriesScreen(viewModel = viewModel,
-                listState = appState.storiesScreenListState,
+//                listState = appState.storiesScreenListState,
                 requestedStoryId = requestedStoryId,
                 navToStoryDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navToTopicDetail(navController, it) },

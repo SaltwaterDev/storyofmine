@@ -1,9 +1,11 @@
 package com.unlone.app.android.viewmodel
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.StoryResult
@@ -24,10 +26,7 @@ data class StoriesScreenUiState(
     val loading: Boolean = true,
     val isUserLoggedIn: Boolean = true,
     val isRefreshing: Boolean = false,
-    val storiesByTopics: List<StoryItem.StoriesByTopic>? = listOf(
-        StoryItem.StoriesByTopic(),
-        StoryItem.StoriesByTopic()
-    ),
+    val storiesByTopics: List<StoryItem.StoriesByTopic>? = List(4) { StoryItem.StoriesByTopic() },
     val errorMsg: String? = null,
     val lastItemId: String? = null,
     val username: String? = null,
@@ -38,7 +37,7 @@ data class StoriesScreenUiState(
 class StoriesViewModel(
     private val authRepository: AuthRepository,
     private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
-    fetchStoryItemsUseCase: FetchStoryItemsUseCase,
+    private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
     private val getTopicStoriesForRequestedStoryUseCase: GetTopicStoriesForRequestedStoryUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -49,8 +48,12 @@ class StoriesViewModel(
         state.copy(username = username)
     }.stateIn(viewModelScope, SharingStarted.Lazily, StoriesScreenUiState())
 
-    val storiesByTopics = fetchStoryItemsUseCase()
-        .cachedIn(viewModelScope)
+    private val _storiesByTopics = fetchStoryItemsUseCase().cachedIn(viewModelScope)
+
+    val storiesByTopics
+        @Composable get() = _storiesByTopics.collectAsLazyPagingItems()
+
+
     var storiesFromRequest = MutableStateFlow<StoryItem.StoriesByTopic?>(null)
         private set
 
@@ -94,10 +97,7 @@ class StoriesViewModel(
         viewModelScope.launch {
             _state.value = when (val authResult = authRepository.authenticate()) {
                 is AuthResult.Authorized -> {
-                    initState()
-                    _state.value.copy(
-                        isUserLoggedIn = true,
-                    )
+                    _state.value.copy(isUserLoggedIn = true)
                 }
                 is AuthResult.Unauthorized -> _state.value.copy(
                     isUserLoggedIn = false,

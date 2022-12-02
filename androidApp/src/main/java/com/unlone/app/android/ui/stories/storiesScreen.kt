@@ -2,7 +2,10 @@ package com.unlone.app.android.ui.stories
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
@@ -36,7 +38,7 @@ import org.example.library.SharedRes
 fun StoriesScreen(
     viewModel: StoriesViewModel,
     requestedStoryId: String? = null,
-    listState: LazyListState,
+//    listState: LazyListState,
     navToStoryDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
     navToFullTopic: () -> Unit = {},
@@ -45,7 +47,8 @@ fun StoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    val storiesByTopics = viewModel.storiesByTopics.collectAsLazyPagingItems()
+    val storiesByTopics = viewModel.storiesByTopics
+    val listState = storiesByTopics.rememberLazyListState()
     // used when displaying the required story at first sight
     val storiesFromRequest = viewModel.storiesFromRequest.collectAsState().value
 
@@ -57,8 +60,10 @@ fun StoriesScreen(
         viewModel.checkAuth()
     }
 
-    LaunchedEffect(requestedStoryId) {
-        requestedStoryId?.let { viewModel.loadStoriesFromRequest(it) }
+    requestedStoryId?.let {
+        LaunchedEffect(requestedStoryId) {
+            viewModel.loadStoriesFromRequest(it)
+        }
     }
 
 
@@ -112,9 +117,9 @@ fun StoriesScreen(
                             Spacer(modifier = Modifier.height(30.dp))
                         }
                     }
-                    items(storiesByTopics, key = {
-                        if (it is StoryItem.TopicTable) it.topics else it.hashCode()
-                    }) {
+                    items(storiesByTopics,
+                        key = { if (it is StoryItem.TopicTable) it.topics else it.hashCode() }
+                    ) {
                         when (it) {
                             is StoryItem.TopicTable -> {
                                 TopicTable(
@@ -143,6 +148,7 @@ fun StoriesScreen(
                         }
 
                     }
+
                 }
             }
         }
@@ -242,7 +248,7 @@ fun LoginInPrompt(modifier: Modifier, navToSignIn: () -> Unit, navToSignUp: () -
 
 
 @Composable
-private fun <T : Any> LazyPagingItems<T>.rememberLazyListState(): LazyListState {
+fun <T : Any> LazyPagingItems<T>.rememberLazyListState(): LazyListState {
     // After recreation, LazyPagingItems first return 0 items, then the cached items.
     // This behavior/issue is resetting the LazyListState scroll position.
     // Below is a workaround. More info: https://issuetracker.google.com/issues/177245496.

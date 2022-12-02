@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.*
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.paging.compose.LazyPagingItems
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.unlone.app.android.ui.navigation.UnloneBottomDestinations
 import timber.log.Timber
@@ -27,10 +28,9 @@ import timber.log.Timber
 fun rememberUnloneAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberAnimatedNavController(),
-    storiesScreenListState: LazyListState = rememberLazyListState(),
 ) =
-    remember(scaffoldState, navController, storiesScreenListState) {
-        UnloneAppState(scaffoldState, navController, storiesScreenListState)
+    remember(scaffoldState, navController) {
+        UnloneAppState(scaffoldState, navController)
     }
 
 /**
@@ -41,7 +41,6 @@ fun rememberUnloneAppState(
 class UnloneAppState(
     val scaffoldState: ScaffoldState,
     val navController: NavHostController,
-    val storiesScreenListState: LazyListState,
 ) {
 
     // ----------------------------------------------------------
@@ -74,8 +73,15 @@ class UnloneAppState(
     }
 
     fun navigateToBottomBarRoute(route: String) {
-        navController.navigate(route) {
-            Timber.d("navigateToBottomBarRoute: $currentRoute, $route")
+        Timber.d("navigateToBottomBarRoute: $currentRoute, $route")
+        if (currentRoute?.contains(route) == true)
+            navController.graph.findStartDestination().route?.let {
+                navController.popBackStack(
+                    route = it,
+                    inclusive = false
+                )
+            }
+        else
             navController.navigate(route) {
                 // Pop up backstack to the first destination and save state. This makes going back
                 // to the start destination when pressing back in any other bottom tab.
@@ -83,9 +89,8 @@ class UnloneAppState(
                     saveState = true
                 }
                 launchSingleTop = true
-                restoreState = true
+                restoreState = false
             }
-        }
     }
 
     // todo

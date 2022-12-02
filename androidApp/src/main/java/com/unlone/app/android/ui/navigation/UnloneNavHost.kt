@@ -65,7 +65,7 @@ fun MainNavHost(
         writeGraph(navController, navToStories = {
             appState.navigateToBottomBarRoute(UnloneBottomDestinations.Stories.route + "?requestedStoryId=$it")
         })
-        storiesGraph(navController, appState, navigateUp)
+        storiesGraph(navController, navigateUp)
         profileGraph(navController, navigateUp)
 
     }
