@@ -19,16 +19,17 @@ internal class AuthRepositoryImpl(
     init {
         // todo: di coroutine
         CoroutineScope(Dispatchers.Main).launch {
-            authenticate()
-            // get username
-            if (isUserSignedIn.value) {
-                val result = getUsername()
-                if (result is AuthResult.Authorized) {
-                    username.value = result.data
-                }
-            }
+            refreshAuth()
         }
     }
+
+    private suspend fun refreshAuth(){
+        authenticate()
+        if (isUserSignedIn.value) {
+            getUsername()
+        }
+    }
+
 
     override var isUserSignedIn = MutableStateFlow(false)
         private set
@@ -154,6 +155,7 @@ internal class AuthRepositoryImpl(
             } else {
                 api.authenticate(token)
                 isUserSignedIn.value = true
+                getUsername()
                 AuthResult.Authorized()
             }
         } catch (e: RedirectResponseException) {
@@ -258,6 +260,7 @@ internal class AuthRepositoryImpl(
         return try {
             prefs.getString(JWT_SP_KEY)?.let {
                 val username = api.getUserName(it)
+                this.username.value = username
                 Logger.d(username)
                 AuthResult.Authorized(username)
             } ?: throw Exception("jwt doesn't exist")
