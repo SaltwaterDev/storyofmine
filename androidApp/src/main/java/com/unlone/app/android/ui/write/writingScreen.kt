@@ -118,7 +118,7 @@ fun WritingScreen(
             OptionsDrawer(
                 uiDraftList,
                 clearAll = {
-                    viewModel.clearBody()
+                    viewModel.clearDraft()
                     scope.launch { scaffoldState.drawerState.close() }
                 }, newDraft = {
                     viewModel.createNewDraft()

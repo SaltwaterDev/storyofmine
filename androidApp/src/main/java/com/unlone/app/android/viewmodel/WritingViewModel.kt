@@ -184,9 +184,12 @@ class WritingViewModel(
     }
 
     // region option menu feature
-    fun clearBody() {
+    fun clearDraft() {
         viewModelScope.launch {
-            changedChannel.send(state.value.copy(body = TextFieldValue(text = "")))
+            changedChannel.send(state.value.copy(
+                title = "",
+                body = TextFieldValue(text = ""),
+            ))
         }
     }
 
@@ -206,8 +209,6 @@ class WritingViewModel(
     }
 
     fun switchDraft(id: String) {
-        if (id == state.value.currentDraftId) return
-
         viewModelScope.launch {
             changedChannel.send(state.value.copy(loading = true))
             saveDraft().join()
