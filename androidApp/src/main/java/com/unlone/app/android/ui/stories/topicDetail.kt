@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.stories
 
 import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,7 +41,8 @@ fun TopicDetail(
     Scaffold(
         modifier = Modifier
             .displayCutoutPadding()
-            .statusBarsPadding(),
+            .statusBarsPadding()
+            .navigationBarsPadding(),
         topBar = {
             TopicDetailTopBar(
                 back,
@@ -48,7 +50,7 @@ fun TopicDetail(
                 true,
                 viewModel::toggleFollowing,
             )
-        }) {
+        }) { padding ->
         SwipeRefresh(state = rememberSwipeRefreshState(uiState.isRefreshing),
             onRefresh = { topic?.let { it1 -> coroutineScope.launch { viewModel.refresh(it1) } } }) {
 
