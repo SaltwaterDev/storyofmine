@@ -6,7 +6,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
@@ -25,11 +24,11 @@ import kotlin.time.Duration.Companion.nanoseconds
 @Composable
 fun MainNavHost(
     appState: UnloneAppState,
-    navController: NavHostController,
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
+) {
+    val navController = appState.navController
 
-    ) {
     NavHost(
         navController = navController,
         startDestination = "splash",
@@ -37,10 +36,10 @@ fun MainNavHost(
         route = "main",
     ) {
 
-        composable("splash"){
+        composable("splash") {
             LaunchedEffect(Unit) {
                 delay(duration = 1.nanoseconds)
-                navController.popBackStack()
+                navigateUp()
                 navController.navigate(UnloneBottomDestinations.Write.routeWithArgs)
             }
 //            SplashScreen {
@@ -62,9 +61,11 @@ fun MainNavHost(
             },
         )
 
-        writeGraph(navController, navToStories = {
-            appState.navigateToBottomBarRoute(UnloneBottomDestinations.Stories.route + "?requestedStoryId=$it")
-        })
+        writeGraph(
+            navController,
+            navToStories = {
+                appState.navigateToBottomBarRoute(UnloneBottomDestinations.Stories.route + "?requestedStoryId=$it")
+            })
         storiesGraph(navController, navigateUp)
         profileGraph(navController, navigateUp)
 

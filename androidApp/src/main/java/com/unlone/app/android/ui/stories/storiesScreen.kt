@@ -1,11 +1,8 @@
 package com.unlone.app.android.ui.stories
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,12 +19,9 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.NoNetworkScreen
-import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.ui.comonComponent.TopicTable
 import com.unlone.app.android.ui.theme.MontserratFontFamily
-import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.StoriesViewModel
-import com.unlone.app.data.story.SimpleStory
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
 import dev.icerock.moko.resources.compose.stringResource
@@ -38,7 +32,6 @@ import org.example.library.SharedRes
 fun StoriesScreen(
     viewModel: StoriesViewModel,
     requestedStoryId: String? = null,
-//    listState: LazyListState,
     navToStoryDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
     navToFullTopic: () -> Unit = {},
@@ -123,7 +116,9 @@ fun StoriesScreen(
                         when (it) {
                             is StoryItem.TopicTable -> {
                                 TopicTable(
-                                    modifier = Modifier.padding(16.dp),
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .padding(bottom = 8.dp),
                                     topics = it.topics,
                                     onTopicClick = navToTopicPosts,
                                     viewMoreTopic = navToFullTopic,
@@ -170,68 +165,6 @@ fun StoriesScreen(
         }
     }
 }
-
-@Composable
-fun PostsByTopic(
-    topic: String,
-    loading: Boolean,
-    stories: List<SimpleStory>,
-    viewMorePost: () -> Unit,
-    navToPostDetail: (String) -> Unit
-) {
-    Column(
-        Modifier.fillMaxWidth()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                text = topic,
-                style = Typography.subtitle1,
-                modifier = Modifier
-                    .weight(1f, false)
-                    .placeholder(
-                        visible = loading,
-                        highlight = PlaceholderHighlight.fade()
-                    )
-            )
-
-            if (!loading)
-                Text(
-                    text = stringResource(resource = SharedRes.strings.stories_show_more),
-                    modifier = Modifier
-                        .clickable { viewMorePost() }
-                        .padding(start = 8.dp, top = 8.dp, end = 8.dp),
-                    fontSize = 13.sp,
-                )
-        }
-        Spacer(modifier = Modifier.height(7.dp))
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            items(stories) {
-                StoryCard(
-                    it.title,
-                    it.content,
-                    loading,
-                    Modifier
-                        .fillParentMaxWidth()
-                        .placeholder(
-                            visible = loading,
-                            highlight = PlaceholderHighlight.fade()
-                        )
-                ) { navToPostDetail(it.id) }
-            }
-        }
-    }
-}
-
 
 @Composable
 fun LoginInPrompt(modifier: Modifier, navToSignIn: () -> Unit, navToSignUp: () -> Unit) {

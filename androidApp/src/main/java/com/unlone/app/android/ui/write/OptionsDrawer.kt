@@ -114,7 +114,8 @@ private fun BlockWithIcon(
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable(enabled) { onClick() }
+            .clickable(enabled) { onClick() },
+        verticalAlignment = Alignment.CenterVertically
     ) {
         iconId?.let {
             Icon(
@@ -130,7 +131,7 @@ private fun BlockWithIcon(
             modifier = Modifier
                 .padding(16.dp)
                 .alpha(if (enabled) 1f else 0.38f),
-            style = Typography.subtitle2
+            style = Typography.subtitle1
         )
     }
 }
@@ -184,7 +185,8 @@ private fun DismissableBlockWithIcon(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clickable { onClick() }
+                    .clickable { onClick() },
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 iconId?.let {
                     Icon(
@@ -193,7 +195,7 @@ private fun DismissableBlockWithIcon(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
-                Text(text = title, modifier = Modifier.padding(16.dp), style = Typography.subtitle2)
+                Text(text = title, modifier = Modifier.padding(16.dp), style = Typography.subtitle1)
             }
 
         }

@@ -74,31 +74,23 @@ class UnloneAppState(
 
     fun navigateToBottomBarRoute(route: String) {
         Timber.d("navigateToBottomBarRoute: $currentRoute, $route")
-        if (currentRoute?.contains(route) == true)
-            navController.graph.findStartDestination().route?.let {
-                navController.popBackStack(
-                    route = it,
-                    inclusive = false
-                )
+        navController.navigate(route) {
+            // Pop up to the start destination of the graph to
+            // avoid building up a large stack of destinations
+            // on the back stack as users select items
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
             }
-        else
-            navController.navigate(route) {
-                // Pop up backstack to the first destination and save state. This makes going back
-                // to the start destination when pressing back in any other bottom tab.
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = false
-            }
+            // Avoid multiple copies of the same destination when
+            // reselecting the same item
+            launchSingleTop = true
+            // Restore state when reselecting a previously selected item
+            restoreState = true
+        }
     }
 
     // todo
     fun navigateToStoriesDetail(pid: Long, from: NavBackStackEntry) {
-        // In order to discard duplicated navigation events, we check the Lifecycle
-        if (from.lifecycleIsResumed()) {
-            navController.navigate("${UnloneBottomDestinations.Stories}/$pid")
-        }
     }
 
 }

@@ -33,19 +33,18 @@ import timber.log.Timber
 fun UnloneApp() {
 
     UnloneTheme {
-        val appState = rememberUnloneAppState()
-        val navController = appState.navController
-
-        Scaffold(scaffoldState = appState.scaffoldState, bottomBar = {
-            Timber.d("UnloneApp: " + appState.navBackStackEntry.value?.destination)
-            AnimatedVisibility(visible = appState.shouldShowBottomBar,
-                enter = slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it }),
-                content = { UnloneBottomBar(appState) })
-        }) { contentPadding ->
+    val appState = rememberUnloneAppState()
+        Scaffold(
+            scaffoldState = appState.scaffoldState,
+            bottomBar = {
+                Timber.d("UnloneApp: " + appState.navBackStackEntry.value?.destination)
+                AnimatedVisibility(visible = appState.shouldShowBottomBar,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it }),
+                    content = { UnloneBottomBar(appState = appState) })
+            }) { contentPadding ->
             MainNavHost(
                 appState,
-                navController,
                 Modifier.padding(contentPadding),
                 appState::upPress
             )
@@ -56,11 +55,11 @@ fun UnloneApp() {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UnloneBottomBar(
+    modifier: Modifier = Modifier,
     appState: UnloneAppState,
     backgroundColor: Color = MaterialTheme.colors.surface,
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = BottomNavigationDefaults.Elevation,
-    modifier: Modifier = Modifier,
 ) {
     val navController = appState.navController
 

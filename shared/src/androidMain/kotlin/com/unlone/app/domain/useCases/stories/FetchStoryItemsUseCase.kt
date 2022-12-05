@@ -8,6 +8,7 @@ import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesIgnore
 import com.unlone.app.data.story.StoryRepository
+import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.Topic
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.StoryItem
@@ -35,8 +36,16 @@ actual class FetchStoryItemsUseCase(
                     size
                 )
 
-                val randomTopics =
+                val randomTopicsResult =
                     if (currentKey == 0) topicRepository.getRandomTopic(randomTopicSize) else null
+
+                // parse randomTopicsResult
+                val randomTopics = if (randomTopicsResult is StoryResult.Success) {
+                    randomTopicsResult.data
+                } else {
+                    Logger.e { randomTopicsResult?.errorMsg.toString() }
+                    null
+                }
 
                 val items = integrateStoryItem(storiesByTopic, randomTopics)
                 PagingResult(
