@@ -96,5 +96,6 @@
     <string name="common__btn_submit">Submit</string>
     <string name="common__btn_follow">Following</string>
     <string name="common__btn_following">Following</string>
+    <string name="common__btn_retry">Retry</string>
 
 </resources>

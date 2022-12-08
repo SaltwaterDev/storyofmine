@@ -96,5 +96,7 @@
     <string name="common__btn_submit">提交</string>
     <string name="common__btn_follow">追蹤</string>
     <string name="common__btn_following">追蹤中</string>
+    <string name="common__btn_retry">重試</string>
+
 
 </resources>

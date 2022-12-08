@@ -3,6 +3,7 @@ package com.unlone.app.android.viewmodel
 import androidx.lifecycle.ViewModel
 import com.unlone.app.data.userPreference.UnloneLocale
 import com.unlone.app.data.userPreference.UserPreferenceRepository
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -22,9 +23,7 @@ class SettingsViewModel(
     val state = _state.asStateFlow()
 
     fun refreshData() {
-//        _state.value = _state.value.copy(loading = true)
         _state.value = _state.value.copy(currentLocale = userPreferenceRepository.getLocale())
-//        _state.value = _state.value.copy(loading = false)
     }
 
     fun switchLocale(locale: UnloneLocale) {

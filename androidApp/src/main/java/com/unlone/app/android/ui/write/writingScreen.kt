@@ -26,9 +26,11 @@ import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.WritingViewModel
+import com.unlone.app.domain.entities.NetworkState
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
@@ -47,7 +49,8 @@ fun WritingScreen(
     navToSignIn: () -> Unit,
     onPostSucceed: (String) -> Unit,
 ) {
-    val uiState = viewModel.state.collectAsState().value
+    val uiState = viewModel.uiState
+    val networkState by connectivityState()
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -62,9 +65,17 @@ fun WritingScreen(
             viewModel.addImageMD(it)
         }
 
+    LaunchedEffect(networkState) {
+        viewModel.checkAuthentication()
+        viewModel.refreshData(networkState is NetworkState.Available)
+    }
+
+
+
     DisposableEffect(Unit) {
         onDispose { viewModel.saveDraft() }
     }
+
 
     // close preview when keyboard is shown
     LaunchedEffect(isKeyboardVisible) {
@@ -133,10 +144,10 @@ fun WritingScreen(
                         launch { scaffoldState.drawerState.close() }
                     }
                 }, deleteDraft = {
-                    if (it == uiState.currentDraftId){
+                    if (it == uiState.currentDraftId) {
                         scope.launch { scaffoldState.drawerState.close() }
                     }
-                    viewModel.deleteDraft(it)
+                    scope.launch { viewModel.deleteDraft(it) }
                 }
             )
         },

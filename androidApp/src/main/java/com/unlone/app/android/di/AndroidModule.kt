@@ -34,6 +34,7 @@ val androidModule = module {
             get(),
             get(),
             get(),
+            get(),
         )
     }
 //    viewModelOf(::WritingViewModel)

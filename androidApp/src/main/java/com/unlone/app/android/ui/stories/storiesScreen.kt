@@ -20,14 +20,17 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.NoNetworkScreen
 import com.unlone.app.android.ui.comonComponent.TopicTable
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.MontserratFontFamily
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun StoriesScreen(
     viewModel: StoriesViewModel,
@@ -39,6 +42,7 @@ fun StoriesScreen(
     navToSignUp: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
+    val networkState by connectivityState()
 
     val storiesByTopics = viewModel.storiesByTopics
     val listState = storiesByTopics.rememberLazyListState()
@@ -60,7 +64,7 @@ fun StoriesScreen(
     }
 
 
-    if (state.networkState !is NetworkState.Ok) {
+    if (networkState !is NetworkState.Available) {
         NoNetworkScreen {
             coroutineScope.launch {
                 viewModel.initState()

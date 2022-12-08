@@ -19,17 +19,9 @@ internal class AuthRepositoryImpl(
     init {
         // todo: di coroutine
         CoroutineScope(Dispatchers.Main).launch {
-            refreshAuth()
+            authenticate()
         }
     }
-
-    private suspend fun refreshAuth(){
-        authenticate()
-        if (isUserSignedIn.value) {
-            getUsername()
-        }
-    }
-
 
     override var isUserSignedIn = MutableStateFlow(false)
         private set
@@ -151,11 +143,11 @@ internal class AuthRepositoryImpl(
             val token = prefs.getString(JWT_SP_KEY)
             if (token == null) {
                 isUserSignedIn.value = false
-                AuthResult.Unauthorized<Unit>(null)
+                AuthResult.Unauthorized(null)
             } else {
-                api.authenticate(token)
+                val response = api.authenticate(token)
                 isUserSignedIn.value = true
-                getUsername()
+                username.value = response.username
                 AuthResult.Authorized()
             }
         } catch (e: RedirectResponseException) {

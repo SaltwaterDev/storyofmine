@@ -1,6 +1,5 @@
 package com.unlone.app.android.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.story.CommentRepository
@@ -8,10 +7,8 @@ import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.entities.Comment
 import com.unlone.app.domain.entities.NetworkState
-import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -31,7 +28,7 @@ data class StoryDetailUiState(
     val loading: Boolean = false,
     val postCommentLoading: Boolean = false,
     val commentText: String = "",
-    val networkState: NetworkState = NetworkState.Ok,
+    val networkState: NetworkState = NetworkState.Available,
     val postCommentSucceed: Boolean = false,
 )
 
@@ -39,8 +36,6 @@ class StoryDetailViewModel(
     private val fetchStoryDetailUseCase: FetchStoryDetailUseCase,
     private val commentRepository: CommentRepository,
     private val storyRepository: StoryRepository,
-    private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
-    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     var state = MutableStateFlow(StoryDetailUiState())
@@ -49,25 +44,6 @@ class StoryDetailViewModel(
     fun getStoryDetail(storyId: String) = viewModelScope.launch(Dispatchers.Default) {
 
         state.value = state.value.copy(loading = true)
-
-        // check network state. Proceed if ok
-        checkNetworkStateUseCase().apply {
-            state.value = state.value.copy(networkState = this)
-            when (this) {
-                is NetworkState.Ok -> {}
-                is NetworkState.UnknownError -> {
-                    state.value = state.value.copy(
-                        errorMsg = this.message
-                    )
-                    cancel()
-                    return@launch
-                }
-                is NetworkState.Unavailable -> {
-                    cancel()
-                    return@launch
-                }
-            }
-        }
 
         when (val result = fetchStoryDetailUseCase(storyId)) {
             is StoryResult.Success -> {

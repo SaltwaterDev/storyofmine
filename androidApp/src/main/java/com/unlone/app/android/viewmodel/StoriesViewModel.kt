@@ -11,7 +11,6 @@ import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
-import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUseCase
 import kotlinx.coroutines.Dispatchers
@@ -30,16 +29,13 @@ data class StoriesScreenUiState(
     val errorMsg: String? = null,
     val lastItemId: String? = null,
     val username: String? = null,
-    val networkState: NetworkState = NetworkState.Ok,
 )
 
 
 class StoriesViewModel(
     private val authRepository: AuthRepository,
-    private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
     private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
     private val getTopicStoriesForRequestedStoryUseCase: GetTopicStoriesForRequestedStoryUseCase,
-    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<StoriesScreenUiState> =
@@ -64,26 +60,10 @@ class StoriesViewModel(
 
     suspend fun initState() = withContext(Dispatchers.Default) {
         _state.value = _state.value.copy(loading = true)
-        // check network state. Proceed if ok
-        checkNetworkStateUseCase().apply {
-            _state.value = _state.value.copy(networkState = this)
-            when (this) {
-                is NetworkState.Ok -> {
-                    if (authRepository.authenticate() is AuthResult.Authorized) {
-                        _state.value = _state.value.copy(
-                            isUserLoggedIn = true,
-                        )
-                    }
-                }
-                is NetworkState.UnknownError -> {
-                    _state.value = _state.value.copy(
-                        errorMsg = this.message,
-                    )
-                }
-                is NetworkState.Unavailable -> {
-                    /*do nothing, as already update the state*/
-                }
-            }
+        if (authRepository.authenticate() is AuthResult.Authorized) {
+            _state.value = _state.value.copy(
+                isUserLoggedIn = true,
+            )
         }
         _state.value = _state.value.copy(loading = false)
     }

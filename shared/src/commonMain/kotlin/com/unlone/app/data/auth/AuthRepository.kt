@@ -17,6 +17,5 @@ interface AuthRepository {
     suspend fun signOut()
     fun getJwt(): String?
     suspend fun setUserName(email: String, username: String): AuthResult<Unit>
-//    suspend fun getUsername(): AuthResult<String>
     suspend fun removeUserRecordByEmail(email: String): AuthResult<Unit>
 }

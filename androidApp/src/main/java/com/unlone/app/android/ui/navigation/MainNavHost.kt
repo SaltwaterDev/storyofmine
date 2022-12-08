@@ -5,12 +5,13 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.unlone.app.android.ui.UnloneAppState
-import com.unlone.app.android.viewmodel.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.nanoseconds
 
@@ -19,7 +20,7 @@ import kotlin.time.Duration.Companion.nanoseconds
 @ExperimentalMaterialApi
 @ExperimentalLayoutApi
 @OptIn(
-    ExperimentalAnimatedInsets::class
+    ExperimentalAnimatedInsets::class, ExperimentalCoroutinesApi::class
 )
 @Composable
 fun MainNavHost(

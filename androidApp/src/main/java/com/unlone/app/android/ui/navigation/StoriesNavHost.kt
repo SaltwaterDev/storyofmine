@@ -2,19 +2,18 @@ package com.unlone.app.android.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.unlone.app.android.ui.UnloneAppState
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.stories.*
 import com.unlone.app.android.viewmodel.*
+import com.unlone.app.domain.entities.NetworkState
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -38,8 +37,8 @@ fun NavGraphBuilder.storiesGraph(
             val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
             val viewModel =
                 koinViewModel<StoriesViewModel>(viewModelStoreOwner = viewModelStoreOwner)
-            StoriesScreen(viewModel = viewModel,
-//                listState = appState.storiesScreenListState,
+            StoriesScreen(
+                viewModel = viewModel,
                 requestedStoryId = requestedStoryId,
                 navToStoryDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navToTopicDetail(navController, it) },
