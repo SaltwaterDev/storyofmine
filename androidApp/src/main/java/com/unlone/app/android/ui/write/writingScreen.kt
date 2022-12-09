@@ -32,12 +32,13 @@ import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.WritingViewModel
 import com.unlone.app.domain.entities.NetworkState
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
 
 
 @SuppressLint("UnusedCrossfadeTargetStateParameter")
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
 @ExperimentalComposeUiApi
 @ExperimentalAnimatedInsets
 @ExperimentalLayoutApi
@@ -57,6 +58,7 @@ fun WritingScreen(
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
     var showPostingDialog by remember { mutableStateOf(false) }
+    var showNetworkUnavailableAlert by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
     var toolbarHeight by remember { mutableStateOf(0.dp) }
     // launch for open gallery
@@ -69,8 +71,6 @@ fun WritingScreen(
         viewModel.checkAuthentication()
         viewModel.refreshData(networkState is NetworkState.Available)
     }
-
-
 
     DisposableEffect(Unit) {
         onDispose { viewModel.saveDraft() }
@@ -114,9 +114,12 @@ fun WritingScreen(
                     }
                 },
                 {
-                    if (uiState.isUserSignedIn) showPostingDialog = true
-                    else requireSignInDialog = true
-
+                    when {
+                        networkState !is NetworkState.Available ->
+                            showNetworkUnavailableAlert = true
+                        !uiState.isUserSignedIn -> requireSignInDialog = true
+                        else -> showPostingDialog = true
+                    }
                 })
         },
         sheetContent = {
@@ -258,6 +261,7 @@ fun WritingScreen(
                 },
             )
 
+
             if (uiState.storyPosting) Card(
                 Modifier.align(Alignment.Center),
                 shape = MaterialTheme.shapes.medium,
@@ -272,7 +276,8 @@ fun WritingScreen(
             }
 
             uiState.error?.let {
-                AlertDialog(onDismissRequest = viewModel::dismiss,
+                AlertDialog(
+                    onDismissRequest = viewModel::dismiss,
                     title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
                     text = { Text(text = it) },
                     confirmButton = {
@@ -289,6 +294,22 @@ fun WritingScreen(
                     requireSignInDialog = false
                     navToSignIn()
                 })
+            }
+
+
+            if (showNetworkUnavailableAlert) {
+                AlertDialog(
+                    onDismissRequest = { showNetworkUnavailableAlert = false },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
+                    text = { Text(text = "_Network unavailable. Make sure you have connect to internet") },
+                    confirmButton = {
+                        Button(
+                            onClick = { showNetworkUnavailableAlert = false }
+                        ) {
+                            Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+                        }
+                    }
+                )
             }
         }
     }

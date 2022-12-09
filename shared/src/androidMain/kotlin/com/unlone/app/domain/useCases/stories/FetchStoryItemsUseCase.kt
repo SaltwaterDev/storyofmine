@@ -31,9 +31,9 @@ actual class FetchStoryItemsUseCase(
             try {
                 // recruit items
                 val storiesByTopic = storyRepository.fetchStoriesByPosts(
-                    currentKey,
-                    postsPerTopic,
-                    size
+                    page = currentKey,
+                    postPerTopic = postsPerTopic,
+                    itemsPerPage = size
                 )
 
                 val randomTopicsResult =
@@ -90,8 +90,8 @@ actual class FetchStoryItemsUseCase(
     }
 
     companion object {
-        private const val postsPerTopic = 5
-        private const val itemsPerPage = 3
+        private const val postsPerTopic = 3
+        private const val itemsPerPage = 4
         private const val randomTopicSize = 4
         private val pagingConfig =
             PagingConfig(pageSize = itemsPerPage, enablePlaceholders = false)

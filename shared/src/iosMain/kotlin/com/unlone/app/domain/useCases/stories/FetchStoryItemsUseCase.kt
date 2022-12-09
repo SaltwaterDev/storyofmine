@@ -37,7 +37,7 @@ actual class FetchStoryItemsUseCase(
                 val randomTopics =
                     if (currentKey == 0) topicRepository.getRandomTopic(randomTopicSize) else null
 
-                val items = integrateStoryItem(storiesByTopic, randomTopics)
+                val items = integrateStoryItem(storiesByTopic, randomTopics?.data)
                 PagingResult(
                     items = items,
                     currentKey = currentKey,
