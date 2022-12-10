@@ -13,6 +13,7 @@ import com.unlone.app.android.ui.navigation.optionalDraftArg
 import com.unlone.app.android.ui.navigation.optionalVersionArg
 import com.unlone.app.android.ui.write.WritingUiState
 import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.data.write.DraftRepository
@@ -32,6 +33,7 @@ private class MutableWritingUiState : WritingUiState {
     override var currentDraftId: String? by mutableStateOf<String?>(null)
     override var displayingGuidingQuestion: GuidingQuestion? by mutableStateOf(null)
     override var draftList: Map<String, String> by mutableStateOf(mapOf())
+    override var postStoryError: PublishStoryException? by mutableStateOf(null)
     override var error: String? by mutableStateOf(null)
     override var guidingQuestion: List<GuidingQuestion> by mutableStateOf(listOf())
     override var isPublished: Boolean by mutableStateOf(false)
@@ -119,6 +121,7 @@ class WritingViewModel(
 
     fun dismiss() {
         _uiState.error = null
+        _uiState.postStoryError = null
     }
 
 
@@ -230,7 +233,13 @@ class WritingViewModel(
                 _uiState.postSucceedStory = result.data
                 _uiState.postSuccess = true
             }
-            is StoryResult.Failed -> _uiState.error = result.errorMsg
+            is StoryResult.Failed -> {
+                result.exception?.let { ex ->
+                    if (ex is PublishStoryException) {
+                        _uiState.postStoryError = ex
+                    }
+                }
+            }
             is StoryResult.UnknownError -> _uiState.error = result.errorMsg
         }
         _uiState.storyPosting = false

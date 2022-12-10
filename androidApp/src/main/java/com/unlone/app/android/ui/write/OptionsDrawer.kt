@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
@@ -201,9 +202,11 @@ private fun DismissableBlockWithIcon(
                 }
                 Text(
                     text = title,
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp, end = 26.dp),
                     style = Typography.subtitle1,
-                    fontWeight = if (isCurrentDraft) FontWeight.SemiBold else null
+                    fontWeight = if (isCurrentDraft) FontWeight.SemiBold else null,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

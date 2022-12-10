@@ -30,7 +30,9 @@ import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.WritingViewModel
+import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.domain.entities.NetworkState
+import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -291,6 +293,20 @@ fun WritingScreen(
                     })
             }
 
+            uiState.postStoryError?.let {
+                AlertDialog(
+                    onDismissRequest = viewModel::dismiss,
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
+                    text = { Text(text = stringResource(resource = getPostStoryErrorMessage(it))) },
+                    confirmButton = {
+                        Button(
+                            onClick = viewModel::dismiss
+                        ) {
+                            Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+                        }
+                    })
+            }
+
             if (requireSignInDialog) {
                 RequireSignInDialog({ requireSignInDialog = false }, {
                     requireSignInDialog = false
@@ -314,6 +330,14 @@ fun WritingScreen(
                 )
             }
         }
+    }
+}
+
+
+fun getPostStoryErrorMessage(publishStoryException: PublishStoryException): StringResource {
+    return when (publishStoryException) {
+        is PublishStoryException.EmptyTitleOrBodyException -> SharedRes.strings.error__publish_story_empty_title_or_body
+        is PublishStoryException.EmptyTopicException -> SharedRes.strings.error__publish_story_empty_topic
     }
 }
 

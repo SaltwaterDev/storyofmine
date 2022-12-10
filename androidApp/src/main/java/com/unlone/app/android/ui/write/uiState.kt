@@ -1,7 +1,11 @@
 package com.unlone.app.android.ui.write
 
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
+import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.data.write.GuidingQuestion
 
 @Stable
@@ -17,6 +21,7 @@ interface WritingUiState {
     val saveAllowed: Boolean
     val error: String?
     val postSuccess: Boolean
+    val postStoryError: PublishStoryException?
     val storyPosting: Boolean
     val loading: Boolean
     val isUserSignedIn: Boolean

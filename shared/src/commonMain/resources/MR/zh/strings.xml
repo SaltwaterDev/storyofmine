@@ -98,5 +98,7 @@
     <string name="common__btn_following">追蹤中</string>
     <string name="common__btn_retry">重試</string>
 
+    <string name="error__publish_story_empty_topic">請設定主題</string>
+    <string name="error__publish_story_empty_title_or_body">標題和內文不應空白</string>
 
 </resources>

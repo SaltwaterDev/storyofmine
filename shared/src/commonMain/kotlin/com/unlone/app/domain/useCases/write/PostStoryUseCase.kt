@@ -2,6 +2,7 @@ package com.unlone.app.domain.useCases.write
 
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
+import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
 
@@ -20,11 +21,11 @@ class PostStoryUseCase(
     ): StoryResult<String> {
         // check if title and content are not empty
         if (title.isEmpty() || content.isEmpty()){
-            return StoryResult.Failed("Title and content should not be empty.")
+            return StoryResult.Failed(exception = PublishStoryException.EmptyTitleOrBodyException())
         }
 
         if (topic.isEmpty()){
-            return StoryResult.Failed("Topic should not be empty")
+            return StoryResult.Failed(exception = PublishStoryException.EmptyTopicException())
         }
 
         return when (authRepository.authenticate()) {
@@ -42,3 +43,5 @@ class PostStoryUseCase(
         }
     }
 }
+
+

@@ -98,4 +98,7 @@
     <string name="common__btn_following">Following</string>
     <string name="common__btn_retry">Retry</string>
 
+    <string name="error__publish_story_empty_topic">Topic should not be empty</string>
+    <string name="error__publish_story_empty_title_or_body">Title and body should not be empty</string>
+
 </resources>
