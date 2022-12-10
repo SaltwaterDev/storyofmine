@@ -146,12 +146,14 @@ fun WritingScreen(
                         launch { it?.let { it1 -> viewModel.switchDraft(it1) } }
                         launch { scaffoldState.drawerState.close() }
                     }
-                }, deleteDraft = {
+                },
+                deleteDraft = {
                     if (it == uiState.currentDraftId) {
                         scope.launch { scaffoldState.drawerState.close() }
                     }
                     scope.launch { viewModel.deleteDraft(it) }
-                }
+                },
+                isCurrentDraft = { uiState.currentDraftId == it }
             )
         },
     ) { innerPadding ->

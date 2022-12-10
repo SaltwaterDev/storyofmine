@@ -65,62 +65,57 @@ class WritingViewModel(
     val uiState: WritingUiState = _uiState
 
     init {
-        viewModelScope.launch {
-            refreshData()
-        }
+        viewModelScope.launch { refreshData() }
     }
 
-    suspend fun refreshData(networkAvailable: Boolean = true) =
-        withContext(Dispatchers.Main) {
+    suspend fun refreshData(networkAvailable: Boolean = true) = withContext(Dispatchers.Main) {
 
-            val draftId = savedStateHandle.get<String>(optionalDraftArg)
-            val version = savedStateHandle.get<String>(optionalVersionArg)
+        val draftId = savedStateHandle.get<String>(optionalDraftArg)
+        val version = savedStateHandle.get<String>(optionalVersionArg)
 
-            _uiState.loading = true
-            _uiState.guidingQuestion = listOf()
-            guidingQuestionIterator = null
+        _uiState.loading = true
+        _uiState.guidingQuestion = listOf()
+        guidingQuestionIterator = null
 
-            launch { if (networkAvailable) getTopicList() }
-
+        if (networkAvailable) {
+            launch { getTopicList() }
             launch {
-                getAllDraftsTitleUseCase().catch { e ->
+                isUserSignedInUseCase().catch { e ->
                     _uiState.error = e.message
                 }.collect {
-                    _uiState.draftList = it
+                    _uiState.isUserSignedIn = it
                 }
             }
-
             launch {
-                if (networkAvailable)
-                    isUserSignedInUseCase().catch { e ->
-                        _uiState.error = e.message
-                    }.collect {
-                        _uiState.isUserSignedIn = it
-                    }
-            }
-
-            launch {
-                if (draftId.isNullOrBlank() || version.isNullOrBlank()) {
-                    getLastOpenedDraftUseCase().let { lastOpened ->
-                        _uiState.currentDraftId = lastOpened?.first
-                        _uiState.title = lastOpened?.second?.title ?: ""
-                        _uiState.body = TextFieldValue(lastOpened?.second?.content ?: "")
-                    }
-                } else {
-                    queryDraftUseCase(draftId, version).collectLatest {
-                        _uiState.currentDraftId = it.first
-                        _uiState.title = it.second.title
-                        _uiState.body = TextFieldValue(it.second.content)
-                    }
-                }
-                _uiState.loading = false
-            }
-
-            launch {
-                if (networkAvailable)
-                    _uiState.guidingQuestion = loadGuidingQuestions()
+                _uiState.guidingQuestion = loadGuidingQuestions()
             }
         }
+
+        launch {
+            getAllDraftsTitleUseCase().catch { e ->
+                _uiState.error = e.message
+            }.collect {
+                _uiState.draftList = it
+            }
+        }
+
+        launch {
+            if (draftId.isNullOrBlank() || version.isNullOrBlank()) {
+                getLastOpenedDraftUseCase().let { lastOpened ->
+                    _uiState.currentDraftId = lastOpened?.first
+                    _uiState.title = lastOpened?.second?.title ?: ""
+                    _uiState.body = TextFieldValue(lastOpened?.second?.content ?: "")
+                }
+            } else {
+                queryDraftUseCase(draftId, version).collectLatest {
+                    _uiState.currentDraftId = it.first
+                    _uiState.title = it.second.title
+                    _uiState.body = TextFieldValue(it.second.content)
+                }
+            }
+            _uiState.loading = false
+        }
+    }
 
     fun dismiss() {
         _uiState.error = null
@@ -299,7 +294,7 @@ class WritingViewModel(
     }
     // endregion
 
-    suspend fun checkAuthentication(){
+    suspend fun checkAuthentication() {
         authRepository.authenticate()
     }
 

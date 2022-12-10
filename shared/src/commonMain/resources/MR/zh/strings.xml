@@ -35,8 +35,8 @@
     <string name="writing__savable">允許收藏</string>
     <string name="writing__btn_post">發佈</string>
     <string name="writing__set_topic_label">選擇/創建主題</string>
-    <string name="writing__sign_in_required_title">需要登入</string>
-    <string name="writing__sign_in_required_text">登入以分享故事</string>
+    <string name="writing__sign_in_required_title">請先登入</string>
+    <string name="writing__sign_in_required_text">你需要登入以發佈故事</string>
     <string name="writing__posting">發佈中</string>
     <string name="writing__clear">清除</string>
     <string name="writing__post_success">已發佈！</string>

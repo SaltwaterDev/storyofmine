@@ -72,7 +72,7 @@ val Typography = Typography(
         fontFamily = MontserratFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
-    )
+    ),
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -89,6 +89,7 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
+
 )
 
 val Typography.titleLarge: TextStyle

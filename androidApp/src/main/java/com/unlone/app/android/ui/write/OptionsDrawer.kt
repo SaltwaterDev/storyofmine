@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
@@ -36,6 +37,7 @@ fun OptionsDrawer(
     newDraft: () -> Unit,
     switchDraft: (String?) -> Unit,
     deleteDraft: (String) -> Unit,
+    isCurrentDraft: (String?) -> Boolean,
 ) {
     LazyColumn {
         item {
@@ -98,6 +100,7 @@ fun OptionsDrawer(
                         deleteDraft(it1)
                     } ?: clearAll()
                 },
+                isCurrentDraft = isCurrentDraft(it.first),
             )
             Divider(Modifier.fillMaxWidth())
         }
@@ -144,6 +147,7 @@ private fun DismissableBlockWithIcon(
     modifier: Modifier,
     onClick: () -> Unit,
     onDismiss: () -> Unit,
+    isCurrentDraft: Boolean,
 ) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
@@ -195,9 +199,13 @@ private fun DismissableBlockWithIcon(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
-                Text(text = title, modifier = Modifier.padding(16.dp), style = Typography.subtitle1)
+                Text(
+                    text = title,
+                    modifier = Modifier.padding(16.dp),
+                    style = Typography.subtitle1,
+                    fontWeight = if (isCurrentDraft) FontWeight.SemiBold else null
+                )
             }
-
         }
     }
 }

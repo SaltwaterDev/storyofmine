@@ -20,7 +20,7 @@ struct StoriesScreen: View {
         if (authSetting.isUserLoggedIn){
             storyView
         } else {
-            loginRequiredVIew
+            loginRequiredView
         }
     }
 
@@ -62,7 +62,7 @@ struct StoriesScreen: View {
         }
     }
     
-    var loginRequiredVIew: some View{
+    var loginRequiredView: some View{
         VStack(spacing: 20){
             Text("Sign up to read other stories")
                 .font(.headline)
@@ -110,10 +110,10 @@ struct StoriesScreen: View {
 
 extension StoriesScreen {
     func initData() async {
-        storiesViewModel.loading = true
-        await self.storiesViewModel.getUserName()
-        await self.storiesViewModel.getStoriesItems()
-        storiesViewModel.loading = false
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask{ await self.storiesViewModel.getUserName()}
+            group.addTask{ await self.storiesViewModel.getStoriesItems()}
+        }
     }
 }
 
