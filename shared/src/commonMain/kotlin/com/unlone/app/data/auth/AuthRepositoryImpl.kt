@@ -26,6 +26,8 @@ internal class AuthRepositoryImpl(
     override var isUserSignedIn = MutableStateFlow(false)
         private set
 
+    override var username: MutableStateFlow<String?> = MutableStateFlow(null)
+
     override suspend fun signUp(
         email: String,
         password: String
@@ -141,10 +143,11 @@ internal class AuthRepositoryImpl(
             val token = prefs.getString(JWT_SP_KEY)
             if (token == null) {
                 isUserSignedIn.value = false
-                AuthResult.Unauthorized<Unit>(null)
+                AuthResult.Unauthorized(null)
             } else {
-                api.authenticate(token)
+                val response = api.authenticate(token)
                 isUserSignedIn.value = true
+                username.value = response.username
                 AuthResult.Authorized()
             }
         } catch (e: RedirectResponseException) {
@@ -245,10 +248,11 @@ internal class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun getUsername(): AuthResult<String> {
+    private suspend fun getUsername(): AuthResult<String> {
         return try {
             prefs.getString(JWT_SP_KEY)?.let {
                 val username = api.getUserName(it)
+                this.username.value = username
                 Logger.d(username)
                 AuthResult.Authorized(username)
             } ?: throw Exception("jwt doesn't exist")

@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.write
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
@@ -19,22 +20,25 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.comonComponent.PreviewBottomSheet
 import com.unlone.app.android.ui.comonComponent.WriteScreenTopBar
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.WritingViewModel
+import com.unlone.app.domain.entities.NetworkState
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@SuppressLint("UnusedCrossfadeTargetStateParameter")
+@OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
 @ExperimentalComposeUiApi
 @ExperimentalAnimatedInsets
 @ExperimentalLayoutApi
@@ -42,36 +46,36 @@ import org.example.library.SharedRes
 @Composable
 fun WritingScreen(
     viewModel: WritingViewModel,
-    draftId: String?,
-    draftVersionId: String?,
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
     onPostSucceed: (String) -> Unit,
 ) {
-    val uiState = viewModel.state.collectAsState().value
+    val uiState = viewModel.uiState
+    val networkState by connectivityState()
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
     var showPostingDialog by remember { mutableStateOf(false) }
+    var showNetworkUnavailableAlert by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
     var toolbarHeight by remember { mutableStateOf(0.dp) }
     // launch for open gallery
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        viewModel.addImageMD(it)
-    }
-
-    LaunchedEffect(draftId) {
-        viewModel.refreshData(draftId, draftVersionId)
-    }
-
-    DisposableEffect(key1 = Unit) {
-        onDispose {
-            viewModel.saveDraft()
-            scope.launch { viewModel.refreshData() }
+    val loadGalleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+            viewModel.addImageMD(it)
         }
+
+    LaunchedEffect(networkState) {
+        viewModel.checkAuthentication()
+        viewModel.refreshData(networkState is NetworkState.Available)
     }
+
+    DisposableEffect(Unit) {
+        onDispose { viewModel.saveDraft() }
+    }
+
 
     // close preview when keyboard is shown
     LaunchedEffect(isKeyboardVisible) {
@@ -87,14 +91,19 @@ fun WritingScreen(
         }
     }
 
+    val uiDraftList: Map<String?, String> =
+        if (uiState.currentDraftId == null && uiState.title.isNotEmpty()) mapOf(
+            uiState.currentDraftId to uiState.title
+        ) + uiState.draftList
+        else (uiState.draftList as Map<String?, String>)
+
     BottomSheetScaffold(
         modifier = Modifier
             .displayCutoutPadding()
             .statusBarsPadding(),
         scaffoldState = scaffoldState,
         topBar = {
-            WriteScreenTopBar(
-                Modifier.statusBarsPadding(),
+            WriteScreenTopBar(Modifier.statusBarsPadding(),
                 { scope.launch { scaffoldState.drawerState.open() } },
                 {
                     scope.launch {
@@ -105,61 +114,64 @@ fun WritingScreen(
                     }
                 },
                 {
-                    if (uiState.isUserSignedIn)
-                        showPostingDialog = true
-                    else
-                        requireSignInDialog = true
-
-                }
-            )
+                    when {
+                        networkState !is NetworkState.Available ->
+                            showNetworkUnavailableAlert = true
+                        !uiState.isUserSignedIn -> requireSignInDialog = true
+                        else -> showPostingDialog = true
+                    }
+                })
         },
         sheetContent = {
-            PreviewBottomSheet(
-                title = uiState.title,
+            PreviewBottomSheet(title = uiState.title,
                 content = uiState.body.text,
-                onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } }
-            )
+                onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } })
         },
         sheetPeekHeight = 0.dp,
         drawerContent = {
             OptionsDrawer(
-                uiState.draftList,
+                uiDraftList,
                 clearAll = {
-                    viewModel.clearBody()
+                    viewModel.clearDraft()
                     scope.launch { scaffoldState.drawerState.close() }
-                },
-                newDraft = {
+                }, newDraft = {
                     viewModel.createNewDraft()
                     scope.launch { scaffoldState.drawerState.close() }
-                },
-                editHistory = {
+                }, editHistory = {
                     uiState.currentDraftId?.let { navToEditHistory(it) }
                     scope.launch { scaffoldState.drawerState.close() }
-                },
-                editHistoryEnabled = uiState.currentDraftId != null,
+                }, editHistoryEnabled = uiState.currentDraftId != null,
                 switchDraft = {
-                    viewModel.switchDraft(it)
-                    scope.launch { scaffoldState.drawerState.close() }
+                    scope.launch {
+                        launch { it?.let { it1 -> viewModel.switchDraft(it1) } }
+                        launch { scaffoldState.drawerState.close() }
+                    }
                 },
-                deleteDraft = viewModel::deleteDraft
+                deleteDraft = {
+                    if (it == uiState.currentDraftId) {
+                        scope.launch { scaffoldState.drawerState.close() }
+                    }
+                    scope.launch { viewModel.deleteDraft(it) }
+                },
+                isCurrentDraft = { uiState.currentDraftId == it }
             )
         },
     ) { innerPadding ->
 
         Box(Modifier.fillMaxHeight()) {
             Column(
-                Modifier
-                    .padding(innerPadding)
+                Modifier.padding(innerPadding)
             ) {
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .placeholder(
-                            visible = uiState.loading,
-                            highlight = PlaceholderHighlight.fade()
+                            visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.title,
-                    onValueChange = { viewModel.setTitle(it) },
+                    onValueChange = {
+                        viewModel.setTitle(it)
+                    },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -180,11 +192,12 @@ fun WritingScreen(
                         .fillMaxSize()
                         .padding(bottom = if (isKeyboardVisible) toolbarHeight else 0.dp)
                         .placeholder(
-                            visible = uiState.loading,
-                            highlight = PlaceholderHighlight.fade()
+                            visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.body.text,
-                    onValueChange = { viewModel.setBody(it) },
+                    onValueChange = {
+                        viewModel.setBody(it)
+                    },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -202,9 +215,7 @@ fun WritingScreen(
                 Modifier
                     .align(Alignment.BottomStart)
                     .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = toolbarHeight + 8.dp
+                        start = 16.dp, end = 16.dp, bottom = toolbarHeight + 8.dp
                     )
             )
 
@@ -222,53 +233,49 @@ fun WritingScreen(
                                 toolbarHeight = with(density) { height.toDp() }
                             }
                             .imePadding(),
-                        { launcher.launch("image/*") },
-                        { scope.launch { viewModel.getDisplayingQuestion() } }
-                    )
+                        { loadGalleryLauncher.launch("image/*") },
+                        { scope.launch { viewModel.getDisplayingQuestion() } })
                 }
             }
 
 
-
-            if (showPostingDialog)
-                PostingDialog(
-                    uiState.topicList,
-                    uiState.selectedTopic,
-                    viewModel::setTopic,
-                    { showPostingDialog = false },
-                    uiState.isPublished,
-                    uiState.commentAllowed,
-                    uiState.saveAllowed,
-                    viewModel::setPublished,
-                    viewModel::setCommentAllowed,
-                    viewModel::setSaveAllowed,
-                    {
-                        scope.launch {
-                            launch { scaffoldState.bottomSheetState.expand() }
-                            launch { showPostingDialog = false }
-                            launch { keyboardController?.hide() }
-                        }
-                    },
-                    {
-                        viewModel.postStory()
-                        showPostingDialog = false
-                    },
-                )
-
-
-            if (uiState.storyPosting)
-                Card(
-                    Modifier.align(Alignment.Center),
-                    shape = MaterialTheme.shapes.medium,
-                ) {
-                    Row(Modifier.padding(8.dp)) {
-                        Text(
-                            text = stringResource(resource = SharedRes.strings.writing__posting),
-                            modifier = Modifier.align(CenterVertically)
-                        )
-                        CircularProgressIndicator(Modifier.padding(start = 4.dp))
+            if (showPostingDialog) PostingDialog(
+                uiState.topicList,
+                uiState.selectedTopic,
+                viewModel::setTopic,
+                { showPostingDialog = false },
+                uiState.isPublished,
+                uiState.commentAllowed,
+                uiState.saveAllowed,
+                viewModel::setPublished,
+                viewModel::setCommentAllowed,
+                viewModel::setSaveAllowed,
+                {
+                    scope.launch {
+                        launch { scaffoldState.bottomSheetState.expand() }
+                        launch { showPostingDialog = false }
+                        launch { keyboardController?.hide() }
                     }
+                },
+                {
+                    viewModel.postStory()
+                    showPostingDialog = false
+                },
+            )
+
+
+            if (uiState.storyPosting) Card(
+                Modifier.align(Alignment.Center),
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Row(Modifier.padding(8.dp)) {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.writing__posting),
+                        modifier = Modifier.align(CenterVertically)
+                    )
+                    CircularProgressIndicator(Modifier.padding(start = 4.dp))
                 }
+            }
 
             uiState.error?.let {
                 AlertDialog(
@@ -281,16 +288,28 @@ fun WritingScreen(
                         ) {
                             Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                         }
-                    }
-                )
+                    })
             }
 
             if (requireSignInDialog) {
-                RequireSignInDialog(
-                    { requireSignInDialog = false },
-                    {
-                        requireSignInDialog = false
-                        navToSignIn()
+                RequireSignInDialog({ requireSignInDialog = false }, {
+                    requireSignInDialog = false
+                    navToSignIn()
+                })
+            }
+
+
+            if (showNetworkUnavailableAlert) {
+                AlertDialog(
+                    onDismissRequest = { showNetworkUnavailableAlert = false },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
+                    text = { Text(text = "_Network unavailable. Make sure you have connect to internet") },
+                    confirmButton = {
+                        Button(
+                            onClick = { showNetworkUnavailableAlert = false }
+                        ) {
+                            Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+                        }
                     }
                 )
             }

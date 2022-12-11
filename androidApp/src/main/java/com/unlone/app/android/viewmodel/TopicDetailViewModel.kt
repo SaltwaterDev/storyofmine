@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.unlone.app.data.story.SimpleStory
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.domain.useCases.stories.FetchStoriesByTopicUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class TopicStoriesUiState(
     val topic: String? = null,
@@ -30,7 +32,7 @@ class TopicDetailViewModel(
         MutableStateFlow(TopicStoriesUiState())
     val state = _state.asStateFlow()
 
-    suspend fun initData(topic: String) {
+    suspend fun initData(topic: String) = withContext(Dispatchers.Default) {
         _state.value = _state.value.copy(
             topic = topic,
             loading = true
@@ -38,25 +40,25 @@ class TopicDetailViewModel(
         when (val result = fetchStoriesByTopicUseCase(topic, state.value.lastPage)) {
             is StoryResult.Success -> {
                 _state.value = _state.value.copy(
-                    stories = result.data
+                    stories = result.data,
+                    loading = false,
                 )
             }
             is StoryResult.Failed -> {
                 _state.value = _state.value.copy(
-                    errorMsg = result.errorMsg
+                    errorMsg = result.errorMsg,
+                    loading = false,
                 )
                 Log.e("TAG", "initData: ${result.errorMsg}")
             }
             is StoryResult.UnknownError -> {
                 _state.value = _state.value.copy(
-                    errorMsg = result.errorMsg
+                    errorMsg = result.errorMsg,
+                    loading = false,
                 )
                 Log.e("TAG", "initData: ${result.errorMsg}")
             }
         }
-        _state.value = _state.value.copy(
-            loading = false,
-        )
     }
 
     fun toggleFollowing() {

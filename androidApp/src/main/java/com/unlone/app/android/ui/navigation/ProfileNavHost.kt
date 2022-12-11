@@ -16,10 +16,9 @@ fun NavGraphBuilder.profileGraph(
     navigateUp: () -> Unit,
 ) {
 
-
     navigation(
         startDestination = UnloneBottomDestinations.Profile.route,
-        route = "profile",
+        route = "profiles",
     ) {
 
         composable(

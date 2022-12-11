@@ -67,7 +67,12 @@ val Typography = Typography(
         fontFamily = MontserratFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp,
-    )
+    ),
+    subtitle2 = TextStyle(
+        fontFamily = MontserratFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 20.sp,
+    ),
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -84,6 +89,7 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
+
 )
 
 val Typography.titleLarge: TextStyle
@@ -113,7 +119,6 @@ val Typography.storyText: TextStyle
 val Typography.topicTableElement: TextStyle
     get() = TextStyle(
         fontFamily = NotoSansHKFontFamily,
-        fontWeight = FontWeight.Light,
+        fontWeight = FontWeight.Normal,
         fontSize = 15.sp,
-//        letterSpacing = 0.1.sp
     )

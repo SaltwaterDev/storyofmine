@@ -78,14 +78,9 @@ class StoriesViewModel: ObservableObject {
     
     func getUserName() async {
         do{
-            let getUsernameResponse = try await authRepo.getUsername()
-            switch (getUsernameResponse) {
-            case is AuthResultAuthorized<NSString>:
-                if(getUsernameResponse.data != nil) {
-                    username = getUsernameResponse.data as String?
-                }
-            default:
-                errorMsg = getUsernameResponse.errorMsg
+            let getUsernameStream = asyncStream(for: authRepo.usernameNative)
+            for try await usernameResponse in getUsernameStream {
+                username = usernameResponse as String?
             }
         }catch{
             print(error)

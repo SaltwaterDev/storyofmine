@@ -16,7 +16,7 @@ interface AuthApi {
     suspend fun checkEmailExisted(request: AuthEmailRequest)
     suspend fun signIn(request: AuthRequest): TokenResponse
     suspend fun validateEmail(request: AuthEmailRequest)
-    suspend fun authenticate(token: String)
+    suspend fun authenticate(token: String): UserResponse
     suspend fun requestOtp(email: String)
     suspend fun verifyOtp(request: AuthOtpRequest)
     suspend fun setUserName(email: String, username: String)
@@ -70,10 +70,11 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
     }
 
 
-    override suspend fun authenticate(token: String) {
-        client.get("$baseUrl/authenticate") {
+    override suspend fun authenticate(token: String): UserResponse {
+        val response = client.get("$baseUrl/authenticate") {
             header("Authorization", "Bearer $token")
         }
+        return response.body()
     }
 
     override suspend fun requestOtp(email: String) {

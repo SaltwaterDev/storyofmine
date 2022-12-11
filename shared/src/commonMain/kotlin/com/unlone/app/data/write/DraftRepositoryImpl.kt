@@ -10,9 +10,10 @@ import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.types.ObjectId
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.math.log
 
 internal class DraftRepositoryImpl : DraftRepository {
 
@@ -33,9 +34,11 @@ internal class DraftRepositoryImpl : DraftRepository {
 
     override fun queryDraft(id: String): Flow<Draft> {
         val objectId = ObjectId.from(id)
+        Logger.d { "I am called" }
         return realm.query<ParentDraftRealmObject>("id == $0", objectId)
             .asFlow()
-            .map { it.list.first().toParentDraft() }
+            .map { it.list.firstOrNull()?.toParentDraft() }
+            .filterNotNull()
     }
 
     override fun getLastOpenedDraft(): Flow<Draft?> {

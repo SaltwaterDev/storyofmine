@@ -5,7 +5,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-
+    id("kotlin-parcelize")
 }
 
 android {
@@ -53,7 +53,7 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.composeLifecycle}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.composeLifecycle}")
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.2.1")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.3.1")
     implementation("androidx.startup:startup-runtime:1.1.1")
 
 

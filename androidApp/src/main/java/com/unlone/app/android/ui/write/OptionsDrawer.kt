@@ -1,13 +1,11 @@
 package com.unlone.app.android.ui.write
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -19,24 +17,27 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
+import timber.log.Timber
 
 
 @ExperimentalFoundationApi
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun OptionsDrawer(
-    listOfDraft: Map<String, String>,
+    listOfDraft: Map<String?, String>,
     clearAll: () -> Unit,
     editHistory: () -> Unit,
     editHistoryEnabled: Boolean,
     newDraft: () -> Unit,
-    switchDraft: (String) -> Unit,
+    switchDraft: (String?) -> Unit,
     deleteDraft: (String) -> Unit,
+    isCurrentDraft: (String?) -> Boolean,
 ) {
     LazyColumn {
         item {
@@ -76,11 +77,6 @@ fun OptionsDrawer(
             Spacer(modifier = Modifier.height(60.dp))
         }
 
-        val getDraftKey =
-            { title: String ->
-                listOfDraft.entries.find { entry -> entry.value == title }?.key ?: "-1"
-            }
-
         if (listOfDraft.values.isNotEmpty())
             item {
                 Text(
@@ -92,7 +88,7 @@ fun OptionsDrawer(
 
         items(
             items = listOfDraft.toList(),
-            key = { it.first },
+            key = { it.first ?: -1 },
         ) {
             DismissableBlockWithIcon(
                 iconId = R.drawable.ic_write,
@@ -100,9 +96,11 @@ fun OptionsDrawer(
                 modifier = Modifier.animateItemPlacement(),
                 onClick = { switchDraft(it.first) },
                 onDismiss = {
-                    Log.d("TAG", "OptionsDrawer: delete")
-                    deleteDraft(it.first)
+                    it.first?.let { it1 ->
+                        deleteDraft(it1)
+                    } ?: clearAll()
                 },
+                isCurrentDraft = isCurrentDraft(it.first),
             )
             Divider(Modifier.fillMaxWidth())
         }
@@ -119,7 +117,8 @@ private fun BlockWithIcon(
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable(enabled) { onClick() }
+            .clickable(enabled) { onClick() },
+        verticalAlignment = Alignment.CenterVertically
     ) {
         iconId?.let {
             Icon(
@@ -135,7 +134,7 @@ private fun BlockWithIcon(
             modifier = Modifier
                 .padding(16.dp)
                 .alpha(if (enabled) 1f else 0.38f),
-            style = Typography.subtitle2
+            style = Typography.subtitle1
         )
     }
 }
@@ -148,6 +147,7 @@ private fun DismissableBlockWithIcon(
     modifier: Modifier,
     onClick: () -> Unit,
     onDismiss: () -> Unit,
+    isCurrentDraft: Boolean,
 ) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
@@ -189,7 +189,8 @@ private fun DismissableBlockWithIcon(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clickable { onClick() }
+                    .clickable { onClick() },
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 iconId?.let {
                     Icon(
@@ -198,9 +199,13 @@ private fun DismissableBlockWithIcon(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
-                Text(text = title, modifier = Modifier.padding(16.dp), style = Typography.subtitle2)
+                Text(
+                    text = title,
+                    modifier = Modifier.padding(16.dp),
+                    style = Typography.subtitle1,
+                    fontWeight = if (isCurrentDraft) FontWeight.SemiBold else null
+                )
             }
-
         }
     }
 }

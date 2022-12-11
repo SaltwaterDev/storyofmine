@@ -61,7 +61,12 @@
 
     <string name="edit_history_title">Edit History</string>
 
-    <string name="rules_title">Rules</string>
+    <string name="rules__title">Rules</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_lang_zh">中文</string>
+    <string name="settings_lang_en">English</string>
 
     <string name="my_stories_title">My Stories</string>
 
@@ -91,5 +96,6 @@
     <string name="common__btn_submit">Submit</string>
     <string name="common__btn_follow">Following</string>
     <string name="common__btn_following">Following</string>
+    <string name="common__btn_retry">Retry</string>
 
 </resources>

@@ -1,17 +1,23 @@
 package com.unlone.app.android.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.stories.*
 import com.unlone.app.android.viewmodel.*
+import com.unlone.app.domain.entities.NetworkState
 import org.koin.androidx.compose.koinViewModel
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @ExperimentalAnimationApi
 fun NavGraphBuilder.storiesGraph(
     navController: NavHostController,
@@ -19,8 +25,8 @@ fun NavGraphBuilder.storiesGraph(
 ) {
 
     navigation(
-        startDestination = UnloneBottomDestinations.Stories.route,
-        route = "story",
+        startDestination = UnloneBottomDestinations.Stories.routeWithArgs,
+        route = UnloneBottomDestinations.Stories.route,
     ) {
 
         composable(
@@ -28,15 +34,18 @@ fun NavGraphBuilder.storiesGraph(
             arguments = UnloneBottomDestinations.Stories.arguments,
         ) {
             val requestedStoryId: String? = it.arguments?.getString("requestedStoryId")
-
-            val viewModel = koinViewModel<StoriesViewModel>()
-            StoriesScreen(viewModel = viewModel,
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
+            val viewModel =
+                koinViewModel<StoriesViewModel>(viewModelStoreOwner = viewModelStoreOwner)
+            StoriesScreen(
+                viewModel = viewModel,
                 requestedStoryId = requestedStoryId,
                 navToStoryDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navToTopicDetail(navController, it) },
                 navToSignIn = { navigateToSignInEmail(navController) },
                 navToSignUp = { navigateToSignUp(navController) },
-                navToFullTopic = { navToAllTopic(navController) })
+                navToFullTopic = { navToAllTopic(navController) },
+            )
         }
 
         composable(

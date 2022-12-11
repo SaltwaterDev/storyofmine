@@ -1,10 +1,12 @@
 package com.unlone.app.data.auth
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 interface AuthRepository {
     val isUserSignedIn: Flow<Boolean>
+    var username: MutableStateFlow<String?>
     suspend fun signUpEmail(email: String): AuthResult<Unit>
     suspend fun signUp(email: String, password: String): AuthResult<Unit>
     suspend fun signInEmail(email: String): AuthResult<Unit>
@@ -15,6 +17,5 @@ interface AuthRepository {
     suspend fun signOut()
     fun getJwt(): String?
     suspend fun setUserName(email: String, username: String): AuthResult<Unit>
-    suspend fun getUsername(): AuthResult<String>
     suspend fun removeUserRecordByEmail(email: String): AuthResult<Unit>
 }

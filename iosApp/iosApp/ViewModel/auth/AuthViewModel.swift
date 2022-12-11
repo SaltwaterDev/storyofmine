@@ -8,6 +8,7 @@
 
 import Foundation
 import shared
+import KMPNativeCoroutinesAsync
 
 @MainActor
 class AuthViewModel: ObservableObject {
@@ -48,13 +49,9 @@ class AuthViewModel: ObservableObject {
     
     func getUserName() async {
         do{
-            let getUsernameResponse = try await authRepo.getUsername()
-            switch (getUsernameResponse){
-                case is AuthResultAuthorized<NSString>:
-                    if( getUsernameResponse.data != nil){
-                        username = getUsernameResponse.data as String?
-                    }
-                default: return // todo
+            let getUsernameStream = asyncStream(for: authRepo.usernameNative)
+            for try await usernameResponse in getUsernameStream {
+                username = usernameResponse as String?
             }
         }catch{
             print(error)

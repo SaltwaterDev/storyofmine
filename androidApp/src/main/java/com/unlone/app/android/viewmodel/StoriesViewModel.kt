@@ -1,19 +1,23 @@
 package com.unlone.app.android.viewmodel
 
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.StoryResult
-import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
-import com.unlone.app.domain.useCases.CheckNetworkStateUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import com.unlone.app.domain.useCases.stories.GetTopicStoriesForRequestedStoryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,77 +25,49 @@ data class StoriesScreenUiState(
     val loading: Boolean = true,
     val isUserLoggedIn: Boolean = true,
     val isRefreshing: Boolean = false,
-    val storiesByTopics: List<StoryItem.StoriesByTopic>? = listOf(
-        StoryItem.StoriesByTopic(),
-        StoryItem.StoriesByTopic()
-    ),
+    val storiesByTopics: List<StoryItem.StoriesByTopic>? = List(4) { StoryItem.StoriesByTopic() },
     val errorMsg: String? = null,
     val lastItemId: String? = null,
     val username: String? = null,
-    val networkState: NetworkState = NetworkState.Ok,
 )
 
 
 class StoriesViewModel(
     private val authRepository: AuthRepository,
-    private val checkNetworkStateUseCase: CheckNetworkStateUseCase,
-    fetchStoryItemsUseCase: FetchStoryItemsUseCase,
+    private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
     private val getTopicStoriesForRequestedStoryUseCase: GetTopicStoriesForRequestedStoryUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<StoriesScreenUiState> =
         MutableStateFlow(StoriesScreenUiState())
-    val state = _state.asStateFlow()
+    val state = _state.combine(authRepository.username) { state, username ->
+        state.copy(username = username)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, StoriesScreenUiState())
 
-    val storiesByTopics = fetchStoryItemsUseCase()
+    private val _storiesByTopics = fetchStoryItemsUseCase().cachedIn(viewModelScope)
+
+    val storiesByTopics
+        @Composable get() = _storiesByTopics.collectAsLazyPagingItems()
+
+
     var storiesFromRequest = MutableStateFlow<StoryItem.StoriesByTopic?>(null)
         private set
 
 
     init {
-        viewModelScope.launch {
-            initData()
-        }
+        viewModelScope.launch { initState() }
     }
 
-    suspend fun initData() = withContext(Dispatchers.Default) {
+    suspend fun initState() = withContext(Dispatchers.Default) {
         _state.value = _state.value.copy(loading = true)
-        // check network state. Proceed if ok
-        checkNetworkStateUseCase().apply {
-            _state.value = _state.value.copy(networkState = this)
-            when (this) {
-                is NetworkState.Ok -> {
-                    if (authRepository.authenticate() is AuthResult.Authorized) {
-                        getUserName()
-                        _state.value = _state.value.copy(
-                            isUserLoggedIn = true,
-                        )
-                    }
-                }
-                is NetworkState.UnknownError -> {
-                    _state.value = _state.value.copy(
-                        errorMsg = this.message
-                    )
-                }
-                is NetworkState.Unavailable -> {
-                    /*do nothing, as already update the state*/
-                }
-            }
+        if (authRepository.authenticate() is AuthResult.Authorized) {
+            _state.value = _state.value.copy(
+                isUserLoggedIn = true,
+            )
         }
-
         _state.value = _state.value.copy(loading = false)
     }
 
-    private suspend fun getUserName() {
-        when (val getUsernameResponse = authRepository.getUsername()) {
-            // getUsername
-            is AuthResult.Authorized -> getUsernameResponse.data?.let {
-                _state.value = _state.value.copy(username = it)
-            }
-            else -> _state.value =
-                _state.value.copy(errorMsg = getUsernameResponse.errorMsg)
-        }
-    }
 
     fun dismissError() {
         _state.value = _state.value.copy(errorMsg = null)
@@ -100,9 +76,9 @@ class StoriesViewModel(
     fun checkAuth() {
         viewModelScope.launch {
             _state.value = when (val authResult = authRepository.authenticate()) {
-                is AuthResult.Authorized -> _state.value.copy(
-                    isUserLoggedIn = true,
-                )
+                is AuthResult.Authorized -> {
+                    _state.value.copy(isUserLoggedIn = true)
+                }
                 is AuthResult.Unauthorized -> _state.value.copy(
                     isUserLoggedIn = false,
                 )

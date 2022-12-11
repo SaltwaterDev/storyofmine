@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -11,6 +12,7 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.unlone.app.android.ui.theme.Typography
+import com.unlone.app.android.viewmodel.ProfileUiState
 import com.unlone.app.android.viewmodel.ProfileViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
@@ -30,6 +32,7 @@ fun ProfileScreen(
 
     val state = viewModel.state.collectAsState().value
     var showSignOutAlert by remember { mutableStateOf(false) }
+
 
     Column(Modifier.fillMaxSize()) {
         if (state.isUserLoggedIn) {
@@ -64,7 +67,12 @@ fun ProfileScreen(
             }
         }
         ProfileScreenDivider()
-        ListItem(Modifier.clickable { goToSetting() }) { Text(text = stringResource(resource = SharedRes.strings.profile__settings), style = Typography.subtitle1) }
+        ListItem(Modifier.clickable { goToSetting() }) {
+            Text(
+                text = stringResource(resource = SharedRes.strings.profile__settings),
+                style = Typography.subtitle1
+            )
+        }
         ProfileScreenDivider()
 //        ListItem(Modifier.clickable { goToHelp() }) {
 //            Text(

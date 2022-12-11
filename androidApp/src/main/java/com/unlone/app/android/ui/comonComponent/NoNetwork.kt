@@ -38,7 +38,7 @@ fun NoNetworkScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "_Retry")
+                Text(text = stringResource(resource = SharedRes.strings.common__btn_retry))
             }
         }
     }

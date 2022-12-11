@@ -24,11 +24,11 @@ fun TopicTable(
     viewMoreTopic: () -> Unit
 ) {
     Column(modifier) {
-        Row {
+        Row(Modifier.padding(bottom = 4.dp)) {
             Text(
                 text = stringResource(resource = SharedRes.strings.common__topic),
                 modifier = Modifier.weight(1f),
-                style = Typography.subtitle1
+                style = Typography.subtitle2
             )
             Text(
                 text = stringResource(resource = SharedRes.strings.stories_show_more),
@@ -47,14 +47,13 @@ fun TopicTable(
 @Composable
 fun TopicItemRow(topic: String, onTopicClick: () -> Unit) {
     Row(Modifier.clickable { onTopicClick() }) {
-        Spacer(modifier = Modifier.width(16.dp))
         Column(
             Modifier
                 .weight(1f)
                 .padding(horizontal = 10.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = topic, style = Typography.topicTableElement)
+//            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = topic, style = Typography.topicTableElement, modifier = Modifier.padding(vertical = 8.dp))
             Divider(Modifier.alpha(0.5f))
         }
     }

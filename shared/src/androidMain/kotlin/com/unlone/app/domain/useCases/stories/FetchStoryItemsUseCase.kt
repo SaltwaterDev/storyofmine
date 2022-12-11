@@ -8,24 +8,22 @@ import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesIgnore
 import com.unlone.app.data.story.StoryRepository
+import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.Topic
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.StoryItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 
 actual class FetchStoryItemsUseCase(
     private val storyRepository: StoryRepository,
     private val topicRepository: TopicRepository,
 ) {
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+    private val scope = MainScope()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    private val pager = Pager(
-        clientScope = coroutineScope,
+    val pager = Pager(
+        clientScope = scope,
         config = pagingConfig,
         initialKey = 0, // Key to use when initialized
         getItems = { currentKey, size ->
@@ -33,13 +31,21 @@ actual class FetchStoryItemsUseCase(
             try {
                 // recruit items
                 val storiesByTopic = storyRepository.fetchStoriesByPosts(
-                    currentKey,
-                    postsPerTopic,
-                    size
+                    page = currentKey,
+                    postPerTopic = postsPerTopic,
+                    itemsPerPage = size
                 )
 
-                val randomTopics =
+                val randomTopicsResult =
                     if (currentKey == 0) topicRepository.getRandomTopic(randomTopicSize) else null
+
+                // parse randomTopicsResult
+                val randomTopics = if (randomTopicsResult is StoryResult.Success) {
+                    randomTopicsResult.data
+                } else {
+                    Logger.e { randomTopicsResult?.errorMsg.toString() }
+                    null
+                }
 
                 val items = integrateStoryItem(storiesByTopic, randomTopics)
                 PagingResult(
@@ -80,13 +86,12 @@ actual class FetchStoryItemsUseCase(
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     @NativeCoroutinesIgnore
     operator fun invoke(): Flow<PagingData<StoryItem>> {
-        return pager.pagingData
-            .cachedIn(coroutineScope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
+        return pager.pagingData.cachedIn(scope)
     }
 
     companion object {
-        private const val postsPerTopic = 5
-        private const val itemsPerPage = 3
+        private const val postsPerTopic = 3
+        private const val itemsPerPage = 4
         private const val randomTopicSize = 4
         private val pagingConfig =
             PagingConfig(pageSize = itemsPerPage, enablePlaceholders = false)

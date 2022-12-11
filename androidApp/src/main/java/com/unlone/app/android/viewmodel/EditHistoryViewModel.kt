@@ -6,13 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.domain.entities.DraftVersion
-import com.unlone.app.domain.useCases.write.GetAllDraftsTitleUseCase
 import com.unlone.app.domain.useCases.write.GetDraftAllVersionsUseCase
-import com.unlone.app.domain.useCases.write.QueryDraftUseCase
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-
 
 
 data class EditHistoryUiState(

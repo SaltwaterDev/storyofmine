@@ -9,10 +9,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AddBox
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Bookmark
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,7 +93,7 @@ fun WriteScreenTopBar(
                 Text(text = stringResource(resource = SharedRes.strings.writing__preview))
             }
             IconButton(onClick = post) {
-                Icon(painterResource(id = R.drawable.ic_send), contentDescription = "post")
+                Icon(Icons.Rounded.Publish, contentDescription = "post")
             }
         }
     }

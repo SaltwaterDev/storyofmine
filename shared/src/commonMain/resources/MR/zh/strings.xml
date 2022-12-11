@@ -3,8 +3,8 @@
     <string name="my_string">DLLMCH</string>
 
     <string name="bottom_nav_bar_label__write">寫東西</string>
-    <string name="bottom_nav_bar_label__stories">故事</string>
-    <string name="bottom_nav_bar_label__profile">Profile</string>
+    <string name="bottom_nav_bar_label__stories">看故事</string>
+    <string name="bottom_nav_bar_label__profile">關於你</string>
 
     <string name="sign_in__title">登入</string>
     <string name="sign_in__btn_sign_in">登入</string>
@@ -35,8 +35,8 @@
     <string name="writing__savable">允許收藏</string>
     <string name="writing__btn_post">發佈</string>
     <string name="writing__set_topic_label">選擇/創建主題</string>
-    <string name="writing__sign_in_required_title">需要登入</string>
-    <string name="writing__sign_in_required_text">登入以分享故事</string>
+    <string name="writing__sign_in_required_title">請先登入</string>
+    <string name="writing__sign_in_required_text">你需要登入以發佈故事</string>
     <string name="writing__posting">發佈中</string>
     <string name="writing__clear">清除</string>
     <string name="writing__post_success">已發佈！</string>
@@ -61,7 +61,12 @@
 
     <string name="edit_history_title">修改歷史</string>
 
-    <string name="rules_title">用戶守則</string>
+    <string name="rules__title">用戶守則</string>
+
+    <string name="settings_title">設定</string>
+    <string name="settings_language">語言</string>
+    <string name="settings_lang_zh">中文</string>
+    <string name="settings_lang_en">English</string>
 
     <string name="my_stories_title">我的故事</string>
 
@@ -91,5 +96,7 @@
     <string name="common__btn_submit">提交</string>
     <string name="common__btn_follow">追蹤</string>
     <string name="common__btn_following">追蹤中</string>
+    <string name="common__btn_retry">重試</string>
+
 
 </resources>
