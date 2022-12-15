@@ -33,7 +33,7 @@ import timber.log.Timber
 fun UnloneApp() {
 
     UnloneTheme {
-    val appState = rememberUnloneAppState()
+        val appState = rememberUnloneAppState()
         Scaffold(
             scaffoldState = appState.scaffoldState,
             bottomBar = {
@@ -43,11 +43,24 @@ fun UnloneApp() {
                     exit = slideOutVertically(targetOffsetY = { it }),
                     content = { UnloneBottomBar(appState = appState) })
             }) { contentPadding ->
+
+
             MainNavHost(
                 appState,
                 Modifier.padding(contentPadding),
                 appState::upPress
             )
+
+            Box(Modifier.fillMaxSize()) {
+                if (appState.shouldShowNoNetworkSnackBar) {
+                    Snackbar(
+                        modifier = Modifier
+                            .padding(contentPadding)
+                            .padding(8.dp)
+                            .align(Alignment.BottomStart)
+                    ) { Text(text = stringResource(resource = SharedRes.strings.common__network_unavailable_warning)) }
+                }
+            }
         }
     }
 }

@@ -103,6 +103,12 @@ class UnloneAppState(
     fun navigateToStoriesDetail(pid: Long, from: NavBackStackEntry) {
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val shouldShowNoNetworkSnackBar: Boolean
+        @Composable get() {
+            return connectivityState().value != NetworkState.Available
+        }
+
 }
 
 

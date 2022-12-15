@@ -70,7 +70,7 @@ class WritingViewModel(
         viewModelScope.launch { refreshData() }
     }
 
-    suspend fun refreshData(networkAvailable: Boolean = true) = withContext(Dispatchers.Main) {
+    suspend fun refreshData(networkAvailable: Boolean = false) = withContext(Dispatchers.Main) {
 
         val draftId = savedStateHandle.get<String>(optionalDraftArg)
         val version = savedStateHandle.get<String>(optionalVersionArg)

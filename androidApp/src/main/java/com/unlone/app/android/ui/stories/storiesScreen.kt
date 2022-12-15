@@ -18,7 +18,6 @@ import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.unlone.app.android.ui.comonComponent.NoNetworkScreen
 import com.unlone.app.android.ui.comonComponent.TopicTable
 import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.MontserratFontFamily
@@ -27,7 +26,6 @@ import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import org.example.library.SharedRes
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -49,12 +47,14 @@ fun StoriesScreen(
     // used when displaying the required story at first sight
     val storiesFromRequest = viewModel.storiesFromRequest.collectAsState().value
 
-    val coroutineScope = rememberCoroutineScope()
     val refreshState =
         rememberSwipeRefreshState(storiesByTopics.loadState.refresh is LoadState.Loading)
 
-    LaunchedEffect(Unit) {
-        viewModel.checkAuth()
+    if (networkState is NetworkState.Available) {
+        LaunchedEffect(networkState) {
+            viewModel.checkAuth()
+            storiesByTopics.refresh()
+        }
     }
 
     requestedStoryId?.let {
@@ -64,14 +64,6 @@ fun StoriesScreen(
     }
 
 
-    if (networkState !is NetworkState.Available) {
-        NoNetworkScreen {
-            coroutineScope.launch {
-                viewModel.initState()
-            }
-        }
-        return
-    }
 
     if (state.isUserLoggedIn) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
