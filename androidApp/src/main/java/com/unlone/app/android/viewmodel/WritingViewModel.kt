@@ -9,8 +9,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.android.ui.navigation.optionalDraftArg
-import com.unlone.app.android.ui.navigation.optionalVersionArg
 import com.unlone.app.android.ui.write.WritingUiState
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.story.PublishStoryException
@@ -23,14 +21,17 @@ import com.unlone.app.data.write.StaticResourceResult
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
 private class MutableWritingUiState : WritingUiState {
     override var body: TextFieldValue by mutableStateOf(TextFieldValue(text = ""))
     override var commentAllowed: Boolean by mutableStateOf(false)
-    override var currentDraftId: String? by mutableStateOf<String?>(null)
+    override var currentDraftId: String? by mutableStateOf(null)
+    override var currentVersionId: String? by mutableStateOf(null)
     override var displayingGuidingQuestion: GuidingQuestion? by mutableStateOf(null)
     override var draftList: Map<String, String> by mutableStateOf(mapOf())
     override var postStoryError: PublishStoryException? by mutableStateOf(null)
@@ -66,14 +67,18 @@ class WritingViewModel(
     private val _uiState = MutableWritingUiState()
     val uiState: WritingUiState = _uiState
 
+    private var shouldCreateNewVersionDraft: Boolean = true
+
     init {
         viewModelScope.launch { refreshData() }
     }
 
-    suspend fun refreshData(networkAvailable: Boolean = false) = withContext(Dispatchers.Main) {
+    suspend fun refreshData(
+        networkAvailable: Boolean = false,
+        draftIdArg: String? = null,
+        versionArg: String? = null,
 
-        val draftId = savedStateHandle.get<String>(optionalDraftArg)
-        val version = savedStateHandle.get<String>(optionalVersionArg)
+    ) = withContext(Dispatchers.Main) {
 
         _uiState.loading = true
         _uiState.guidingQuestion = listOf()
@@ -102,19 +107,22 @@ class WritingViewModel(
         }
 
         launch {
-            if (draftId.isNullOrBlank() || version.isNullOrBlank()) {
+            if (draftIdArg.isNullOrBlank() || versionArg.isNullOrBlank()) {
                 getLastOpenedDraftUseCase().let { lastOpened ->
                     _uiState.currentDraftId = lastOpened?.first
+                    _uiState.currentVersionId = lastOpened?.second?.version
                     _uiState.title = lastOpened?.second?.title ?: ""
                     _uiState.body = TextFieldValue(lastOpened?.second?.content ?: "")
                 }
             } else {
-                queryDraftUseCase(draftId, version).collectLatest {
+                queryDraftUseCase(draftIdArg, versionArg).first {
                     _uiState.currentDraftId = it.first
                     _uiState.title = it.second.title
                     _uiState.body = TextFieldValue(it.second.content)
+                    true
                 }
             }
+            shouldCreateNewVersionDraft = true
             _uiState.loading = false
         }
     }
@@ -127,6 +135,8 @@ class WritingViewModel(
 
     fun setTitle(title: String) {
         _uiState.title = title
+        // real-time update in realm
+        saveDraft()
     }
 
     fun setBody(text: String) {
@@ -134,21 +144,33 @@ class WritingViewModel(
             text = text,
             selection = TextRange(text.length)
         )
+        // real-time update in realm
+        saveDraft()
     }
 
     fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
-        if (uiState.title.isNotBlank() || uiState.body.text.isNotBlank()) {
-            Timber.d(uiState.currentDraftId)
-            val result = saveDraftUseCase(
-                uiState.currentDraftId, uiState.title, uiState.body.text
-            )
-            when (result) {
-                is StoryResult.Success -> _uiState.currentDraftId = result.data
-                is StoryResult.Failed -> _uiState.error = result.errorMsg
-                else -> {}  // won't hit this case for now
+        if (uiState.title.isBlank() && uiState.body.text.isBlank()) return@launch
+
+        Timber.d(uiState.currentDraftId)
+        val result = saveDraftUseCase(
+            uiState.currentDraftId,
+            uiState.title,
+            uiState.body.text,
+            shouldCreateNewVersionDraft,
+        )
+        when (result) {
+            is StoryResult.Success -> {
+                if (shouldCreateNewVersionDraft){
+                    _uiState.currentDraftId = result.data?.first
+                    _uiState.currentVersionId = result.data?.second
+                    shouldCreateNewVersionDraft = false
+                }
             }
+            is StoryResult.Failed -> _uiState.error = result.errorMsg
+            else -> {}  // won't hit this case for now
         }
     }
+
 
     fun addImageMD(uri: Uri?) {
         uri?.let {
@@ -172,9 +194,11 @@ class WritingViewModel(
 
         val newDraftMap = createNewDraftUseCase()
         _uiState.currentDraftId = newDraftMap["id"]
+        _uiState.currentVersionId = newDraftMap["version"]
         _uiState.title = newDraftMap["title"] ?: ""
         _uiState.body = TextFieldValue(text = newDraftMap["content"] ?: "")
         _uiState.selectedTopic = newDraftMap["selectedTopic"] ?: ""
+        shouldCreateNewVersionDraft = true
     }
 
 
@@ -195,6 +219,7 @@ class WritingViewModel(
         // remove current content if deleting the current one
         if (id == uiState.currentDraftId) {
             _uiState.currentDraftId = null
+            _uiState.currentVersionId = null
             clearDraft()
         }
     }

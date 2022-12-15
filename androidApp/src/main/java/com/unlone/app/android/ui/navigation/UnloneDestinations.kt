@@ -11,15 +11,15 @@ import com.unlone.app.android.ui.UnloneApp
  */
 
 
-const val optionalDraftArg = "draftId"
-const val optionalVersionArg = "version"
+const val OptionalDraftArg = "draftId"
+const val OptionalVersionArg = "version"
 
 enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneDestination {
     Write(icon = R.drawable.ic_write, label = "write") {
         override val route: String = "writeRoute"
 
-        private val optionalDraftArg = "draftId"
-        private val optionalVersionArg = "version"
+            val optionalDraftArg = OptionalDraftArg
+        val optionalVersionArg = OptionalVersionArg
         private val typeArg =
             "?$optionalDraftArg={$optionalDraftArg}&$optionalVersionArg={$optionalVersionArg}"
         override val routeWithArgs = "$route$typeArg"

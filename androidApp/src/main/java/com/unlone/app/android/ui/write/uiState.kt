@@ -11,6 +11,7 @@ import com.unlone.app.data.write.GuidingQuestion
 @Stable
 interface WritingUiState {
     val currentDraftId: String?
+    val currentVersionId: String?
     val title: String
     val body: TextFieldValue
     val draftList: Map<String, String>

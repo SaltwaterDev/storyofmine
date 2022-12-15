@@ -48,6 +48,8 @@ import org.example.library.SharedRes
 @Composable
 fun WritingScreen(
     viewModel: WritingViewModel,
+    draftIdArg: String? = null,
+    versionArg: String? = null,
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
     onPostSucceed: (String) -> Unit,
@@ -71,11 +73,11 @@ fun WritingScreen(
 
     LaunchedEffect(networkState) {
         viewModel.checkAuthentication()
-        viewModel.refreshData(networkState is NetworkState.Available)
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { viewModel.saveDraft() }
+        viewModel.refreshData(
+            networkState is NetworkState.Available,
+            draftIdArg,
+            versionArg,
+        )
     }
 
 

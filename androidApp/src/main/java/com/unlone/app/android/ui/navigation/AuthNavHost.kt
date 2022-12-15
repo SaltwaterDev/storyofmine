@@ -34,8 +34,8 @@ fun NavGraphBuilder.authGraph(
 
 
     navigation(
-        startDestination = AuthNav.SignUp.name,
         route = "auth",
+        startDestination = AuthNav.SignUp.name,
         arguments = listOf(navArgument("lastRoute") { type = NavType.StringType })
     ) {
 

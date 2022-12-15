@@ -36,13 +36,16 @@ fun NavGraphBuilder.writeGraph(
             route = UnloneBottomDestinations.Write.routeWithArgs,
             arguments = UnloneBottomDestinations.Write.arguments
         ) {
+
             val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
             val viewModel =
                 koinViewModel<WritingViewModel>(viewModelStoreOwner = viewModelStoreOwner)
             WritingScreen(
                 viewModel = viewModel,
+                draftIdArg = it.arguments?.getString(OptionalDraftArg),
+                versionArg = it.arguments?.getString(OptionalVersionArg),
                 navToEditHistory = { id -> navToEditHistory(navController, id) },
-                navToSignIn = { navigateToAuth(navController, UnloneBottomDestinations.Write.route) },
+                navToSignIn = { navigateToSignUp(navController) },
                 onPostSucceed = { succeedStory -> navToStories(succeedStory) })
         }
 
@@ -69,6 +72,6 @@ fun navToWrite(
     draftId: String? = null,
     version: String? = null,
 ) {
-    if (draftId != null && version != null) navController.navigate("${UnloneBottomDestinations.Write.route}?${optionalDraftArg}=${draftId}&${optionalVersionArg}=${version}")
+    if (draftId != null && version != null) navController.navigate("${UnloneBottomDestinations.Write.route}?${OptionalDraftArg}=${draftId}&${OptionalVersionArg}=${version}")
     else navController.navigate(UnloneBottomDestinations.Write.route)
 }

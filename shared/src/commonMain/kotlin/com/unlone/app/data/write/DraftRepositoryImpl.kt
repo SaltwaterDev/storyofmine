@@ -13,14 +13,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
-import kotlin.math.log
 
 internal class DraftRepositoryImpl : DraftRepository {
 
     // use the RealmConfiguration.Builder() for more options
-    private val configuration = RealmConfiguration.create(schema = setOf(ParentDraftRealmObject::class, ChildDraftRealmObject::class))
+    private val configuration = RealmConfiguration.create(
+        schema = setOf(
+            ParentDraftRealmObject::class,
+            ChildDraftRealmObject::class
+        )
+    )
     private val realm = Realm.open(configuration)
-
 
 
     override fun getAllDrafts(): Flow<List<Draft>> {
@@ -53,42 +56,59 @@ internal class DraftRepositoryImpl : DraftRepository {
         }
     }
 
-    override suspend fun saveDraft(id: String?, title: String, content: String): String {
-        val draftId = realm.write {
-            val parentDraftRealmObject = ParentDraftRealmObject().apply {
-                id?.let { this.id = ObjectId.from(id) }
-                this.childDraftRealmObjects = realmListOf(
-                    ChildDraftRealmObject().apply {
-                        this.title = title
-                        this.content = content
-                    }
-                )
-            }
+    private fun queryParentDraftById(id: ObjectId): ParentDraftRealmObject? {
+        return realm.query<ParentDraftRealmObject>("id == $0", id).first()
+            .find()
+    }
 
-            val existingParentDraftRealmObject: ParentDraftRealmObject? =
-                query<ParentDraftRealmObject>("id == $0", parentDraftRealmObject.id).first()
-                    .find()
-            if (existingParentDraftRealmObject != null) {
-                if (existingParentDraftRealmObject.childDraftRealmObjects.all { it.title != title || it.content != content }) {
-                    // create new Version
-                    parentDraftRealmObject.childDraftRealmObjects.forEach {
-                        existingParentDraftRealmObject.childDraftRealmObjects.add(it)
+
+    private val ParentDraftRealmObject.isDifferentContent: (String, String) -> Boolean
+        get() = { title: String, body: String ->
+            childDraftRealmObjects.all { it.title != title || it.content != body }
+        }
+
+    override suspend fun saveDraft(
+        id: String?,
+        title: String,
+        body: String
+    ): Pair<String, String> {
+        val parentDraftRealmObject = ParentDraftRealmObject().apply {
+            id?.let { this.id = ObjectId.from(id) }
+            this.childDraftRealmObjects = realmListOf(
+                ChildDraftRealmObject().apply {
+                    this.title = title
+                    this.content = body
+                }
+            )
+        }
+
+        queryParentDraftById(parentDraftRealmObject.id).also { existingParentDraftRealmObject ->
+            realm.write {
+                if (existingParentDraftRealmObject != null) {
+                    if (existingParentDraftRealmObject.isDifferentContent(title, body)) {
+                        findLatest(existingParentDraftRealmObject)?.apply {
+                            childDraftRealmObjects.add(
+                                ChildDraftRealmObject().apply {
+                                    this.title = title
+                                    this.content = body
+                                }
+                            )
+                        }
                     }
                     existingParentDraftRealmObject.topics = parentDraftRealmObject.topics
+                } else {
+                    copyToRealm(parentDraftRealmObject)
                 }
-            } else {
-                copyToRealm(parentDraftRealmObject)
             }
-            parentDraftRealmObject.id.toString()
         }
-        return draftId
+        return parentDraftRealmObject.id.toString() to parentDraftRealmObject.childDraftRealmObjects.last().id.toString()
     }
 
     override suspend fun updateLastOpenedTime(id: String) {
         realm.write {
-            val parentDraftRealmObject: ParentDraftRealmObject? =
-                this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).first().find()
-            // modify the frog's age in the write transaction to persist the new age to the realm
+            val parentDraftRealmObject =
+                query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).first()
+                    .find()
             parentDraftRealmObject?.lastOpened =
                 RealmInstant.from(Clock.System.now().epochSeconds, 1000)
         }
@@ -98,5 +118,20 @@ internal class DraftRepositoryImpl : DraftRepository {
         val parentDraftRealmObject =
             this.query<ParentDraftRealmObject>("id == $0", ObjectId.from(id)).find().first()
         delete(parentDraftRealmObject)
+    }
+
+    override suspend fun updateDraftVersion(
+        parentDraftId: String,
+        title: String,
+        body: String
+    ) {
+        return realm.write {
+            queryParentDraftById(ObjectId.Companion.from(parentDraftId))?.also { existingParentDraftRealmObject ->
+                findLatest(existingParentDraftRealmObject)?.latestDraft()?.apply {
+                    this.title = title
+                    this.content = body
+                }
+            }
+        }
     }
 }

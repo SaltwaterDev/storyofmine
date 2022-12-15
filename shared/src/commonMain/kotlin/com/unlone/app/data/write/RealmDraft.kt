@@ -21,6 +21,8 @@ internal class ParentDraftRealmObject : RealmObject {
     var lastOpened: RealmInstant = RealmInstant.from(Clock.System.now().epochSeconds, 1000)
 }
 
+
+
 internal fun ParentDraftRealmObject.latestDraft(): ChildDraftRealmObject {
     return childDraftRealmObjects.maxByOrNull { it.timeStamp } ?: childDraftRealmObjects.first()
 }
