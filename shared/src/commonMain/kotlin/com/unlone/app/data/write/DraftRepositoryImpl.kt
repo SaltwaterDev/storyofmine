@@ -83,7 +83,7 @@ internal class DraftRepositoryImpl : DraftRepository {
         }
 
         queryParentDraftById(parentDraftRealmObject.id).also { existingParentDraftRealmObject ->
-            realm.write {
+            realm.writeBlocking {
                 if (existingParentDraftRealmObject != null) {
                     if (existingParentDraftRealmObject.isDifferentContent(title, body)) {
                         findLatest(existingParentDraftRealmObject)?.apply {

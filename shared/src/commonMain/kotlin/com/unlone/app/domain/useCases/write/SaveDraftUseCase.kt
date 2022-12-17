@@ -8,21 +8,10 @@ class SaveDraftUseCase(private val draftRepository: DraftRepository) {
         id: String?,
         title: String,
         body: String,
-        shouldCreateNewVersion: Boolean,
     ): StoryResult<Pair<String, String>?> {
         return if (title.isNotBlank() || body.isNotBlank()) {
-            if (shouldCreateNewVersion) {
-                draftRepository.saveDraft(id, title, body).let {
-                    StoryResult.Success(data = it)
-                }
-            } else {
-                if (id != null) {
-                    draftRepository.updateDraftVersion(id, title, body).let {
-                        StoryResult.Success()
-                    }
-                } else {
-                    StoryResult.Failed(errorMsg = "id is null")
-                }
+            draftRepository.saveDraft(id, title, body).let {
+                StoryResult.Success(data = it)
             }
         } else {
             StoryResult.Failed(errorMsg = "title or content is blank")

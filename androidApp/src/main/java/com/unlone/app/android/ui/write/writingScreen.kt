@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.write
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
@@ -18,7 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -39,6 +42,45 @@ import kotlinx.coroutines.launch
 import org.example.library.SharedRes
 
 
+@Stable
+class WritingScreenState(
+    // DO NOT pass a ViewModel instance to a plain state holder class
+    // private val viewModel: MyScreenViewModel,
+
+    // Instead, pass only what it needs as a dependency
+    private val bodyText: String,
+    private val setBodyText: (String) -> Unit,
+) {
+    val setBodyTextField: (TextFieldValue) -> Unit = {
+        setBodyText(it.text)
+    }
+
+    // Other UI-scoped types
+    var bodyTextField: TextFieldValue by mutableStateOf(
+        TextFieldValue(
+            bodyText,
+            TextRange(bodyText.length)
+        )
+    )
+
+    fun addImageMD(uri: Uri?) {
+        uri?.let {
+            val imageMD = "![image]($it)"
+            setBodyText(bodyText + imageMD)
+        }
+    }
+}
+
+@Composable
+fun rememberWritingScreenState(
+    bodyText: String,
+    setBodyText: (String) -> Unit,
+): WritingScreenState =
+    remember(bodyText, setBodyText) {
+        WritingScreenState(bodyText, setBodyText)
+    }
+
+
 @SuppressLint("UnusedCrossfadeTargetStateParameter")
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
 @ExperimentalComposeUiApi
@@ -55,6 +97,11 @@ fun WritingScreen(
     onPostSucceed: (String) -> Unit,
 ) {
     val uiState = viewModel.uiState
+    val screenState = rememberWritingScreenState(
+        bodyText = uiState.body,
+        setBodyText = viewModel::setBody
+    )
+
     val networkState by connectivityState()
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val density = LocalDensity.current
@@ -68,7 +115,7 @@ fun WritingScreen(
     // launch for open gallery
     val loadGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-            viewModel.addImageMD(it)
+            screenState.addImageMD(it)
         }
 
     LaunchedEffect(networkState) {
@@ -79,7 +126,6 @@ fun WritingScreen(
             versionArg,
         )
     }
-
 
     // close preview when keyboard is shown
     LaunchedEffect(isKeyboardVisible) {
@@ -128,7 +174,7 @@ fun WritingScreen(
         },
         sheetContent = {
             PreviewBottomSheet(title = uiState.title,
-                content = uiState.body.text,
+                content = screenState.bodyTextField.text,
                 onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } })
         },
         sheetPeekHeight = 0.dp,
@@ -173,9 +219,7 @@ fun WritingScreen(
                             visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.title,
-                    onValueChange = {
-                        viewModel.setTitle(it)
-                    },
+                    onValueChange = viewModel::setTitle,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -198,10 +242,8 @@ fun WritingScreen(
                         .placeholder(
                             visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
-                    value = uiState.body.text,
-                    onValueChange = {
-                        viewModel.setBody(it)
-                    },
+                    value = screenState.bodyTextField,
+                    onValueChange = screenState.setBodyTextField,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -246,7 +288,7 @@ fun WritingScreen(
             if (showPostingDialog) PostingDialog(
                 uiState.topicList,
                 uiState.selectedTopic,
-                viewModel::setTopic,
+                viewModel.setTopic,
                 { showPostingDialog = false },
                 uiState.isPublished,
                 uiState.commentAllowed,

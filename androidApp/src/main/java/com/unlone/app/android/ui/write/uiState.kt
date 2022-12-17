@@ -11,9 +11,8 @@ import com.unlone.app.data.write.GuidingQuestion
 @Stable
 interface WritingUiState {
     val currentDraftId: String?
-    val currentVersionId: String?
     val title: String
-    val body: TextFieldValue
+    val body: String
     val draftList: Map<String, String>
     val topicList: List<String>
     val selectedTopic: String
@@ -29,5 +28,6 @@ interface WritingUiState {
     val guidingQuestion: List<GuidingQuestion>
     val displayingGuidingQuestion: GuidingQuestion?
     val postSucceedStory: String?
+    val shouldCreateNewVersionDraft: Boolean
 }
 

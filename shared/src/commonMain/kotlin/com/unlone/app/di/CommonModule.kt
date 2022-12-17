@@ -50,6 +50,7 @@ val commonModule = module {
     singleOf(::SaveDraftUseCase)
     singleOf(::ValidPasswordUseCase)
     singleOf(::IsUserSignedInUseCase)
+    singleOf(::UpdateLatestDraftUseCase)
 
     // repositories
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }

@@ -25,7 +25,11 @@ class SavedStoriesViewModel(
     var uiState by mutableStateOf(SavedStoriesUiState())
         private set
 
-    fun loadStories() = viewModelScope.launch {
+    init {
+        loadStories()
+    }
+
+    private fun loadStories() = viewModelScope.launch {
         uiState = uiState.copy(loading = true)
         when (val result = storyRepository.getSavedStories()) {
             is StoryResult.Success -> result.data?.let {
