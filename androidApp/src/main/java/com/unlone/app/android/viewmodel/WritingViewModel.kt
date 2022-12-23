@@ -127,6 +127,11 @@ class WritingViewModel(
         _uiState.postStoryError = null
     }
 
+    fun resetShouldCreateNewVersionDraft() {
+        dismiss()
+        _uiState.shouldCreateNewVersionDraft = true
+    }
+
 
     fun setTitle(text: String) {
         _uiState.title = text
@@ -140,35 +145,42 @@ class WritingViewModel(
         saveDraft()
     }
 
-    private fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
+    private fun saveDraft() = viewModelScope.launch {
         if (_uiState.title.isBlank() && _uiState.body.isBlank()) return@launch
-
         Timber.d("currentDraftId", uiState.currentDraftId)
-
         if (_uiState.shouldCreateNewVersionDraft) {
-            val result = saveDraftUseCase(
-                _uiState.currentDraftId,
+            if (saveAsNewVersionDraft())
+                _uiState.shouldCreateNewVersionDraft = false
+        } else {
+            saveToLatestVersion()
+        }
+    }
+
+    private suspend fun saveAsNewVersionDraft(): Boolean {
+        val result = saveDraftUseCase(
+            _uiState.currentDraftId,
+            _uiState.title,
+            _uiState.body,
+        )
+        when (result) {
+            is StoryResult.Success -> {
+                _uiState.currentDraftId = result.data?.first
+                return true
+
+            }
+            is StoryResult.Failed -> _uiState.error = result.errorMsg
+            else -> {}  // won't hit this case for now
+        }
+        return false
+    }
+
+    private suspend fun saveToLatestVersion() {
+        _uiState.currentDraftId?.let {
+            updateLatestDraftUseCase(
+                it,
                 _uiState.title,
                 _uiState.body,
-                )
-            when (result) {
-                is StoryResult.Success -> {
-                    if (_uiState.shouldCreateNewVersionDraft) {
-                        _uiState.currentDraftId = result.data?.first
-                        _uiState.shouldCreateNewVersionDraft = false
-                    }
-                }
-                is StoryResult.Failed -> _uiState.error = result.errorMsg
-                else -> {}  // won't hit this case for now
-            }
-        } else {
-            _uiState.currentDraftId?.let {
-                updateLatestDraftUseCase(
-                    it,
-                    _uiState.title,
-                    _uiState.body,
-                )
-            }
+            )
         }
     }
 

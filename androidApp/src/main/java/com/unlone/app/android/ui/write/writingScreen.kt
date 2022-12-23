@@ -141,11 +141,12 @@ fun WritingScreen(
         }
     }
 
-    val uiDraftList: Map<String?, String> =
-        if (uiState.currentDraftId == null && uiState.title.isNotEmpty()) mapOf(
-            uiState.currentDraftId to uiState.title
-        ) + uiState.draftList
-        else (uiState.draftList as Map<String?, String>)
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.resetShouldCreateNewVersionDraft()
+        }
+    }
+
 
     BottomSheetScaffold(
         modifier = Modifier
@@ -180,7 +181,7 @@ fun WritingScreen(
         sheetPeekHeight = 0.dp,
         drawerContent = {
             OptionsDrawer(
-                uiDraftList,
+                uiState.draftList,
                 clearAll = {
                     viewModel.clearDraft()
                     scope.launch { scaffoldState.drawerState.close() }

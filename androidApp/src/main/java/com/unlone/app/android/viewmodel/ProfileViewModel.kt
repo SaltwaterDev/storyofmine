@@ -28,17 +28,18 @@ class ProfileViewModel(
 ) : ViewModel() {
 
     var state =
-        authRepository.isUserSignedIn.combine(authRepository.username) { isSignIn, username ->
+        authRepository.isUserSignedIn
+            .combine(authRepository.username) { isSignIn, username ->
 
-            ProfileUiState(
-                isUserLoggedIn = isSignIn,
-                username = username ?: "",
-                errorMsg = if (username == null) "username is null" else null
-            )
-        }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileUiState())
+                ProfileUiState(
+                    isUserLoggedIn = isSignIn,
+                    username = username ?: "",
+                    errorMsg = if (username == null) "username is null" else null
+                )
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileUiState())
 
 
-    fun signOut() = viewModelScope.launch(Dispatchers.Default) {
+    fun signOut() = viewModelScope.launch {
         authRepository.signOut()
     }
 

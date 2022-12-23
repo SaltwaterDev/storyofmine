@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.domain.entities.Comment
 import dev.icerock.moko.resources.compose.stringResource
@@ -40,7 +42,7 @@ fun CommentItem(comment: Comment) {
             Text(
                 comment.username, fontWeight = if (unread) FontWeight.Bold else null
             )
-        }, secondaryText = { Text(comment.text) }, singleLineSecondaryText = false
+        }, secondaryText = { Text(comment.text, lineHeight = 16.sp, maxLines = 20) }, singleLineSecondaryText = false
         )
     }
     /*SwipeToDismiss(
@@ -120,7 +122,10 @@ fun CommentInput(
         Row(
             Modifier.navigationBarsPadding(), verticalAlignment = Alignment.CenterVertically
         ) {
-            TextField(value = comment, onValueChange = setComment, modifier = Modifier
+            TextField(
+                value = comment, onValueChange = setComment,
+                maxLines = 20,
+                modifier = Modifier
 //                    .padding(horizontal = 16.dp, vertical = 8.dp)
                 .weight(1f), enabled = sendEnabled, colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Unspecified,
