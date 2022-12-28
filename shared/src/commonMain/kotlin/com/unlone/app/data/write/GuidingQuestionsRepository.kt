@@ -45,7 +45,6 @@ class GuidingQuestionsRepositoryImpl(
             StaticResourceResult.Failed(null)
         }
         catch (e: Exception) {
-//            Logger.e { e.toString() }
             Logger.e(e) { "GuidingQuestionsRepositoryImpl error" }
             StaticResourceResult.Failed(errorMsg = e.message)
         }

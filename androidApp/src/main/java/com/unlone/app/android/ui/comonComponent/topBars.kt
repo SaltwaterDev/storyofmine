@@ -117,6 +117,7 @@ fun StoryDetailTopBar(
     edit: () -> Unit,
     topic: String,
     isSelfWritten: Boolean,
+    btnEnabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -137,7 +138,8 @@ fun StoryDetailTopBar(
 
             OutlinedButton(
                 onClick = navToTopicDetail,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
+                enabled = btnEnabled
             ) {
                 Text(text = topic)
             }
@@ -162,7 +164,7 @@ fun StoryDetailTopBar(
                 }
 
                 Box {
-                    IconButton(onClick = { expanded = true }) {
+                    IconButton(onClick = { expanded = true }, enabled = btnEnabled) {
                         Icon(
                             Icons.Rounded.MoreVert,
                             contentDescription = "more"
@@ -207,6 +209,7 @@ fun StoryDetailTopBarPreview() {
         topic = "Topic",
         isSelfWritten = false,
         isSaved = true,
+        btnEnabled = true
     )
 }
 

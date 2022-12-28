@@ -82,9 +82,13 @@ class StoriesViewModel(
                 is AuthResult.Unauthorized -> _state.value.copy(
                     isUserLoggedIn = false,
                 )
-                is AuthResult.UnknownError -> _state.value.copy(
-                    errorMsg = "Unknown error: " + authResult.errorMsg
-                )
+                is AuthResult.UnknownError -> {
+                    _state.value.copy(
+                        errorMsg = authResult.errorMsg?.let {
+                            "Unknown error: $it"
+                        }
+                    )
+                }
             }
         }
     }
