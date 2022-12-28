@@ -19,10 +19,12 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.ui.comonComponent.CommentInput
 import com.unlone.app.android.ui.comonComponent.CommentItem
 import com.unlone.app.android.ui.comonComponent.StoryDetailTopBar
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.storyText
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
+import com.unlone.app.domain.entities.NetworkState
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
@@ -46,12 +48,14 @@ fun StoryDetail(
         }
         onDispose {}
     }*/
-    LaunchedEffect(Unit) {
-        if (storyId != null) {
-            viewModel.getStoryDetail(storyId)
+    val networkState by connectivityState()
+    if (networkState is NetworkState.Available) {
+        LaunchedEffect(networkState) {
+            if (storyId != null) {
+                viewModel.getStoryDetail(storyId)
+            }
         }
     }
-
 
     val state by viewModel.state.collectAsState()
     var commentInputHeight by remember { mutableStateOf(0) }

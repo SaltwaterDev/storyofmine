@@ -41,6 +41,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.composeCompiler
     }
+    namespace = "com.unlone.app.android"
 }
 
 dependencies {

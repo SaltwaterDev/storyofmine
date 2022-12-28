@@ -90,7 +90,7 @@ actual class FetchStoryItemsUseCase(
     }
 
     companion object {
-        private const val postsPerTopic = 3
+        private const val postsPerTopic = 4
         private const val itemsPerPage = 4
         private const val randomTopicSize = 4
         private val pagingConfig =

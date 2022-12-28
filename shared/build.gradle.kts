@@ -49,6 +49,7 @@ kotlin {
                 // logger
                 implementation(kotlin("stdlib-common"))
                 implementation("co.touchlab:kermit:1.1.3")
+                implementation("co.touchlab:kermit-crashlytics:1.1.3")
                 // mongodb realm
                 implementation(Ktx.Coroutine.core)
                 implementation(Deps.realm)
@@ -121,6 +122,7 @@ android {
         minSdk = ConfigData.minSdkVersion
         targetSdk = ConfigData.targetSdkVersion
     }
+    namespace = "com.unlone.app"
 }
 
 

@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -20,7 +17,9 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.ui.comonComponent.TopicDetailTopBar
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.viewmodel.TopicDetailViewModel
+import com.unlone.app.domain.entities.NetworkState
 import kotlinx.coroutines.launch
 
 
@@ -34,8 +33,12 @@ fun TopicDetail(
     val uiState = viewModel.state.collectAsState().value
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        topic?.let { viewModel.initData(it) }
+
+    val networkState by connectivityState()
+    if (networkState is NetworkState.Available) {
+        LaunchedEffect(networkState) {
+            topic?.let { viewModel.initData(it) }
+        }
     }
 
     Scaffold(

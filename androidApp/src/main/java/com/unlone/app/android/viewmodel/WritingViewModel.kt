@@ -135,13 +135,13 @@ class WritingViewModel(
 
     fun setTitle(text: String) {
         _uiState.title = text
-        // real-time update in realm
+        // real-time save
         saveDraft()
     }
 
     fun setBody(text: String) {
         _uiState.body = text
-        // real-time update in realm
+        // real-time save
         saveDraft()
     }
 

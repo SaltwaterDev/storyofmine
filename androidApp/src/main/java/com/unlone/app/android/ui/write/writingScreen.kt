@@ -118,6 +118,10 @@ fun WritingScreen(
             screenState.addImageMD(it)
         }
 
+    LaunchedEffect(Unit){
+        viewModel.resetShouldCreateNewVersionDraft()
+    }
+
     LaunchedEffect(networkState) {
         viewModel.checkAuthentication()
         viewModel.refreshData(
@@ -138,12 +142,6 @@ fun WritingScreen(
         if (uiState.postSuccess) {
             uiState.postSucceedStory?.let { onPostSucceed(it) }
             viewModel.dismissSucceed()
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            viewModel.resetShouldCreateNewVersionDraft()
         }
     }
 
@@ -364,7 +362,7 @@ fun WritingScreen(
                 AlertDialog(
                     onDismissRequest = { showNetworkUnavailableAlert = false },
                     title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
-                    text = { Text(text = "_Network unavailable. Make sure you have connect to internet") },
+                    text = { Text(text = stringResource(resource = SharedRes.strings.common__network_unavailable_warning)) },
                     confirmButton = {
                         Button(
                             onClick = { showNetworkUnavailableAlert = false }

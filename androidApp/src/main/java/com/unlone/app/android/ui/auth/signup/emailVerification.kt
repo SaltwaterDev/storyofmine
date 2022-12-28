@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.End
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.android.viewmodel.SignUpUiState
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
@@ -72,7 +74,7 @@ fun EmailVerificationScreen(
 
     state.errorMsg?.let { msg ->
         AlertDialog(
-            onDismissRequest = dismissError, 
+            onDismissRequest = dismissError,
             title = { Text(text = msg) },
             confirmButton = {
                 Button(onClick = dismissError) {
@@ -99,7 +101,14 @@ fun OtpInputBlock(
     Column(modifier) {
         Text(text = stringResource(resource = SharedRes.strings.otp__enter_otp))
         Spacer(modifier = Modifier.height(15.dp))
-        TextField(value = otp, onValueChange = onValueChanged, modifier = Modifier.fillMaxWidth())
+        TextField(
+            value = otp,
+            onValueChange = onValueChanged,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardActions = KeyboardActions(
+                onDone = { onClick() }
+            )
+        )
         Spacer(modifier = Modifier.height(50.dp))
         Button(
             onClick = onClick,

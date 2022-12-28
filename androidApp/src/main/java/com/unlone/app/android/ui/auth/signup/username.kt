@@ -1,6 +1,7 @@
 package com.unlone.app.android.ui.auth.signup
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,6 +10,7 @@ import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.android.model.SignUpUiEvent
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import dev.icerock.moko.resources.compose.stringResource
@@ -55,6 +57,9 @@ fun SetUsernameScreen(
                 },
                 onValueChange = { viewModel.onEvent(SignUpUiEvent.UsernameChanged(it)) },
                 singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onDone = { viewModel.onEvent(SignUpUiEvent.SetUsername) }
+                )
             )
             Button(
                 onClick = { viewModel.onEvent(SignUpUiEvent.SetUsername) },
