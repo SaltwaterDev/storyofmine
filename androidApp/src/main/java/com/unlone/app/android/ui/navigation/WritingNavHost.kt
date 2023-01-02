@@ -2,6 +2,7 @@ package com.unlone.app.android.ui.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -15,6 +16,7 @@ import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.EditHistoryViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 
 @ExperimentalAnimatedInsets
@@ -40,13 +42,15 @@ fun NavGraphBuilder.writeGraph(
             val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
             val viewModel =
                 koinViewModel<WritingViewModel>(viewModelStoreOwner = viewModelStoreOwner)
+
             WritingScreen(
                 viewModel = viewModel,
                 draftIdArg = it.arguments?.getString(OptionalDraftArg),
                 versionArg = it.arguments?.getString(OptionalVersionArg),
                 navToEditHistory = { id -> navToEditHistory(navController, id) },
                 navToSignIn = { navigateToSignUp(navController) },
-                onPostSucceed = { succeedStory -> navToStories(succeedStory) })
+                onPostSucceed = { succeedStory -> navToStories(succeedStory) },
+            )
         }
 
         composable(

@@ -1,14 +1,15 @@
 package com.unlone.app.android.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,7 @@ import org.example.library.SharedRes
 import timber.log.Timber
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @OptIn(ExperimentalLayoutApi::class)
@@ -34,6 +36,7 @@ fun UnloneApp() {
 
     UnloneTheme {
         val appState = rememberUnloneAppState()
+
         Scaffold(
             scaffoldState = appState.scaffoldState,
             bottomBar = {
@@ -42,12 +45,12 @@ fun UnloneApp() {
                     enter = slideInVertically(initialOffsetY = { it }),
                     exit = slideOutVertically(targetOffsetY = { it }),
                     content = { UnloneBottomBar(appState = appState) })
-            }) { contentPadding ->
-
+            }) {
+            val contentPadding by animateDpAsState(it.calculateBottomPadding())
 
             MainNavHost(
                 appState,
-                Modifier.padding(contentPadding),
+                Modifier.padding(bottom = contentPadding),
                 appState::upPress
             )
 
@@ -55,7 +58,7 @@ fun UnloneApp() {
                 if (appState.shouldShowNoNetworkSnackBar) {
                     Snackbar(
                         modifier = Modifier
-                            .padding(contentPadding)
+                            .padding(bottom = contentPadding)
                             .padding(8.dp)
                             .align(Alignment.BottomStart)
                     ) { Text(text = stringResource(resource = SharedRes.strings.common__network_unavailable_warning)) }

@@ -139,28 +139,27 @@ class WritingViewModel(
         saveDraft()
     }
 
-    fun setBody(text: String) {
-        _uiState.body = text
+    val setBody: (String) -> Unit = { text: String ->
         // real-time save
-        saveDraft()
+        saveDraft(bodyText = text)
     }
 
-    private fun saveDraft() = viewModelScope.launch {
-        if (_uiState.title.isBlank() && _uiState.body.isBlank()) return@launch
+    private fun saveDraft(bodyText: String = "") = viewModelScope.launch {
+        if (_uiState.title.isBlank() && bodyText.isBlank()) return@launch
         Timber.d("currentDraftId", uiState.currentDraftId)
         if (_uiState.shouldCreateNewVersionDraft) {
-            if (saveAsNewVersionDraft())
+            if (saveAsNewVersionDraft(bodyText))
                 _uiState.shouldCreateNewVersionDraft = false
         } else {
-            saveToLatestVersion()
+            saveToLatestVersion(bodyText)
         }
     }
 
-    private suspend fun saveAsNewVersionDraft(): Boolean {
+    private suspend fun saveAsNewVersionDraft(bodyText: String): Boolean {
         val result = saveDraftUseCase(
             _uiState.currentDraftId,
             _uiState.title,
-            _uiState.body,
+            bodyText,
         )
         when (result) {
             is StoryResult.Success -> {
@@ -174,12 +173,12 @@ class WritingViewModel(
         return false
     }
 
-    private suspend fun saveToLatestVersion() {
+    private suspend fun saveToLatestVersion(bodyText: String) {
         _uiState.currentDraftId?.let {
             updateLatestDraftUseCase(
                 it,
                 _uiState.title,
-                _uiState.body,
+                bodyText,
             )
         }
     }

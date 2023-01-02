@@ -40,18 +40,16 @@ import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
+import timber.log.Timber
 
 
 @Stable
 class WritingScreenState(
-    // DO NOT pass a ViewModel instance to a plain state holder class
-    // private val viewModel: MyScreenViewModel,
-
-    // Instead, pass only what it needs as a dependency
     private val bodyText: String,
     private val setBodyText: (String) -> Unit,
 ) {
     val setBodyTextField: (TextFieldValue) -> Unit = {
+        bodyTextField = it
         setBodyText(it.text)
     }
 
@@ -99,7 +97,7 @@ fun WritingScreen(
     val uiState = viewModel.uiState
     val screenState = rememberWritingScreenState(
         bodyText = uiState.body,
-        setBodyText = viewModel::setBody
+        setBodyText = viewModel.setBody
     )
 
     val networkState by connectivityState()
@@ -263,7 +261,6 @@ fun WritingScreen(
                         start = 16.dp, end = 16.dp, bottom = toolbarHeight + 8.dp
                     )
             )
-
 
             Crossfade(
                 targetState = isKeyboardVisible,

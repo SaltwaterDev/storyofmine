@@ -27,6 +27,7 @@ import com.unlone.app.domain.entities.StoryItem
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.example.library.SharedRes
+import timber.log.Timber
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -64,9 +65,10 @@ fun StoriesScreen(
     }
 
 
-
     if (state.isUserLoggedIn) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Scaffold(
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
             SwipeRefresh(state = refreshState, onRefresh = storiesByTopics::refresh) {
                 LazyColumn(
                     Modifier
@@ -137,9 +139,7 @@ fun StoriesScreen(
 //                                todo: maybe do nothing?
                             }
                         }
-
                     }
-
                 }
             }
         }

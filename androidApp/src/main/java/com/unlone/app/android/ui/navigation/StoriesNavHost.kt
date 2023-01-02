@@ -2,18 +2,17 @@ package com.unlone.app.android.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.stories.*
 import com.unlone.app.android.viewmodel.*
-import com.unlone.app.domain.entities.NetworkState
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -57,7 +56,8 @@ fun NavGraphBuilder.storiesGraph(
                 if (pid != null) {
                     navToReport(navController, ReportType.story.name, pid)
                 }
-            }, viewModel
+            },
+                viewModel,
             )
         }
         composable(
@@ -69,7 +69,7 @@ fun NavGraphBuilder.storiesGraph(
                 topic,
                 navController::navigateUp,
                 navToStoryDetail = { pid -> navigateToStoryDetail(navController, pid) },
-                viewModel
+                viewModel,
             )
         }
 

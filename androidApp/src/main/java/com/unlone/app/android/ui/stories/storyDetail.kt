@@ -25,9 +25,13 @@ import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
 import com.unlone.app.domain.entities.NetworkState
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.example.library.SharedRes
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalCoroutinesApi::class
+)
 @Composable
 fun StoryDetail(
     storyId: String?,
@@ -83,7 +87,7 @@ fun StoryDetail(
                     edit = { /*TODO*/ },
                     topic = state.topic,
                     isSelfWritten = state.isSelfWritten,
-                    btnEnabled = networkState is NetworkState.Available,
+                    btnEnabled = (networkState is NetworkState.Available) && !state.loading,
                 )
             },
             modifier = Modifier.fillMaxSize()
