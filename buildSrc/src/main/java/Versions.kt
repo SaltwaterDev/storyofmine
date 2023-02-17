@@ -11,6 +11,7 @@ object Versions {
     const val koin = "3.2.2"
     const val koin_android_version = "3.3.0"
     const val kotlin = "1.7.20"
+    const val kotest = "5.5.5"
     const val ktor = "1.6.4"
     const val ktorVersion = "2.0.2"
     const val ktxCoroutine = "1.6.4"
@@ -18,7 +19,6 @@ object Versions {
     const val navCompose = "2.5.3"
     const val timber = "5.0.1"
     const val realm = "1.4.0"
-    const val kotest = "5.4.2"
     const val kmmPaging = "0.5.0"
     const val pagingCompose = "1.0.0-alpha16"
 }

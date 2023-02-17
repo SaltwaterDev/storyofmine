@@ -54,7 +54,7 @@ fun TopicItemRow(topic: String, onTopicClick: () -> Unit) {
         ) {
 //            Spacer(modifier = Modifier.height(16.dp))
             Text(text = topic, style = Typography.topicTableElement, modifier = Modifier.padding(vertical = 8.dp))
-            Divider(Modifier.alpha(0.5f))
+            Divider(Modifier.alpha(0.8f))
         }
     }
 }

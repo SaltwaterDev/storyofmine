@@ -1,5 +1,5 @@
 PODS:
-  - ExytePopupView (1.2.1)
+  - ExytePopupView (2.0.1)
   - shared (1.0)
 
 DEPENDENCIES:
@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :path: "../shared"
 
 SPEC CHECKSUMS:
-  ExytePopupView: e0554c9713665a386a54b356c596858811e84621
+  ExytePopupView: bb465c950090178eda383b6333f453d943df1390
   shared: 2d3b24a8fe27b7d9e65b8d075a9672fbc6a1aa10
 
 PODFILE CHECKSUM: dacf2138af209ccbcd5b9af6e04522b97b46b5aa

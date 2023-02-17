@@ -87,18 +87,19 @@ struct WritingScreen: View {
                 MenuItemView(showMenu: $showMenu, title: draft.value, callback:{ writingViewModel.onMenuClicked(id: draft.key) })
             })
             menuItemList =  menuItems + draftItems
-        }).popup(isPresented: $writingViewModel.showPostPopup, closeOnTap: false, closeOnTapOutside: true, view: {
-            PostingDialog
         })
-        .popup(isPresented: $writingViewModel.postSuccess, view: {
-            Text("Posted!")
-                .padding(20)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color(red: 0.85, green: 0.8, blue: 0.95))
-                        .opacity(1)
-                )
-        })
+//        .popup(isPresented: $writingViewModel.showPostPopup, closeOnTap: false, closeOnTapOutside: true, view: {
+//            PostingDialog
+//        })
+//        .popup(isPresented: $writingViewModel.postSuccess, view: {
+//            Text("Posted!")
+//                .padding(20)
+//                .background(
+//                    RoundedRectangle(cornerRadius: 8)
+//                        .fill(Color(red: 0.85, green: 0.8, blue: 0.95))
+//                        .opacity(1)
+//                )
+//        })
     }
 }
 

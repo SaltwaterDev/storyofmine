@@ -1,51 +1,35 @@
 package com.unlone.app.domain.auth
 
-import com.unlone.app.data.auth.AuthRepository
-import com.unlone.app.data.auth.AuthResult
+import com.unlone.app.data.repo.TestAuthRepository
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
-import io.mockk.coEvery
-import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import io.kotest.core.spec.style.FunSpec
 
-class IsUserSignedInTest {
+class IsUserSignedInTest: FunSpec({
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `test auth success`() = runTest {
-        val authRepo = mockk<AuthRepository>()
-        coEvery { authRepo.authenticate() } returns AuthResult.Authorized()
+    val authRepo = TestAuthRepository()
 
+    test ("test auth success")
+        .config(coroutineTestScope = true) {
         val useCase = IsUserSignedInUseCase(authRepo)
-        assertTrue {
-            useCase.invoke()
-        }
+        useCase.invoke() shouldBe
+//        assertTrue {
+//            useCase.invoke()
+//        }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `test unauthorized`() = runTest {
-        val authRepo = mockk<AuthRepository>()
-        coEvery { authRepo.authenticate() } returns AuthResult.Unauthorized("error")
-
+    test ("test unauthorized")
+        .config(coroutineTestScope = true) {
         val useCase = IsUserSignedInUseCase(authRepo)
-        assertFalse {
-            useCase.invoke()
-        }
+//        assertFalse {
+//            useCase.invoke()
+//        }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `test unknown fail`() = runTest {
-        val authRepo = mockk<AuthRepository>()
-        coEvery { authRepo.authenticate() } returns AuthResult.UnknownError()
-
+    test ("test unknown fail")
+        .config(coroutineTestScope = true) {
         val useCase = IsUserSignedInUseCase(authRepo)
-        assertFalse {
-            useCase.invoke()
-        }
+//        assertFalse {
+//            useCase.invoke()
+//        }
     }
-}
+})

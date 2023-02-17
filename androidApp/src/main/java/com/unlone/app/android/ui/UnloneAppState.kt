@@ -99,10 +99,6 @@ class UnloneAppState(
         }
     }
 
-    // todo
-    fun navigateToStoriesDetail(pid: Long, from: NavBackStackEntry) {
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     val shouldShowNoNetworkSnackBar: Boolean
         @Composable get() {

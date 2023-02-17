@@ -3,13 +3,13 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
-    id("com.android.library")
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("plugin.serialization") version Versions.kotlin
     id("io.realm.kotlin")
     id("dev.icerock.mobile.multiplatform-resources")
     id("io.kotest.multiplatform") version Versions.kotest
     id("com.codingfeline.buildkonfig")
     id("com.rickclephas.kmp.nativecoroutines") version "0.13.1"
+    id("com.android.library")
 }
 
 version = "1.0"
@@ -66,7 +66,6 @@ kotlin {
                 implementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
                 implementation(Ktx.Coroutine.test)
                 implementation(Ktor.clientMock)
-//                implementation("io.mockk:mockk:1.13.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             }
         }

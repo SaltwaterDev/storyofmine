@@ -1,5 +1,6 @@
 package com.unlone.app.data.api
 
+import io.kotest.core.spec.style.FunSpec
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import io.ktor.utils.io.*
@@ -8,9 +9,9 @@ import kotlin.test.Test
 
 
 // todo: still studying
-class AuthApiTest {
+class AuthApiTest: FunSpec({
 
-    private val mockEngine = MockEngine { request ->
+    val mockEngine = MockEngine { request ->
         // todo: what does it do?
         respond(
             content = ByteReadChannel("""{"ip":"127.0.0.1"}"""),
@@ -18,16 +19,13 @@ class AuthApiTest {
             headers = headersOf(HttpHeaders.ContentType, "application/json")
         )
     }
-    private val authApiService = AuthApiService(mockEngine)
+    val authApiService = AuthApiService(mockEngine)
 
-    @Test
-    fun sampleClientTest() {
+
+    test("sampleClientTest") {
         runBlocking {
             // if it doesn't crash, the test succeed
             authApiService.authenticate("12345")
         }
     }
-
-
-
-}
+})
