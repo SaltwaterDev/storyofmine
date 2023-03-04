@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,6 +22,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlone.app.android.ui.comonComponent.TopicTable
 import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.MontserratFontFamily
+import com.unlone.app.android.ui.theme.NotoSansHKFontFamily
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
@@ -67,7 +69,7 @@ fun StoriesScreen(
 
     if (state.isUserLoggedIn) {
         Scaffold(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) { innerPadding ->
             SwipeRefresh(state = refreshState, onRefresh = storiesByTopics::refresh) {
                 LazyColumn(
@@ -91,8 +93,8 @@ fun StoriesScreen(
                                     highlight = PlaceholderHighlight.fade()
                                 ),
                             fontSize = 30.sp,
-                            fontFamily = MontserratFontFamily,
-                            fontWeight = FontWeight.SemiBold
+                            fontFamily = NotoSansHKFontFamily,
+                            fontWeight = FontWeight.Medium
                         )
                     }
 

@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
@@ -25,6 +26,7 @@ enum class AuthNav {
 }
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @ExperimentalAnimationApi
 @OptIn(InternalCoroutinesApi::class)
 fun NavGraphBuilder.authGraph(

@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +39,7 @@ fun TopicTable(
                 fontSize = 13.sp,
             )
         }
-        Divider()
+        Divider(color = Color.Black)
         Spacer(modifier = Modifier.height(3.dp))
         topics.forEach { TopicItemRow(topic = it.name, onTopicClick = { onTopicClick(it.name) }) }
     }
@@ -52,9 +53,8 @@ fun TopicItemRow(topic: String, onTopicClick: () -> Unit) {
                 .weight(1f)
                 .padding(horizontal = 10.dp)
         ) {
-//            Spacer(modifier = Modifier.height(16.dp))
             Text(text = topic, style = Typography.topicTableElement, modifier = Modifier.padding(vertical = 8.dp))
-            Divider(Modifier.alpha(0.8f))
+            Divider(color = Color.Black, thickness = 0.5.dp)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.stories
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -16,6 +17,7 @@ import com.unlone.app.android.viewmodel.FullTopicUiState
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FullTopicScreen(

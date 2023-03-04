@@ -8,8 +8,10 @@ plugins {
     id("dev.icerock.mobile.multiplatform-resources")
     id("io.kotest.multiplatform") version Versions.kotest
     id("com.codingfeline.buildkonfig")
-    id("com.rickclephas.kmp.nativecoroutines") version "0.13.1"
+    id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
     id("com.android.library")
+    id("co.touchlab.crashkios.crashlyticslink") version "0.8.2"
+//    id("org.jetbrains.kotlin.android")
 }
 
 version = "1.0"
@@ -26,6 +28,7 @@ kotlin {
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
         framework {
+//            isStatic = true
             baseName = "shared"
             export("io.github.kuuuurt:multiplatform-paging:${Versions.kmmPaging}")
         }
@@ -49,7 +52,8 @@ kotlin {
                 // logger
                 implementation(kotlin("stdlib-common"))
                 implementation("co.touchlab:kermit:1.1.3")
-                implementation("co.touchlab:kermit-crashlytics:1.1.3")
+//                implementation("co.touchlab:kermit-crashlytics:1.1.3")
+//                implementation("co.touchlab.crashkios:crashlytics:0.8.2")
                 // mongodb realm
                 implementation(Ktx.Coroutine.core)
                 implementation(Deps.realm)
@@ -57,14 +61,15 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 // pagination
                 api(Deps.multiplatformPaging)
+
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation("io.kotest:kotest-framework-engine:${Versions.kotest}")
-                implementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
+                implementation(Kotest.framework)
+                implementation(Kotest.assertion)
                 implementation(Ktx.Coroutine.test)
+                implementation(kotlin("test"))
                 implementation(Ktor.clientMock)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             }
@@ -78,7 +83,7 @@ kotlin {
 
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation("androidx.security:security-app-authenticator:1.0.0-alpha02")
             }
@@ -99,7 +104,7 @@ kotlin {
         val iosArm64Test by getting
         val iosSimulatorArm64Test by getting
         val iosTest by creating {
-            dependsOn(commonTest)
+//            dependsOn(commonTest)
             iosX64Test.dependsOn(this)
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
@@ -126,13 +131,11 @@ android {
 
 
 dependencies {
+    implementation("androidx.core:core-ktx:+")
     // locale resources
     "commonMainApi"("dev.icerock.moko:resources:0.20.1")
     "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")
     "commonTestImplementation"("dev.icerock.moko:resources-test:0.20.1")
-    // testing
-//    "commonTestImplementation"("io.mockk:mockk-common:1.13.1")
-//    "testImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 
 

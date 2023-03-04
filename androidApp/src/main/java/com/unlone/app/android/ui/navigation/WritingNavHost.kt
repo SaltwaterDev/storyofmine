@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @ExperimentalAnimatedInsets
 @ExperimentalAnimationApi
 @OptIn(

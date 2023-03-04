@@ -1,7 +1,7 @@
 package com.unlone.app.data.write
 
 import co.touchlab.kermit.Logger
-import co.touchlab.kermit.crashlytics.CrashlyticsLogWriter
+//import co.touchlab.kermit.crashlytics.CrashlyticsLogWriter
 import com.unlone.app.data.api.StaticResourcesApi
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.userPreference.UserPreferenceRepository
@@ -24,7 +24,7 @@ class GuidingQuestionsRepositoryImpl(
 ) : GuidingQuestionsRepository {
 
     init {
-        Logger.addLogWriter(CrashlyticsLogWriter())
+//        Logger.addLogWriter(CrashlyticsLogWriter())
     }
 
     override var guidingQuestionList: List<GuidingQuestion> = listOf()
