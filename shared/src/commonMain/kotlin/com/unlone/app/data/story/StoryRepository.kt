@@ -36,6 +36,11 @@ interface StoryRepository {
         page: Int?,
     ): StoryResult<List<SimpleStory>>
 
+    suspend fun getSameTopicStoriesWithTarget(
+        requestedStory: String?,
+        storiesPerTopic: Int,
+    ): StoryResult<List<TopicStoryResponse>>
+
     suspend fun getMyStories(): StoryResult<List<SimpleStory>>
     suspend fun getSavedStories(): StoryResult<List<SimpleStory>>
 
@@ -112,8 +117,8 @@ internal class StoryRepositoryImpl(
         page: Int?
     ): StoryResult<List<SimpleStory>> {
         return try {
-            val response = storyApi.fetchStoriesByTopic(
-                topic, requestedStory, pagingItems, page
+            val response = storyApi.fetchStoriesPerPost(
+                1, pagingItems, 0, topic,
             )
             StoryResult.Success(response.data.flatMap {
                 it.stories
@@ -126,6 +131,24 @@ internal class StoryRepositoryImpl(
             Logger.e { e.toString() }
             StoryResult.UnknownError(errorMsg = e.message)
         }
+    }
+
+    override suspend fun getSameTopicStoriesWithTarget(
+        requestedStory: String?,
+        storiesPerTopic: Int
+    ): StoryResult<List<TopicStoryResponse>> {
+        return try {
+            val response = storyApi.getSameTopicStories(requestedStory, storiesPerTopic)
+            StoryResult.Success(response.data)
+        } catch (e: RedirectResponseException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: ClientRequestException) {
+            StoryResult.Failed(errorMsg = e.response.body<String>())
+        } catch (e: Exception) {
+            Logger.e { e.toString() }
+            StoryResult.UnknownError(errorMsg = e.message)
+        }
+
     }
 
     override suspend fun getMyStories(): StoryResult<List<SimpleStory>> {

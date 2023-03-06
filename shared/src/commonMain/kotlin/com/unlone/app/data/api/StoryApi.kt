@@ -20,16 +20,17 @@ interface StoryApi {
         postsPerTopic: Int,
         pagingItems: Int,
         page: Int,
+        topic: String? = null,
     ): StoriesPerTopicsResponse
 
     suspend fun getAllTopics(): AllTopicResponse
     suspend fun getRandomTopics(amount: String): AllTopicResponse
     suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse
-    suspend fun fetchStoriesByTopic(
-        topic: String? = null,
+
+    suspend fun getSameTopicStories(
         requestedStory: String? = null,
         pagingSize: Int,
-        page: Int?
+        page: Int? = null
     ): StoriesPerTopicsResponse
 
     suspend fun getReportReasons(lang: String?): ReportReasonResponse
@@ -87,6 +88,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         postsPerTopic: Int,
         pagingItems: Int,
         page: Int,
+        topic: String?,
     ): StoriesPerTopicsResponse {
         val response = client.get("$baseUrl/story/allStories") {
             url {
@@ -117,16 +119,13 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
-    override suspend fun fetchStoriesByTopic(
-        topic: String?,
+    override suspend fun getSameTopicStories(
         requestedStory: String?,
         pagingSize: Int,
-        page: Int?
+        page: Int?,
     ): StoriesPerTopicsResponse {
-        val response = client.get("$baseUrl/story/allStoriesFromTopic") {
+        val response = client.get("$baseUrl/story/sameTopicStories/$requestedStory") {
             url {
-                topic?.let { it1 -> parameters.append("topic", it1) }
-                requestedStory?.let { it1 -> parameters.append("requestedStory", it1) }
                 parameters.append("pagingSize", pagingSize.toString())
                 page?.let { parameters.append("page", page.toString()) }
             }

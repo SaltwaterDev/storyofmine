@@ -9,31 +9,25 @@ import kotlinx.coroutines.flow.flow
 class GetTopicStoriesForRequestedStoryUseCase(private val storyRepository: StoryRepository) {
     suspend operator fun invoke(
         requestStory: String,
-        lastItemId: Int? = null
+        storiesPerTopic: Int = 4,
     ): StoryResult<StoryItem.StoriesByTopic> {
 
         return when (val result =
-            storyRepository.fetchStoriesByTopic(
-                null,
+            storyRepository.getSameTopicStoriesWithTarget(
                 requestStory,
-                pagingItems,
-                lastItemId
+                storiesPerTopic,
             )) {
-            is StoryResult.Success ->
+            is StoryResult.Success -> {
+                val topicStory = result.data?.first()
                 StoryResult.Success(
-                    result.data?.first()?.topic?.let {
-                        StoryItem.StoriesByTopic(
-                            it,
-                            result.data,
-                        )
-                    })
-
+                    topicStory?.topic?.let { StoryItem.StoriesByTopic(it, topicStory.stories) })
+            }
             is StoryResult.Failed -> StoryResult.Failed(result.errorMsg)
             is StoryResult.UnknownError -> StoryResult.UnknownError(result.errorMsg)
         }
     }
 
-    companion object {
-        private const val pagingItems = 10
-    }
+//    companion object {
+//        private const val pagingItems = 10
+//    }
 }
