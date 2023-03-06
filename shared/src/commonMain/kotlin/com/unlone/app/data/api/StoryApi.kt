@@ -135,7 +135,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     }
 
     override suspend fun getReportReasons(lang: String?): ReportReasonResponse {
-        val response = client.get("$baseUrl/report/allReportReasons/${lang}")
+        val response = client.get("$baseUrl/reportReason/${lang}")
         return response.body()
     }
 
@@ -143,7 +143,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         reportRequest: ReportRequest,
         token: String
     ) {
-        client.post("$baseUrl/report/createReport") {
+        client.post("$baseUrl/report") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Bearer $token")
             setBody(reportRequest)
