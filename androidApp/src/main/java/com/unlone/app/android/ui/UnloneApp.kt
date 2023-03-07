@@ -55,7 +55,8 @@ fun UnloneApp() {
             )
 
             Box(Modifier.fillMaxSize()) {
-                if (appState.shouldShowNoNetworkSnackBar) {
+                if (false) {
+//                fixme: if (appState.shouldShowNoNetworkSnackBar) {
                     Snackbar(
                         modifier = Modifier
                             .padding(bottom = contentPadding)

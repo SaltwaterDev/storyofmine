@@ -147,9 +147,8 @@ class WritingViewModel(
     private fun saveDraft(bodyText: String = "") = viewModelScope.launch {
         if (_uiState.title.isBlank() && bodyText.isBlank()) return@launch
         Timber.d("currentDraftId", uiState.currentDraftId)
-        if (_uiState.shouldCreateNewVersionDraft) {
-            if (saveAsNewVersionDraft(bodyText))
-                _uiState.shouldCreateNewVersionDraft = false
+        if (_uiState.shouldCreateNewVersionDraft && saveAsNewVersionDraft(bodyText)) {
+            _uiState.shouldCreateNewVersionDraft = false
         } else {
             saveToLatestVersion(bodyText)
         }
@@ -247,6 +246,7 @@ class WritingViewModel(
 
     fun postStory() = viewModelScope.launch {
         _uiState.storyPosting = true
+        Timber.d("${uiState.title} ${uiState.body}")
         val result = postStoryUseCase(
             uiState.title,
             uiState.body,

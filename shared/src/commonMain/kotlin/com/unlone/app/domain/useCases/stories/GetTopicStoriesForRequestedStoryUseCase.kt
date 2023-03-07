@@ -13,10 +13,8 @@ class GetTopicStoriesForRequestedStoryUseCase(private val storyRepository: Story
     ): StoryResult<StoryItem.StoriesByTopic> {
 
         return when (val result =
-            storyRepository.getSameTopicStoriesWithTarget(
-                requestStory,
-                storiesPerTopic,
-            )) {
+            storyRepository.getSameTopicStoriesWithTarget(requestStory, storiesPerTopic)) {
+
             is StoryResult.Success -> {
                 val topicStory = result.data?.first()
                 StoryResult.Success(
