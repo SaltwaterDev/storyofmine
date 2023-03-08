@@ -14,14 +14,4 @@ class IsUserSignedInTest : FunSpec({
         val useCase = IsUserSignedInUseCase(authRepo)
         useCase.invoke().first().shouldBeTrue()
     }
-
-    test("test unauthorized").config(coroutineTestScope = true) {
-        val useCase = IsUserSignedInUseCase(authRepo)
-        useCase.invoke().first().shouldBeTrue()
-    }
-
-    test("test unknown fail").config(coroutineTestScope = true) {
-        val useCase = IsUserSignedInUseCase(authRepo)
-        useCase.invoke().first().shouldBeTrue()
-    }
 })

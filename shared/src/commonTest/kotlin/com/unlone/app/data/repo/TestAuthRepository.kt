@@ -4,10 +4,11 @@ import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 
 internal class TestAuthRepository : AuthRepository {
     override val isUserSignedIn: Flow<Boolean>
-        get() = TODO("Not yet implemented")
+        get() = flowOf(true)
     override var username: MutableStateFlow<String?>
         get() = TODO("Not yet implemented")
         set(value) {}
@@ -29,7 +30,7 @@ internal class TestAuthRepository : AuthRepository {
     }
 
     override suspend fun authenticate(): AuthResult<Unit> {
-        TODO("Not yet implemented")
+        return AuthResult.Authorized()
     }
 
     override suspend fun requestOtpEmail(email: String): AuthResult<Unit> {

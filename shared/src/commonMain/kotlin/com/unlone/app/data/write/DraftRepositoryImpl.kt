@@ -124,14 +124,17 @@ internal class DraftRepositoryImpl : DraftRepository {
         parentDraftId: String,
         title: String,
         body: String
-    ) {
+    ): Pair<String, String> {
         return realm.write {
-            queryParentDraftById(ObjectId.Companion.from(parentDraftId))?.also { existingParentDraftRealmObject ->
+            var latestVersionId: ObjectId? = null
+            val parentDraft = queryParentDraftById(ObjectId.from(parentDraftId))?.also { existingParentDraftRealmObject ->
                 findLatest(existingParentDraftRealmObject)?.latestDraft()?.apply {
+                    latestVersionId = this.id
                     this.title = title
                     this.content = body
                 }
             }
+            Pair(parentDraft?.id.toString(), latestVersionId.toString())
         }
     }
 }

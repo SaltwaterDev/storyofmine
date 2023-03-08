@@ -11,5 +11,9 @@ interface DraftRepository {
     suspend fun saveDraft(id: String?, title: String, body: String): Pair<String, String>
     suspend fun updateLastOpenedTime(id: String)
     suspend fun deleteDraft(id: String)
-    suspend fun updateDraftVersion(parentDraftId: String, title: String, body: String)
+    suspend fun updateDraftVersion(
+        parentDraftId: String,
+        title: String,
+        body: String
+    ): Pair<String, String>
 }

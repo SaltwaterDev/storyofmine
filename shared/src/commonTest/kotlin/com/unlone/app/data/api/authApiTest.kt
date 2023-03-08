@@ -9,23 +9,20 @@ import kotlin.test.Test
 
 
 // todo: still studying
-class AuthApiTest: FunSpec({
+class AuthApiTest : FunSpec({
 
-    val mockEngine = MockEngine { request ->
+    val mockEngine = MockEngine {
         // todo: what does it do?
         respond(
-            content = ByteReadChannel("""{"ip":"127.0.0.1"}"""),
+            content = ByteReadChannel("""{"id":"iq78r7qyb9","username":"user1234"}"""),
             status = HttpStatusCode.OK,
             headers = headersOf(HttpHeaders.ContentType, "application/json")
         )
     }
     val authApiService = AuthApiService(mockEngine)
 
-
-    test("sampleClientTest") {
-        runBlocking {
-            // if it doesn't crash, the test succeed
-            authApiService.authenticate("12345")
-        }
+    test("sampleClientTest").config(coroutineTestScope = true) {
+        // if it doesn't crash, the test succeed
+        authApiService.authenticate("12345")
     }
 })
