@@ -1,4 +1,4 @@
-package com.unlone.app.domain.useCases.write
+package com.unlone.app.domain.write
 
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult

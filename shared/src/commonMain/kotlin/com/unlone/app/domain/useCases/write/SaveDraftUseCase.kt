@@ -14,7 +14,7 @@ class SaveDraftUseCase(private val draftRepository: DraftRepository) {
                 StoryResult.Success(data = it)
             }
         } else {
-            StoryResult.Failed(errorMsg = "title or content is blank")
+            StoryResult.Failed(errorMsg = "title and content is blank")
         }
     }
 }

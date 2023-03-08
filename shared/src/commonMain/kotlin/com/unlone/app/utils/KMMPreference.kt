@@ -1,7 +1,6 @@
 package com.unlone.app.utils
 
 class KMMPreference(private val context: KMMContext) {
-
     fun put(key: String, value: Int) {
         context.putInt(key, value)
     }

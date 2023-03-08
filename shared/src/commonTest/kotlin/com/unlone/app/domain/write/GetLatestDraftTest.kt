@@ -1,14 +1,19 @@
 package com.unlone.app.domain.write
 
+import com.unlone.app.domain.MockTestDraftRepository
 import com.unlone.app.domain.entities.DraftVersion
 import com.unlone.app.domain.useCases.write.GetDraftAllVersionsUseCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.unlone.app.domain.useCases.write.GetLatestDraftUseCase
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.types.shouldBeTypeOf
+import kotlinx.coroutines.flow.first
 
-class GetLatestDraftUseCase(private val getDraftAllVersionsUseCase: GetDraftAllVersionsUseCase) {
-    operator fun invoke(id: String): Flow<Pair<String, DraftVersion?>> {
-        return getDraftAllVersionsUseCase(id).map {
-            it.first to it.second.maxByOrNull { it2 -> it2.timeStamp }
-        }
+class GetLatestDraftTest: FunSpec({
+    val draftRepo = MockTestDraftRepository()
+    val getDraftAllVersionsUseCase = GetDraftAllVersionsUseCase(draftRepo)
+
+    test("test get latest draft"){
+        val useCase = GetLatestDraftUseCase(getDraftAllVersionsUseCase)
+        useCase("12345").first().shouldBeTypeOf<Pair<String, DraftVersion?>>()
     }
-}
+})

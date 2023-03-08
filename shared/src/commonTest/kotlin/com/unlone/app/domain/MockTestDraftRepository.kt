@@ -15,19 +15,18 @@ class MockTestDraftRepository : DraftRepository {
     }
 
     override fun getLastOpenedDraft(): Flow<Draft?> {
-        TODO("Not yet implemented")
+        return flowOf(Draft.mock)
     }
 
     override suspend fun saveDraft(id: String?, title: String, body: String): Pair<String, String> {
-        TODO("Not yet implemented")
+        return Pair("1234", "5678")
     }
 
     override suspend fun updateLastOpenedTime(id: String) {
-        TODO("Not yet implemented")
+
     }
 
     override suspend fun deleteDraft(id: String) {
-        TODO("Not yet implemented")
     }
 
     override suspend fun updateDraftVersion(parentDraftId: String, title: String, body: String): Pair<String, String> {

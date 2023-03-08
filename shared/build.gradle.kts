@@ -11,7 +11,6 @@ plugins {
     id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
     id("com.android.library")
     id("co.touchlab.crashkios.crashlyticslink") version "0.8.2"
-//    id("org.jetbrains.kotlin.android")
 }
 
 version = "1.0"

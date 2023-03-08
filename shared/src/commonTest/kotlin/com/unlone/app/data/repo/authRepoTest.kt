@@ -3,10 +3,6 @@ package com.unlone.app.data.repo
 import com.unlone.app.data.auth.AuthResult
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.kotest.matchers.types.shouldBeSameInstanceAs
-import io.kotest.matchers.types.shouldBeTypeOf
-import kotlinx.coroutines.launch
-import kotlin.test.assertIs
 
 
 class AuthRepoTest : FunSpec({
