@@ -1,47 +1,35 @@
 package com.unlone.app.domain.write
 
-import com.unlone.app.data.auth.AuthRepository
-import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.PublishStoryException
-import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
+import com.unlone.app.domain.MockAuthRepository
+import com.unlone.app.domain.MockStoryRepository
+import com.unlone.app.domain.useCases.write.PostStoryUseCase
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeTypeOf
 
 
-class PostStoryUseCase(
-    private val storyRepository: StoryRepository,
-    private val authRepository: AuthRepository,
-) {
-    suspend operator fun invoke(
-        title: String,
-        content: String,
-        topic: String,
-        isPublished: Boolean,
-        commentAllowed: Boolean,
-        saveAllowed: Boolean,
-    ): StoryResult<String> {
-        // check if title and content are not empty
-        if (title.isEmpty() || content.isEmpty()){
-            return StoryResult.Failed(exception = PublishStoryException.EmptyTitleOrBodyException())
-        }
+class PostStoryTest : FunSpec({
+    val storyRepository = MockStoryRepository()
+    val authRepository = MockAuthRepository()
 
-        if (topic.isEmpty()){
-            return StoryResult.Failed(exception = PublishStoryException.EmptyTopicException())
-        }
-
-        return when (authRepository.authenticate()) {
-            is AuthResult.Authorized -> storyRepository.postStory(
-                authRepository.getJwt()!!,
-                title,
-                content,
-                topic,
-                isPublished,
-                commentAllowed,
-                saveAllowed
-            )
-            is AuthResult.Unauthorized -> StoryResult.Failed("user not logged in")
-            is AuthResult.UnknownError -> StoryResult.UnknownError("unknown error")
-        }
+    test("test post story success") {
+        val useCase = PostStoryUseCase(storyRepository, authRepository)
+        val result = useCase("title", "content", "topic", true, true, true)
+        result.shouldBeTypeOf<StoryResult.Success<String>>()
     }
-}
 
-
+    test("test post story empty title fail") {
+        val useCase = PostStoryUseCase(storyRepository, authRepository)
+        val result = useCase("title", "", "topic", true, true, true)
+        result.shouldBeTypeOf<StoryResult.Failed<String>>()
+        result.exception.shouldBe(PublishStoryException.EmptyTitleOrBodyException())
+    }
+    test("test post story empty topic fail") {
+        val useCase = PostStoryUseCase(storyRepository, authRepository)
+        val result = useCase("title", "content", "", true, true, true)
+        result.shouldBeTypeOf<StoryResult.Failed<String>>()
+        result.exception.shouldBe(PublishStoryException.EmptyTopicException())
+    }
+})

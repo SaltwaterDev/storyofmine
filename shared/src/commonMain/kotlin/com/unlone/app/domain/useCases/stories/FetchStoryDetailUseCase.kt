@@ -7,7 +7,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-
 class FetchStoryDetailUseCase(private val storyRepository: StoryRepository) {
 
     suspend operator fun invoke(id: String): StoryResult<Story> {

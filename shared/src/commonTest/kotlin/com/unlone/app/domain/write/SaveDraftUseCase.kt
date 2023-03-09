@@ -1,14 +1,14 @@
 package com.unlone.app.domain.write
 
 import com.unlone.app.data.story.StoryResult
-import com.unlone.app.domain.MockTestDraftRepository
+import com.unlone.app.domain.MockDraftRepository
 import com.unlone.app.domain.useCases.write.SaveDraftUseCase
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
 
 class SaveDraftTest : FunSpec({
-    val draftRepo = MockTestDraftRepository()
+    val draftRepo = MockDraftRepository()
 
     test("Save new draft success") {
         val useCase = SaveDraftUseCase(draftRepo)

@@ -5,7 +5,7 @@ import com.unlone.app.domain.entities.Draft
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class MockTestDraftRepository : DraftRepository {
+class MockDraftRepository : DraftRepository {
     override fun getAllDrafts(): Flow<List<Draft>> {
         return flowOf(listOf(Draft.mock))
     }

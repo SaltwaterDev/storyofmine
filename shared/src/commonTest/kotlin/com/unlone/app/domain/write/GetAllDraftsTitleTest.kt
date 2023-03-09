@@ -1,6 +1,6 @@
 package com.unlone.app.domain.write
 
-import com.unlone.app.domain.MockTestDraftRepository
+import com.unlone.app.domain.MockDraftRepository
 import com.unlone.app.domain.entities.Draft
 import com.unlone.app.domain.useCases.write.GetAllDraftsTitleUseCase
 import io.kotest.core.spec.style.FunSpec
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.first
 
 class GetAllDraftsTitleTest : FunSpec({
 
-    val draftRepo = MockTestDraftRepository()
+    val draftRepo = MockDraftRepository()
 
     test("get all draft").config(coroutineDebugProbes = true) {
         val useCase = GetAllDraftsTitleUseCase(draftRepo)
