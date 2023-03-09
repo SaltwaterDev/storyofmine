@@ -19,6 +19,7 @@ import com.unlone.app.domain.useCases.stories.*
 import com.unlone.app.domain.useCases.write.*
 import com.unlone.app.httpClientEngine
 import com.unlone.app.utils.KMMPreference
+import com.unlone.app.utils.KMMPreferenceImpl
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -26,8 +27,7 @@ import org.koin.dsl.module
 
 val commonModule = module {
     singleOf(::Greeting)        // as an example
-
-    single { KMMPreference(get()) }
+    single<KMMPreference> { KMMPreferenceImpl(get()) }
 
     // data source
     single { httpClientEngine }

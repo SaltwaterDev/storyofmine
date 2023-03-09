@@ -60,11 +60,7 @@ internal class AuthRepositoryImpl(
 
     override suspend fun signInEmail(email: String): AuthResult<Unit> {
         return try {
-            api.validateEmail(
-                request = AuthEmailRequest(
-                    email = email,
-                )
-            )
+            api.validateEmail(request = AuthEmailRequest(email = email))
             AuthResult.Authorized()
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
@@ -299,5 +295,4 @@ internal class AuthRepositoryImpl(
     companion object {
         private const val JWT_SP_KEY = "jwt"
     }
-
 }
