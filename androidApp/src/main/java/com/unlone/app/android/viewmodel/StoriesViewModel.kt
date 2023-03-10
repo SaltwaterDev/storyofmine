@@ -8,12 +8,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.domain.entities.StoryItem
+import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.stories.FetchStoryItemsUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,6 +28,7 @@ data class StoriesScreenUiState(
 
 class StoriesViewModel(
     private val authRepository: AuthRepository,
+    private val isUserSignedInUseCase: IsUserSignedInUseCase,
     private val fetchStoryItemsUseCase: FetchStoryItemsUseCase,
 ) : ViewModel() {
 
@@ -51,14 +50,9 @@ class StoriesViewModel(
 
     private suspend fun initState() = withContext(Dispatchers.Default) {
         _state.value = _state.value.copy(loading = true)
-        if (authRepository.authenticate() is AuthResult.Authorized) {
-            _state.value = _state.value.copy(
-                isUserLoggedIn = true,
-            )
-        }
+        checkAuth()
         _state.value = _state.value.copy(loading = false)
     }
-
 
     fun dismissError() {
         _state.value = _state.value.copy(errorMsg = null)
@@ -66,20 +60,10 @@ class StoriesViewModel(
 
     fun checkAuth() {
         viewModelScope.launch {
-            _state.value = when (val authResult = authRepository.authenticate()) {
-                is AuthResult.Authorized -> {
-                    _state.value.copy(isUserLoggedIn = true)
-                }
-                is AuthResult.Unauthorized -> _state.value.copy(
-                    isUserLoggedIn = false,
-                )
-                is AuthResult.UnknownError -> {
-                    _state.value.copy(
-                        errorMsg = authResult.errorMsg?.let {
-                            "Unknown error: $it"
-                        }
-                    )
-                }
+            isUserSignedInUseCase().catch { e ->
+                _state.value = _state.value.copy(errorMsg = e.message)
+            }.collect {
+                _state.value = _state.value.copy(isUserLoggedIn = it)
             }
         }
     }

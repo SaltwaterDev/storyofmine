@@ -45,7 +45,6 @@ private class MutableWritingUiState : WritingUiState {
 }
 
 class WritingViewModel(
-    private val authRepository: AuthRepository,
     private val createNewDraftUseCase: CreateNewDraftUseCase,
     private val getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
     private val getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
@@ -311,9 +310,6 @@ class WritingViewModel(
     }
     // endregion
 
-    suspend fun checkAuthentication() {
-        authRepository.authenticate()
-    }
 
     fun cleanUpState() {
         _uiState.postSuccess = false

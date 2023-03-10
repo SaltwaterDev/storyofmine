@@ -55,10 +55,8 @@ fun WritingScreen(
     onPostSucceed: () -> Unit,
 ) {
     val uiState = viewModel.uiState
-    val screenState = rememberWritingScreenState(
-        bodyText = uiState.body,
-        setBodyText = viewModel.setBody
-    )
+    val screenState =
+        rememberWritingScreenState(bodyText = uiState.body, setBodyText = viewModel.setBody)
 
     val density = LocalDensity.current
     val networkState by connectivityState()
@@ -78,12 +76,9 @@ fun WritingScreen(
             screenState.addImageMD(it)
         }
 
-    LaunchedEffect(Unit) {
-        viewModel.resetShouldCreateNewVersionDraft()
-    }
+    LaunchedEffect(Unit) { viewModel.resetShouldCreateNewVersionDraft() }
 
     LaunchedEffect(networkState) {
-        viewModel.checkAuthentication()
         viewModel.refreshData(
             networkState is NetworkState.Available,
             draftIdArg,
@@ -128,7 +123,8 @@ fun WritingScreen(
                         if (scaffoldState.bottomSheetState.isCollapsed) {
                             scaffoldState.bottomSheetState.expand()
                             keyboardController?.hide()
-                        } else scaffoldState.bottomSheetState.collapse()
+                        } else
+                            scaffoldState.bottomSheetState.collapse()
                     }
                 },
                 {
@@ -332,9 +328,7 @@ fun WritingScreen(
                     title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
                     text = { Text(text = stringResource(resource = SharedRes.strings.common__network_unavailable_warning)) },
                     confirmButton = {
-                        Button(
-                            onClick = { showNetworkUnavailableAlert = false }
-                        ) {
+                        Button(onClick = { showNetworkUnavailableAlert = false }) {
                             Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                         }
                     }
@@ -351,4 +345,3 @@ fun getPostStoryErrorMessage(publishStoryException: PublishStoryException): Stri
         is PublishStoryException.EmptyTopicException -> SharedRes.strings.error__publish_story_empty_topic
     }
 }
-

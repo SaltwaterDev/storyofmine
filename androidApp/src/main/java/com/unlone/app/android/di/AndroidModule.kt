@@ -21,11 +21,6 @@ val androidModule = module {
     viewModelOf(::SignUpViewModel)
     viewModelOf(::SignInViewModel)
     viewModelOf(::StoryDetailViewModel)
-    viewModel {
-        WritingViewModel(
-            get(), get(), get(), get(), get(),
-            get(), get(), get(), get(), get(), get(),
-        )
-    }
+    viewModelOf(::WritingViewModel)
     viewModelOf(::SettingsViewModel)
 }

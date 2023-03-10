@@ -47,11 +47,10 @@ fun StoriesScreen(
     val refreshState =
         rememberSwipeRefreshState(storiesByTopics.loadState.refresh is LoadState.Loading)
 
-    if (networkState is NetworkState.Available) {
-        LaunchedEffect(networkState) {
-            viewModel.checkAuth()
+    LaunchedEffect(networkState) {
+        viewModel.checkAuth()
+        if (networkState is NetworkState.Available)
             storiesByTopics.refresh()
-        }
     }
 
 

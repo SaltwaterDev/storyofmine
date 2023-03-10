@@ -109,13 +109,10 @@ internal class AuthRepositoryImpl(
     override suspend fun signIn(email: String, password: String): AuthResult<Unit> {
         return try {
             val response = api.signIn(
-                request = AuthRequest(
-                    email = email,
-                    password = password,
-                )
+                request = AuthRequest(email = email, password = password)
             )
             prefs.put(JWT_SP_KEY, response.token)
-            AuthResult.Authorized()
+            authenticate()
         } catch (e: RedirectResponseException) {
             AuthResult.Unauthorized(errorMsg = e.response.body<String>())
             // todo
