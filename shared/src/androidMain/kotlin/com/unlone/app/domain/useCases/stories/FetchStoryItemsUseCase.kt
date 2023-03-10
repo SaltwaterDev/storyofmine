@@ -9,7 +9,6 @@ import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesIgnore
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
-import com.unlone.app.data.story.Topic
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.StoryItem
 import kotlinx.coroutines.*
@@ -29,25 +28,14 @@ actual class FetchStoryItemsUseCase(
         getItems = { currentKey, size ->
 
             try {
-                // recruit items
-                val storiesByTopic = storyRepository.fetchStoriesByPosts(
-                    page = currentKey,
-                    postPerTopic = postsPerTopic,
-                    itemsPerPage = size
-                )
+                val prioritisedTopicStories: List<StoryItem.StoriesByTopic>? =
+                    if (currentKey == 0) getPrioritisedTopicStories() else null
+                val randomTopics = if (currentKey == 0) getRandomTopics() else null
+                val storiesByTopic = getNormalTopicStories(currentKey, size)
 
-                val randomTopicsResult =
-                    if (currentKey == 0) topicRepository.getRandomTopic(randomTopicSize) else null
+                val items =
+                    integrateStoryItem(randomTopics, storiesByTopic, prioritisedTopicStories)
 
-                // parse randomTopicsResult
-                val randomTopics = if (randomTopicsResult is StoryResult.Success) {
-                    randomTopicsResult.data
-                } else {
-                    Logger.e { randomTopicsResult?.errorMsg.toString() }
-                    null
-                }
-
-                val items = integrateStoryItem(storiesByTopic, randomTopics)
                 PagingResult(
                     items = items,
                     currentKey = currentKey,
@@ -66,20 +54,64 @@ actual class FetchStoryItemsUseCase(
         }
     )
 
-    private fun integrateStoryItem(
-        storiesByTopic: List<StoryItem.StoriesByTopic>,
-        randomTopics: List<Topic>?,
-    ): List<StoryItem> {
-        val topicTableStoryItem =
-            randomTopics?.let {
-                listOf(
-                    StoryItem.TopicTable(
-                        topics = it
-                    )
-                )
-            } ?: emptyList()
+    private suspend fun getRandomTopics(): StoryItem.TopicTable? {
+        val randomTopicsResult = topicRepository.getRandomTopic(randomTopicSize)
+        return if (randomTopicsResult is StoryResult.Success) {
+            randomTopicsResult.data?.let { StoryItem.TopicTable(it) }
+        } else {
+            Logger.e { randomTopicsResult.errorMsg.toString() }
+            null
+        }
+    }
 
-        return topicTableStoryItem + storiesByTopic
+    private suspend fun getNormalTopicStories(
+        page: Int,
+        size: Int
+    ): List<StoryItem.StoriesByTopic> {
+        return storyRepository.fetchStoriesByPosts(
+            page = page,
+            postPerTopic = postsPerTopic,
+            itemsPerPage = size
+        )
+
+    }
+
+    private suspend fun getPrioritisedTopicStories(): List<StoryItem.StoriesByTopic>? {
+        val storyId = storyRepository.fetchPrioritiseTopicStoriesRepresentative()
+        return storyId?.let {
+            when (val result =
+                storyRepository.getSameTopicStoriesWithTarget(it, postsPerTopic)
+            ) {
+                is StoryResult.Success -> {
+                    result.data
+                }
+                else -> {
+                    Logger.e(result.errorMsg.toString())
+                    null
+                }
+            }
+        }?.map {
+            StoryItem.StoriesByTopic(it.topic, it.stories)
+        }
+    }
+
+
+    private fun integrateStoryItem(
+        randomTopics: StoryItem.TopicTable?,
+        topicStories: List<StoryItem.StoriesByTopic>,
+        prioritisedTopicStories: List<StoryItem.StoriesByTopic>?,
+    ): List<StoryItem> {
+        val storyItemList = mutableListOf<StoryItem>()
+        prioritisedTopicStories?.let { storyItemList.addAll(it) }
+        randomTopics?.let { storyItemList.add(it) }
+
+        val distinctStoryItems =
+            topicStories.filter { topicStory ->
+                prioritisedTopicStories?.all { topicStory.topic != it.topic } ?: true
+            }
+        storyItemList.addAll(distinctStoryItems)
+
+        return storyItemList
     }
 
 

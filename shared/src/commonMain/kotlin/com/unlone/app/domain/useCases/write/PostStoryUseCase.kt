@@ -1,7 +1,5 @@
 package com.unlone.app.domain.useCases.write
 
-import com.unlone.app.data.auth.AuthRepository
-import com.unlone.app.data.auth.AuthResult
 import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
@@ -9,7 +7,6 @@ import com.unlone.app.data.story.StoryResult
 
 class PostStoryUseCase(
     private val storyRepository: StoryRepository,
-    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(
         title: String,
@@ -25,19 +22,18 @@ class PostStoryUseCase(
         } else if (topic.isEmpty()) {
             StoryResult.Failed(exception = PublishStoryException.EmptyTopicException())
         } else {
-            when (authRepository.authenticate()) {
-                is AuthResult.Authorized -> storyRepository.postStory(
-                    authRepository.getJwt()!!,
-                    title,
-                    content,
-                    topic,
-                    isPublished,
-                    commentAllowed,
-                    saveAllowed
-                )
-                is AuthResult.Unauthorized -> StoryResult.Failed("user not logged in")
-                is AuthResult.UnknownError -> StoryResult.UnknownError("unknown error")
+            val result = storyRepository.postStory(
+                title,
+                content,
+                topic,
+                isPublished,
+                commentAllowed,
+                saveAllowed
+            )
+            if (result is StoryResult.Success){
+                storyRepository.setPrioritiseTopicStoriesRepresentative(storyId = result.data!!)
             }
+            return result
         }
     }
 }

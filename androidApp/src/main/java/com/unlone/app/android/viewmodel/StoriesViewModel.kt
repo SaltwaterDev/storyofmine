@@ -49,7 +49,7 @@ class StoriesViewModel(
         viewModelScope.launch { initState() }
     }
 
-    suspend fun initState() = withContext(Dispatchers.Default) {
+    private suspend fun initState() = withContext(Dispatchers.Default) {
         _state.value = _state.value.copy(loading = true)
         if (authRepository.authenticate() is AuthResult.Authorized) {
             _state.value = _state.value.copy(

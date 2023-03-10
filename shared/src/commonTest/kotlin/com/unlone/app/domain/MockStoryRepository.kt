@@ -17,7 +17,6 @@ class MockStoryRepository : StoryRepository {
     }
 
     override suspend fun postStory(
-        jwt: String,
         title: String,
         content: String,
         topic: String,
@@ -59,5 +58,10 @@ class MockStoryRepository : StoryRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun setPrioritiseTopicStoriesRepresentative(storyId: String) {
+    }
 
+    override suspend fun fetchPrioritiseTopicStoriesRepresentative(): String? {
+        return "234"
+    }
 }

@@ -20,15 +20,15 @@ class StoryRepositoryTest : FunSpec({
     val authRepo = AuthRepositoryImpl(authApi, pref)
 
     test("fetchStoriesByPosts") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.fetchStoriesByPosts(0, 5, 5)
             .shouldBeInstanceOf<List<StoryItem.StoriesByTopic>>()
     }
 
     test("post story") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.postStory(
-            "jwt", "title", "content", "topic",
+            "title", "content", "topic",
             isPublished = true,
             commentAllowed = true,
             saveAllowed = true
@@ -36,29 +36,38 @@ class StoryRepositoryTest : FunSpec({
     }
 
     test("fetchStoryDetail") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.fetchStoryDetail("id").shouldBeTypeOf<StoryResult.Success<Story>>()
     }
     test("fetchStoriesByTopic") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.fetchStoriesByTopic("topic", 5, 0)
             .shouldBeInstanceOf<StoryResult<List<SimpleStory>>>()
     }
     test("getSameTopicStoriesWithTarget") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.getSameTopicStoriesWithTarget("sid", 5)
     }
     test("getMyStories") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.getMyStories().shouldBeInstanceOf<StoryResult<List<SimpleStory>>>()
     }
     test("getSavedStories") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.getSavedStories().shouldBeInstanceOf<StoryResult<List<SimpleStory>>>()
     }
     test("saveStory") {
-        val storyRepository = StoryRepositoryImpl(authRepo, storyApi)
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
         storyRepository.saveStory("id", true).shouldBeInstanceOf<StoryResult<Unit>>()
     }
 
+    test("setPrioritiseTopicStories"){
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
+        storyRepository.setPrioritiseTopicStoriesRepresentative("storyId")
+    }
+
+    test("getPrioritiseTopicStories"){
+        val storyRepository = StoryRepositoryImpl(authRepo, storyApi, pref)
+        storyRepository.fetchPrioritiseTopicStoriesRepresentative().shouldBeTypeOf<String>()
+    }
 })
