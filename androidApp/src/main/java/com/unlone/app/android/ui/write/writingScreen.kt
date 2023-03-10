@@ -1,7 +1,6 @@
 package com.unlone.app.android.ui.write
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
@@ -19,9 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -40,42 +37,6 @@ import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
-
-
-@Stable
-class WritingScreenState(
-    private val bodyText: String,
-    private val setBodyText: (String) -> Unit,
-) {
-    val setBodyTextField: (TextFieldValue) -> Unit = {
-        bodyTextField = it
-        setBodyText(it.text)
-    }
-
-    // Other UI-scoped types
-    var bodyTextField: TextFieldValue by mutableStateOf(
-        TextFieldValue(
-            bodyText,
-            TextRange(bodyText.length)
-        )
-    )
-
-    fun addImageMD(uri: Uri?) {
-        uri?.let {
-            val imageMD = "![image]($it)"
-            setBodyText(bodyText + imageMD)
-        }
-    }
-}
-
-@Composable
-fun rememberWritingScreenState(
-    bodyText: String,
-    setBodyText: (String) -> Unit,
-): WritingScreenState =
-    remember(bodyText, setBodyText) {
-        WritingScreenState(bodyText, setBodyText)
-    }
 
 
 @SuppressLint("UnusedCrossfadeTargetStateParameter")
@@ -99,23 +60,25 @@ fun WritingScreen(
         setBodyText = viewModel.setBody
     )
 
+    val density = LocalDensity.current
     val networkState by connectivityState()
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
-    val density = LocalDensity.current
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
+
     var showPostingDialog by remember { mutableStateOf(false) }
     var showNetworkUnavailableAlert by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
     var toolbarHeight by remember { mutableStateOf(0.dp) }
+
     // launch for open gallery
     val loadGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
             screenState.addImageMD(it)
         }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.resetShouldCreateNewVersionDraft()
     }
 
@@ -129,19 +92,25 @@ fun WritingScreen(
     }
 
     // close preview when keyboard is shown
-    LaunchedEffect(isKeyboardVisible) {
-        if (isKeyboardVisible) {
+    if (isKeyboardVisible) {
+        LaunchedEffect(isKeyboardVisible) {
             scaffoldState.bottomSheetState.collapse()
         }
     }
 
-    LaunchedEffect(uiState.postSuccess) {
-        if (uiState.postSuccess) {
+    if (uiState.postSuccess) {
+        LaunchedEffect(uiState.postSuccess) {
             onPostSucceed()
         }
     }
 
-    DisposableEffect(Unit){
+    if (scaffoldState.drawerState.isOpen) {
+        LaunchedEffect(scaffoldState.drawerState.isOpen) {
+            keyboardController?.hide()
+        }
+    }
+
+    DisposableEffect(Unit) {
         onDispose { viewModel.cleanUpState() }
     }
 

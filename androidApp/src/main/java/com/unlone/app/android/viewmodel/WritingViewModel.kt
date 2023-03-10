@@ -196,6 +196,7 @@ class WritingViewModel(
         _uiState.currentDraftId = result.first
         _uiState.title = result.second.title
         _uiState.body = result.second.content
+        resetShouldCreateNewVersionDraft()
     }
 
 
@@ -207,7 +208,6 @@ class WritingViewModel(
             clearDraft()
         }
     }
-
     // endregion
 
     // region set posting config
