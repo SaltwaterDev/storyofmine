@@ -18,9 +18,10 @@ class MockDraftRepository : DraftRepository {
         return flowOf(Draft.mock)
     }
 
-    override suspend fun saveDraft(id: String?, title: String, body: String): Pair<String, String> {
+    override suspend fun createNewDraft(title: String, body: String): Pair<String, String> {
         return Pair("1234", "5678")
     }
+
 
     override suspend fun updateLastOpenedTime(id: String) {
 
@@ -29,8 +30,16 @@ class MockDraftRepository : DraftRepository {
     override suspend fun deleteDraft(id: String) {
     }
 
-    override suspend fun updateDraftVersion(parentDraftId: String, title: String, body: String): Pair<String, String> {
-        return Pair(parentDraftId, "newestVersionId")
+    override suspend fun updateDraftVersion(draftId: String, title: String, body: String): Pair<String, String> {
+        return Pair(draftId, "newestVersionId")
+    }
+
+    override suspend fun addNewVersionToDraft(
+        id: String,
+        title: String,
+        body: String
+    ): Pair<String?, String?> {
+        TODO("Not yet implemented")
     }
 
 }

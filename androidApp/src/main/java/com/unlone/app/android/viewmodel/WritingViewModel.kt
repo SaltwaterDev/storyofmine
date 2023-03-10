@@ -52,7 +52,6 @@ class WritingViewModel(
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
     private val postStoryUseCase: PostStoryUseCase,
-    private val updateLatestDraftUseCase: UpdateLatestDraftUseCase,
     private val topicRepository: TopicRepository,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val draftRepository: DraftRepository,
@@ -117,7 +116,6 @@ class WritingViewModel(
                     true
                 }
             }
-            _uiState.shouldCreateNewVersionDraft = true
             _uiState.loading = false
         }
     }
@@ -132,52 +130,44 @@ class WritingViewModel(
         _uiState.shouldCreateNewVersionDraft = true
     }
 
+    private fun shouldNowSaveToLatestVersion() {
+        _uiState.shouldCreateNewVersionDraft = false
+    }
+
 
     fun setTitle(text: String) {
         _uiState.title = text
-        Timber.d(_uiState.title)
-        // real-time save
         saveDraft()
     }
 
     val setBody: (String) -> Unit = { text: String ->
-        // real-time save
         _uiState.body = text
-        Timber.d(_uiState.body)
         saveDraft()
     }
 
     private fun saveDraft() = viewModelScope.launch {
         if (_uiState.title.isBlank() && _uiState.body.isBlank()) return@launch
-        Timber.d("currentDraftId", uiState.currentDraftId)
-        if (_uiState.shouldCreateNewVersionDraft && saveAsNewVersionDraft()) {
-            _uiState.shouldCreateNewVersionDraft = false
-        } else {
-            saveToLatestVersion()
-        }
-    }
 
-    private suspend fun saveAsNewVersionDraft(): Boolean {
-        return when (val result =
-            saveDraftUseCase(_uiState.currentDraftId, _uiState.title, _uiState.body)) {
+        Timber.d("currentDraftId ${uiState.currentDraftId}")
+        when (val result =
+            saveDraftUseCase(
+                _uiState.currentDraftId,
+                _uiState.title,
+                _uiState.body,
+                _uiState.shouldCreateNewVersionDraft
+            )) {
             is StoryResult.Success -> {
                 _uiState.currentDraftId = result.data?.first
-                true
             }
             is StoryResult.Failed -> {
                 _uiState.error = result.errorMsg
-                false
             }
-            else -> {
-                false
-            }  // won't hit this case for now
+            else -> { /*won't hit this case for now*/ }
+        }
+        if (_uiState.shouldCreateNewVersionDraft) {
+            shouldNowSaveToLatestVersion()
         }
     }
-
-    private suspend fun saveToLatestVersion() {
-        _uiState.currentDraftId?.let { updateLatestDraftUseCase(it, _uiState.title, _uiState.body) }
-    }
-
 
     // region option menu feature
     fun clearDraft() {
@@ -193,7 +183,7 @@ class WritingViewModel(
         _uiState.title = newDraftMap["title"] ?: ""
         _uiState.body = newDraftMap["content"] ?: ""
         _uiState.selectedTopic = newDraftMap["selectedTopic"] ?: ""
-        _uiState.shouldCreateNewVersionDraft = true
+        resetShouldCreateNewVersionDraft()
     }
 
 

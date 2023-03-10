@@ -1,16 +1,11 @@
 package com.unlone.app.data.write
 
 import co.touchlab.kermit.Logger
-//import co.touchlab.kermit.crashlytics.CrashlyticsLogWriter
 import com.unlone.app.data.api.StaticResourcesApi
-import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.userPreference.UserPreferenceRepository
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 interface GuidingQuestionsRepository {
     suspend fun getGuidingQuestionList(): StaticResourceResult<List<GuidingQuestion>>

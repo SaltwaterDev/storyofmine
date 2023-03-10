@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.android.viewmodel.SignUpUiState
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes

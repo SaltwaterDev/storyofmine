@@ -23,20 +23,9 @@ val androidModule = module {
     viewModelOf(::StoryDetailViewModel)
     viewModel {
         WritingViewModel(
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
+            get(), get(), get(), get(), get(),
+            get(), get(), get(), get(), get(), get(),
         )
     }
-//    viewModelOf(::WritingViewModel)
     viewModelOf(::SettingsViewModel)
 }

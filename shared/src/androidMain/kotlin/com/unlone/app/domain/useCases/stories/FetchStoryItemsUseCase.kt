@@ -26,18 +26,18 @@ actual class FetchStoryItemsUseCase(
         config = pagingConfig,
         initialKey = 0, // Key to use when initialized
         getItems = { currentKey, size ->
-
             try {
+                val isFirstPage = (currentKey == 0)
                 val prioritisedTopicStories: List<StoryItem.StoriesByTopic>? =
-                    if (currentKey == 0) getPrioritisedTopicStories() else null
-                val randomTopics = if (currentKey == 0) getRandomTopics() else null
+                    if (isFirstPage) getPrioritisedTopicStories() else null
+                val topicTable = if (isFirstPage) getTopicTable() else null
                 val storiesByTopic = getNormalTopicStories(currentKey, size)
 
-                val items =
-                    integrateStoryItem(randomTopics, storiesByTopic, prioritisedTopicStories)
+                val storyItems =
+                    integrateStoryItem(topicTable, storiesByTopic, prioritisedTopicStories)
 
                 PagingResult(
-                    items = items,
+                    items = storyItems,
                     currentKey = currentKey,
                     prevKey = { null }, // Key for previous page, null means don't load previous pages
                     nextKey = { currentKey + (size / itemsPerPage) }
@@ -54,7 +54,7 @@ actual class FetchStoryItemsUseCase(
         }
     )
 
-    private suspend fun getRandomTopics(): StoryItem.TopicTable? {
+    private suspend fun getTopicTable(): StoryItem.TopicTable? {
         val randomTopicsResult = topicRepository.getRandomTopic(randomTopicSize)
         return if (randomTopicsResult is StoryResult.Success) {
             randomTopicsResult.data?.let { StoryItem.TopicTable(it) }
@@ -73,7 +73,6 @@ actual class FetchStoryItemsUseCase(
             postPerTopic = postsPerTopic,
             itemsPerPage = size
         )
-
     }
 
     private suspend fun getPrioritisedTopicStories(): List<StoryItem.StoriesByTopic>? {
