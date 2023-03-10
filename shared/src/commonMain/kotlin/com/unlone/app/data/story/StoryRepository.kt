@@ -31,13 +31,12 @@ interface StoryRepository {
 
     suspend fun fetchStoriesByTopic(
         topic: String?,
-        requestedStory: String?,
         pagingItems: Int,
         page: Int?,
     ): StoryResult<List<SimpleStory>>
 
     suspend fun getSameTopicStoriesWithTarget(
-        requestedStory: String?,
+        requestedStory: String,
         storiesPerTopic: Int,
     ): StoryResult<List<TopicStoryResponse>>
 
@@ -112,7 +111,6 @@ internal class StoryRepositoryImpl(
 
     override suspend fun fetchStoriesByTopic(
         topic: String?,
-        requestedStory: String?,
         pagingItems: Int,
         page: Int?
     ): StoryResult<List<SimpleStory>> {
@@ -134,7 +132,7 @@ internal class StoryRepositoryImpl(
     }
 
     override suspend fun getSameTopicStoriesWithTarget(
-        requestedStory: String?,
+        requestedStory: String,
         storiesPerTopic: Int
     ): StoryResult<List<TopicStoryResponse>> {
         return try {

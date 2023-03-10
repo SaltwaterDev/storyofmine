@@ -10,8 +10,7 @@ class FetchStoriesByTopicUseCase(private val storyRepository: StoryRepository) {
         topic: String,
         lastItemId: Int? = null
     ): StoryResult<List<SimpleStory>> {
-        // requestedStory is null as it is not out use case here
-        return storyRepository.fetchStoriesByTopic(topic, null, pagingItems, lastItemId)
+        return storyRepository.fetchStoriesByTopic(topic, pagingItems, lastItemId)
     }
 
     companion object {

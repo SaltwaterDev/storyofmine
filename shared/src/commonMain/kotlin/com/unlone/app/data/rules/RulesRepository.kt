@@ -28,5 +28,4 @@ class RulesRepositoryImpl(
             StaticResourceResult.Failed(errorMsg = e.message)
         }
     }
-
 }

@@ -34,7 +34,6 @@ class MockStoryRepository : StoryRepository {
 
     override suspend fun fetchStoriesByTopic(
         topic: String?,
-        requestedStory: String?,
         pagingItems: Int,
         page: Int?
     ): StoryResult<List<SimpleStory>> {
@@ -42,7 +41,7 @@ class MockStoryRepository : StoryRepository {
     }
 
     override suspend fun getSameTopicStoriesWithTarget(
-        requestedStory: String?,
+        requestedStory: String,
         storiesPerTopic: Int
     ): StoryResult<List<TopicStoryResponse>> {
         return StoryResult.Success(listOf(TopicStoryResponse("topic", listOf(SimpleStory.mock()))))

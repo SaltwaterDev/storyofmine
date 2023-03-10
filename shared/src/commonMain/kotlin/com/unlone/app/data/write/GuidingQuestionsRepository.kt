@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 interface GuidingQuestionsRepository {
-    val guidingQuestionList: List<GuidingQuestion>
     suspend fun getGuidingQuestionList(): StaticResourceResult<List<GuidingQuestion>>
 }
 
@@ -22,13 +21,6 @@ class GuidingQuestionsRepositoryImpl(
     private val api: StaticResourcesApi,
     private val userPreferenceRepository: UserPreferenceRepository
 ) : GuidingQuestionsRepository {
-
-    init {
-//        Logger.addLogWriter(CrashlyticsLogWriter())
-    }
-
-    override var guidingQuestionList: List<GuidingQuestion> = listOf()
-        private set
 
     override suspend fun getGuidingQuestionList(): StaticResourceResult<List<GuidingQuestion>> {
         return try {
@@ -46,7 +38,7 @@ class GuidingQuestionsRepositoryImpl(
         }
         catch (e: Exception) {
             Logger.e(e) { "GuidingQuestionsRepositoryImpl error" }
-            StaticResourceResult.Failed(errorMsg = e.message)
+            StaticResourceResult.UnknownError(errorMsg = e.message)
         }
     }
 }

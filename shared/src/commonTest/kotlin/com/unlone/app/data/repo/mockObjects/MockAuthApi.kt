@@ -1,4 +1,4 @@
-package com.unlone.app.data.repo
+package com.unlone.app.data.repo.mockObjects
 
 import com.unlone.app.data.api.AuthApi
 import com.unlone.app.data.auth.*

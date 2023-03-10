@@ -1,4 +1,4 @@
-package com.unlone.app.data.repo
+package com.unlone.app.data.repo.mockObjects
 
 import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.auth.AuthResult
@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 
-internal class TestAuthRepository : AuthRepository {
+internal class MockAuthRepository : AuthRepository {
     override val isUserSignedIn: Flow<Boolean>
         get() = flowOf(true)
     override var username: MutableStateFlow<String?>

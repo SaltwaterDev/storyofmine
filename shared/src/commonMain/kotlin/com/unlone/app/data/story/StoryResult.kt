@@ -1,22 +1,33 @@
 package com.unlone.app.data.story
 
 import com.unlone.app.domain.entities.Story
+import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 import kotlin.random.Random
 
 
-sealed class StoryResult<T>(val data: T? = null, val errorMsg: String? = null, val exception: StoryException? = null) {
+sealed class StoryResult<T>(
+    val data: T? = null,
+    val errorMsg: String? = null,
+    val exception: StoryException? = null
+) {
     class Success<T>(data: T? = null) : StoryResult<T>(data = data)
+
     // todo: remove errorMsg
-    class Failed<T>(errorMsg: String? = null, exception: StoryException? = null) : StoryResult<T>(errorMsg = errorMsg, exception = exception)
+    class Failed<T>(errorMsg: String? = null, exception: StoryException? = null) :
+        StoryResult<T>(errorMsg = errorMsg, exception = exception)
+
     class UnknownError<T>(errorMsg: String?) : StoryResult<T>(errorMsg = errorMsg)
 }
 
-sealed class StoryException: Exception()
+sealed class StoryException : Exception()
 
-sealed class PublishStoryException(override val message: String): StoryException(){
-    class EmptyTopicException(override val message: String = "Topic should not be empty"): PublishStoryException(message)
-    class EmptyTitleOrBodyException(override val message: String = "Title and body should not be empty"): PublishStoryException(message)
+sealed class PublishStoryException(override val message: String) : StoryException() {
+    class EmptyTopicException(override val message: String = "Topic should not be empty") :
+        PublishStoryException(message)
+
+    class EmptyTitleOrBodyException(override val message: String = "Title and body should not be empty") :
+        PublishStoryException(message)
 
 }
 
@@ -53,6 +64,22 @@ data class StoryResponse(
             null,
             this.createdDate,
             this.isSaved
+        )
+    }
+
+    companion object {
+        val mock = StoryResponse(
+            "id",
+            "title",
+            "content",
+            "topic",
+            "author",
+            isPublished = true,
+            isSelfWritten = true,
+            commentAllowed = true,
+            saveAllowed = true,
+            isSaved = true,
+            createdDate = Clock.System.now().toString(),
         )
     }
 }
