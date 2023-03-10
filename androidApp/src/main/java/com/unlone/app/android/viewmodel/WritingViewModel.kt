@@ -135,57 +135,49 @@ class WritingViewModel(
 
     fun setTitle(text: String) {
         _uiState.title = text
+        Timber.d(_uiState.title)
         // real-time save
         saveDraft()
     }
 
     val setBody: (String) -> Unit = { text: String ->
         // real-time save
-        saveDraft(bodyText = text)
+        _uiState.body = text
+        Timber.d(_uiState.body)
+        saveDraft()
     }
 
-    private fun saveDraft(bodyText: String = "") = viewModelScope.launch {
-        if (_uiState.title.isBlank() && bodyText.isBlank()) return@launch
+    private fun saveDraft() = viewModelScope.launch {
+        if (_uiState.title.isBlank() && _uiState.body.isBlank()) return@launch
         Timber.d("currentDraftId", uiState.currentDraftId)
-        if (_uiState.shouldCreateNewVersionDraft && saveAsNewVersionDraft(bodyText)) {
+        if (_uiState.shouldCreateNewVersionDraft && saveAsNewVersionDraft()) {
             _uiState.shouldCreateNewVersionDraft = false
         } else {
-            saveToLatestVersion(bodyText)
+            saveToLatestVersion()
         }
     }
 
-    private suspend fun saveAsNewVersionDraft(bodyText: String): Boolean {
-        val result = saveDraftUseCase(
-            _uiState.currentDraftId,
-            _uiState.title,
-            bodyText,
-        )
-        when (result) {
+    private suspend fun saveAsNewVersionDraft(): Boolean {
+        return when (val result =
+            saveDraftUseCase(_uiState.currentDraftId, _uiState.title, _uiState.body)) {
             is StoryResult.Success -> {
                 _uiState.currentDraftId = result.data?.first
-                return true
-
+                true
             }
-            is StoryResult.Failed -> _uiState.error = result.errorMsg
-            else -> {}  // won't hit this case for now
-        }
-        return false
-    }
-
-    private suspend fun saveToLatestVersion(bodyText: String) {
-        _uiState.currentDraftId?.let {
-            updateLatestDraftUseCase(
-                it,
-                _uiState.title,
-                bodyText,
-            )
+            is StoryResult.Failed -> {
+                _uiState.error = result.errorMsg
+                false
+            }
+            else -> {
+                false
+            }  // won't hit this case for now
         }
     }
 
-
-    fun dismissSucceed() {
-        _uiState.postSuccess = false
+    private suspend fun saveToLatestVersion() {
+        _uiState.currentDraftId?.let { updateLatestDraftUseCase(it, _uiState.title, _uiState.body) }
     }
+
 
     // region option menu feature
     fun clearDraft() {
@@ -331,6 +323,10 @@ class WritingViewModel(
 
     suspend fun checkAuthentication() {
         authRepository.authenticate()
+    }
+
+    fun cleanUpState() {
+        _uiState.postSuccess = false
     }
 
 }

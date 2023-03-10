@@ -2,8 +2,6 @@ package com.unlone.app.android.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -24,21 +22,19 @@ fun NavGraphBuilder.storiesGraph(
 ) {
 
     navigation(
-        startDestination = UnloneBottomDestinations.Stories.routeWithArgs,
-        route = UnloneBottomDestinations.Stories.route,
+        route = UnloneBottomDestinations.Stories.name,
+        startDestination = UnloneBottomDestinations.Stories.route,
     ) {
 
         composable(
             UnloneBottomDestinations.Stories.routeWithArgs,
             arguments = UnloneBottomDestinations.Stories.arguments,
         ) {
-            val requestedStoryId: String? = it.arguments?.getString("requestedStoryId")
             val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
             val viewModel =
                 koinViewModel<StoriesViewModel>(viewModelStoreOwner = viewModelStoreOwner)
             StoriesScreen(
                 viewModel = viewModel,
-                requestedStoryId = requestedStoryId,
                 navToStoryDetail = { navigateToStoryDetail(navController, it) },
                 navToTopicPosts = { navToTopicDetail(navController, it) },
                 navToSignIn = { navigateToSignInEmail(navController) },
@@ -54,7 +50,7 @@ fun NavGraphBuilder.storiesGraph(
             val viewModel = koinViewModel<StoryDetailViewModel>()
             StoryDetail(pid, navigateUp, { topicId -> navToTopicDetail(navController, topicId) }, {
                 if (pid != null) {
-                    navToReport(navController, ReportType.story.name, pid)
+                    navToReport(navController, ReportType.Story.name, pid)
                 }
             },
                 viewModel,

@@ -40,7 +40,6 @@ import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.example.library.SharedRes
-import timber.log.Timber
 
 
 @Stable
@@ -92,7 +91,7 @@ fun WritingScreen(
     versionArg: String? = null,
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
-    onPostSucceed: (String) -> Unit,
+    onPostSucceed: () -> Unit,
 ) {
     val uiState = viewModel.uiState
     val screenState = rememberWritingScreenState(
@@ -138,9 +137,12 @@ fun WritingScreen(
 
     LaunchedEffect(uiState.postSuccess) {
         if (uiState.postSuccess) {
-            uiState.postSucceedStory?.let { onPostSucceed(it) }
-            viewModel.dismissSucceed()
+            onPostSucceed()
         }
+    }
+
+    DisposableEffect(Unit){
+        onDispose { viewModel.cleanUpState() }
     }
 
 

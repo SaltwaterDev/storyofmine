@@ -28,7 +28,7 @@ import timber.log.Timber
 )
 fun NavGraphBuilder.writeGraph(
     navController: NavHostController,
-    navToStories: (String) -> Unit,
+    navToStories: () -> Unit,
 ) {
 
     navigation(
@@ -51,7 +51,7 @@ fun NavGraphBuilder.writeGraph(
                 versionArg = it.arguments?.getString(OptionalVersionArg),
                 navToEditHistory = { id -> navToEditHistory(navController, id) },
                 navToSignIn = { navigateToSignUp(navController) },
-                onPostSucceed = { succeedStory -> navToStories(succeedStory) },
+                onPostSucceed = { navToStories() },
             )
         }
 
