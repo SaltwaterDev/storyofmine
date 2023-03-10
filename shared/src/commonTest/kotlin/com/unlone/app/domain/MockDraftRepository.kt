@@ -39,7 +39,7 @@ class MockDraftRepository : DraftRepository {
         title: String,
         body: String
     ): Pair<String?, String?> {
-        TODO("Not yet implemented")
+        return Pair(id, "newestVersionId")
     }
 
 }
