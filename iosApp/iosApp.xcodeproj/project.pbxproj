@@ -327,10 +327,9 @@
 				7555FF77242A565900829871 /* Sources */,
 				7555FF79242A565900829871 /* Resources */,
 				B9D7D8C410381396E9AC3FF1 /* Frameworks */,
-				2B425AEE289E232700906522 /* ShellScript */,
 				FC4BDE540993E5088A5E5AA9 /* [CP] Embed Pods Frameworks */,
 				2BF36088299FD4800099D2D1 /* Run Script */,
-				2B33852629B2F47C0060AED6 /* Uoload Kotlin dSYM */,
+				2B33852629B2F47C0060AED6 /* Upload Kotlin dSYM */,
 			);
 			buildRules = (
 			);
@@ -406,7 +405,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2B33852629B2F47C0060AED6 /* Uoload Kotlin dSYM */ = {
+		2B33852629B2F47C0060AED6 /* Upload Kotlin dSYM */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -414,32 +413,17 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
 			);
-			name = "Uoload Kotlin dSYM";
+			name = "Upload Kotlin dSYM";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nPods/FirebaseCrashlytics/upload-symbols -gsp ios/GoogleService-Info.plist -p ios ../shared/build/cocoapods/framework/shared.framework.dSYM\n";
-		};
-		2B425AEE289E232700906522 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd ..\n./gradlew -p ./ copyFrameworkResourcesToApp \\\n    -Pmoko.resources.PLATFORM_NAME=$PLATFORM_NAME \\\n    -Pmoko.resources.CONFIGURATION=$CONFIGURATION \\\n    -Pmoko.resources.BUILT_PRODUCTS_DIR=$BUILT_PRODUCTS_DIR \\\n    -Pmoko.resources.CONTENTS_FOLDER_PATH=$CONTENTS_FOLDER_PATH\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Make sure this new Run Script phase is your project's last build phase; otherwise, Crashlytics can't properly process dSYMs.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 		};
 		2BF36088299FD4800099D2D1 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
