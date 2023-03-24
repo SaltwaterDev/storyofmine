@@ -22,7 +22,7 @@ class MockStoryApi: StoryApi {
         return AllTopicResponse(listOf(Topic("12345", "topic1")))
     }
 
-    override suspend fun getRandomTopics(amount: String): AllTopicResponse {
+    override suspend fun getRandomTopics(amount: Int): AllTopicResponse {
         return AllTopicResponse(listOf(Topic("12345", "topic1")))
     }
 

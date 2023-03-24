@@ -33,7 +33,7 @@ class TopicRepositoryImpl(
     override suspend fun getRandomTopic(amount: Int): StoryResult<List<Topic>> {
 
         return try {
-            val response = storyApi.getRandomTopics(amount.toString())
+            val response = storyApi.getRandomTopics(amount)
             Logger.d { response.data.toString() }
             return StoryResult.Success(response.data)
         } catch (e: RedirectResponseException) {

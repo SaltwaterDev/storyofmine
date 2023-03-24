@@ -24,7 +24,7 @@ interface StoryApi {
     ): StoriesPerTopicsResponse
 
     suspend fun getAllTopics(): AllTopicResponse
-    suspend fun getRandomTopics(amount: String): AllTopicResponse
+    suspend fun getRandomTopics(amount: Int): AllTopicResponse
     suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse
 
     suspend fun getSameTopicStories(
@@ -33,7 +33,7 @@ interface StoryApi {
         page: Int? = null
     ): StoriesPerTopicsResponse
 
-    suspend fun getReportReasons(lang: String?): ReportReasonResponse
+    suspend fun getReportReasons(lang: String? = null): ReportReasonResponse
     suspend fun postReport(
         reportRequest: ReportRequest,
         token: String
@@ -105,9 +105,9 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
-    override suspend fun getRandomTopics(amount: String): AllTopicResponse {
+    override suspend fun getRandomTopics(amount: Int): AllTopicResponse {
         val response = client.get("$baseUrl/story/randomTopic"){
-            url { parameters.append("amount", amount) }
+            url { parameters.append("amount", amount.toString()) }
         }
         return response.body()
     }
