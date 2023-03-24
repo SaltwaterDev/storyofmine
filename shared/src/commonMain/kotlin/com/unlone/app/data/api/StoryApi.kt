@@ -60,7 +60,6 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             gzip()
         }
         Charsets {
-
             // Allow using `UTF_8`.
             register(Charsets.UTF_8)
             sendCharset = Charsets.UTF_8
@@ -95,6 +94,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
                 parameters.append("postsPerTopic", postsPerTopic.toString())
                 parameters.append("itemsPerPage", pagingItems.toString())
                 parameters.append("page", page.toString())
+                topic?.let { it1 -> parameters.append("topic", it1) }
             }
         }
         return response.body()

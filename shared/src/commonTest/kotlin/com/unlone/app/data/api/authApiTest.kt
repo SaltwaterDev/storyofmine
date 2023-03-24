@@ -1,5 +1,6 @@
 package com.unlone.app.data.api
 
+import com.unlone.app.data.auth.AuthRequest
 import io.kotest.core.spec.style.FunSpec
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
@@ -21,8 +22,13 @@ class AuthApiTest : FunSpec({
     }
     val authApiService = AuthApiService(mockEngine)
 
-    test("sampleClientTest").config(coroutineTestScope = true) {
+    test("authenticate").config(coroutineTestScope = true) {
         // if it doesn't crash, the test succeed
         authApiService.authenticate("12345")
+    }
+
+    test("signUp").config(coroutineTestScope = true) {
+        // if it doesn't crash, the test succeed
+        authApiService.signUp(AuthRequest(email = "email", password = "password"))
     }
 })

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 data class TopicStoriesUiState(
     val topic: String? = null,
@@ -49,14 +50,14 @@ class TopicDetailViewModel(
                     errorMsg = result.errorMsg,
                     loading = false,
                 )
-                Log.e("TAG", "initData: ${result.errorMsg}")
+                Timber.e("TAG", "initData: ${result.errorMsg}")
             }
             is StoryResult.UnknownError -> {
                 _state.value = _state.value.copy(
                     errorMsg = result.errorMsg,
                     loading = false,
                 )
-                Log.e("TAG", "initData: ${result.errorMsg}")
+                Timber.e("TAG", "initData: ${result.errorMsg}")
             }
         }
     }

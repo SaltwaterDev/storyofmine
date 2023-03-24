@@ -120,7 +120,7 @@ internal class StoryRepositoryImpl(
     ): StoryResult<List<SimpleStory>> {
         return try {
             val response = storyApi.fetchStoriesPerPost(
-                1, pagingItems, 0, topic,
+                pagingItems, 1, 0, topic,
             )
             StoryResult.Success(response.data.flatMap {
                 it.stories

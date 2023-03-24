@@ -31,12 +31,6 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
-
-        // tbc: delete staging
-//        create("staging") {
-//            initWith(getByName("debug"))
-//            applicationIdSuffix = ".debugStaging"
-//        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.composeCompiler
