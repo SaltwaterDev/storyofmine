@@ -32,10 +32,12 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
         }
     }
 
-    private val localBaseUrlForEmulator = "http://10.0.2.2:8080/"
-    private val localBaseUrl = "http://192.168.8.154:8080/"
-    private val serverUrl = UnloneConfig.baseUrl
-    private val baseUrl = serverUrl
+    companion object{
+        private const val localBaseUrlForEmulator = "http://10.0.2.2:8080/"
+        private const val localBaseUrl = "http://192.168.8.154:8080/"
+        private val serverUrl = UnloneConfig.baseUrl
+        private val baseUrl = serverUrl
+    }
 
 
     override suspend fun signUp(request: AuthRequest) {
@@ -46,7 +48,7 @@ internal class AuthApiService(httpClientEngine: HttpClientEngine) : AuthApi {
     }
 
     override suspend fun checkEmailExisted(request: AuthEmailRequest) {
-        val post = client.post("$baseUrl/signup/email") {
+        client.post("$baseUrl/signup/email") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
