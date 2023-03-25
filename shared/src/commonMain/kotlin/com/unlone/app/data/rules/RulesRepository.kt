@@ -8,14 +8,14 @@ import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 
 interface RulesRepository {
-    suspend fun getRules(): StaticResourceResult<List<Rules>?>
+    suspend fun getRules(): StaticResourceResult<List<Rule>?>
 }
 
 class RulesRepositoryImpl(
     private val staticResourcesApi: StaticResourcesApi,
     private val userPreferenceRepository: UserPreferenceRepository
 ) : RulesRepository {
-    override suspend fun getRules(): StaticResourceResult<List<Rules>?> {
+    override suspend fun getRules(): StaticResourceResult<List<Rule>?> {
         return try {
             val response = staticResourcesApi.getRules(userPreferenceRepository.getLocale()?.localeName)
             StaticResourceResult.Success(response.data)

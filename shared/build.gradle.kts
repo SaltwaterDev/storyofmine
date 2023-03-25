@@ -11,6 +11,7 @@ plugins {
     id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
     id("com.android.library")
     id("co.touchlab.crashkios.crashlyticslink") version "0.8.2"
+    jacoco
 }
 
 version = "1.0"
@@ -38,7 +39,7 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                with(Ktor){
+                with(Ktor) {
                     implementation(contentNegotiation)
                     implementation(clientCore)
                     implementation(serialization)
@@ -130,7 +131,7 @@ android {
 
 
 dependencies {
-    implementation("androidx.core:core-ktx:+")
+    implementation("androidx.core:core-ktx:1.9.0")
     // locale resources
     "commonMainApi"("dev.icerock.moko:resources:0.20.1")
     "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")
@@ -148,7 +149,7 @@ multiplatformResources {
 
 buildkonfig {
     packageName = "com.unlone.app"
-     objectName = "UnloneConfig"
+    objectName = "UnloneConfig"
 //     exposeObjectWithName = "YourAwesomePublicConfig"
 
     defaultConfigs {
@@ -164,3 +165,20 @@ buildkonfig {
         buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
     }
 }
+
+jacoco {
+    toolVersion = "0.8.8"
+    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir")) // optional
+}
+
+//tasks.jacocoTestReport {
+//    dependsOn(tasks.test)
+//    reports {
+//        xml.required.set(true)
+//    }
+//}
+//
+//tasks.test {
+////    ...
+//    finalizedBy(tasks.jacocoTestReport)
+//}

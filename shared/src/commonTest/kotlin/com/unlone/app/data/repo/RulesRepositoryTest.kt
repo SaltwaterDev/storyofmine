@@ -3,7 +3,7 @@ package com.unlone.app.data.repo
 import com.unlone.app.data.api.StaticResourcesApi
 import com.unlone.app.data.repo.mockObjects.MockKmmPreference
 import com.unlone.app.data.repo.mockObjects.MockStaticResourcesApi
-import com.unlone.app.data.rules.Rules
+import com.unlone.app.data.rules.Rule
 import com.unlone.app.data.rules.RulesRepositoryImpl
 import com.unlone.app.data.userPreference.UserPreferenceRepositoryImpl
 import com.unlone.app.data.write.StaticResourceResult
@@ -18,7 +18,7 @@ class RulesRepositoryTest : FunSpec({
 
     test("getRules") {
         val rulesRepository = RulesRepositoryImpl(staticResourcesApi, userPreferenceRepository)
-        rulesRepository.getRules().shouldBeTypeOf<StaticResourceResult.Success<List<Rules>?>>()
+        rulesRepository.getRules().shouldBeTypeOf<StaticResourceResult.Success<List<Rule>?>>()
 
     }
 })

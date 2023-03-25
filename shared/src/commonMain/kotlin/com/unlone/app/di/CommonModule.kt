@@ -21,6 +21,7 @@ import com.unlone.app.httpClientEngine
 import com.unlone.app.utils.KMMPreference
 import com.unlone.app.utils.KMMPreferenceImpl
 import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.createdAtStart
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -40,7 +41,6 @@ val commonModule = module {
     singleOf(::FetchStoriesByTopicUseCase)
     singleOf(::GetTopicStoriesForRequestedStoryUseCase)
     singleOf(::FetchStoryDetailUseCase)
-    singleOf(::FetchStoryItemsUseCase)
     singleOf(::GetAllDraftsTitleUseCase)
     singleOf(::GetDraftAllVersionsUseCase)
     singleOf(::GetLatestDraftUseCase)
@@ -52,13 +52,28 @@ val commonModule = module {
     singleOf(::IsUserSignedInUseCase)
 
     // repositories
-    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
+    singleOf(::AuthRepositoryImpl) {
+        bind<AuthRepository>()
+        createdAtStart()
+    }
     singleOf(::CommentRepositoryImpl) { bind<CommentRepository>() }
     singleOf(::DraftRepositoryImpl) { bind<DraftRepository>() }
-    singleOf(::GuidingQuestionsRepositoryImpl) { bind<GuidingQuestionsRepository>() }
+    singleOf(::GuidingQuestionsRepositoryImpl) {
+        bind<GuidingQuestionsRepository>()
+        createdAtStart()
+    }
     singleOf(::ReportRepositoryImpl) { bind<ReportRepository>() }
     singleOf(::RulesRepositoryImpl) { bind<RulesRepository>() }
-    singleOf(::StoryRepositoryImpl) { bind<StoryRepository>() }
-    singleOf(::TopicRepositoryImpl) { bind<TopicRepository>() }
-    singleOf(::UserPreferenceRepositoryImpl) { bind<UserPreferenceRepository>() }
+    singleOf(::StoryRepositoryImpl) {
+        bind<StoryRepository>()
+        createdAtStart()
+    }
+    singleOf(::TopicRepositoryImpl) {
+        bind<TopicRepository>()
+        createdAtStart()
+    }
+    singleOf(::UserPreferenceRepositoryImpl) {
+        bind<UserPreferenceRepository>()
+        createdAtStart()
+    }
 }

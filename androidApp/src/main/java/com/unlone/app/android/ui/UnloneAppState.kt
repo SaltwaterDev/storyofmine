@@ -121,15 +121,6 @@ fun connectivityState(): State<NetworkState> {
 }
 
 /**
- * If the lifecycle is not resumed it means this NavBackStackEntry already processed a nav event.
- *
- * This is used to de-duplicate navigation events.
- */
-private fun NavBackStackEntry.lifecycleIsResumed() =
-    this.lifecycle.currentState == Lifecycle.State.RESUMED
-
-
-/**
  * Network utility to get current state of internet connection
  */
 val Context.currentConnectivityState: NetworkState

@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RulesResponse(
-    val data: List<Rules> = listOf(Rules())
+    val data: List<Rule> = listOf(Rule())
 )
 
 @Serializable
-data class Rules(
+data class Rule(
     val id: String = "",
     val text: String = ""
 )
