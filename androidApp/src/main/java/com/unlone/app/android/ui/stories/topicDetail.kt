@@ -17,9 +17,11 @@ import com.unlone.app.android.ui.comonComponent.TopicDetailTopBar
 import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.viewmodel.TopicDetailViewModel
 import com.unlone.app.domain.entities.NetworkState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun TopicDetail(
     topic: String?,
@@ -62,8 +64,8 @@ fun TopicDetail(
                             story.content,
                             uiState.loading,
                             Modifier
-                                .padding(16.dp)
                                 .fillParentMaxWidth()
+                                .padding(16.dp)
                                 .placeholder(
                                     visible = uiState.loading,
                                     highlight = PlaceholderHighlight.fade()
