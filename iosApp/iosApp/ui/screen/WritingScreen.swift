@@ -89,13 +89,13 @@ struct WritingScreen: View {
                 MenuItemView(showMenu: $showMenu, title: draft.value, callback:{ writingViewModel.onMenuClicked(id: draft.key) })
             })
             menuItemList =  menuItems + draftItems
-        }).popup(isPresented: $writingViewModel.showPostPopup, closeOnTap: false, closeOnTapOutside: true, view: {
+        }).popup(isPresented: $writingViewModel.showPostPopup, view: {
             PostingDialog
+        }, customize: {
+            $0.closeOnTap(false)
+                .closeOnTapOutside(true)
         })
-        .popup(isPresented: $writingViewModel.postSuccess, dismissCallback: {
-            tabSelection = 2
-            postSuccessStory = writingViewModel.postSuccessStoryId
-        }, view: {
+        .popup(isPresented: $writingViewModel.postSuccess, view: {
             Text("Posted!")
                 .padding(20)
                 .frame(width: UIScreen.screenWidth - 40, alignment: .center)
@@ -104,6 +104,11 @@ struct WritingScreen: View {
                         .fill(Color(red: 0.85, green: 0.8, blue: 0.95))
                         .opacity(1)
                 )
+        }, customize: {
+            $0.dismissCallback {
+                tabSelection = 2
+                postSuccessStory = writingViewModel.postSuccessStoryId
+            }
         })
         .popup(isPresented: $writingViewModel.loading, view: {
             ProgressView()
@@ -114,6 +119,24 @@ struct WritingScreen: View {
                         .fill(Color(red: 0.85, green: 0.8, blue: 0.95))
                         .opacity(1)
                 )
+        }, customize: {
+            $0
+        })
+        .popup(isPresented: $writingViewModel.showPostPopup, view: {
+            PostingDialog
+        }, customize: {
+            $0.closeOnTap(false).closeOnTapOutside(true)
+        })
+        .popup(isPresented: $writingViewModel.postSuccess, view: {
+            Text("Posted!")
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color(red: 0.85, green: 0.8, blue: 0.95))
+                        .opacity(1)
+                )
+        }, customize: {
+            $0
         })
     }
 }
