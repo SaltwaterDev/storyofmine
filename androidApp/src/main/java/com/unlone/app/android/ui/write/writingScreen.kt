@@ -30,7 +30,9 @@ import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.WritingViewModel
+import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.domain.entities.NetworkState
+import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -46,56 +48,67 @@ import org.example.library.SharedRes
 @Composable
 fun WritingScreen(
     viewModel: WritingViewModel,
+    draftIdArg: String? = null,
+    versionArg: String? = null,
     navToEditHistory: (String) -> Unit,
     navToSignIn: () -> Unit,
-    onPostSucceed: (String) -> Unit,
+    onPostSucceed: () -> Unit,
 ) {
     val uiState = viewModel.uiState
+    val screenState =
+        rememberWritingScreenState(bodyText = uiState.body, setBodyText = viewModel.setBody)
+
+    val density = LocalDensity.current
     val networkState by connectivityState()
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
-    val density = LocalDensity.current
     val scope = rememberCoroutineScope()
     val isKeyboardVisible = WindowInsets.isImeVisible
     val keyboardController = LocalSoftwareKeyboardController.current
+
     var showPostingDialog by remember { mutableStateOf(false) }
     var showNetworkUnavailableAlert by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
     var toolbarHeight by remember { mutableStateOf(0.dp) }
+
     // launch for open gallery
     val loadGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-            viewModel.addImageMD(it)
+            screenState.addImageMD(it)
         }
 
+    LaunchedEffect(Unit) { viewModel.resetShouldCreateNewVersionDraft() }
+
     LaunchedEffect(networkState) {
-        viewModel.checkAuthentication()
-        viewModel.refreshData(networkState is NetworkState.Available)
+        viewModel.refreshData(
+            networkState is NetworkState.Available,
+            draftIdArg,
+            versionArg,
+        )
     }
-
-    DisposableEffect(Unit) {
-        onDispose { viewModel.saveDraft() }
-    }
-
 
     // close preview when keyboard is shown
-    LaunchedEffect(isKeyboardVisible) {
-        if (isKeyboardVisible) {
+    if (isKeyboardVisible) {
+        LaunchedEffect(isKeyboardVisible) {
             scaffoldState.bottomSheetState.collapse()
         }
     }
 
-    LaunchedEffect(uiState.postSuccess) {
-        if (uiState.postSuccess) {
-            uiState.postSucceedStory?.let { onPostSucceed(it) }
-            viewModel.dismissSucceed()
+    if (uiState.postSuccess) {
+        LaunchedEffect(uiState.postSuccess) {
+            onPostSucceed()
         }
     }
 
-    val uiDraftList: Map<String?, String> =
-        if (uiState.currentDraftId == null && uiState.title.isNotEmpty()) mapOf(
-            uiState.currentDraftId to uiState.title
-        ) + uiState.draftList
-        else (uiState.draftList as Map<String?, String>)
+    if (scaffoldState.drawerState.isOpen) {
+        LaunchedEffect(scaffoldState.drawerState.isOpen) {
+            keyboardController?.hide()
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { viewModel.cleanUpState() }
+    }
+
 
     BottomSheetScaffold(
         modifier = Modifier
@@ -110,7 +123,8 @@ fun WritingScreen(
                         if (scaffoldState.bottomSheetState.isCollapsed) {
                             scaffoldState.bottomSheetState.expand()
                             keyboardController?.hide()
-                        } else scaffoldState.bottomSheetState.collapse()
+                        } else
+                            scaffoldState.bottomSheetState.collapse()
                     }
                 },
                 {
@@ -124,13 +138,13 @@ fun WritingScreen(
         },
         sheetContent = {
             PreviewBottomSheet(title = uiState.title,
-                content = uiState.body.text,
+                content = screenState.bodyTextField.text,
                 onClose = { scope.launch { scaffoldState.bottomSheetState.collapse() } })
         },
         sheetPeekHeight = 0.dp,
         drawerContent = {
             OptionsDrawer(
-                uiDraftList,
+                uiState.draftList,
                 clearAll = {
                     viewModel.clearDraft()
                     scope.launch { scaffoldState.drawerState.close() }
@@ -169,9 +183,7 @@ fun WritingScreen(
                             visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
                     value = uiState.title,
-                    onValueChange = {
-                        viewModel.setTitle(it)
-                    },
+                    onValueChange = viewModel::setTitle,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -194,10 +206,8 @@ fun WritingScreen(
                         .placeholder(
                             visible = uiState.loading, highlight = PlaceholderHighlight.fade()
                         ),
-                    value = uiState.body.text,
-                    onValueChange = {
-                        viewModel.setBody(it)
-                    },
+                    value = screenState.bodyTextField,
+                    onValueChange = screenState.setBodyTextField,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
@@ -218,7 +228,6 @@ fun WritingScreen(
                         start = 16.dp, end = 16.dp, bottom = toolbarHeight + 8.dp
                     )
             )
-
 
             Crossfade(
                 targetState = isKeyboardVisible,
@@ -242,7 +251,7 @@ fun WritingScreen(
             if (showPostingDialog) PostingDialog(
                 uiState.topicList,
                 uiState.selectedTopic,
-                viewModel::setTopic,
+                viewModel.setTopic,
                 { showPostingDialog = false },
                 uiState.isPublished,
                 uiState.commentAllowed,
@@ -291,6 +300,20 @@ fun WritingScreen(
                     })
             }
 
+            uiState.postStoryError?.let {
+                AlertDialog(
+                    onDismissRequest = viewModel::dismiss,
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
+                    text = { Text(text = stringResource(resource = getPostStoryErrorMessage(it))) },
+                    confirmButton = {
+                        Button(
+                            onClick = viewModel::dismiss
+                        ) {
+                            Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+                        }
+                    })
+            }
+
             if (requireSignInDialog) {
                 RequireSignInDialog({ requireSignInDialog = false }, {
                     requireSignInDialog = false
@@ -303,11 +326,9 @@ fun WritingScreen(
                 AlertDialog(
                     onDismissRequest = { showNetworkUnavailableAlert = false },
                     title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
-                    text = { Text(text = "_Network unavailable. Make sure you have connect to internet") },
+                    text = { Text(text = stringResource(resource = SharedRes.strings.common__network_unavailable_warning)) },
                     confirmButton = {
-                        Button(
-                            onClick = { showNetworkUnavailableAlert = false }
-                        ) {
+                        Button(onClick = { showNetworkUnavailableAlert = false }) {
                             Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                         }
                     }
@@ -317,3 +338,10 @@ fun WritingScreen(
     }
 }
 
+
+fun getPostStoryErrorMessage(publishStoryException: PublishStoryException): StringResource {
+    return when (publishStoryException) {
+        is PublishStoryException.EmptyTitleOrBodyException -> SharedRes.strings.error__publish_story_empty_title_or_body
+        is PublishStoryException.EmptyTopicException -> SharedRes.strings.error__publish_story_empty_topic
+    }
+}

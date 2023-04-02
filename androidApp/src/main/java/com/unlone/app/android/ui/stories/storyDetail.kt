@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -19,14 +18,20 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unlone.app.android.ui.comonComponent.CommentInput
 import com.unlone.app.android.ui.comonComponent.CommentItem
 import com.unlone.app.android.ui.comonComponent.StoryDetailTopBar
+import com.unlone.app.android.ui.connectivityState
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.storyText
 import com.unlone.app.android.ui.theme.titleLarge
 import com.unlone.app.android.viewmodel.StoryDetailViewModel
+import com.unlone.app.domain.entities.NetworkState
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.example.library.SharedRes
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalCoroutinesApi::class
+)
 @Composable
 fun StoryDetail(
     storyId: String?,
@@ -46,12 +51,14 @@ fun StoryDetail(
         }
         onDispose {}
     }*/
-    LaunchedEffect(Unit) {
-        if (storyId != null) {
-            viewModel.getStoryDetail(storyId)
+    val networkState by connectivityState()
+    if (networkState is NetworkState.Available) {
+        LaunchedEffect(networkState) {
+            if (storyId != null) {
+                viewModel.getStoryDetail(storyId)
+            }
         }
     }
-
 
     val state by viewModel.state.collectAsState()
     var commentInputHeight by remember { mutableStateOf(0) }
@@ -80,6 +87,7 @@ fun StoryDetail(
                     edit = { /*TODO*/ },
                     topic = state.topic,
                     isSelfWritten = state.isSelfWritten,
+                    btnEnabled = (networkState is NetworkState.Available) && !state.loading,
                 )
             },
             modifier = Modifier.fillMaxSize()

@@ -30,9 +30,7 @@ fun SavedStoriesScreen(
     back: () -> Unit,
 ) {
     val state = viewModel.uiState
-    LaunchedEffect(Unit) {
-        viewModel.loadStories()
-    }
+
     LazyColumn(
         Modifier
             .fillMaxSize()

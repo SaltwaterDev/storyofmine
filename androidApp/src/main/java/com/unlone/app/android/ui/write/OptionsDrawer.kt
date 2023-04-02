@@ -18,19 +18,19 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
-import timber.log.Timber
 
 
 @ExperimentalFoundationApi
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun OptionsDrawer(
-    listOfDraft: Map<String?, String>,
+    listOfDraft: Map<String, String>,
     clearAll: () -> Unit,
     editHistory: () -> Unit,
     editHistoryEnabled: Boolean,
@@ -88,7 +88,7 @@ fun OptionsDrawer(
 
         items(
             items = listOfDraft.toList(),
-            key = { it.first ?: -1 },
+            key = { it.first },
         ) {
             DismissableBlockWithIcon(
                 iconId = R.drawable.ic_write,
@@ -96,9 +96,7 @@ fun OptionsDrawer(
                 modifier = Modifier.animateItemPlacement(),
                 onClick = { switchDraft(it.first) },
                 onDismiss = {
-                    it.first?.let { it1 ->
-                        deleteDraft(it1)
-                    } ?: clearAll()
+                    deleteDraft(it.first)
                 },
                 isCurrentDraft = isCurrentDraft(it.first),
             )
@@ -201,9 +199,11 @@ private fun DismissableBlockWithIcon(
                 }
                 Text(
                     text = title,
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp, end = 26.dp),
                     style = Typography.subtitle1,
-                    fontWeight = if (isCurrentDraft) FontWeight.SemiBold else null
+                    fontWeight = if (isCurrentDraft) FontWeight.SemiBold else null,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +32,7 @@ import com.unlone.app.android.model.SignInUiEvent
 import com.unlone.app.data.auth.AuthResult
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.delay
 import org.example.library.SharedRes
 
 @InternalCoroutinesApi
@@ -42,6 +45,7 @@ fun SignInPasswordScreen(
 
     val uiState = viewModel.uiState
     val context = LocalContext.current
+    val focusRequester = remember { FocusRequester() }
 
     val unknownErrorText = stringResource(resource = SharedRes.strings.common__unknown_error)
     LaunchedEffect(viewModel, context) {
@@ -59,6 +63,11 @@ fun SignInPasswordScreen(
             }
 
         }
+    }
+
+    LaunchedEffect(Unit) {
+        delay(200)// <-- This is crucial.
+        focusRequester.requestFocus()
     }
 
     Box(Modifier.fillMaxSize().statusBarsPadding()) {
@@ -80,7 +89,7 @@ fun SignInPasswordScreen(
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                 keyboardActions = KeyboardActions(
                     onDone = { viewModel.onEvent(SignInUiEvent.SignInPw) }
                 )

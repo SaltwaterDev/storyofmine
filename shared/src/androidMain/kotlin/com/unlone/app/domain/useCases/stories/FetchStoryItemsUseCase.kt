@@ -9,7 +9,6 @@ import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesIgnore
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
-import com.unlone.app.data.story.Topic
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.domain.entities.StoryItem
 import kotlinx.coroutines.*
@@ -27,29 +26,18 @@ actual class FetchStoryItemsUseCase(
         config = pagingConfig,
         initialKey = 0, // Key to use when initialized
         getItems = { currentKey, size ->
-
             try {
-                // recruit items
-                val storiesByTopic = storyRepository.fetchStoriesByPosts(
-                    page = currentKey,
-                    postPerTopic = postsPerTopic,
-                    itemsPerPage = size
-                )
+                val isFirstPage = (currentKey == 0)
+                val prioritisedTopicStories: List<StoryItem.StoriesByTopic>? =
+                    if (isFirstPage) getPrioritisedTopicStories() else null
+                val topicTable = if (isFirstPage) getTopicTable() else null
+                val storiesByTopic = getNormalTopicStories(currentKey, size)
 
-                val randomTopicsResult =
-                    if (currentKey == 0) topicRepository.getRandomTopic(randomTopicSize) else null
+                val storyItems =
+                    integrateStoryItem(topicTable, storiesByTopic, prioritisedTopicStories)
 
-                // parse randomTopicsResult
-                val randomTopics = if (randomTopicsResult is StoryResult.Success) {
-                    randomTopicsResult.data
-                } else {
-                    Logger.e { randomTopicsResult?.errorMsg.toString() }
-                    null
-                }
-
-                val items = integrateStoryItem(storiesByTopic, randomTopics)
                 PagingResult(
-                    items = items,
+                    items = storyItems,
                     currentKey = currentKey,
                     prevKey = { null }, // Key for previous page, null means don't load previous pages
                     nextKey = { currentKey + (size / itemsPerPage) }
@@ -66,20 +54,63 @@ actual class FetchStoryItemsUseCase(
         }
     )
 
-    private fun integrateStoryItem(
-        storiesByTopic: List<StoryItem.StoriesByTopic>,
-        randomTopics: List<Topic>?,
-    ): List<StoryItem> {
-        val topicTableStoryItem =
-            randomTopics?.let {
-                listOf(
-                    StoryItem.TopicTable(
-                        topics = it
-                    )
-                )
-            } ?: emptyList()
+    private suspend fun getTopicTable(): StoryItem.TopicTable? {
+        val randomTopicsResult = topicRepository.getRandomTopic(randomTopicSize)
+        return if (randomTopicsResult is StoryResult.Success) {
+            randomTopicsResult.data?.let { StoryItem.TopicTable(it) }
+        } else {
+            Logger.e { randomTopicsResult.errorMsg.toString() }
+            null
+        }
+    }
 
-        return topicTableStoryItem + storiesByTopic
+    private suspend fun getNormalTopicStories(
+        page: Int,
+        size: Int
+    ): List<StoryItem.StoriesByTopic> {
+        return storyRepository.fetchStoriesByPosts(
+            page = page,
+            postPerTopic = postsPerTopic,
+            itemsPerPage = size
+        )
+    }
+
+    private suspend fun getPrioritisedTopicStories(): List<StoryItem.StoriesByTopic>? {
+        val storyId = storyRepository.fetchPrioritiseTopicStoriesRepresentative()
+        return storyId?.let {
+            when (val result =
+                storyRepository.getSameTopicStoriesWithTarget(it, postsPerTopic)
+            ) {
+                is StoryResult.Success -> {
+                    result.data
+                }
+                else -> {
+                    Logger.e(result.errorMsg.toString())
+                    null
+                }
+            }
+        }?.map {
+            StoryItem.StoriesByTopic(it.topic, it.stories)
+        }
+    }
+
+
+    private fun integrateStoryItem(
+        randomTopics: StoryItem.TopicTable?,
+        topicStories: List<StoryItem.StoriesByTopic>,
+        prioritisedTopicStories: List<StoryItem.StoriesByTopic>?,
+    ): List<StoryItem> {
+        val storyItemList = mutableListOf<StoryItem>()
+        prioritisedTopicStories?.let { storyItemList.addAll(it) }
+        randomTopics?.let { storyItemList.add(it) }
+
+        val distinctStoryItems =
+            topicStories.filter { topicStory ->
+                prioritisedTopicStories?.all { topicStory.topic != it.topic } ?: true
+            }
+        storyItemList.addAll(distinctStoryItems)
+
+        return storyItemList
     }
 
 
@@ -90,7 +121,7 @@ actual class FetchStoryItemsUseCase(
     }
 
     companion object {
-        private const val postsPerTopic = 3
+        private const val postsPerTopic = 4
         private const val itemsPerPage = 4
         private const val randomTopicSize = 4
         private val pagingConfig =

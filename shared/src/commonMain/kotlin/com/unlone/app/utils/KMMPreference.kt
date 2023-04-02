@@ -1,29 +1,37 @@
 package com.unlone.app.utils
 
-class KMMPreference(private val context: KMMContext) {
-
-    fun put(key: String, value: Int) {
+interface KMMPreference{
+    fun put(key: String, value: Int)
+    fun put(key: String, value: String)
+    fun put(key: String, value: Boolean)
+    fun getInt(key: String, default: Int): Int
+    fun getString(key: String): String?
+    fun getBool(key: String, default: Boolean): Boolean
+    fun remove(key: String)
+}
+class KMMPreferenceImpl(private val context: KMMContext): KMMPreference {
+    override fun put(key: String, value: Int) {
         context.putInt(key, value)
     }
 
-    fun put(key: String, value: String) {
+    override fun put(key: String, value: String) {
         context.putString(key, value)
     }
 
-    fun put(key: String, value: Boolean) {
+    override fun put(key: String, value: Boolean) {
         context.putBool(key, value)
     }
 
-    fun getInt(key: String, default: Int): Int = context.getInt(key, default)
+    override fun getInt(key: String, default: Int): Int = context.getInt(key, default)
 
 
-    fun getString(key: String): String? = context.getString(key)
+    override fun getString(key: String): String? = context.getString(key)
 
 
-    fun getBool(key: String, default: Boolean): Boolean =
+    override fun getBool(key: String, default: Boolean): Boolean =
         context.getBool(key, default)
 
-    fun remove(key: String) {
+    override fun remove(key: String) {
         context.remove(key)
     }
 

@@ -18,23 +18,20 @@ import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.unlone.app.android.ui.comonComponent.NoNetworkScreen
 import com.unlone.app.android.ui.comonComponent.TopicTable
 import com.unlone.app.android.ui.connectivityState
-import com.unlone.app.android.ui.theme.MontserratFontFamily
+import com.unlone.app.android.ui.theme.NotoSansHKFontFamily
 import com.unlone.app.android.viewmodel.StoriesViewModel
 import com.unlone.app.domain.entities.NetworkState
 import com.unlone.app.domain.entities.StoryItem
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import org.example.library.SharedRes
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun StoriesScreen(
     viewModel: StoriesViewModel,
-    requestedStoryId: String? = null,
     navToStoryDetail: (String) -> Unit = {},
     navToTopicPosts: (String) -> Unit = {},
     navToFullTopic: () -> Unit = {},
@@ -46,35 +43,21 @@ fun StoriesScreen(
 
     val storiesByTopics = viewModel.storiesByTopics
     val listState = storiesByTopics.rememberLazyListState()
-    // used when displaying the required story at first sight
-    val storiesFromRequest = viewModel.storiesFromRequest.collectAsState().value
 
-    val coroutineScope = rememberCoroutineScope()
     val refreshState =
         rememberSwipeRefreshState(storiesByTopics.loadState.refresh is LoadState.Loading)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(networkState) {
         viewModel.checkAuth()
+        if (networkState is NetworkState.Available)
+            storiesByTopics.refresh()
     }
 
-    requestedStoryId?.let {
-        LaunchedEffect(requestedStoryId) {
-            viewModel.loadStoriesFromRequest(it)
-        }
-    }
-
-
-    if (networkState !is NetworkState.Available) {
-        NoNetworkScreen {
-            coroutineScope.launch {
-                viewModel.initState()
-            }
-        }
-        return
-    }
 
     if (state.isUserLoggedIn) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
             SwipeRefresh(state = refreshState, onRefresh = storiesByTopics::refresh) {
                 LazyColumn(
                     Modifier
@@ -97,23 +80,11 @@ fun StoriesScreen(
                                     highlight = PlaceholderHighlight.fade()
                                 ),
                             fontSize = 30.sp,
-                            fontFamily = MontserratFontFamily,
-                            fontWeight = FontWeight.SemiBold
+                            fontFamily = NotoSansHKFontFamily,
+                            fontWeight = FontWeight.Medium
                         )
                     }
 
-                    storiesFromRequest?.let {
-                        item {
-                            PostsByTopic(
-                                topic = it.topic,
-                                loading = state.loading,
-                                stories = it.stories,
-                                viewMorePost = { navToTopicPosts(it.topic) },
-                                navToPostDetail = { sid -> navToStoryDetail(sid) }
-                            )
-                            Spacer(modifier = Modifier.height(30.dp))
-                        }
-                    }
                     items(storiesByTopics,
                         key = { if (it is StoryItem.TopicTable) it.topics else it.hashCode() }
                     ) {
@@ -129,13 +100,13 @@ fun StoriesScreen(
                                 )
                             }
                             is StoryItem.StoriesByTopic -> {
-                                if (storiesFromRequest?.topic != it.topic)
-                                    PostsByTopic(
-                                        it.topic,
-                                        state.loading,
-                                        it.stories,
-                                        { navToTopicPosts(it.topic) }
-                                    ) { sid -> navToStoryDetail(sid) }
+                                PostsByTopic(
+                                    it.topic,
+                                    state.loading,
+                                    it.stories,
+                                    viewMorePost = { navToTopicPosts(it.topic) },
+                                    navToPostDetail = { sid -> navToStoryDetail(sid) }
+                                )
                                 Spacer(modifier = Modifier.height(30.dp))
                             }
                             is StoryItem.UnknownError -> {
@@ -145,9 +116,7 @@ fun StoriesScreen(
 //                                todo: maybe do nothing?
                             }
                         }
-
                     }
-
                 }
             }
         }

@@ -1,18 +1,13 @@
 package com.unlone.app.android.viewmodel
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.android.ui.navigation.optionalDraftArg
-import com.unlone.app.android.ui.navigation.optionalVersionArg
 import com.unlone.app.android.ui.write.WritingUiState
 import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.data.story.StoryResult
 import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.data.write.DraftRepository
@@ -22,16 +17,18 @@ import com.unlone.app.data.write.StaticResourceResult
 import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
 private class MutableWritingUiState : WritingUiState {
-    override var body: TextFieldValue by mutableStateOf(TextFieldValue(text = ""))
+    override var body: String by mutableStateOf("")
     override var commentAllowed: Boolean by mutableStateOf(false)
-    override var currentDraftId: String? by mutableStateOf<String?>(null)
+    override var currentDraftId: String? by mutableStateOf(null)
     override var displayingGuidingQuestion: GuidingQuestion? by mutableStateOf(null)
     override var draftList: Map<String, String> by mutableStateOf(mapOf())
+    override var postStoryError: PublishStoryException? by mutableStateOf(null)
     override var error: String? by mutableStateOf(null)
     override var guidingQuestion: List<GuidingQuestion> by mutableStateOf(listOf())
     override var isPublished: Boolean by mutableStateOf(false)
@@ -44,21 +41,20 @@ private class MutableWritingUiState : WritingUiState {
     override var saveAllowed: Boolean by mutableStateOf(false)
     override var selectedTopic: String by mutableStateOf("")
     override var storyPosting: Boolean by mutableStateOf(false)
+    override var shouldCreateNewVersionDraft: Boolean by mutableStateOf(true)
 }
 
 class WritingViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    private val createNewDraftUseCase: CreateNewDraftUseCase,
     private val getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
     private val getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
-    private val saveDraftUseCase: SaveDraftUseCase,
+    private val isUserSignedInUseCase: IsUserSignedInUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
-    private val createNewDraftUseCase: CreateNewDraftUseCase,
     private val postStoryUseCase: PostStoryUseCase,
     private val topicRepository: TopicRepository,
-    private val isUserSignedInUseCase: IsUserSignedInUseCase,
+    private val saveDraftUseCase: SaveDraftUseCase,
     private val draftRepository: DraftRepository,
     private val guidingQuestionsRepository: GuidingQuestionsRepository,
-    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableWritingUiState()
@@ -68,10 +64,11 @@ class WritingViewModel(
         viewModelScope.launch { refreshData() }
     }
 
-    suspend fun refreshData(networkAvailable: Boolean = true) = withContext(Dispatchers.Main) {
-
-        val draftId = savedStateHandle.get<String>(optionalDraftArg)
-        val version = savedStateHandle.get<String>(optionalVersionArg)
+    suspend fun refreshData(
+        networkAvailable: Boolean = false,
+        draftIdArg: String? = null,
+        versionArg: String? = null,
+    ) = withContext(Dispatchers.Main) {
 
         _uiState.loading = true
         _uiState.guidingQuestion = listOf()
@@ -92,25 +89,30 @@ class WritingViewModel(
         }
 
         launch {
-            getAllDraftsTitleUseCase().catch { e ->
-                _uiState.error = e.message
-            }.collect {
-                _uiState.draftList = it
+            try {
+                getAllDraftsTitleUseCase().catch { e ->
+                    _uiState.error = e.message
+                }.collect {
+                    _uiState.draftList = it
+                }
+            } catch (_: Throwable) {
+                // do nothing
             }
         }
 
         launch {
-            if (draftId.isNullOrBlank() || version.isNullOrBlank()) {
+            if (draftIdArg.isNullOrBlank() || versionArg.isNullOrBlank()) {
                 getLastOpenedDraftUseCase().let { lastOpened ->
                     _uiState.currentDraftId = lastOpened?.first
                     _uiState.title = lastOpened?.second?.title ?: ""
-                    _uiState.body = TextFieldValue(lastOpened?.second?.content ?: "")
+                    _uiState.body = lastOpened?.second?.content ?: ""
                 }
             } else {
-                queryDraftUseCase(draftId, version).collectLatest {
+                queryDraftUseCase(draftIdArg, versionArg).first {
                     _uiState.currentDraftId = it.first
                     _uiState.title = it.second.title
-                    _uiState.body = TextFieldValue(it.second.content)
+                    _uiState.body = it.second.content
+                    true
                 }
             }
             _uiState.loading = false
@@ -119,49 +121,57 @@ class WritingViewModel(
 
     fun dismiss() {
         _uiState.error = null
+        _uiState.postStoryError = null
+    }
+
+    fun resetShouldCreateNewVersionDraft() {
+        dismiss()
+        _uiState.shouldCreateNewVersionDraft = true
+    }
+
+    private fun shouldNowSaveToLatestVersion() {
+        _uiState.shouldCreateNewVersionDraft = false
     }
 
 
-    fun setTitle(title: String) {
-        _uiState.title = title
+    fun setTitle(text: String) {
+        _uiState.title = text
+        saveDraft()
     }
 
-    fun setBody(text: String) {
-        _uiState.body = _uiState.body.copy(
-            text = text,
-            selection = TextRange(text.length)
-        )
+    val setBody: (String) -> Unit = { text: String ->
+        _uiState.body = text
+        saveDraft()
     }
 
-    fun saveDraft() = viewModelScope.launch(Dispatchers.Default) {
-        if (uiState.title.isNotBlank() || uiState.body.text.isNotBlank()) {
-            Timber.d(uiState.currentDraftId)
-            val result = saveDraftUseCase(
-                uiState.currentDraftId, uiState.title, uiState.body.text
-            )
-            when (result) {
-                is StoryResult.Success -> _uiState.currentDraftId = result.data
-                is StoryResult.Failed -> _uiState.error = result.errorMsg
-                else -> {}  // won't hit this case for now
+    private fun saveDraft() = viewModelScope.launch {
+        if (_uiState.title.isBlank() && _uiState.body.isBlank()) return@launch
+
+        Timber.d("currentDraftId ${uiState.currentDraftId}")
+        when (val result =
+            saveDraftUseCase(
+                _uiState.currentDraftId,
+                _uiState.title,
+                _uiState.body,
+                _uiState.shouldCreateNewVersionDraft
+            )) {
+            is StoryResult.Success -> {
+                _uiState.currentDraftId = result.data?.first
             }
+            is StoryResult.Failed -> {
+                _uiState.error = result.errorMsg
+            }
+            else -> { /*won't hit this case for now*/ }
         }
-    }
-
-    fun addImageMD(uri: Uri?) {
-        uri?.let {
-            val imageMD = "![image]($it)"
-            setBody(uiState.body.text + imageMD)
+        if (_uiState.shouldCreateNewVersionDraft) {
+            shouldNowSaveToLatestVersion()
         }
-    }
-
-    fun dismissSucceed() {
-        _uiState.postSuccess = false
     }
 
     // region option menu feature
     fun clearDraft() {
         _uiState.title = ""
-        _uiState.body = TextFieldValue(text = "")
+        _uiState.body = ""
     }
 
     fun createNewDraft() = viewModelScope.launch {
@@ -170,8 +180,9 @@ class WritingViewModel(
         val newDraftMap = createNewDraftUseCase()
         _uiState.currentDraftId = newDraftMap["id"]
         _uiState.title = newDraftMap["title"] ?: ""
-        _uiState.body = TextFieldValue(text = newDraftMap["content"] ?: "")
+        _uiState.body = newDraftMap["content"] ?: ""
         _uiState.selectedTopic = newDraftMap["selectedTopic"] ?: ""
+        resetShouldCreateNewVersionDraft()
     }
 
 
@@ -183,7 +194,8 @@ class WritingViewModel(
         _uiState.loading = false
         _uiState.currentDraftId = result.first
         _uiState.title = result.second.title
-        _uiState.body = TextFieldValue(text = result.second.content)
+        _uiState.body = result.second.content
+        resetShouldCreateNewVersionDraft()
     }
 
 
@@ -195,7 +207,6 @@ class WritingViewModel(
             clearDraft()
         }
     }
-
     // endregion
 
     // region set posting config
@@ -216,9 +227,10 @@ class WritingViewModel(
 
     fun postStory() = viewModelScope.launch {
         _uiState.storyPosting = true
+        Timber.d("${uiState.title} ${uiState.body}")
         val result = postStoryUseCase(
             uiState.title,
-            uiState.body.text,
+            uiState.body,
             uiState.selectedTopic,
             uiState.isPublished,
             uiState.commentAllowed,
@@ -230,16 +242,20 @@ class WritingViewModel(
                 _uiState.postSucceedStory = result.data
                 _uiState.postSuccess = true
             }
-            is StoryResult.Failed -> _uiState.error = result.errorMsg
+            is StoryResult.Failed -> {
+                result.exception?.let { ex ->
+                    if (ex is PublishStoryException) {
+                        _uiState.postStoryError = ex
+                    }
+                }
+            }
             is StoryResult.UnknownError -> _uiState.error = result.errorMsg
         }
         _uiState.storyPosting = false
         Timber.d(result.data)
     }
 
-    fun setTopic(topic: String) {
-        _uiState.selectedTopic = topic
-    }
+    val setTopic = { topic: String -> _uiState.selectedTopic = topic }
 
     private suspend fun getTopicList() {
         when (val result = topicRepository.getAllTopic()) {
@@ -294,8 +310,9 @@ class WritingViewModel(
     }
     // endregion
 
-    suspend fun checkAuthentication() {
-        authRepository.authenticate()
+
+    fun cleanUpState() {
+        _uiState.postSuccess = false
     }
 
 }

@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.End
@@ -72,7 +73,7 @@ fun EmailVerificationScreen(
 
     state.errorMsg?.let { msg ->
         AlertDialog(
-            onDismissRequest = dismissError, 
+            onDismissRequest = dismissError,
             title = { Text(text = msg) },
             confirmButton = {
                 Button(onClick = dismissError) {
@@ -99,7 +100,14 @@ fun OtpInputBlock(
     Column(modifier) {
         Text(text = stringResource(resource = SharedRes.strings.otp__enter_otp))
         Spacer(modifier = Modifier.height(15.dp))
-        TextField(value = otp, onValueChange = onValueChanged, modifier = Modifier.fillMaxWidth())
+        TextField(
+            value = otp,
+            onValueChange = onValueChanged,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardActions = KeyboardActions(
+                onDone = { onClick() }
+            )
+        )
         Spacer(modifier = Modifier.height(50.dp))
         Button(
             onClick = onClick,

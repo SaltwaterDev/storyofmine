@@ -20,19 +20,20 @@ interface StoryApi {
         postsPerTopic: Int,
         pagingItems: Int,
         page: Int,
+        topic: String? = null,
     ): StoriesPerTopicsResponse
 
     suspend fun getAllTopics(): AllTopicResponse
-    suspend fun getRandomTopics(amount: String): AllTopicResponse
+    suspend fun getRandomTopics(amount: Int): AllTopicResponse
     suspend fun fetchStoryDetail(pid: String, token: String): StoryResponse
-    suspend fun fetchStoriesByTopic(
-        topic: String? = null,
+
+    suspend fun getSameTopicStories(
         requestedStory: String? = null,
         pagingSize: Int,
-        page: Int?
+        page: Int? = null
     ): StoriesPerTopicsResponse
 
-    suspend fun getReportReasons(lang: String?): ReportReasonResponse
+    suspend fun getReportReasons(lang: String? = null): ReportReasonResponse
     suspend fun postReport(
         reportRequest: ReportRequest,
         token: String
@@ -59,7 +60,6 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
             gzip()
         }
         Charsets {
-
             // Allow using `UTF_8`.
             register(Charsets.UTF_8)
             sendCharset = Charsets.UTF_8
@@ -87,12 +87,14 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         postsPerTopic: Int,
         pagingItems: Int,
         page: Int,
+        topic: String?,
     ): StoriesPerTopicsResponse {
         val response = client.get("$baseUrl/story/allStories") {
             url {
                 parameters.append("postsPerTopic", postsPerTopic.toString())
                 parameters.append("itemsPerPage", pagingItems.toString())
                 parameters.append("page", page.toString())
+                topic?.let { it1 -> parameters.append("topic", it1) }
             }
         }
         return response.body()
@@ -103,9 +105,9 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
-    override suspend fun getRandomTopics(amount: String): AllTopicResponse {
+    override suspend fun getRandomTopics(amount: Int): AllTopicResponse {
         val response = client.get("$baseUrl/story/randomTopic"){
-            url { parameters.append("amount", amount) }
+            url { parameters.append("amount", amount.toString()) }
         }
         return response.body()
     }
@@ -117,16 +119,13 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         return response.body()
     }
 
-    override suspend fun fetchStoriesByTopic(
-        topic: String?,
+    override suspend fun getSameTopicStories(
         requestedStory: String?,
         pagingSize: Int,
-        page: Int?
+        page: Int?,
     ): StoriesPerTopicsResponse {
-        val response = client.get("$baseUrl/story/allStoriesFromTopic") {
+        val response = client.get("$baseUrl/story/sameTopicStories/$requestedStory") {
             url {
-                topic?.let { it1 -> parameters.append("topic", it1) }
-                requestedStory?.let { it1 -> parameters.append("requestedStory", it1) }
                 parameters.append("pagingSize", pagingSize.toString())
                 page?.let { parameters.append("page", page.toString()) }
             }
@@ -135,7 +134,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
     }
 
     override suspend fun getReportReasons(lang: String?): ReportReasonResponse {
-        val response = client.get("$baseUrl/report/allReportReasons/${lang}")
+        val response = client.get("$baseUrl/reportReason/${lang}")
         return response.body()
     }
 
@@ -143,7 +142,7 @@ internal class StoryApiService(httpClientEngine: HttpClientEngine) : StoryApi {
         reportRequest: ReportRequest,
         token: String
     ) {
-        client.post("$baseUrl/report/createReport") {
+        client.post("$baseUrl/report") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Bearer $token")
             setBody(reportRequest)

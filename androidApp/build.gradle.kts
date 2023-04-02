@@ -31,16 +31,11 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
-
-        // tbc: delete staging
-//        create("staging") {
-//            initWith(getByName("debug"))
-//            applicationIdSuffix = ".debugStaging"
-//        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.composeCompiler
     }
+    namespace = "com.unlone.app.android"
 }
 
 dependencies {
@@ -53,9 +48,8 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.composeLifecycle}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.composeLifecycle}")
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.3.1")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.0")
     implementation("androidx.startup:startup-runtime:1.1.1")
-
 
     with(Compose) {
         implementation(ui)
@@ -64,7 +58,7 @@ dependencies {
         implementation(activity)
         implementation(navigation)
         implementation(viewModel)
-        implementation(materialIcon)
+        implementation(materialIconsExtended)
         implementation(composePaging)
     }
 
@@ -103,10 +97,7 @@ dependencies {
 
     // firebase
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:31.0.1"))
-
-    // Add the dependencies for the Crashlytics and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation(platform("com.google.firebase:firebase-bom:31.2.2"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 

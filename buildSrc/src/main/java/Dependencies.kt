@@ -42,12 +42,11 @@ object Compose {
     const val activity = "androidx.activity:activity-compose:${Versions.compose}"
     const val uiGraphics = "androidx.compose.ui:ui-graphics:${Versions.compose}"
     const val foundationLayout = "androidx.compose.foundation:foundation-layout:${Versions.compose}"
-    const val material = "androidx.compose.material:material:${Versions.compose}"
-    const val materialIconsExtended = "androidx.compose.material:material-icons-extended:${Versions.compose}"
+    const val material = "androidx.compose.material:material:${Versions.composeMaterial}"
+    const val materialIconsExtended = "androidx.compose.material:material-icons-extended:${Versions.composeMaterial}"
     const val navigation = "androidx.navigation:navigation-compose:${Versions.navCompose}"
     const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.composeLifecycle}"
     const val preview = "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
-    const val materialIcon = "androidx.compose.material:material-icons-extended:${Versions.compose}"
     const val composePaging = "androidx.paging:paging-compose:${Versions.pagingCompose}"
 
 }
@@ -77,4 +76,9 @@ object Ktor{
     const val okHttp = "io.ktor:ktor-client-okhttp:${Versions.ktorVersion}"
     const val darwin = "io.ktor:ktor-client-darwin:${Versions.ktorVersion}"
     const val encoding = "io.ktor:ktor-client-encoding:${Versions.ktorVersion}"
+}
+
+object Kotest{
+    const val framework = "io.kotest:kotest-framework-engine:${Versions.kotest}"
+    const val assertion = "io.kotest:kotest-assertions-core:${Versions.kotest}"
 }

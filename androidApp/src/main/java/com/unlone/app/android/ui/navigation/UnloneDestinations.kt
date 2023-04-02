@@ -11,15 +11,15 @@ import com.unlone.app.android.ui.UnloneApp
  */
 
 
-const val optionalDraftArg = "draftId"
-const val optionalVersionArg = "version"
+const val OptionalDraftArg = "draftId"
+const val OptionalVersionArg = "version"
 
 enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneDestination {
     Write(icon = R.drawable.ic_write, label = "write") {
         override val route: String = "writeRoute"
 
-        private val optionalDraftArg = "draftId"
-        private val optionalVersionArg = "version"
+            val optionalDraftArg = OptionalDraftArg
+        val optionalVersionArg = OptionalVersionArg
         private val typeArg =
             "?$optionalDraftArg={$optionalDraftArg}&$optionalVersionArg={$optionalVersionArg}"
         override val routeWithArgs = "$route$typeArg"
@@ -36,16 +36,9 @@ enum class UnloneBottomDestinations(val icon: Int, val label: String?) : UnloneD
         )
     },
     Stories(icon = R.drawable.ic_book, label = "stories") {
-        override val route: String = "stories"
-        private val optionalRequestedStoryIdArg = "requestedStoryId"
-        private val typeArg =
-            "?${optionalRequestedStoryIdArg}={${optionalRequestedStoryIdArg}}"
-
-        override val routeWithArgs = "$route$typeArg"
-        override val arguments = listOf(navArgument("requestedStoryId") {
-            type = NavType.StringType
-            nullable = true
-        })
+        override val route: String = "storiesRoute"
+        override val routeWithArgs = route
+        override val arguments: List<NamedNavArgument> = emptyList()
 
     },
     Profile(icon = R.drawable.ic_profile, label = "profile") {
@@ -104,8 +97,8 @@ object FullTopic : UnloneDestination {
 }
 
 enum class ReportType {
-    story,
-    comment
+    Story,
+    Comment,
 }
 
 

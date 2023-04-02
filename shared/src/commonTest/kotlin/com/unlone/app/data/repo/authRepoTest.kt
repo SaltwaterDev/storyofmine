@@ -1,67 +1,88 @@
 package com.unlone.app.data.repo
 
-import com.unlone.app.data.api.AuthApi
 import com.unlone.app.data.auth.AuthRepositoryImpl
 import com.unlone.app.data.auth.AuthResult
-import com.unlone.app.utils.KMMPreference
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runTest
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertIs
+import com.unlone.app.data.repo.mockObjects.MockAuthApi
+import com.unlone.app.data.repo.mockObjects.MockKmmPreference
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.types.shouldBeInstanceOf
+
+class AuthRepoTest : FunSpec({
+
+    val kmmPref = MockKmmPreference()
+    val apiTest = MockAuthApi()
 
 
-@ExperimentalCoroutinesApi
-class AuthRepoTest {
-
-    @BeforeTest
-    fun setUp() {
-    }
-
-    @AfterTest
-    fun tearDown() {
-    }
-
-
-    @Test
-    fun `given Api and KmmPreference Mock when Calling Mocked Method then throw Unknown Error`() =
-        runTest {
-            val pref: KMMPreference = mockk {
-                every { getString(any()) } returns "13579"
-            }
-            val api: AuthApi = mockk() {
-                coEvery { authenticate(any()) } throws Exception()
-            }
-            val authRepositoryImpl = AuthRepositoryImpl(api, pref)
-
-            launch {
-                val result = authRepositoryImpl.authenticate()
-                assertIs<AuthResult.UnknownError<Unit>>(result)
-            }
+    test("test authenticate success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.authenticate()
+            result.shouldBeInstanceOf<AuthResult<Unit>>()
         }
 
-    @Test
-    fun `given Api and KmmPreference Mock when Calling Mocked Method then Correctly Verified`() =
-        runTest {
-            val pref: KMMPreference = mockk {
-                every { getString(any()) } returns "13579"
-            }
-            val api: AuthApi = mockk {
-                coEvery { authenticate(any()) } returns Unit
-            }
-            val authRepositoryImpl = AuthRepositoryImpl(api, pref)
-
-            launch {
-                val result = authRepositoryImpl.authenticate()
-                assertIs<AuthResult.Authorized<Unit>>(result)
-            }
+    test("test signUp success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.signUp("email", "password")
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
         }
-}
+
+    test("test signIn success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.signIn("email", "password")
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
+        }
+
+    test("test signInEmail success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.signInEmail("email")
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
+        }
+
+    test("test requestOtpEmail success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.requestOtpEmail("email")
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
+        }
+
+    test("test signUpEmail success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.signUpEmail("email")
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
+        }
+
+    test("test verifyOtp success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.verifyOtp("email", 12345)
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
+        }
+
+    test("tests signOut") {
+        val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+        authRepo.signOut()
+    }
+
+    test("test setUserName success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.setUserName("email", "username")
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
+        }
+
+
+    test("test removeUserRecordByEmail success")
+        .config(coroutineTestScope = true) {
+            val authRepo = AuthRepositoryImpl(apiTest, kmmPref)
+            val result = authRepo.removeUserRecordByEmail("email")
+            result.shouldBeInstanceOf<AuthResult.Authorized<Unit>>()
+        }
+})
+
 
 
 

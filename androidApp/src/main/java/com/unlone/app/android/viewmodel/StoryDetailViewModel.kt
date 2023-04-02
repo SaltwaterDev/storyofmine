@@ -1,7 +1,9 @@
 package com.unlone.app.android.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlone.app.android.BuildConfig
 import com.unlone.app.data.story.CommentRepository
 import com.unlone.app.data.story.StoryRepository
 import com.unlone.app.data.story.StoryResult
@@ -11,13 +13,14 @@ import com.unlone.app.domain.useCases.stories.FetchStoryDetailUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 data class StoryDetailUiState(
     val pid: String = "",
-    val title: String = "\b".repeat(5),
-    val content: String = "\b".repeat(10),
+    val title: String = " ".repeat(5),
+    val content: String = " ".repeat(10),
     val authorId: String = "",
-    val topic: String = "\b".repeat(5),
+    val topic: String = " ".repeat(5),
     val createdDate: String = "",
     val comments: List<Comment> = listOf(),
     val isSelfWritten: Boolean = false,
@@ -66,7 +69,9 @@ class StoryDetailViewModel(
                 }
             }
             else -> {
-                state.value = state.value.copy(errorMsg = result.errorMsg)
+                Timber.e(result.errorMsg)
+                if (BuildConfig.DEBUG)
+                    state.value = state.value.copy(errorMsg = result.errorMsg)
             }
         }
 
@@ -87,8 +92,10 @@ class StoryDetailViewModel(
                     state.value = state.value.copy(comments = it)
                 }
                 is StoryResult.Failed -> state.value = state.value.copy(errorMsg = result.errorMsg)
-                is StoryResult.UnknownError -> state.value =
-                    state.value.copy(errorMsg = result.errorMsg)
+                is StoryResult.UnknownError -> {
+                    state.value = state.value.copy(errorMsg = "_something wrong")
+//                    state.value = state.value.copy(errorMsg = result.errorMsg)
+                }
             }
             state.value = state.value.copy(loading = false)
         }

@@ -3,13 +3,15 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
-    id("com.android.library")
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("plugin.serialization") version Versions.kotlin
     id("io.realm.kotlin")
     id("dev.icerock.mobile.multiplatform-resources")
     id("io.kotest.multiplatform") version Versions.kotest
     id("com.codingfeline.buildkonfig")
-    id("com.rickclephas.kmp.nativecoroutines") version "0.13.1"
+    id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
+    id("com.android.library")
+    id("co.touchlab.crashkios.crashlyticslink") version "0.8.2"
+    jacoco
 }
 
 version = "1.0"
@@ -26,6 +28,7 @@ kotlin {
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
         framework {
+//            isStatic = true
             baseName = "shared"
             export("io.github.kuuuurt:multiplatform-paging:${Versions.kmmPaging}")
         }
@@ -36,7 +39,7 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                with(Ktor){
+                with(Ktor) {
                     implementation(contentNegotiation)
                     implementation(clientCore)
                     implementation(serialization)
@@ -49,6 +52,8 @@ kotlin {
                 // logger
                 implementation(kotlin("stdlib-common"))
                 implementation("co.touchlab:kermit:1.1.3")
+//                implementation("co.touchlab:kermit-crashlytics:1.1.3")
+//                implementation("co.touchlab.crashkios:crashlytics:0.8.2")
                 // mongodb realm
                 implementation(Ktx.Coroutine.core)
                 implementation(Deps.realm)
@@ -56,16 +61,16 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 // pagination
                 api(Deps.multiplatformPaging)
+
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation("io.kotest:kotest-framework-engine:${Versions.kotest}")
-                implementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
+                implementation(Kotest.framework)
+                implementation(Kotest.assertion)
                 implementation(Ktx.Coroutine.test)
+                implementation(kotlin("test"))
                 implementation(Ktor.clientMock)
-//                implementation("io.mockk:mockk:1.13.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             }
         }
@@ -78,7 +83,7 @@ kotlin {
 
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation("androidx.security:security-app-authenticator:1.0.0-alpha02")
             }
@@ -121,17 +126,16 @@ android {
         minSdk = ConfigData.minSdkVersion
         targetSdk = ConfigData.targetSdkVersion
     }
+    namespace = "com.unlone.app"
 }
 
 
 dependencies {
+    implementation("androidx.core:core-ktx:1.9.0")
     // locale resources
     "commonMainApi"("dev.icerock.moko:resources:0.20.1")
     "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")
     "commonTestImplementation"("dev.icerock.moko:resources-test:0.20.1")
-    // testing
-//    "commonTestImplementation"("io.mockk:mockk-common:1.13.1")
-//    "testImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 
 
@@ -145,11 +149,11 @@ multiplatformResources {
 
 buildkonfig {
     packageName = "com.unlone.app"
-     objectName = "UnloneConfig"
+    objectName = "UnloneConfig"
 //     exposeObjectWithName = "YourAwesomePublicConfig"
 
     defaultConfigs {
-        buildConfigField(STRING, "baseUrl", "https://unlone-dev-dot-unlone.an.r.appspot.com")
+        buildConfigField(STRING, "baseUrl", "https://unlone-ktor-dev-mpejb4b6eq-an.a.run.app")
     }
     // flavor is passed as a first argument of defaultConfigs
     defaultConfigs("staging") {
@@ -161,3 +165,20 @@ buildkonfig {
         buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
     }
 }
+
+jacoco {
+    toolVersion = "0.8.8"
+    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir")) // optional
+}
+
+//tasks.jacocoTestReport {
+//    dependsOn(tasks.test)
+//    reports {
+//        xml.required.set(true)
+//    }
+//}
+//
+//tasks.test {
+////    ...
+//    finalizedBy(tasks.jacocoTestReport)
+//}

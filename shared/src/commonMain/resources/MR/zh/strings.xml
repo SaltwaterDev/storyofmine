@@ -44,7 +44,7 @@
     <string name="saved_stories_title">收藏</string>
 
     <string name="stories_auth_required_title">註冊以觀閱更多故事</string>
-    <string name="stories_header_greeting">你好 %s</string>
+    <string name="stories_header_greeting">哈囉 %s!</string>
     <string name="stories_show_more">更多</string>
 
     <string name="story_detail__reply">回覆...</string>
@@ -79,7 +79,7 @@
     <string name="common__confirm_password">確認密碼</string>
     <string name="common__password">密碼</string>
     <string name="common__report">舉報</string>
-    <string name="common__network_unavailable_warning">無法連線\n請查看你的網絡狀態</string>
+    <string name="common__network_unavailable_warning">無法連線，請查看你的網絡狀態</string>
     <string name="common__error">錯誤</string>
     <string name="common__warning">警告</string>
     <string name="common__unknown_error">未知錯誤</string>
@@ -98,5 +98,7 @@
     <string name="common__btn_following">追蹤中</string>
     <string name="common__btn_retry">重試</string>
 
+    <string name="error__publish_story_empty_topic">請設定主題</string>
+    <string name="error__publish_story_empty_title_or_body">標題和內文不應空白</string>
 
 </resources>

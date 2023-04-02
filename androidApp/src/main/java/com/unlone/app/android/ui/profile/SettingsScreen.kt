@@ -1,5 +1,6 @@
 package com.unlone.app.android.ui.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -21,6 +22,7 @@ import com.unlone.app.data.userPreference.UnloneLocale
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,

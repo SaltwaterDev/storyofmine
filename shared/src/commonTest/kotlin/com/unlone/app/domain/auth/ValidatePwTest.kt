@@ -1,33 +1,30 @@
 package com.unlone.app.domain.auth
 
 import com.unlone.app.domain.useCases.auth.ValidPasswordUseCase
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class ValidatePwTest {
+class ValidatePwTest : FunSpec({
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `validate pw success`() = runTest {
-        val useCase = ValidPasswordUseCase()
-        assertTrue {
-            useCase.invoke("1234QWEe")
-            useCase.invoke("1234QWEe!1!")
-        }
+    val useCase = ValidPasswordUseCase()
+
+    test("validate pw success") {
+        useCase.invoke("1234QWEe").shouldBeTrue()
+        useCase.invoke("1234QWEe!1!").shouldBeTrue()
     }
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `validate pw fail`() = runTest {
-        val useCase = ValidPasswordUseCase()
-        assertFalse { useCase.invoke("") }
-        assertFalse { useCase.invoke("12341234") }
-        assertFalse { useCase.invoke("1123Aa") }
-        assertFalse { useCase.invoke("1243aaaa") }
-        assertFalse { useCase.invoke("1243aaaa") }
+    test("validate pw fail") {
+        useCase.invoke("").shouldBeFalse()
+        useCase.invoke("12341234").shouldBeFalse()
+        useCase.invoke("1123Aa").shouldBeFalse()
+        useCase.invoke("1243aaaa").shouldBeFalse()
+        useCase.invoke("1243aaaa").shouldBeFalse()
     }
-}
+})

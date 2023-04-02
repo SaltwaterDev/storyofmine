@@ -99,9 +99,11 @@ class UnloneAppState(
         }
     }
 
-    // todo
-    fun navigateToStoriesDetail(pid: Long, from: NavBackStackEntry) {
-    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val shouldShowNoNetworkSnackBar: Boolean
+        @Composable get() {
+            return connectivityState().value != NetworkState.Available
+        }
 
 }
 
@@ -117,15 +119,6 @@ fun connectivityState(): State<NetworkState> {
         context.observeConnectivityAsFlow().collect { value = it }
     }
 }
-
-/**
- * If the lifecycle is not resumed it means this NavBackStackEntry already processed a nav event.
- *
- * This is used to de-duplicate navigation events.
- */
-private fun NavBackStackEntry.lifecycleIsResumed() =
-    this.lifecycle.currentState == Lifecycle.State.RESUMED
-
 
 /**
  * Network utility to get current state of internet connection

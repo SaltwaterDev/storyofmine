@@ -1,7 +1,9 @@
 package com.unlone.app.android.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -15,8 +17,10 @@ import com.unlone.app.android.ui.write.WritingScreen
 import com.unlone.app.android.viewmodel.EditHistoryViewModel
 import com.unlone.app.android.viewmodel.WritingViewModel
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @ExperimentalAnimatedInsets
 @ExperimentalAnimationApi
 @OptIn(
@@ -24,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 )
 fun NavGraphBuilder.writeGraph(
     navController: NavHostController,
-    navToStories: (String) -> Unit,
+    navToStories: () -> Unit,
 ) {
 
     navigation(
@@ -36,14 +40,19 @@ fun NavGraphBuilder.writeGraph(
             route = UnloneBottomDestinations.Write.routeWithArgs,
             arguments = UnloneBottomDestinations.Write.arguments
         ) {
+
             val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
             val viewModel =
                 koinViewModel<WritingViewModel>(viewModelStoreOwner = viewModelStoreOwner)
+
             WritingScreen(
                 viewModel = viewModel,
+                draftIdArg = it.arguments?.getString(OptionalDraftArg),
+                versionArg = it.arguments?.getString(OptionalVersionArg),
                 navToEditHistory = { id -> navToEditHistory(navController, id) },
-                navToSignIn = { navigateToAuth(navController, UnloneBottomDestinations.Write.route) },
-                onPostSucceed = { succeedStory -> navToStories(succeedStory) })
+                navToSignIn = { navigateToSignUp(navController) },
+                onPostSucceed = { navToStories() },
+            )
         }
 
         composable(
@@ -69,6 +78,6 @@ fun navToWrite(
     draftId: String? = null,
     version: String? = null,
 ) {
-    if (draftId != null && version != null) navController.navigate("${UnloneBottomDestinations.Write.route}?${optionalDraftArg}=${draftId}&${optionalVersionArg}=${version}")
+    if (draftId != null && version != null) navController.navigate("${UnloneBottomDestinations.Write.route}?${OptionalDraftArg}=${draftId}&${OptionalVersionArg}=${version}")
     else navController.navigate(UnloneBottomDestinations.Write.route)
 }

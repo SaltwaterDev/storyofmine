@@ -45,9 +45,7 @@ fun EditHistoryScreen(
 
         TransparentTopBar(
             stringResource(resource = SharedRes.strings.edit_history_title),
-        ) {
-            back()
-        }
+        ) { back() }
 
         Spacer(modifier = Modifier.height(30.dp))
 

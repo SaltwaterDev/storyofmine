@@ -133,7 +133,7 @@ class WritingViewModel: ObservableObject {
         Task {
             do {
                 guard !self.title.isEmpty else { return }
-                try await saveDraftUseCase.invoke(id: self.currentDraftId, title: self.title, content: self.content)
+                try await saveDraftUseCase.invoke(draftId: self.currentDraftId, title: self.title, body: self.content, shouldCreateNewVersion: false)
             } catch{ print(error) }
         }
     }
