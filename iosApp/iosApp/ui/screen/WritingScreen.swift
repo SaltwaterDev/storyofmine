@@ -46,7 +46,7 @@ struct WritingScreen: View {
             }))
         
         let PostingDialog = VStack {
-            DropdownPicker(title: $writingViewModel.selectedTopic, placeholder: "Select Topic", selectionList: writingViewModel.topicList)
+            DropdownPicker(input: $writingViewModel.selectedTopic, data: writingViewModel.topicList)
             Toggle("Post to public", isOn: $writingViewModel.isPublished).onChange(of: writingViewModel.isPublished) { _isOn in
                 writingViewModel.setSaveAllowed(saveAllowed: writingViewModel.isPublished && writingViewModel.saveAllowed)
                 writingViewModel.setCommentAllowed(commentAllowed: writingViewModel.isPublished && writingViewModel.commentAllowed)
