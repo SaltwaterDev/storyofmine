@@ -16,6 +16,8 @@ android {
         targetSdk = ConfigData.targetSdkVersion
         versionCode = ConfigData.versionCode
         versionName = ConfigData.versionName
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
     buildFeatures {
         compose = true
@@ -44,12 +46,13 @@ dependencies {
     implementation(Deps.materialDesign)
     implementation(Deps.appCompat)
     implementation(Deps.activity)
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.1")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.composeLifecycle}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.composeLifecycle}")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.4.0")
     implementation("androidx.startup:startup-runtime:1.1.1")
+//    implementation("androidx.core:core-ktx:+")
 
     with(Compose) {
         implementation(ui)

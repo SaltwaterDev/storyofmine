@@ -11,6 +11,7 @@ plugins {
     id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
     id("com.android.library")
     id("co.touchlab.crashkios.crashlyticslink") version "0.8.2"
+//    id("org.jetbrains.kotlin.android")
     jacoco
 }
 
@@ -54,6 +55,7 @@ kotlin {
                 implementation("co.touchlab:kermit:1.1.3")
 //                implementation("co.touchlab:kermit-crashlytics:1.1.3")
 //                implementation("co.touchlab.crashkios:crashlytics:0.8.2")
+
                 // mongodb realm
                 implementation(Ktx.Coroutine.core)
                 implementation(Deps.realm)
@@ -131,7 +133,7 @@ android {
 
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     // locale resources
     "commonMainApi"("dev.icerock.moko:resources:0.20.1")
     "androidMainApi"("dev.icerock.moko:resources-compose:0.20.1")

@@ -6,7 +6,7 @@ object Versions {
     const val composeFoundatiaon = "1.3.1"
     const val composeMaterial = "1.3.1"
     const val compose = "1.3.3"
-    const val composeCompiler = "1.4.0"
+    const val composeCompiler = "1.4.7"
     const val constraintLayout = "2.1.4"
     const val gradlePlugin = "4.2.1"
     const val jUnit = "4.13.2"
@@ -19,7 +19,7 @@ object Versions {
     const val ktxCoroutine = "1.6.4"
     const val materialDesign = "1.6.1"
     const val navCompose = "2.5.3"
-    const val realm = "1.6.1"
+    const val realm = "1.8.0"
     const val timber = "5.0.1"
     const val pagingCompose = "1.0.0-alpha16"
 }

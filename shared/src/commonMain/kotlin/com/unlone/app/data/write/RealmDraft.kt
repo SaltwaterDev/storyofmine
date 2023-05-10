@@ -17,7 +17,7 @@ internal class ParentDraftRealmObject : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId.create()
     var childDraftRealmObjects: RealmList<ChildDraftRealmObject> = realmListOf()
-    var topics: List<String> = emptyList()
+//    var topics: List<String> = emptyList()
     var lastOpened: RealmInstant = RealmInstant.from(Clock.System.now().epochSeconds, 1000)
 }
 
