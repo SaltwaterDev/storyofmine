@@ -2,8 +2,8 @@
 <resources>
     <string name="my_string">DLLMCH</string>
 
-    <string name="bottom_nav_bar_label__write">寫東西</string>
-    <string name="bottom_nav_bar_label__stories">看故事</string>
+    <string name="bottom_nav_bar_label__write">隨心寫</string>
+    <string name="bottom_nav_bar_label__stories">故事</string>
     <string name="bottom_nav_bar_label__profile">關於你</string>
 
     <string name="sign_in__title">登入</string>
@@ -32,7 +32,7 @@
     <string name="writing__topic">主題</string>
     <string name="writing__post_to_public">公開</string>
     <string name="writing__open_comment">允許留言</string>
-    <string name="writing__savable">允許收藏</string>
+    <string name="writing__savable">允許他人收藏</string>
     <string name="writing__btn_post">發佈</string>
     <string name="writing__set_topic_label">選擇/創建主題</string>
     <string name="writing__sign_in_required_title">請先登入</string>
@@ -97,8 +97,9 @@
     <string name="common__btn_follow">追蹤</string>
     <string name="common__btn_following">追蹤中</string>
     <string name="common__btn_retry">重試</string>
+    <string name="common__oops">哎吔</string>
 
-    <string name="error__publish_story_empty_topic">請設定主題</string>
-    <string name="error__publish_story_empty_title_or_body">標題和內文不應空白</string>
+    <string name="error__publish_story_empty_topic">請先設定主題</string>
+    <string name="error__publish_story_empty_title_or_body">標題和內文不可以空白的</string>
 
 </resources>

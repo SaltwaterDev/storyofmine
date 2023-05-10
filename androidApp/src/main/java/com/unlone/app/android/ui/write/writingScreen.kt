@@ -70,7 +70,7 @@ fun WritingScreen(
     var requireSignInDialog by remember { mutableStateOf(false) }
     var toolbarHeight by remember { mutableStateOf(0.dp) }
 
-    // launch for open gallery
+    // launch for opening gallery
     val loadGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
             screenState.addImageMD(it)
@@ -86,9 +86,9 @@ fun WritingScreen(
         )
     }
 
-    // close preview when keyboard is shown
     if (isKeyboardVisible) {
         LaunchedEffect(isKeyboardVisible) {
+            // close preview bottom sheet when keyboard is shown
             scaffoldState.bottomSheetState.collapse()
         }
     }
@@ -289,7 +289,7 @@ fun WritingScreen(
             uiState.error?.let {
                 AlertDialog(
                     onDismissRequest = viewModel::dismiss,
-                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__oops)) },
                     text = { Text(text = it) },
                     confirmButton = {
                         Button(
@@ -303,7 +303,7 @@ fun WritingScreen(
             uiState.postStoryError?.let {
                 AlertDialog(
                     onDismissRequest = viewModel::dismiss,
-                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__oops)) },
                     text = { Text(text = stringResource(resource = getPostStoryErrorMessage(it))) },
                     confirmButton = {
                         Button(
@@ -325,7 +325,7 @@ fun WritingScreen(
             if (showNetworkUnavailableAlert) {
                 AlertDialog(
                     onDismissRequest = { showNetworkUnavailableAlert = false },
-                    title = { Text(text = stringResource(resource = SharedRes.strings.common__attention)) },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__oops)) },
                     text = { Text(text = stringResource(resource = SharedRes.strings.common__network_unavailable_warning)) },
                     confirmButton = {
                         Button(onClick = { showNetworkUnavailableAlert = false }) {

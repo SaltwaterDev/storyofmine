@@ -107,5 +107,6 @@ dependencies {
         implementation(android)
         implementation(navGraph)
         implementation(compose)
+        testImplementation(unitTest)
     }
 }

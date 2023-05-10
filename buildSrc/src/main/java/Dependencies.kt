@@ -57,6 +57,7 @@ object Koin {
     const val android = "io.insert-koin:koin-android:${Versions.koin_android_version}"
     const val navGraph = "io.insert-koin:koin-androidx-navigation:${Versions.koin_android_version}"
     const val compose = "io.insert-koin:koin-androidx-compose:${Versions.koin_android_version}"
+    const val unitTest = "io.insert-koin:koin-test-junit4:${Versions.koin_android_version}"
 }
 
 object Accompanist {
