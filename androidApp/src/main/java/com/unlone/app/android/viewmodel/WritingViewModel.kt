@@ -33,6 +33,8 @@ private class MutableWritingUiState : WritingUiState {
     override var guidingQuestion: List<GuidingQuestion> by mutableStateOf(listOf())
     override var isPublished: Boolean by mutableStateOf(false)
     override var isUserSignedIn: Boolean by mutableStateOf(false)
+    override val isTitleAndBodyEmpty: Boolean
+        get() = title.isEmpty() || body.isEmpty()
     override var loading: Boolean by mutableStateOf(false)
     override var postSuccess: Boolean by mutableStateOf(false)
     override var postSucceedStory: String? by mutableStateOf(null)

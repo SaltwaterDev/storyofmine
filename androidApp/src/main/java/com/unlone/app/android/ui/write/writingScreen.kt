@@ -68,6 +68,7 @@ fun WritingScreen(
     var showPostingDialog by remember { mutableStateOf(false) }
     var showNetworkUnavailableAlert by remember { mutableStateOf(false) }
     var requireSignInDialog by remember { mutableStateOf(false) }
+    var titleAndBodyIsEmptyDialog by remember { mutableStateOf(false) }
     var toolbarHeight by remember { mutableStateOf(0.dp) }
 
     // launch for opening gallery
@@ -132,6 +133,7 @@ fun WritingScreen(
                         networkState !is NetworkState.Available ->
                             showNetworkUnavailableAlert = true
                         !uiState.isUserSignedIn -> requireSignInDialog = true
+                        uiState.isTitleAndBodyEmpty -> titleAndBodyIsEmptyDialog = true
                         else -> showPostingDialog = true
                     }
                 })
@@ -319,6 +321,20 @@ fun WritingScreen(
                     requireSignInDialog = false
                     navToSignIn()
                 })
+            }
+
+            if (titleAndBodyIsEmptyDialog) {
+                AlertDialog(
+                    onDismissRequest = { titleAndBodyIsEmptyDialog = false },
+                    title = { Text(text = stringResource(resource = SharedRes.strings.common__oops)) },
+                    text = { Text(text = stringResource(resource = SharedRes.strings.error__publish_story_empty_title_or_body)) },
+                    confirmButton = {
+                        Button(
+                            onClick = { titleAndBodyIsEmptyDialog = false }
+                        ) {
+                            Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+                        }
+                    })
             }
 
 

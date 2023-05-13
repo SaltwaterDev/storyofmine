@@ -25,6 +25,7 @@ interface WritingUiState {
     val storyPosting: Boolean
     val loading: Boolean
     val isUserSignedIn: Boolean
+    val isTitleAndBodyEmpty: Boolean
     val guidingQuestion: List<GuidingQuestion>
     val displayingGuidingQuestion: GuidingQuestion?
     val postSucceedStory: String?
