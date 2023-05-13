@@ -24,34 +24,28 @@ fun RulesScreen(
     viewModel: RulesViewModel,
     back: () -> Unit
 ) {
-
     val state = viewModel.uiState.collectAsState().value
 
     Scaffold(
-        topBar = {
-            StandardTopBar(title = stringResource(SharedRes.strings.rules__title)) {
-                back()
-            }
-        },
+        topBar = { StandardTopBar(title = stringResource(SharedRes.strings.rules__title)) { back() } },
         modifier = Modifier.statusBarsPadding()
     ) {
         Box(Modifier.fillMaxSize()) {
             if (state.loading) {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
-            } else {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp, 30.dp)
-                ) {
-                    state.rules.forEachIndexed { index, s ->
-                        Text(text = "${index + 1}. $s", fontWeight = FontWeight.SemiBold)
-                        Spacer(modifier = Modifier.height(30.dp))
-                    }
-                }
             }
 
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp, 30.dp)
+            ) {
+                state.rules.forEachIndexed { index, rule ->
+                    Text(text = "${index + 1}. $rule", fontWeight = FontWeight.SemiBold)
+                    Spacer(modifier = Modifier.height(30.dp))
+                }
+            }
         }
     }
 }

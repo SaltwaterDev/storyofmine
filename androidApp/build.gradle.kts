@@ -46,13 +46,12 @@ dependencies {
     implementation(Deps.materialDesign)
     implementation(Deps.appCompat)
     implementation(Deps.activity)
-    implementation("androidx.core:core-ktx:1.10.1")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.composeLifecycle}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.composeLifecycle}")
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.0")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.3")
     implementation("androidx.startup:startup-runtime:1.1.1")
-//    implementation("androidx.core:core-ktx:+")
+    implementation("androidx.core:core-ktx:1.10.1")
 
     with(Compose) {
         implementation(ui)
@@ -76,8 +75,8 @@ dependencies {
 
     // testing
     testImplementation("junit:junit:${Versions.jUnit}")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.compose}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Versions.compose}")
     debugImplementation("androidx.compose.ui:ui-test-manifest:${Versions.compose}")
@@ -99,7 +98,6 @@ dependencies {
     implementation("com.github.jeziellago:compose-markdown:0.3.0")
 
     // firebase
-    // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:31.2.2"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")

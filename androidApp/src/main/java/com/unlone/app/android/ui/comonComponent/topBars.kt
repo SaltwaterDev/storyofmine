@@ -1,26 +1,21 @@
 package com.unlone.app.android.ui.comonComponent
 
-import android.text.style.LineBackgroundSpan.Standard
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.AddBox
-import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.unlone.app.android.R
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.ui.theme.titleLarge
 import dev.icerock.moko.resources.compose.stringResource
@@ -42,21 +37,13 @@ fun WriteScreenTopBar(
     val sizePx = with(LocalDensity.current) { squareSize.toPx() }
     val anchors = mapOf(0f to 0, sizePx to 1) // Maps anchor points (in px) to states
     val scope = rememberCoroutineScope()
-
     val systemUiController: SystemUiController = rememberSystemUiController()
-    val topBarModifier = if (swipeableState.currentValue == 1)
-        modifier
-    else
-        modifier.displayCutoutPadding()
-
+    val topBarModifier =
+        if (swipeableState.currentValue == 1) modifier else modifier.displayCutoutPadding()
 
     if (swipeableState.currentValue == 0 || swipeableState.currentValue == 1)
         LaunchedEffect(swipeableState.currentValue) {
-            if (swipeableState.currentValue == 1) {
-                systemUiController.isSystemBarsVisible = false
-            }
-            if (swipeableState.currentValue == 0)
-                systemUiController.isSystemBarsVisible = true
+            systemUiController.isSystemBarsVisible = (swipeableState.currentValue == 0)
         }
 
     DisposableEffect(Unit) {
@@ -80,13 +67,11 @@ fun WriteScreenTopBar(
         backgroundColor = MaterialTheme.colors.background
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = openOptions) {
                 Icon(
-                    Icons.Rounded.Menu,
-                    contentDescription = "options"
+                    Icons.Rounded.Menu, contentDescription = "options"
                 )
             }
             TextButton(onClick = openPreview) {
@@ -149,15 +134,13 @@ fun StoryDetailTopBar(
                     if (isSaved) {
                         IconButton(onClick = it, enabled = saveEnabled) {
                             Icon(
-                                Icons.Rounded.Bookmark,
-                                contentDescription = "unsave"
+                                Icons.Rounded.Bookmark, contentDescription = "unsave"
                             )
                         }
                     } else {
                         IconButton(onClick = it, enabled = saveEnabled) {
                             Icon(
-                                Icons.Outlined.BookmarkBorder,
-                                contentDescription = "save"
+                                Icons.Outlined.BookmarkBorder, contentDescription = "save"
                             )
                         }
                     }
@@ -166,15 +149,11 @@ fun StoryDetailTopBar(
                 Box {
                     IconButton(onClick = { expanded = true }, enabled = btnEnabled) {
                         Icon(
-                            Icons.Rounded.MoreVert,
-                            contentDescription = "more"
+                            Icons.Rounded.MoreVert, contentDescription = "more"
                         )
                     }
 
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
+                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                         DropdownMenuItem(onClick = report) {
                             Text(stringResource(resource = SharedRes.strings.common__report))
                         }
@@ -215,10 +194,7 @@ fun StoryDetailTopBarPreview() {
 
 @Composable
 fun TopicDetailTopBar(
-    back: () -> Unit,
-    topicTitle: String,
-    isFollowing: Boolean,
-    toggleFollowing: () -> Unit
+    back: () -> Unit, topicTitle: String, isFollowing: Boolean, toggleFollowing: () -> Unit
 ) {
     TopAppBar() {
 
@@ -246,32 +222,21 @@ fun TopicDetailTopBar(
 @Preview
 @Composable
 fun TopicDetailTopBarPreview() {
-    TopicDetailTopBar(
-        {},
-        "Apple",
-        true,
-        {}
-    )
+    TopicDetailTopBar({}, "Apple", true, {})
 }
 
 
 @Composable
 fun StandardTopBar(
-    title: String,
-    modifier: Modifier = Modifier,
-    onBackPressed: (() -> Unit)? = null
+    title: String, modifier: Modifier = Modifier, onBackPressed: (() -> Unit)? = null
 ) {
-    TopAppBar(
-        modifier = modifier,
-        title = { Text(text = title) },
-        navigationIcon = {
-            onBackPressed?.let { onClicked ->
-                IconButton(onClick = onClicked) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
-                }
+    TopAppBar(modifier = modifier, title = { Text(text = title) }, navigationIcon = {
+        onBackPressed?.let { onClicked ->
+            IconButton(onClick = onClicked) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
             }
         }
-    )
+    })
 }
 
 
@@ -282,8 +247,7 @@ fun TransparentTopBar(
     onBackPressed: (() -> Unit),
 ) {
     Row(
-        modifier,
-        verticalAlignment = Alignment.CenterVertically
+        modifier, verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBackPressed) {
             Icon(Icons.Rounded.ArrowBack, "back")

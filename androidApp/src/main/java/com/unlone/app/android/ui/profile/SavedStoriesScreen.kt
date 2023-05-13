@@ -17,8 +17,10 @@ import com.unlone.app.android.ui.comonComponent.StoryCard
 import com.unlone.app.android.ui.comonComponent.TransparentTopBar
 import com.unlone.app.android.ui.theme.Typography
 import com.unlone.app.android.viewmodel.SavedStoriesViewModel
+import com.unlone.app.data.story.SimpleStory
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone.Companion.currentSystemDefault
 import kotlinx.datetime.toLocalDateTime
 import org.example.library.SharedRes
@@ -40,51 +42,48 @@ fun SavedStoriesScreen(
         item {
             TransparentTopBar(
                 stringResource(resource = SharedRes.strings.saved_stories_title),
+                modifier = Modifier.padding(bottom = 30.dp)
             ) { back() }
         }
 
-        item { Spacer(modifier = Modifier.height(30.dp)) }
-
-
-        items(state.stories, { it.id }) {
-            val datetime = it.createdDate?.let { it1 ->
-                Instant.fromEpochMilliseconds(it1).toLocalDateTime(
-                    currentSystemDefault()
-                )
-            }
+        items(state.stories, { it.id }) { simpleStory ->
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                datetime?.let {
-                    Text(
-                        text = "${datetime.dayOfMonth}/${datetime.monthNumber}/${datetime.year}",
-                        style = Typography.subtitle1
-                    )
+                val formattedDateTime = getSimpleStoryDateTime(simpleStory)?.let {
+                    "${it.dayOfMonth}/${it.monthNumber}/${it.year}"
                 }
-                Spacer(modifier = Modifier.height(4.dp))
+
+                formattedDateTime?.let { Text(text = it, style = Typography.subtitle1) }
                 StoryCard(
-                    title = it.title,
-                    content = it.content,
+                    title = simpleStory.title,
+                    content = simpleStory.content,
                     loading = state.loading,
-                    onClick = { openStory(it.id) },
-                    modifier = Modifier.placeholder(
-                        visible = state.loading,
-                        highlight = PlaceholderHighlight.fade()
-                    )
+                    onClick = { openStory(simpleStory.id) },
+                    modifier = Modifier
+                        .placeholder(
+                            visible = state.loading,
+                            highlight = PlaceholderHighlight.fade()
+                        )
+                        .padding(top = 4.dp, bottom = 20.dp)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
             }
         }
     }
 
     state.error?.let {
-        AlertDialog(onDismissRequest = viewModel::dismissError,
+        AlertDialog(
+            onDismissRequest = viewModel::dismissError,
             title = { Text(text = it) },
             confirmButton = {
-                Button(
-                    onClick = viewModel::dismissError
-                ) {
+                Button(onClick = viewModel::dismissError) {
                     Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
                 }
             }
         )
+    }
+}
+
+private fun getSimpleStoryDateTime(simpleStory: SimpleStory): LocalDateTime? {
+    return simpleStory.createdDate?.let {
+        Instant.fromEpochMilliseconds(it).toLocalDateTime(currentSystemDefault())
     }
 }

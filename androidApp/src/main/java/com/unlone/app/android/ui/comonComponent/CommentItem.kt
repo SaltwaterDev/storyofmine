@@ -32,17 +32,19 @@ fun CommentItem(comment: Comment) {
         it != DismissValue.DismissedToEnd
     })
 
+    val isDismissingComment = dismissState.dismissDirection != null
     Card(
-        elevation = animateDpAsState(
-            if (dismissState.dismissDirection != null) 4.dp else 0.dp
-        ).value,
+        elevation = animateDpAsState(if (isDismissingComment) 4.dp else 0.dp).value,
         modifier = Modifier.padding(vertical = 4.dp),
     ) {
-        ListItem(text = {
-            Text(
-                comment.username, fontWeight = if (unread) FontWeight.Bold else null
-            )
-        }, secondaryText = { Text(comment.text, lineHeight = 16.sp, maxLines = 20) }, singleLineSecondaryText = false
+        ListItem(
+            text = {
+                Text(
+                    comment.username, fontWeight = if (unread) FontWeight.Bold else null
+                )
+            },
+            secondaryText = { Text(comment.text, lineHeight = 16.sp, maxLines = 20) },
+            singleLineSecondaryText = false
         )
     }
     /*SwipeToDismiss(
@@ -123,33 +125,37 @@ fun CommentInput(
             Modifier.navigationBarsPadding(), verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
-                value = comment, onValueChange = setComment,
+                value = comment,
+                onValueChange = setComment,
                 maxLines = 20,
-                modifier = Modifier
-//                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                .weight(1f), enabled = sendEnabled, colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Unspecified,
-                focusedIndicatorColor = Color.Unspecified,
-                unfocusedIndicatorColor = Color.Unspecified,
-            ), trailingIcon = {
-                TextButton(enabled = sendEnabled && comment.isNotBlank(), border = BorderStroke(
-                    1.dp, MaterialTheme.colors.primary.copy(
-                        alpha = if (enabled) 1f else 0.38f
+                modifier = Modifier.weight(1f),
+                enabled = sendEnabled,
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Unspecified,
+                    focusedIndicatorColor = Color.Unspecified,
+                    unfocusedIndicatorColor = Color.Unspecified,
+                ),
+                trailingIcon = {
+                    TextButton(modifier = Modifier.padding(4.dp), border = BorderStroke(
+                        1.dp, MaterialTheme.colors.primary.copy(
+                            alpha = if (enabled) 1f else 0.38f
+                        )
+                    ), enabled = sendEnabled && comment.isNotBlank(), onClick = {
+                        onCommentSent()
+                        keyboardController?.hide()
+                    }) {
+                        Text(text = stringResource(resource = SharedRes.strings.story_detail__send_reply))
+                    }
+                },
+                textStyle = Typography.body1,
+                placeholder = {
+                    Text(
+                        text = stringResource(resource = SharedRes.strings.story_detail__reply),
+                        modifier = Modifier.align(CenterVertically),
+                        style = Typography.body1,
                     )
-                ), modifier = Modifier.padding(4.dp), onClick = {
-                    onCommentSent()
-                    keyboardController?.hide()
-                }) {
-                    Text(text = stringResource(resource = SharedRes.strings.story_detail__send_reply))
                 }
-            }, textStyle = Typography.body1, placeholder = {
-
-                Text(
-                    text = stringResource(resource = SharedRes.strings.story_detail__reply),
-                    modifier = Modifier.align(CenterVertically),
-                    style = Typography.body1,
-                )
-            })
+            )
         }
     }
 }

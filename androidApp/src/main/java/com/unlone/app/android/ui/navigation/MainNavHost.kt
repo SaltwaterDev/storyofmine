@@ -64,6 +64,7 @@ fun MainNavHost(
                 appState.navigateToBottomBarRoute(UnloneBottomDestinations.Stories.route)
             },
         )
+
         storiesGraph(navController, navigateUp)
         profileGraph(navController, navigateUp)
 

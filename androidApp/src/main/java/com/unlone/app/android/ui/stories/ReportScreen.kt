@@ -126,8 +126,8 @@ fun ReportScreen(
                 if (state.selectedReportReason != null || state.otherReportReason.isNotBlank()) {
                     showConfirmDialog = true
                 } else {
-                    // fixme
-//                    errorDialogShow.value = stringResource(resource = SharedRes.strings.report__no_reason_warning)
+                // FIXME:
+                //  errorDialogShow.value = stringResource(resource = SharedRes.strings.report__no_reason_warning)
                 }
             }) {
             Text(stringResource(resource = SharedRes.strings.common__btn_submit))

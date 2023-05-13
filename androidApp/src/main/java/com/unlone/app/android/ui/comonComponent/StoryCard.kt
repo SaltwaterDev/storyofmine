@@ -44,7 +44,6 @@ fun StoryCard(
             )
 
             var bodyLineCount = 1
-
             Text(
                 text = content + "\n".repeat((bodyMaxLines - bodyLineCount)),
                 modifier = Modifier

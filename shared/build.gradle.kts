@@ -11,7 +11,6 @@ plugins {
     id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
     id("com.android.library")
     id("co.touchlab.crashkios.crashlyticslink") version "0.8.2"
-//    id("org.jetbrains.kotlin.android")
     jacoco
 }
 
@@ -144,15 +143,12 @@ dependencies {
 multiplatformResources {
     multiplatformResourcesPackage = "org.example.library" // requiredcommonClientMainViperphD
     multiplatformResourcesClassName = "SharedRes" // optional, default MR
-//    multiplatformResourcesVisibility = dev.icerock.gradle.MRVisibility.Internal // optional, default Public
     iosBaseLocalizationRegion = "en" // optional, default "en"
-//    multiplatformResourcesSourceSet = "commonClientMain"  // optional, default "commonMain"
 }
 
 buildkonfig {
     packageName = "com.unlone.app"
     objectName = "UnloneConfig"
-//     exposeObjectWithName = "YourAwesomePublicConfig"
 
     defaultConfigs {
         buildConfigField(STRING, "baseUrl", "https://unlone-ktor-dev-mpejb4b6eq-an.a.run.app")

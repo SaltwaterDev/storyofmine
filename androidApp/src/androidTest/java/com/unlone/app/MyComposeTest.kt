@@ -30,7 +30,6 @@ class MyComposeTest {
         }
 
 //        composeTestRule.onNodeWithText("Continue").performClick()
-//
 //        composeTestRule.onNodeWithText("Welcome").assertIsDisplayed()
     }
 }
