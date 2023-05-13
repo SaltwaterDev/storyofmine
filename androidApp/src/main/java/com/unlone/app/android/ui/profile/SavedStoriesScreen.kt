@@ -52,7 +52,7 @@ fun SavedStoriesScreen(
                     "${it.dayOfMonth}/${it.monthNumber}/${it.year}"
                 }
 
-                formattedDateTime?.let { Text(text = it, style = Typography.subtitle1) }
+                Text(text = formattedDateTime ?: "", style = Typography.subtitle1)
                 StoryCard(
                     title = simpleStory.title,
                     content = simpleStory.content,
