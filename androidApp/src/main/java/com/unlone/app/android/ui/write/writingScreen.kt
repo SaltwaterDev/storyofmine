@@ -144,7 +144,6 @@ fun WritingScreen(
                                 modalBottomSheetState.hide()
                         }
                     },
-                    post = onPostBtnClick
                 )
             },
             drawerContent = {
@@ -209,7 +208,7 @@ fun WritingScreen(
                                 }
                                 .imePadding(),
                             { loadGalleryLauncher.launch("image/*") },
-                            { scope.launch { viewModel.getDisplayingQuestion() } })
+                            { })
                     }
                 }
 
@@ -221,29 +220,6 @@ fun WritingScreen(
                         launch { keyboardController?.hide() }
                     }
                 }
-
-                if (showPostingDialog)
-                    PostingDialog(
-                        uiState.topicList,
-                        uiState.selectedTopic,
-                        viewModel.setTopic,
-                        { showPostingDialog = false },
-                        uiState.isPublished,
-                        uiState.commentAllowed,
-                        uiState.saveAllowed,
-                        viewModel::setPublished,
-                        viewModel::setCommentAllowed,
-                        viewModel::setSaveAllowed,
-                        openPreviewFromPostingDialog,
-                        {
-                            viewModel.postStory()
-                            showPostingDialog = false
-                        },
-                    )
-
-
-                if (uiState.storyPosting)
-                    StoryPostingLoadingIndicator(Modifier.align(Alignment.Center))
 
                 uiState.error?.let {
                     AlertDialog(

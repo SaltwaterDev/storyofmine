@@ -6,21 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlone.app.android.ui.write.WritingUiState
-import com.unlone.app.data.auth.AuthRepository
 import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.data.story.StoryResult
-import com.unlone.app.data.story.TopicRepository
 import com.unlone.app.data.write.DraftRepository
 import com.unlone.app.data.write.GuidingQuestion
-import com.unlone.app.data.write.GuidingQuestionsRepository
-import com.unlone.app.data.write.StaticResourceResult
-import com.unlone.app.domain.useCases.auth.IsUserSignedInUseCase
 import com.unlone.app.domain.useCases.write.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
-import kotlin.time.Duration.Companion.seconds
 
 private class MutableWritingUiState : WritingUiState {
     override var body: String by mutableStateOf("")
@@ -50,13 +44,9 @@ class WritingViewModel(
     private val createNewDraftUseCase: CreateNewDraftUseCase,
     private val getAllDraftsTitleUseCase: GetAllDraftsTitleUseCase,
     private val getLastOpenedDraftUseCase: GetLastOpenedDraftUseCase,
-    private val isUserSignedInUseCase: IsUserSignedInUseCase,
     private val queryDraftUseCase: QueryDraftUseCase,
-    private val postStoryUseCase: PostStoryUseCase,
-    private val topicRepository: TopicRepository,
     private val saveDraftUseCase: SaveDraftUseCase,
     private val draftRepository: DraftRepository,
-    private val guidingQuestionsRepository: GuidingQuestionsRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableWritingUiState()
@@ -73,22 +63,7 @@ class WritingViewModel(
     ) = withContext(Dispatchers.Main) {
 
         _uiState.loading = true
-        _uiState.guidingQuestion = listOf()
-        guidingQuestionIterator = null
 
-        if (networkAvailable) {
-            launch { getTopicList() }
-            launch {
-                isUserSignedInUseCase().catch { e ->
-                    _uiState.error = e.message
-                }.collect {
-                    _uiState.isUserSignedIn = it
-                }
-            }
-            launch {
-                _uiState.guidingQuestion = loadGuidingQuestions()
-            }
-        }
 
         launch {
             try {
@@ -227,90 +202,6 @@ class WritingViewModel(
         _uiState.saveAllowed = saveAllowed
     }
 
-    fun postStory() = viewModelScope.launch {
-        _uiState.storyPosting = true
-        Timber.d("${uiState.title} ${uiState.body}")
-        val result = postStoryUseCase(
-            uiState.title,
-            uiState.body,
-            uiState.selectedTopic,
-            uiState.isPublished,
-            uiState.commentAllowed,
-            uiState.saveAllowed,
-        )
-        when (result) {
-            is StoryResult.Success -> {
-                uiState.currentDraftId?.let { deleteDraft(it) } ?: createNewDraft()
-                _uiState.postSucceedStory = result.data
-                _uiState.postSuccess = true
-            }
-            is StoryResult.Failed -> {
-                result.exception?.let { ex ->
-                    if (ex is PublishStoryException) {
-                        _uiState.postStoryError = ex
-                    }
-                }
-            }
-            is StoryResult.UnknownError -> _uiState.error = result.errorMsg
-        }
-        _uiState.storyPosting = false
-        Timber.d(result.data)
-    }
-
-    val setTopic = { topic: String -> _uiState.selectedTopic = topic }
-
-    private suspend fun getTopicList() {
-        when (val result = topicRepository.getAllTopic()) {
-            is StoryResult.Success -> {
-                result.data?.map { topic -> topic.name }?.let {
-                    _uiState.topicList = it
-                }
-            }
-            is StoryResult.Failed -> {
-                /*todo*/
-            }
-            is StoryResult.UnknownError -> {
-                /*todo*/
-            }
-        }
-    }
-    // endregion
-
-    // region guiding question
-    private suspend fun loadGuidingQuestions(): List<GuidingQuestion> {
-        return when (val result = guidingQuestionsRepository.getGuidingQuestionList()) {
-            is StaticResourceResult.Success -> result.data ?: listOf()
-            is StaticResourceResult.Failed -> {
-                _uiState.error = result.errorMsg
-                listOf()
-            }
-            is StaticResourceResult.UnknownError -> {
-                listOf()
-            }
-        }
-    }
-
-
-    private var guidingQuestionIterator: ListIterator<GuidingQuestion>? =
-        uiState.guidingQuestion.listIterator()
-    private var dismissQuestionJob: Job? = null
-    suspend fun getDisplayingQuestion() {
-        if (guidingQuestionIterator?.hasNext() != true) {
-            // reset the iterator
-            guidingQuestionIterator = uiState.guidingQuestion.listIterator()
-        }
-
-        dismissQuestionJob?.cancelAndJoin()
-        dismissQuestionJob = viewModelScope.launch {
-            delay(6.seconds)
-            _uiState.displayingGuidingQuestion = null
-        }
-
-        if (guidingQuestionIterator?.hasNext() == true) {
-            _uiState.displayingGuidingQuestion = guidingQuestionIterator!!.next()
-        }
-    }
-    // endregion
 
 
     fun cleanUpState() {

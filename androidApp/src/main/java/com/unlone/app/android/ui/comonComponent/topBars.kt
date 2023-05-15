@@ -29,7 +29,6 @@ fun WriteScreenTopBar(
     modifier: Modifier = Modifier,
     openOptions: () -> Unit,
     openPreview: () -> Unit,
-    post: () -> Unit,
 ) {
 
     val squareSize = 60.dp
@@ -77,9 +76,6 @@ fun WriteScreenTopBar(
             TextButton(onClick = openPreview) {
                 Text(text = stringResource(resource = SharedRes.strings.writing__preview))
             }
-            IconButton(onClick = post) {
-                Icon(Icons.Rounded.Publish, contentDescription = "post")
-            }
         }
     }
 }
@@ -87,7 +83,7 @@ fun WriteScreenTopBar(
 @Preview
 @Composable
 fun WriteScreenTopBarPreview() {
-    WriteScreenTopBar(Modifier, {}, {}, {})
+    WriteScreenTopBar(Modifier, {}, {})
 }
 
 @Composable

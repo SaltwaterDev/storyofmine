@@ -57,7 +57,7 @@ fun NavGraphBuilder.writeGraph(
                 draftIdArg = it.arguments?.getString(OptionalDraftArg),
                 versionArg = it.arguments?.getString(OptionalVersionArg),
                 navToEditHistory = { id -> navToEditHistory(navController, id) },
-                navToSignIn = { navigateToSignUp(navController) },
+                navToSignIn = {  },
                 onPostSucceed = { navToStories() },
             )
         }

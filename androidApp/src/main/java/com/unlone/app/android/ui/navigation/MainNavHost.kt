@@ -47,27 +47,12 @@ fun MainNavHost(
 
         // todo: Add on-boarding Screens
 
-        authGraph(
-            navController,
-            onSigninOrSignupFinished = { lastRoute ->
-                navController.popBackStack(
-                    route = lastRoute,
-                    inclusive = true,
-                    saveState = false
-                )
-            },
-        )
-
         writeGraph(
             navController,
             navToStories = {
                 appState.navigateToBottomBarRoute(UnloneBottomDestinations.Stories.route)
             },
         )
-
-        storiesGraph(navController, navigateUp)
-        profileGraph(navController, navigateUp)
-
     }
 }
 

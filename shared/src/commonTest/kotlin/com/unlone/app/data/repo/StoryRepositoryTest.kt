@@ -1,6 +1,5 @@
 package com.unlone.app.data.repo
 
-import com.unlone.app.data.auth.AuthRepositoryImpl
 import com.unlone.app.data.repo.mockObjects.MockAuthApi
 import com.unlone.app.data.repo.mockObjects.MockKmmPreference
 import com.unlone.app.data.repo.mockObjects.MockStoryApi

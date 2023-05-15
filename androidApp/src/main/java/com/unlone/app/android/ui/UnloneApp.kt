@@ -39,13 +39,7 @@ fun UnloneApp() {
 
         Scaffold(
             scaffoldState = appState.scaffoldState,
-            bottomBar = {
-                Timber.d("UnloneApp: " + appState.navBackStackEntry.value?.destination)
-                AnimatedVisibility(visible = appState.shouldShowBottomBar,
-                    enter = slideInVertically(initialOffsetY = { it }),
-                    exit = slideOutVertically(targetOffsetY = { it }),
-                    content = { UnloneBottomBar(appState = appState) })
-            }) {
+        ) {
             val contentPadding by animateDpAsState(it.calculateBottomPadding())
 
             MainNavHost(

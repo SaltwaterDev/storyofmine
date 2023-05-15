@@ -2,9 +2,7 @@ package com.unlone.app.domain.write
 
 import com.unlone.app.data.story.PublishStoryException
 import com.unlone.app.data.story.StoryResult
-import com.unlone.app.domain.MockAuthRepository
 import com.unlone.app.domain.MockStoryRepository
-import com.unlone.app.domain.useCases.write.PostStoryUseCase
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
