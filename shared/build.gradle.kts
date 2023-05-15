@@ -127,7 +127,7 @@ android {
         minSdk = ConfigData.minSdkVersion
         targetSdk = ConfigData.targetSdkVersion
     }
-    namespace = "com.unlone.app"
+    namespace = "com.example.app"
 }
 
 

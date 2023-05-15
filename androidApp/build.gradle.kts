@@ -3,15 +3,13 @@ plugins {
     kotlin("android")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
 }
 
 android {
     compileSdk = ConfigData.compileSdkVersion
     defaultConfig {
-        applicationId = "com.unlone.app.android"
+        applicationId = "com.example.app.android"
         minSdk = ConfigData.minSdkVersion
         targetSdk = ConfigData.targetSdkVersion
         versionCode = ConfigData.versionCode
@@ -37,7 +35,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.composeCompiler
     }
-    namespace = "com.unlone.app.android"
+    namespace = "com.example.app.android"
 }
 
 dependencies {
@@ -96,11 +94,6 @@ dependencies {
 
     // compose markdown
     implementation("com.github.jeziellago:compose-markdown:0.3.0")
-
-    // firebase
-    implementation(platform("com.google.firebase:firebase-bom:31.2.2"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
 
 
     with(Koin) {

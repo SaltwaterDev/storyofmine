@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.unlone.app.android.MainApplication"
+        android:name="com.example.app.android.MainApplication"
         android:usesCleartextTraffic="true"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:label="Unlone"
+        android:label="My Stories"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.unlone.app.android.MainActivity"
+            android:name="com.example.app.android.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
