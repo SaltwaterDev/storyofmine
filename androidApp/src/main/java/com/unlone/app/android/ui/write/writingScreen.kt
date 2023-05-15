@@ -3,18 +3,13 @@ package com.unlone.app.android.ui.write
 import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.snap
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
@@ -51,7 +46,6 @@ fun WritingScreen(
     val screenState =
         rememberWritingScreenState(bodyText = uiState.body, setBodyText = viewModel.setBody)
 
-    val density = LocalDensity.current
     val networkState by connectivityState()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -116,7 +110,6 @@ fun WritingScreen(
 
     ModalBottomSheetLayout(
         modifier = Modifier
-            .background(Color.Red)
             .displayCutoutPadding()
             .statusBarsPadding(),
         sheetContent = {
@@ -194,32 +187,6 @@ fun WritingScreen(
                         )
                 )
 
-                Crossfade(
-                    targetState = isKeyboardVisible,
-                    modifier = Modifier.align(Alignment.BottomStart),
-                    animationSpec = snap()
-                ) {
-                    if (isKeyboardVisible) {
-                        WritingScreenToolBar(
-                            Modifier
-                                .onGloballyPositioned {
-                                    val height = it.size.height
-                                    toolbarHeight = with(density) { height.toDp() }
-                                }
-                                .imePadding(),
-                            { loadGalleryLauncher.launch("image/*") },
-                            { })
-                    }
-                }
-
-
-                val openPreviewFromPostingDialog: () -> Unit = {
-                    scope.launch {
-                        launch { modalBottomSheetState.show() }
-                        launch { showPostingDialog = false }
-                        launch { keyboardController?.hide() }
-                    }
-                }
 
                 uiState.error?.let {
                     AlertDialog(
