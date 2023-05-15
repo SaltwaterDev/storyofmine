@@ -5,8 +5,6 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 
 
-const val SP_NAME = "unlone_app"
-
 actual fun KMMContext.putInt(key: String, value: Int) {
     getSpEditor().putInt(key, value).apply()
 }

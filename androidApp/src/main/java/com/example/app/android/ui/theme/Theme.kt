@@ -26,7 +26,7 @@ private val LightColorScheme = lightColors(
 )
 
 @Composable
-fun UnloneTheme(
+fun MyStoriesTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

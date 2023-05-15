@@ -8,8 +8,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.app.android.ui.MyStoriesAppState
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
-import com.example.app.android.ui.UnloneAppState
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.nanoseconds
 
@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.nanoseconds
 )
 @Composable
 fun MainNavHost(
-    appState: UnloneAppState,
+    appState: MyStoriesAppState,
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
 ) {
@@ -39,7 +39,7 @@ fun MainNavHost(
             LaunchedEffect(Unit) {
                 delay(duration = 1.nanoseconds)
                 navigateUp()
-                navController.navigate(UnloneBottomDestinations.Write.routeWithArgs)
+                navController.navigate(MyStoriesBottomDestinations.Write.routeWithArgs)
             }
         }
 
@@ -47,9 +47,7 @@ fun MainNavHost(
 
         writeGraph(
             navController,
-            navToStories = {
-                appState.navigateToBottomBarRoute(UnloneBottomDestinations.Stories.route)
-            },
+            navToStories = {},
         )
     }
 }

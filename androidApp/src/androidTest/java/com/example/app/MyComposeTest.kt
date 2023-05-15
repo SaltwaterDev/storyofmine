@@ -3,7 +3,7 @@ package com.example.app
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.test.junit4.createComposeRule
-import com.example.app.android.ui.UnloneApp
+import com.example.app.android.ui.MyStoriesApp
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
@@ -24,7 +24,7 @@ class MyComposeTest {
     fun myTest() {
         // Start the app
         composeTestRule.setContent {
-            UnloneApp()
+            MyStoriesApp()
         }
 
 //        composeTestRule.onNodeWithText("Continue").performClick()

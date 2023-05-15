@@ -13,8 +13,8 @@ internal class UserPreferenceRepositoryTest: FunSpec({
     test("setLocale"){
         val userPreferenceRepository = UserPreferenceRepositoryImpl(prefs)
         userPreferenceRepository.setLocale()
-        userPreferenceRepository.setLocale(com.example.app.data.userPreference.UnloneLocale.Zh)
-        userPreferenceRepository.setLocale(com.example.app.data.userPreference.UnloneLocale.En)
+        userPreferenceRepository.setLocale(com.example.app.data.userPreference.MyStoriesLocale.Zh)
+        userPreferenceRepository.setLocale(com.example.app.data.userPreference.MyStoriesLocale.En)
     }
 
     test("getLocale"){

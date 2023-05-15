@@ -148,35 +148,12 @@ multiplatformResources {
 
 buildkonfig {
     packageName = "com.unlone.app"
-    objectName = "UnloneConfig"
+    objectName = "MyStoriesConfig"
 
-    defaultConfigs {
-        buildConfigField(STRING, "baseUrl", "https://unlone-ktor-dev-mpejb4b6eq-an.a.run.app")
-    }
-    // flavor is passed as a first argument of defaultConfigs
-    defaultConfigs("staging") {
-        buildConfigField(STRING, "baseUrl", "https://unlone-staging-dot-unlone.an.r.appspot.com/")
-    }
-
-    // flavor is passed as a first argument of defaultConfigs
-    defaultConfigs("prod") {
-        buildConfigField(STRING, "baseUrl", "https://unlone.an.r.appspot.com")
-    }
+    defaultConfigs {}
 }
 
 jacoco {
     toolVersion = "0.8.8"
     reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir")) // optional
 }
-
-//tasks.jacocoTestReport {
-//    dependsOn(tasks.test)
-//    reports {
-//        xml.required.set(true)
-//    }
-//}
-//
-//tasks.test {
-////    ...
-//    finalizedBy(tasks.jacocoTestReport)
-//}

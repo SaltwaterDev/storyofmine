@@ -7,44 +7,38 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.*
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.example.app.android.ui.navigation.UnloneBottomDestinations
 import com.example.app.domain.entities.NetworkState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import timber.log.Timber
 
 
 /**
- * Remembers and creates an instance of [UnloneAppState]
+ * Remembers and creates an instance of [MyStoriesAppState]
  */
 @ExperimentalAnimationApi
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun rememberUnloneAppState(
+fun rememberMyStoriesAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberAnimatedNavController(),
 ) =
     remember(scaffoldState, navController) {
-        UnloneAppState(scaffoldState, navController)
+        MyStoriesAppState(scaffoldState, navController)
     }
 
 /**
- * Responsible for holding state related to [UnloneApp] and containing UI-related logic.
+ * Responsible for holding state related to [MyStoriesApp] and containing UI-related logic.
  */
 @ExperimentalLayoutApi
 @Stable
-class UnloneAppState(
+class MyStoriesAppState(
     val scaffoldState: ScaffoldState,
     val navController: NavHostController,
 ) {
@@ -53,53 +47,10 @@ class UnloneAppState(
     // BottomBar state source of truth
     // ----------------------------------------------------------
 
-    val bottomBarTabs = UnloneBottomDestinations.values()
-
-    // Reading this attribute will cause recompositions when the bottom bar needs shown, or not.
-    // Not all routes need to show the bottom bar.
-    val shouldShowBottomBar: Boolean
-        @Composable get() = !WindowInsets.isImeVisible &&
-                bottomBarTabs.any { batTab ->
-                    currentRoute?.startsWith(batTab.route) ?: false
-                }
-
-    // ----------------------------------------------------------
-    // Navigation state source of truth
-    // ----------------------------------------------------------
-
-    // Subscribe to navBackStackEntry, required to get current route
-    val navBackStackEntry: State<NavBackStackEntry?>
-        @Composable get() = navController.currentBackStackEntryAsState()
-
-    val currentRoute: String?
-        get() = navController.currentDestination?.route
-
     fun upPress() {
         navController.navigateUp()
     }
 
-    fun navigateToBottomBarRoute(route: String) {
-        Timber.d("navigateToBottomBarRoute: $currentRoute, $route")
-        navController.navigate(route) {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            // Avoid multiple copies of the same destination when
-            // reselecting the same item
-            launchSingleTop = true
-            // Restore state when reselecting a previously selected item
-            restoreState = true
-        }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val shouldShowNoNetworkSnackBar: Boolean
-        @Composable get() {
-            return connectivityState().value != NetworkState.Available
-        }
 
 }
 

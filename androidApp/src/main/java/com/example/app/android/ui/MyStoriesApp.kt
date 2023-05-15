@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.app.android.ui.navigation.MainNavHost
-import com.example.app.android.ui.theme.UnloneTheme
+import com.example.app.android.ui.theme.MyStoriesTheme
 import dev.icerock.moko.resources.compose.stringResource
 import org.example.library.SharedRes
 
@@ -20,10 +20,10 @@ import org.example.library.SharedRes
 @ExperimentalMaterialApi
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun UnloneApp() {
+fun MyStoriesApp() {
 
-    UnloneTheme {
-        val appState = rememberUnloneAppState()
+    MyStoriesTheme {
+        val appState = rememberMyStoriesAppState()
 
         Scaffold(
             scaffoldState = appState.scaffoldState,

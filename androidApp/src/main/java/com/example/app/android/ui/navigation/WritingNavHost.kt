@@ -30,13 +30,13 @@ fun NavGraphBuilder.writeGraph(
 ) {
 
     navigation(
-        route = UnloneBottomDestinations.Write.name,
-        startDestination = UnloneBottomDestinations.Write.routeWithArgs,
+        route = "write",
+        startDestination = MyStoriesBottomDestinations.Write.routeWithArgs,
     ) {
 
         composable(
-            route = UnloneBottomDestinations.Write.routeWithArgs,
-            arguments = UnloneBottomDestinations.Write.arguments
+            route = MyStoriesBottomDestinations.Write.routeWithArgs,
+            arguments = MyStoriesBottomDestinations.Write.arguments
         ) {
 
             val viewModelStoreOwner = remember { navController.getBackStackEntry("main") }
@@ -76,6 +76,6 @@ fun navToWrite(
     draftId: String? = null,
     version: String? = null,
 ) {
-    if (draftId != null && version != null) navController.navigate("${UnloneBottomDestinations.Write.route}?${OptionalDraftArg}=${draftId}&${OptionalVersionArg}=${version}")
-    else navController.navigate(UnloneBottomDestinations.Write.route)
+    if (draftId != null && version != null) navController.navigate("${MyStoriesBottomDestinations.Write.route}?${OptionalDraftArg}=${draftId}&${OptionalVersionArg}=${version}")
+    else navController.navigate(MyStoriesBottomDestinations.Write.route)
 }
