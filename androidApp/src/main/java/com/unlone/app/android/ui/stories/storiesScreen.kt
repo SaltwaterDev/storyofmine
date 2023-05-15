@@ -1,118 +1,167 @@
 package com.unlone.app.android.ui.stories
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.items
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.unlone.app.android.ui.comonComponent.TopicTable
+import com.unlone.app.android.ui.connectivityState
+import com.unlone.app.android.ui.theme.NotoSansHKFontFamily
 import com.unlone.app.android.viewmodel.StoriesViewModel
-import com.unlone.app.model.LoungePost
-import com.unlone.app.ui.comonComponent.HorizontalScrollPosts
-import timber.log.Timber
+import com.unlone.app.domain.entities.NetworkState
+import com.unlone.app.domain.entities.StoryItem
+import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.example.library.SharedRes
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun StoriesScreen(
     viewModel: StoriesViewModel,
-    navToPostDetail: (String) -> Unit = {},
-    navToTopicPosts: () -> Unit = {},
-    navToAuthGraph: () -> Unit = {},
+    navToStoryDetail: (String) -> Unit = {},
+    navToTopicPosts: (String) -> Unit = {},
+    navToFullTopic: () -> Unit = {},
+    navToSignIn: () -> Unit = {},
+    navToSignUp: () -> Unit = {},
 ) {
-
     val state by viewModel.state.collectAsState()
+    val networkState by connectivityState()
 
-    if (!state.loading) {
-        if (!state.isUserLoggedIn)
-            Box(Modifier.fillMaxSize()) {
-                LoginInPrompt(Modifier.align(Alignment.Center), navToAuthGraph)
-            }
-        else {
-            Scaffold() { innerPadding ->
+    val storiesByTopics = viewModel.storiesByTopics
+    val listState = storiesByTopics.rememberLazyListState()
+
+    val refreshState =
+        rememberSwipeRefreshState(storiesByTopics.loadState.refresh is LoadState.Loading)
+
+    LaunchedEffect(networkState) {
+        viewModel.checkAuth()
+        if (networkState is NetworkState.Available)
+            storiesByTopics.refresh()
+    }
+
+
+    if (state.isUserLoggedIn) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
+            SwipeRefresh(state = refreshState, onRefresh = storiesByTopics::refresh) {
                 LazyColumn(
-                    Modifier.padding(innerPadding)
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    state = listState
                 ) {
+
                     item {
+                        Spacer(modifier = Modifier.height(30.dp))
                         Text(
-                            text = "Hello",
-                            modifier = Modifier.padding(15.dp, 40.dp),
+                            text = stringResource(
+                                resource = SharedRes.strings.stories_header_greeting,
+                                state.username ?: ""
+                            ),
+                            modifier = Modifier
+                                .padding(16.dp, 40.dp)
+                                .placeholder(
+                                    visible = state.loading,
+                                    highlight = PlaceholderHighlight.fade()
+                                ),
                             fontSize = 30.sp,
-                            fontWeight = FontWeight.SemiBold
+                            fontFamily = NotoSansHKFontFamily,
+                            fontWeight = FontWeight.Medium
                         )
                     }
 
-                    state.postsByTopics?.let { posts ->
-                        items(posts) {
-                            PostsByTopic(it.topic, it.posts, navToTopicPosts) { pid ->
-                                navToPostDetail(pid)
+                    items(storiesByTopics,
+                        key = { if (it is StoryItem.TopicTable) it.topics else it.hashCode() }
+                    ) {
+                        when (it) {
+                            is StoryItem.TopicTable -> {
+                                TopicTable(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .padding(bottom = 8.dp),
+                                    topics = it.topics,
+                                    onTopicClick = navToTopicPosts,
+                                    viewMoreTopic = navToFullTopic,
+                                )
                             }
-                            Spacer(modifier = Modifier.height(30.dp))
+                            is StoryItem.StoriesByTopic -> {
+                                PostsByTopic(
+                                    it.topic,
+                                    state.loading,
+                                    it.stories,
+                                    viewMorePost = { navToTopicPosts(it.topic) },
+                                    navToPostDetail = { sid -> navToStoryDetail(sid) }
+                                )
+                                Spacer(modifier = Modifier.height(30.dp))
+                            }
+                            is StoryItem.UnknownError -> {
+//                                todo: make use of its error Msg
+                            }
+                            null -> {
+//                                todo: maybe do nothing?
+                            }
                         }
                     }
                 }
             }
         }
-    }
-}
 
-@Composable
-fun PostsByTopic(
-    title: String,
-    posts: List<LoungePost>,
-    viewMorePost: () -> Unit,
-    navToPostDetail: (String) -> Unit
-) {
-    BoxWithConstraints {
-        Column {
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .padding(start = 15.dp),
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Text(
-                    text = title,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Text(
-                    text = "Show more",
-                    fontSize = 10.sp,
-                    modifier = Modifier
-                        .padding(end = 15.dp)
-                        .clickable { viewMorePost() },
-                    color = Color.Black.copy(0.6f)
-                )
-            }
-
-            HorizontalScrollPosts(
-                modifier = Modifier.width(this@BoxWithConstraints.maxWidth.times(0.95f)),
-                posts
-            ) { navToPostDetail(it) }
+        state.errorMsg?.let {
+            AlertDialog(
+                onDismissRequest = viewModel::dismissError,
+                title = { Text(text = it) },
+                confirmButton = {
+                    Button(onClick = viewModel::dismissError) {
+                        Text(text = stringResource(resource = SharedRes.strings.common__btn_confirm))
+                    }
+                }
+            )
+        }
+    } else {
+        Box(Modifier.fillMaxSize()) {
+            LoginInPrompt(Modifier.align(Alignment.Center), navToSignIn, navToSignUp)
         }
     }
 }
 
-
 @Composable
-fun LoginInPrompt(modifier: Modifier, navToAuth: () -> Unit) {
+fun LoginInPrompt(modifier: Modifier, navToSignIn: () -> Unit, navToSignUp: () -> Unit) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Sign up to see other stories")
-        Button(onClick = navToAuth) {
-            Text(text = "SignUp")
+        Text(text = stringResource(resource = SharedRes.strings.stories_auth_required_title))
+        Button(onClick = navToSignUp, modifier = Modifier.padding(top = 26.dp)) {
+            Text(text = stringResource(resource = SharedRes.strings.common__btn_sign_up))
         }
+        OutlinedButton(onClick = navToSignIn, modifier = Modifier) {
+            Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in_instead))
+        }
+    }
+}
+
+
+@Composable
+fun <T : Any> LazyPagingItems<T>.rememberLazyListState(): LazyListState {
+    // After recreation, LazyPagingItems first return 0 items, then the cached items.
+    // This behavior/issue is resetting the LazyListState scroll position.
+    // Below is a workaround. More info: https://issuetracker.google.com/issues/177245496.
+    return when (itemCount) {
+        // Return a different LazyListState instance.
+        0 -> remember(this) { LazyListState(0, 0) }
+        // Return rememberLazyListState (normal case).
+        else -> androidx.compose.foundation.lazy.rememberLazyListState()
     }
 }

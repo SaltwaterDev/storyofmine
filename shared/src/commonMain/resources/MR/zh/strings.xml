@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="my_string">DLLMCH</string>
+
+    <string name="bottom_nav_bar_label__write">隨心寫</string>
+    <string name="bottom_nav_bar_label__stories">故事</string>
+    <string name="bottom_nav_bar_label__profile">關於你</string>
+
+    <string name="sign_in__title">登入</string>
+    <string name="sign_in__btn_sign_in">登入</string>
+    <string name="sign_in__btn_sign_in_instead">我想登入</string>
+
+    <string name="sign_up__title">創建帳戶</string>
+    <string name="sign_up__email_already_used">此電郵已被註冊</string>
+    <string name="sign_up__pw_tips">你的密碼必須包含一個或以上的大階字母，細階字母和數字</string>
+    <string name="sign_up__pw_and_confirm_pw_not_same">密碼與確係密碼不相同</string>
+
+    <string name="otp__send_email">驗證碼將會傳送到這電郵:</string>
+    <string name="otp__btn_Send">傳送</string>
+    <string name="otp__enter_otp">輸入驗證碼</string>
+
+    <string name="set_username__username">用戶名稱</string>
+    <string name="set_username__title">你已成功驗證！請輸入你的用戶名稱</string>
+
+    <string name="writing__option_drawer_title">選項</string>
+    <string name="writing__option_drawer_draft_title">草稿</string>
+    <string name="writing__edit_history">修改歷史</string>
+    <string name="writing__placeholder">無標題</string>
+    <string name="writing__new_draft">新草稿</string>
+    <string name="writing__preview">預覽</string>
+    <string name="writing__untitled">無標題</string>
+    <string name="writing__topic">主題</string>
+    <string name="writing__post_to_public">公開</string>
+    <string name="writing__open_comment">允許留言</string>
+    <string name="writing__savable">允許他人收藏</string>
+    <string name="writing__btn_post">發佈</string>
+    <string name="writing__set_topic_label">選擇/創建主題</string>
+    <string name="writing__sign_in_required_title">請先登入</string>
+    <string name="writing__sign_in_required_text">你需要登入以發佈故事</string>
+    <string name="writing__posting">發佈中</string>
+    <string name="writing__clear">清除</string>
+    <string name="writing__post_success">已發佈！</string>
+
+    <string name="saved_stories_title">收藏</string>
+
+    <string name="stories_auth_required_title">註冊以觀閱更多故事</string>
+    <string name="stories_header_greeting">哈囉 %s!</string>
+    <string name="stories_show_more">更多</string>
+
+    <string name="story_detail__reply">回覆...</string>
+    <string name="story_detail__send_reply">傳送</string>
+
+    <string name="profile__my_stories">我的故事</string>
+    <string name="profile__saved">收藏</string>
+    <string name="profile__settings">設定</string>
+    <string name="profile__help">幫助</string>
+    <string name="profile__rules">用戶守則</string>
+    <string name="profile__sign_out">登出</string>
+    <string name="profile__sign_out_alert_title">你確定要登出嗎？</string>
+    <string name="profile__btn_sign_out">登出</string>
+
+    <string name="edit_history_title">修改歷史</string>
+
+    <string name="rules__title">用戶守則</string>
+
+    <string name="settings_title">設定</string>
+    <string name="settings_language">語言</string>
+    <string name="settings_lang_zh">中文</string>
+    <string name="settings_lang_en">English</string>
+
+    <string name="my_stories_title">我的故事</string>
+
+    <string name="report__title">請列明舉報原因</string>
+    <string name="report__no_reason_warning">你仍未選擇舉報原因</string>
+    <string name="report__confirm_title">你將以 \'%s\' 舉報</string>
+
+    <string name="common__attention">注意</string>
+    <string name="common__email">電郵</string>
+    <string name="common__confirm_password">確認密碼</string>
+    <string name="common__password">密碼</string>
+    <string name="common__report">舉報</string>
+    <string name="common__network_unavailable_warning">無法連線，請查看你的網絡狀態</string>
+    <string name="common__error">錯誤</string>
+    <string name="common__warning">警告</string>
+    <string name="common__unknown_error">未知錯誤</string>
+    <string name="common__back">返回</string>
+    <string name="common__warning">警告</string>
+    <string name="common__topic">主題</string>
+    <string name="common__username">用戶名稱</string>
+    <string name="common__btn_next">下一步</string>
+    <string name="common__btn_confirm">確認</string>
+    <string name="common__btn_finish">完成</string>
+    <string name="common__btn_cancel">取消</string>
+    <string name="common__btn_sign_in">登入</string>
+    <string name="common__btn_sign_up">註冊</string>
+    <string name="common__btn_submit">提交</string>
+    <string name="common__btn_follow">追蹤</string>
+    <string name="common__btn_following">追蹤中</string>
+    <string name="common__btn_retry">重試</string>
+    <string name="common__oops">哎吔</string>
+
+    <string name="error__publish_story_empty_topic">請先設定主題</string>
+    <string name="error__publish_story_empty_title_or_body">標題和內文不可以空白的</string>
+
+</resources>

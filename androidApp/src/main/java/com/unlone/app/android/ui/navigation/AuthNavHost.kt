@@ -1,18 +1,23 @@
 package com.unlone.app.android.ui.navigation
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.unlone.app.android.ui.auth.SignUpEmailScreen
-import com.unlone.app.android.ui.auth.SignUpPwScreen
+import androidx.navigation.navArgument
 import com.unlone.app.android.ui.auth.signin.SignInEmailScreen
 import com.unlone.app.android.ui.auth.signin.SignInPasswordScreen
+import com.unlone.app.android.ui.auth.signup.EmailVerificationScreen
+import com.unlone.app.android.ui.auth.signup.SetUsernameScreen
+import com.unlone.app.android.ui.auth.signup.SignUpScreen
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.viewmodel.SignUpViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.koin.androidx.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 enum class AuthNav {
@@ -21,49 +26,81 @@ enum class AuthNav {
 }
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
+@ExperimentalAnimationApi
 @OptIn(InternalCoroutinesApi::class)
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
-    onSigninOrSignupFinished: () -> Unit,
+    onSigninOrSignupFinished: (String) -> Unit,
 ) {
 
-    navigation(AuthNav.SignUp.name, route = "auth") {
 
+    navigation(
+        route = "auth",
+        startDestination = AuthNav.SignUp.name,
+        arguments = listOf(navArgument("lastRoute") { type = NavType.StringType })
+    ) {
+
+        val lastRoute = "auth"
 
         composable(AuthNav.SignUp.name) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignUpViewModel>(viewModelStoreOwner = viewModelStoreOwner)
 
-            SignUpEmailScreen(
+            SignUpScreen(
+                back = {navController.popBackStack() },
                 viewModel = viewModel,
-                onEmailConfirmed = { navigateToSignUpPassword(navController) },
-            ) { navigateToSignInEmail(navController) }
+                navToSendEmailOtp = { navigateToEmailVerification(navController) },
+                navToSignIn = { navigateToSignInEmail(navController) }
+            )
         }
-
-        composable(AuthNav.SignUp.name + "/password") {
+        composable(AuthNav.SignUp.name + "/setUsername") {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignUpViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignUpViewModel>(viewModelStoreOwner = viewModelStoreOwner)
 
-            SignUpPwScreen(
+            SetUsernameScreen(
                 viewModel = viewModel,
-                onSignupSuccess = onSigninOrSignupFinished,
+                onSignUpSuccess = { onSigninOrSignupFinished(lastRoute) },
             )
         }
 
-        composable(AuthNav.SignIn.name + "/email") {
+        composable(AuthNav.SignUp.name + "/emailVerification") {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignUpViewModel>(viewModelStoreOwner = viewModelStoreOwner)
+
+            EmailVerificationScreen(
+                state = viewModel.uiState,
+                onCancelSignUp = {
+                    navController.popBackStack()
+                },
+
+                setOtp = viewModel.setOtp,
+                navToSetUsername = { navigateToSetUsername(navController) },
+                onOtpVerified = { viewModel.verifyOtp() },
+                onOtpGenerate = { viewModel.generateOtp() },
+                dismissError = { viewModel.dismissErrorMsg() }
+            )
+        }
+
+        composable(
+            AuthNav.SignIn.name + "/email",
+        ) {
+            val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
+            val viewModel = koinViewModel<SignInViewModel>(viewModelStoreOwner = viewModelStoreOwner)
             SignInEmailScreen(
+                back = { navController.popBackStack() },
                 navToSignInPw = { navigateToSignInPw(navController) },
                 navToSignUp = { navigateToSignUp(navController) },
                 viewModel = viewModel
             )
         }
-        composable(AuthNav.SignIn.name + "/password") {
+        composable(
+            AuthNav.SignIn.name + "/password",
+        ) {
             val viewModelStoreOwner = remember { navController.getBackStackEntry("auth") }
-            val viewModel by viewModel<SignInViewModel>(owner = viewModelStoreOwner)
+            val viewModel = koinViewModel<SignInViewModel>(viewModelStoreOwner = viewModelStoreOwner)
             SignInPasswordScreen(
-                onSignInSuccess = onSigninOrSignupFinished,
+                onSignInSuccess = { onSigninOrSignupFinished(lastRoute) },
                 back = { navController.popBackStack() },
                 viewModel = viewModel
             )
@@ -71,22 +108,29 @@ fun NavGraphBuilder.authGraph(
     }
 }
 
-fun navigateToAuth(navController: NavHostController) {
-    navController.navigate("auth")
+fun navigateToAuth(
+    navController: NavHostController,
+    lsatRoute: String
+) {
+    navController.navigate("auth/$lsatRoute")
 }
 
 fun navigateToSignUp(navController: NavHostController) {
     navController.navigate(AuthNav.SignUp.name)
 }
 
-fun navigateToSignUpPassword(navController: NavHostController) {
-    navController.navigate(AuthNav.SignUp.name + "/password")
-}
-
 fun navigateToSignInEmail(navController: NavHostController) {
-    navController.navigate(AuthNav.SignIn.name+ "/email")
+    navController.navigate(AuthNav.SignIn.name + "/email")
 }
 
 fun navigateToSignInPw(navController: NavHostController) {
-    navController.navigate(AuthNav.SignIn.name+ "/password")
+    navController.navigate(AuthNav.SignIn.name + "/password")
+}
+
+fun navigateToSetUsername(navController: NavHostController) {
+    navController.navigate(AuthNav.SignUp.name + "/setUsername")
+}
+
+fun navigateToEmailVerification(navController: NavHostController) {
+    navController.navigate(AuthNav.SignUp.name + "/emailVerification")
 }

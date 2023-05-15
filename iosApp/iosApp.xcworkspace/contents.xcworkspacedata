@@ -1,6 +1,272 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <Group
+      location = "container:"
+      name = "New Group">
+      <Group
+         location = "group:../shared/src/commonMain"
+         name = "commonMain">
+         <Group
+            location = "group:resources"
+            name = "resources">
+            <Group
+               location = "group:MR"
+               name = "MR">
+               <Group
+                  location = "group:zh"
+                  name = "zh">
+                  <FileRef
+                     location = "group:strings.xml">
+                  </FileRef>
+               </Group>
+               <Group
+                  location = "group:base"
+                  name = "base">
+                  <FileRef
+                     location = "group:strings.xml">
+                  </FileRef>
+               </Group>
+            </Group>
+         </Group>
+         <Group
+            location = "group:kotlin"
+            name = "kotlin">
+            <Group
+               location = "group:com"
+               name = "com">
+               <Group
+                  location = "group:unlone"
+                  name = "unlone">
+                  <Group
+                     location = "group:app"
+                     name = "app">
+                     <Group
+                        location = "group:di"
+                        name = "di">
+                        <FileRef
+                           location = "group:PlatformModule.kt">
+                        </FileRef>
+                        <FileRef
+                           location = "group:AppModule.kt">
+                        </FileRef>
+                        <FileRef
+                           location = "group:CommonModule.kt">
+                        </FileRef>
+                     </Group>
+                     <FileRef
+                        location = "group:Platform.kt">
+                     </FileRef>
+                     <Group
+                        location = "group:utils"
+                        name = "utils">
+                        <FileRef
+                           location = "group:context.kt">
+                        </FileRef>
+                        <FileRef
+                           location = "group:preference.kt">
+                        </FileRef>
+                        <FileRef
+                           location = "group:KMMPreference.kt">
+                        </FileRef>
+                     </Group>
+                     <Group
+                        location = "group:data"
+                        name = "data">
+                        <Group
+                           location = "group:write"
+                           name = "write">
+                           <FileRef
+                              location = "group:DraftRepository.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:DraftRepositoryImpl.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:StoryApi.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:RealmDraft.kt">
+                           </FileRef>
+                        </Group>
+                        <Group
+                           location = "group:auth"
+                           name = "auth">
+                           <FileRef
+                              location = "group:TokenResponse.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:AuthApi.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:AuthRepositoryImpl.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:AuthRequest.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:AuthResult.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:AuthRepository.kt">
+                           </FileRef>
+                        </Group>
+                        <Group
+                           location = "group:story"
+                           name = "story">
+                           <FileRef
+                              location = "group:StoryResult.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:StoryPerPostRequest.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:Topic.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:StoryRequest.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:StoryRepository.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:StoryRepositoryImpl.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:TopicRepository.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:TopicStoryResponse.kt">
+                           </FileRef>
+                        </Group>
+                     </Group>
+                     <Group
+                        location = "group:domain"
+                        name = "domain">
+                        <Group
+                           location = "group:useCases"
+                           name = "useCases">
+                           <Group
+                              location = "group:write"
+                              name = "write">
+                              <FileRef
+                                 location = "group:GetLatestDraftUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:GetAllDraftsTitleUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:GetLastOpenedDraftUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:QueryDraftUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:SaveDraftUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:GetDraftAllVersionsUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:CreateNewDraftUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:PostStoryUseCase.kt">
+                              </FileRef>
+                           </Group>
+                           <Group
+                              location = "group:auth"
+                              name = "auth">
+                              <FileRef
+                                 location = "group:ValidPasswordUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:IsUserSignedInUseCase.kt">
+                              </FileRef>
+                           </Group>
+                           <Group
+                              location = "group:stories"
+                              name = "stories">
+                              <FileRef
+                                 location = "group:FetchStoryDetailUseCase.kt">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:FetchStoryItemsUseCase.kt">
+                              </FileRef>
+                           </Group>
+                        </Group>
+                        <Group
+                           location = "group:entities"
+                           name = "entities">
+                           <FileRef
+                              location = "group:DraftVersion.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:Draft.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:Comment.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:StoryItem.kt">
+                           </FileRef>
+                           <FileRef
+                              location = "group:Story.kt">
+                           </FileRef>
+                        </Group>
+                     </Group>
+                     <FileRef
+                        location = "group:Greeting.kt">
+                     </FileRef>
+                  </Group>
+               </Group>
+            </Group>
+         </Group>
+      </Group>
+      <Group
+         location = "group:../shared/src/iosMain"
+         name = "iosMain">
+         <Group
+            location = "group:kotlin"
+            name = "kotlin">
+            <Group
+               location = "group:com"
+               name = "com">
+               <Group
+                  location = "group:unlone"
+                  name = "unlone">
+                  <Group
+                     location = "group:app"
+                     name = "app">
+                     <FileRef
+                        location = "group:Helper.kt">
+                     </FileRef>
+                     <Group
+                        location = "group:di"
+                        name = "di">
+                        <FileRef
+                           location = "group:platformModule.kt">
+                        </FileRef>
+                     </Group>
+                     <FileRef
+                        location = "group:Platform.kt">
+                     </FileRef>
+                     <Group
+                        location = "group:utils"
+                        name = "utils">
+                        <FileRef
+                           location = "group:context.kt">
+                        </FileRef>
+                        <FileRef
+                           location = "group:preference.kt">
+                        </FileRef>
+                     </Group>
+                  </Group>
+               </Group>
+            </Group>
+         </Group>
+      </Group>
+   </Group>
    <FileRef
       location = "group:iosApp.xcodeproj">
    </FileRef>

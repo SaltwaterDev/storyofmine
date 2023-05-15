@@ -5,10 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlone.app.android.model.AuthUiEvent
-import com.unlone.app.auth.AuthRepository
-import com.unlone.app.auth.AuthResult
+import com.unlone.app.android.model.SignInUiEvent
+import com.unlone.app.data.auth.AuthRepository
+import com.unlone.app.data.auth.AuthResult
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -35,21 +36,20 @@ class SignInViewModel(
 
     val authResult = resultChannel.receiveAsFlow()
 
-    fun onEvent(event: AuthUiEvent) {
+    fun onEvent(event: SignInUiEvent) {
         when (event) {
-            is AuthUiEvent.SignInEmailChanged -> {
+            is SignInUiEvent.SignInEmailChanged -> {
                 uiState = uiState.copy(email = event.value)
             }
-            is AuthUiEvent.SignInPasswordChanged -> {
+            is SignInUiEvent.SignInPasswordChanged -> {
                 uiState = uiState.copy(password = event.value)
             }
-            is AuthUiEvent.SignInEmail -> {
+            is SignInUiEvent.SignInEmail -> {
                 emailValidate()
             }
-            is AuthUiEvent.SignInPw -> {
+            is SignInUiEvent.SignInPw -> {
                 signIn()
             }
-            else -> {}
         }
     }
 
@@ -71,12 +71,14 @@ class SignInViewModel(
     }
 
     private fun signIn() {
+        uiState = uiState.copy(loading = true)
         viewModelScope.launch {
             val result = authRepository.signIn(
                 email = uiState.email,
                 password = uiState.password,
             )
             resultChannel.send(result)
+            uiState = uiState.copy(loading = false)
         }
     }
 }

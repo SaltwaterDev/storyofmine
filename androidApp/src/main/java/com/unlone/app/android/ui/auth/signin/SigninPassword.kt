@@ -1,14 +1,23 @@
 package com.unlone.app.android.ui.auth.signin
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -19,9 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unlone.app.android.viewmodel.SignInViewModel
 import com.unlone.app.android.R
-import com.unlone.app.android.model.AuthUiEvent
-import com.unlone.app.auth.AuthResult
+import com.unlone.app.android.model.SignInUiEvent
+import com.unlone.app.data.auth.AuthResult
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.delay
+import org.example.library.SharedRes
 
 @InternalCoroutinesApi
 @Composable
@@ -33,7 +45,9 @@ fun SignInPasswordScreen(
 
     val uiState = viewModel.uiState
     val context = LocalContext.current
+    val focusRequester = remember { FocusRequester() }
 
+    val unknownErrorText = stringResource(resource = SharedRes.strings.common__unknown_error)
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
             when (result) {
@@ -44,57 +58,51 @@ fun SignInPasswordScreen(
                     Toast.makeText(context, result.errorMsg, Toast.LENGTH_LONG).show()
                 }
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(context, "An unknown error occurred", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, unknownErrorText, Toast.LENGTH_LONG).show()
                 }
             }
 
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    LaunchedEffect(Unit) {
+        delay(200)// <-- This is crucial.
+        focusRequester.requestFocus()
+    }
+
+    Box(Modifier.fillMaxSize().statusBarsPadding()) {
+        IconButton(onClick = { back() }) {
+            Icon(Icons.Rounded.ArrowBack, contentDescription = "back")
+        }
         Column(
-            Modifier.align(BiasAlignment(0f, -0.3f)),
-            horizontalAlignment = CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
         ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.app_icon),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .fillMaxWidth(0.6f)
-                    .aspectRatio(5 / 3f),
-                contentScale = ContentScale.Inside
-            )
-
+            Spacer(modifier = Modifier.height(60.dp))
+            Text(text = stringResource(resource = SharedRes.strings.sign_in__title), fontSize = 36.sp)
+            Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 value = uiState.password,
-                label = { Text(text = "Password", fontSize = 14.sp, color = Color.White) },
-                onValueChange = { viewModel.onEvent(AuthUiEvent.SignInPasswordChanged(it)) },
+                label = { Text(text = stringResource(resource = SharedRes.strings.common__password), fontSize = 14.sp) },
+                onValueChange = { viewModel.onEvent(SignInUiEvent.SignInPasswordChanged(it)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
+                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                keyboardActions = KeyboardActions(
+                    onDone = { viewModel.onEvent(SignInUiEvent.SignInPw) }
+                )
             )
+            Spacer(Modifier.height(30.dp))
+            Button(
+                onClick = { viewModel.onEvent(SignInUiEvent.SignInPw) },
+                colors = ButtonDefaults.buttonColors(),
+                enabled = uiState.pwBtnEnabled,
+                modifier = Modifier.align(End)
+            ) {
 
-            Spacer(Modifier.height(60.dp))
-
-            Row {
-                Button(
-                    onClick = back,
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                ) {
-                    Text(text = "back")
-                }
-
-                Spacer(modifier = Modifier.width(20.dp))
-
-                Button(
-                    onClick = { viewModel.onEvent(AuthUiEvent.SignInPw) },
-                    colors = ButtonDefaults.buttonColors(),
-                    enabled = uiState.pwBtnEnabled
-                ) {
-                    Text(text = "Sign In")
-                }
+                Text(text = stringResource(resource = SharedRes.strings.sign_in__btn_sign_in))
             }
         }
     }
@@ -105,17 +113,22 @@ fun SignInPasswordScreen(
                 viewModel.dismissMsg()
             },
             title = {
-                Text(text = "Warning")
+                Text(text = stringResource(resource = SharedRes.strings.common__warning))
             },
             text = {
                 Text(uiState.errorMsg)
             },
             confirmButton = {
                 Button(
-                    onClick = {
-                        viewModel.dismissMsg()
-                    }) {
-                    Text("This is the Confirm Button")
+                    onClick = { viewModel.dismissMsg() },
+                    enabled = !uiState.loading
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically){
+                        Text(stringResource(resource = SharedRes.strings.common__btn_confirm))
+                        AnimatedVisibility(visible = uiState.loading, modifier = Modifier.padding(start = 4.dp)) {
+                            CircularProgressIndicator()
+                        }
+                    }
                 }
             },
         )

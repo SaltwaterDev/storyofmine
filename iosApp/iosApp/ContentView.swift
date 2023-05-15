@@ -2,10 +2,17 @@ import SwiftUI
 import shared
 
 struct ContentView: View {
-	let greet = Greeting().greeting()
-
+    @StateObject var authSetting = AuthViewModel()
+    
 	var body: some View {
-		Text(greet)
+            TabView{
+                WritingScreen().tabItem{Image(systemName: "pencil.and.outline")
+                    Text("Write")}
+                StoriesScreen().tabItem{Image(systemName: "book")
+                    Text("Stories")}
+                ProfileScreen().tabItem{Image(systemName: "person")
+                    Text("Profile")}
+            }.environmentObject(authSetting)
 	}
 }
 
