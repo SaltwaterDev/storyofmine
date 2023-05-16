@@ -2,9 +2,9 @@
 An Android self journaling app
 
 ## Main features
-- Trace back edit history
 - Auto save the journal
-- Markdown available -- Add "Preview" button to see effect
+- Trace back edit history
+- Markdown available -- Add "Preview" button to see the effect
 
 
 ![Screenshot_20230515_204254](https://github.com/SaltwaterDev/storyofmine/assets/56107201/018a1b25-bc61-436e-852e-9ec8c9f997bf)
