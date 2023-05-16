@@ -1,6 +1,5 @@
 package com.example.app.android.ui.comonComponent
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -29,7 +28,7 @@ fun StoryCard(
         enabled = !loading,
         shape = RoundedCornerShape(8.dp),
         modifier = modifier,
-        elevation = if (isSystemInDarkTheme()) 4.dp else 0.dp,
+//        elevation = if (isSystemInDarkTheme()) 4.dp else 0.dp,
     ) {
 
         Column(Modifier) {
