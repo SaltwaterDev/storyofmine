@@ -28,7 +28,6 @@ fun StoryCard(
         enabled = !loading,
         shape = RoundedCornerShape(8.dp),
         modifier = modifier,
-//        elevation = if (isSystemInDarkTheme()) 4.dp else 0.dp,
     ) {
 
         Column(Modifier) {

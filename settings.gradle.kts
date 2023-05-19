@@ -6,6 +6,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "unlone-kmm"
+rootProject.name = "story-of-mine"
 include(":androidApp")
 include(":shared")

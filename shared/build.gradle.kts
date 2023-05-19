@@ -147,7 +147,7 @@ multiplatformResources {
 }
 
 buildkonfig {
-    packageName = "com.unlone.app"
+    packageName = "com.example.app"
     objectName = "MyStoriesConfig"
 
     defaultConfigs {}
